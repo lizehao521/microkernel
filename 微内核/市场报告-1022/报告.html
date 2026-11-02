@@ -1,0 +1,940 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agentkernel 市场进入重评 · 2026-10-20</title>
+<style>
+:root{
+  --navy:#0b1f33; --navy2:#12314f; --teal:#0f766e; --teal2:#14b8a6;
+  --amber:#b45309; --red:#b91c1c; --green:#15803d; --ink:#172033;
+  --muted:#5b6b7f; --line:#d9e2ec; --bg:#f6f8fb; --soft:#eef4f8;
+}
+@page{ size:A4; margin:19mm 15mm 18mm 15mm; }
+html{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+body{
+  margin:0; color:var(--ink);
+  font-family:"Microsoft YaHei","Noto Sans SC","Segoe UI",sans-serif;
+  font-size:10.3pt; line-height:1.78;
+}
+p{ margin:0 0 7pt; text-align:justify; text-justify:inter-ideograph; }
+a{ color:var(--teal); text-decoration:none; }
+b,strong{ color:#0b1f33; }
+em{ font-style:normal; color:var(--amber); }
+.small{ font-size:8.8pt; line-height:1.6; color:var(--muted); }
+.tiny{ font-size:8pt; line-height:1.55; color:var(--muted); }
+.center{ text-align:center; }
+.right{ text-align:right; }
+.nowrap{ white-space:nowrap; }
+.mono{ font-family:"Cascadia Mono","Consolas","Segoe UI",monospace; font-size:8.6pt; }
+.muted{ color:var(--muted); }
+.teal{ color:var(--teal); }
+.red{ color:var(--red); }
+.amber{ color:var(--amber); }
+.green{ color:var(--green); }
+.rule{ height:1px; background:var(--line); margin:14pt 0; }
+.pagebreak{ page-break-before:always; }
+.avoid{ break-inside:avoid; page-break-inside:avoid; }
+
+/* ---------- cover ---------- */
+.cover{
+  height:259mm; box-sizing:border-box; margin:0; padding:26mm 20mm 16mm;
+  background:linear-gradient(145deg,#081827 0%,#0b1f33 52%,#12314f 100%);
+  color:#fff; position:relative; overflow:hidden; page-break-after:always;
+}
+.cover .grid{
+  position:absolute; inset:0; opacity:.16;
+  background-image:
+    linear-gradient(rgba(255,255,255,.14) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.14) 1px,transparent 1px);
+  background-size:11mm 11mm;
+}
+.cover .glow{
+  position:absolute; width:120mm; height:120mm; right:-38mm; top:-30mm;
+  background:radial-gradient(circle,rgba(20,184,166,.38),rgba(20,184,166,0) 68%);
+}
+.cover .glow2{
+  position:absolute; width:90mm; height:90mm; left:-30mm; bottom:-28mm;
+  background:radial-gradient(circle,rgba(180,83,9,.24),rgba(180,83,9,0) 70%);
+}
+.cover .inner{ position:relative; z-index:2; }
+.cover .kicker{
+  font-size:8.6pt; letter-spacing:.22em; color:#8fd8cf; text-transform:uppercase;
+  margin-bottom:10mm;
+}
+.cover h1{
+  font-size:31pt; line-height:1.28; margin:0 0 6mm; font-weight:700; letter-spacing:.01em;
+  border:0; padding:0; color:#fff;
+}
+.cover h1 .thin{ font-weight:300; color:#b9d7e8; }
+.cover .sub{
+  font-size:12.6pt; line-height:1.8; color:#d4e4ef; max-width:158mm; margin-bottom:9mm;
+}
+.cover .object{
+  display:inline-block; border:1px solid rgba(143,216,207,.45); border-radius:2px;
+  padding:3mm 5mm; font-size:9.2pt; color:#d9f3ee; margin-bottom:10mm;
+}
+.cover .verdict{
+  border-left:3px solid var(--teal2); background:rgba(255,255,255,.07);
+  padding:5mm 6mm; max-width:165mm; margin-bottom:8mm;
+}
+.cover .verdict .lab{ font-size:8pt; letter-spacing:.16em; color:#8fd8cf; margin-bottom:2mm; }
+.cover .verdict .txt{ font-size:13.2pt; line-height:1.7; color:#fff; }
+/* 全局 b,strong 是给浅色页用的深墨（#0b1f33）；落进封面这块深色底就读不出来了。
+   这条作用域规则修的是肉眼开图看到的对比度缺陷，不是美化。 */
+.cover .verdict .txt b, .cover .verdict .txt strong{ color:#ffd9a0; font-weight:700; }
+.cover .sub strong, .cover .object strong, .cover .foot strong{ color:#cfe6ff; }
+.cover .stats{ width:100%; border-collapse:collapse; margin-top:4mm; }
+.cover .stats td{ border-top:1px solid rgba(255,255,255,.18); padding:4mm 3mm 0 0; vertical-align:top; }
+.cover .stats .v{ font-size:17pt; color:#8fd8cf; font-weight:700; line-height:1.2; }
+.cover .stats .l{ font-size:7.8pt; color:#a9c4d6; line-height:1.5; margin-top:1mm; }
+.cover .foot{
+  position:absolute; left:20mm; right:20mm; bottom:13mm; z-index:2;
+  border-top:1px solid rgba(255,255,255,.18); padding-top:3mm;
+  font-size:8pt; color:#9fb9cc; line-height:1.6;
+}
+
+/* ---------- headings ---------- */
+.chapter{ page-break-before:always; }
+h1{
+  font-size:21pt; line-height:1.35; color:var(--navy); margin:0 0 4mm;
+  padding-bottom:3mm; border-bottom:2px solid var(--navy); font-weight:700;
+  break-after:avoid;
+}
+h1 .num{
+  display:inline-block; min-width:13mm; color:var(--teal); font-size:12pt;
+  letter-spacing:.08em; vertical-align:3pt; margin-right:2mm;
+}
+h2{
+  font-size:13.6pt; line-height:1.45; color:var(--navy2); margin:9mm 0 3mm;
+  padding-left:3mm; border-left:3px solid var(--teal); font-weight:700;
+  break-after:avoid;
+}
+h3{
+  font-size:10.9pt; color:#0f3a5c; margin:6mm 0 2mm; font-weight:700; break-after:avoid;
+}
+h4{ font-size:10.2pt; color:var(--ink); margin:4mm 0 1.5mm; font-weight:700; break-after:avoid; }
+.lede{ font-size:11.4pt; line-height:1.85; color:#24384d; margin-bottom:6mm; }
+.chap-kicker{ font-size:8pt; letter-spacing:.18em; color:var(--teal); margin:0 0 2mm; text-transform:uppercase; }
+.chap-q{
+  background:var(--soft); border:1px solid var(--line); border-left:4px solid var(--teal);
+  padding:3.5mm 5mm; margin:0 0 7mm; font-size:10.4pt; color:#24384d;
+}
+.chap-q b{ color:var(--navy); }
+
+/* ---------- callouts ---------- */
+.callout{
+  border:1px solid var(--line); border-left:4px solid var(--teal);
+  background:#f3faf8; padding:3.5mm 5mm; margin:4mm 0 6mm;
+  break-inside:avoid; page-break-inside:avoid;
+}
+.callout.warn{ border-left-color:var(--amber); background:#fff8ed; }
+.callout.danger{ border-left-color:var(--red); background:#fdf2f2; }
+.callout.neutral{ border-left-color:#64748b; background:#f8fafc; }
+.callout .t{ font-weight:700; color:var(--navy); margin-bottom:1.5mm; font-size:10pt; }
+.callout p:last-child{ margin-bottom:0; }
+.quote{
+  margin:5mm 0; padding:3mm 0 3mm 6mm; border-left:2px solid #94a3b8;
+  color:#334155; font-size:10.6pt; line-height:1.8;
+}
+.quote .who{ display:block; margin-top:2mm; font-size:8.4pt; color:var(--muted); }
+
+/* ---------- badges ---------- */
+.tag{
+  display:inline-block; font-size:7.6pt; line-height:1.5; padding:0 3.2pt;
+  border-radius:2px; margin:0 2pt 0 0; vertical-align:1pt; font-weight:700;
+  letter-spacing:.02em;
+}
+.tag-a{ background:#dcfce7; color:#166534; border:1px solid #86efac; }
+.tag-b{ background:#dbeafe; color:#1e40af; border:1px solid #93c5fd; }
+.tag-c{ background:#fef3c7; color:#92400e; border:1px solid #fcd34d; }
+.tag-d{ background:#ede9fe; color:#5b21b6; border:1px solid #c4b5fd; }
+.tag-x{ background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; }
+.tag-gray{ background:#e2e8f0; color:#334155; border:1px solid #cbd5e1; }
+
+/* ---------- metrics ---------- */
+.metrics{ width:100%; border-collapse:collapse; margin:4mm 0 6mm; }
+.metrics td{
+  width:25%; vertical-align:top; padding:3.5mm 3mm;
+  border-top:2px solid var(--navy); background:#f8fafc;
+}
+.metrics .v{ font-size:16pt; font-weight:700; color:var(--navy); line-height:1.25; }
+.metrics .l{ font-size:8pt; color:var(--muted); line-height:1.55; margin-top:1.5mm; }
+
+/* ---------- tables ---------- */
+table.tbl{
+  width:100%; border-collapse:collapse; margin:3mm 0 5mm;
+  font-size:8.7pt; line-height:1.55;
+}
+table.tbl caption{
+  caption-side:top; text-align:left; font-size:8.4pt; color:var(--muted);
+  padding:0 0 2mm; font-weight:400;
+}
+table.tbl caption b{ color:var(--navy); }
+table.tbl th{
+  background:var(--navy); color:#fff; font-weight:700; text-align:left;
+  padding:2.2mm 2.2mm; border:1px solid var(--navy); vertical-align:bottom;
+}
+table.tbl td{
+  padding:2mm 2.2mm; border:1px solid var(--line); vertical-align:top;
+}
+table.tbl tr:nth-child(even) td{ background:#f8fafc; }
+table.tbl tr{ break-inside:avoid; page-break-inside:avoid; }
+table.tbl td.num, table.tbl th.num{ text-align:right; white-space:nowrap; }
+table.tbl .em-row td{ background:#f0fdfa !important; font-weight:700; }
+table.tbl .warn-row td{ background:#fff7ed !important; }
+table.tbl .danger-row td{ background:#fef2f2 !important; }
+table.tbl .ok{ color:var(--green); font-weight:700; }
+table.tbl .no{ color:var(--red); font-weight:700; }
+table.tbl .mid{ color:var(--amber); font-weight:700; }
+
+/* ---------- figures ---------- */
+figure{
+  margin:4mm 0 6mm; padding:0; break-inside:avoid; page-break-inside:avoid;
+  border:1px solid var(--line); background:#fff;
+}
+figure .pad{ padding:4mm 4mm 2mm; }
+figure svg{ display:block; width:100%; height:auto; }
+figcaption{
+  font-size:8.3pt; line-height:1.6; color:var(--muted);
+  padding:2.5mm 4mm 3mm; border-top:1px solid #eef2f7;
+}
+figcaption b{ color:var(--navy); }
+.figsrc{ font-size:7.6pt; color:#7c8b9d; }
+
+/* ---------- toc ---------- */
+.toc-page{ page-break-before:always; }
+.toc-title{ font-size:19pt; color:var(--navy); margin:0 0 2mm; border:0; padding:0; }
+table.toc{ width:100%; border-collapse:collapse; font-size:9.2pt; line-height:1.35; margin-top:2mm; }
+table.toc td{ padding:1.5pt 0; border-bottom:1px dotted #c7d3df; vertical-align:bottom; }
+table.toc td.pg{ width:12mm; text-align:right; color:var(--muted); font-size:8.8pt; }
+table.toc tr.l1 td{ font-weight:700; color:var(--navy); padding-top:3pt; }
+table.toc tr.l2 td:first-child{ padding-left:8mm; font-weight:400; color:#334155; font-size:8.6pt; }
+table.toc tr.l2 td.pg{ font-size:8.4pt; }
+table.toc .tn{ display:inline-block; min-width:9mm; color:var(--teal); font-size:8.4pt; }
+
+/* ---------- lists ---------- */
+ul,ol{ margin:0 0 6pt 0; padding-left:16pt; }
+li{ margin:0 0 2.2pt; text-align:justify; }
+ul.tight li, ol.tight li{ margin-bottom:1pt; }
+.checklist{ list-style:none; padding-left:0; }
+.checklist li{ padding-left:12pt; text-indent:-12pt; }
+.checklist li:before{ content:"□"; color:var(--teal); font-weight:700; margin-right:4pt; }
+.kv{ width:100%; border-collapse:collapse; font-size:9pt; }
+.kv td{ padding:1.6mm 0; border-bottom:1px solid #eef2f7; vertical-align:top; }
+.kv td:first-child{ width:32mm; color:var(--muted); }
+.grid2{ width:100%; border-collapse:separate; border-spacing:5mm 0; margin-left:-5mm; margin-right:-5mm; }
+.grid2 td{ width:50%; vertical-align:top; }
+.grid3{ width:100%; border-collapse:separate; border-spacing:3mm 0; margin-left:-3mm; margin-right:-3mm; }
+.grid3 td{ width:33.3%; vertical-align:top; }
+.card{ border:1px solid var(--line); background:#fff; padding:3.5mm 4mm; height:100%; }
+.card .h{ font-weight:700; color:var(--navy); font-size:9.6pt; margin-bottom:1.5mm; }
+.card p{ font-size:8.8pt; line-height:1.65; margin-bottom:2mm; }
+.card .foot{ font-size:8pt; color:var(--muted); }
+.two-col{ column-count:2; column-gap:8mm; }
+.two-col p{ break-inside:avoid; }
+.endnote{ font-size:8pt; color:var(--muted); border-top:1px solid var(--line); padding-top:2mm; margin-top:6mm; }
+.appendix h1{ font-size:18pt; }
+.ref{ font-size:8.4pt; line-height:1.65; margin-bottom:2.4mm; padding-left:9mm; text-indent:-9mm; }
+.ref .n{ color:var(--teal); font-weight:700; }
+.sig{ font-size:8.4pt; color:var(--muted); margin-top:8mm; }
+.v2badge{
+  display:inline-block; font-size:7.8pt; letter-spacing:.14em; color:#0f766e;
+  border:1px solid #99f6e4; background:#f0fdfa; padding:1mm 3mm; margin-bottom:3mm;
+}
+.diff-table td.old{ color:#7c2d12; background:#fff7ed; }
+.diff-table td.new{ color:#14532d; background:#f0fdf4; }
+.flow{
+  border:1px solid var(--line); background:#f8fafc; padding:3.5mm 4mm; margin:4mm 0 6mm;
+  font-size:9pt; line-height:1.9; break-inside:avoid; page-break-inside:avoid;
+}
+.flow b{ color:var(--navy); }
+.flow .arrow{ color:var(--teal); font-weight:700; padding:0 2mm; }
+</style>
+</head>
+<body>
+<!-- ================= COVER + TOC ================= -->
+<section class="cover">
+  <div class="grid"></div>
+  <div class="glow"></div>
+  <div class="glow2"></div>
+  <div class="inner">
+    <div class="kicker">Agentkernel · Market Entry Research · V3（证据更新版）</div>
+    <h1>把「合规会不会<br><span class="thin">逼出这本账」问到底</span></h1>
+    <div class="sub">
+      v3 不重画赛道，只判 v2 自己留下的那一句风险：<br>
+      「SAM 下调可能过度悲观——如果 AI 审计在 2027 成为独立预算科目，SAM 会回升」。
+    </div>
+    <div class="object">
+      研究对象：agentkernel v1（48 键 / 49 格，判据表冻结）· 底盘 v2（2026-10-20，48 页）· 更新日 2026-10-22
+    </div>
+    <div class="verdict">
+      <div class="lab">v3 判定</div>
+      <div class="txt">那句话<strong>方向反了两次</strong>：法规侧它过乐观（记录类义务已被推到 2027-12 / 2028-08），采购侧它过悲观（真门槛是归属 + 连续留存，与法规无关）。<br>SAM/SOM 沿用 v2 的 C 级假设，不升格；回升的前提<strong>目前没有任何被记录下来的证据</strong>。</div>
+    </div>
+    <table class="stats">
+      <tr>
+        <td><div class="v">2027-12-02</div><div class="l">Annex III 高风险义务<br>被 Digital Omnibus 推迟（D 级）</div></td>
+        <td><div class="v">0 条</div><div class="l">被记录下来的买方要求<br>「逐调用记录须可独立验证」</div></td>
+        <td><div class="v">$2,499/月</div><div class="l">Langfuse Enterprise 档<br>审计日志与 SCIM 所在层（A 级）</div></td>
+        <td><div class="v">Planned</div><div class="l">事件层 E1–E9<br>实时过程可见，代码一行未动</div></td>
+      </tr>
+    </table>
+  </div>
+  <div class="foot">
+    本报告不是合规意见、不是报价单、不是「符合某法规」的声明。规模数字一律缺席：同名类目三家基数差 2.6 倍且全为 Tier 3。<br>
+    证据分级 A/B/C/D/未；「未」不折成 0；真人 0/1、访谈 0/10、LOI 0、付费 0。判定分母与波次账见附录 A。
+  </div>
+</section>
+
+<section class="toc-page pagebreak">
+  <h1 class="toc-title">这份 v3 怎么读</h1>
+
+  <div class="callout">
+    <div class="t">先说三件会让读者本能反感的事，说完再讲别的</div>
+    <p><strong>一、本报告不给你市场规模结论。</strong>同名类目「AI/LLM 可观测」2025 年基数有三家给法：$758M、$0.93B（仅美国）、$1.97B，
+      最大最小差 2.6 倍，来源全是 Tier 3 报告厂。v2 当年取的 26.9 亿美元其实是其中 <strong>2026 年</strong>的那个口径，既没标年份，也处在离散区间的上沿。
+      v3 把这些数字全部降级成「口径离散度」证据，SAM/SOM 一律沿用 v2 的 <span class="tag tag-c">C 级规划假设</span>，不升格。</p>
+    <p><strong>二、本件的话术已经被在位者说过了。</strong>UiPath 的平台页原文写着「每一个 agent 动作、模型调用、提示、响应与批准人都记入防篡改审计轨迹」，
+      并直接说这就是「监管所要的证据」。它没有给出密钥管理、外部锚或离线验证机制。所以我们不能讲「没人做这件事」，只能讲
+      <strong>「这句话的机制层没人背书」</strong>——这是完全不同的主张，也弱得多。</p>
+    <p><strong>三、我们的先例不是零。</strong>公开预印本 Traccia（arXiv:2607.14309，2026-07-15）已经把「执行 trace → 哈希防篡改账本 → 映射到 EU AI Act 条文」这条链做出来了。
+      v3 撤回所有暗示首创的表述，改把差异点收窄到四个可核对的形容词：<em>被动的、本地优先的、出处分五档的、停止必须结算的</em>。</p>
+  </div>
+
+  <h2>三条边界，先写在前面</h2>
+  <ul class="checklist">
+    <li><strong>不是合规意见。</strong>关于 EU AI Act 的全部表述只在「条文写了什么、什么时候适用」层面；哪条义务落到你身上，请找持牌法律顾问。</li>
+    <li><strong>不是尽调材料。</strong>本件没有 SOC 2 报告、没有渗透测试、没有保险。§3 会说明这为什么是采购侧的真墙，而不是可绕开的形式。</li>
+    <li><strong>效果未被证明。</strong>真人访谈 0/10、试读交接 0/1、LOI 0、付费 0；事件层（把循环过程投影给用户看的那部分）状态是 <span class="tag tag-x">Planned</span>，代码一行未动。</li>
+  </ul>
+
+  <h2>证据分级：五种状态，不许塌成一种</h2>
+  <table class="tbl">
+    <tr><th>级</th><th>含义</th><th>能说什么</th><th>不能说什么</th></tr>
+    <tr><td><span class="tag tag-a">A 级</span></td><td>逐行复算／原文已读，且给出复跑命令或盘上件</td><td>「本机实跑读数如此」「条文原句如此」</td><td>—</td></tr>
+    <tr><td><span class="tag tag-b">B 级</span></td><td>一手页已读，但为厂商自述或单一来源</td><td>「该厂商页面这样声明」</td><td>不能升格成「行业事实」</td></tr>
+    <tr><td><span class="tag tag-c">C 级</span></td><td>作者规划假设（占比、单价、情景）</td><td>「这是假设，随附假设值」</td><td>不得写成调查结论</td></tr>
+    <tr><td><span class="tag tag-d">D 级</span></td><td>二级/三级来源转述（含快照级数字）</td><td>「据具名来源转述」</td><td>不得写成官方原文已核</td></tr>
+    <tr><td><span class="tag tag-x">未</span></td><td>没跑、没取到、打不开</td><td>「不知道 / NOT_RUN」</td><td>不得折成 0，也不得用相邻材料顶</td></tr>
+  </table>
+  <p class="small">v3 期间新加一条硬规矩：<strong>只有 A 级（读过原文正文或表格原件）的数字才允许被排版进正文。</strong>
+    这条是被自己的错误逼出来的——抽查前我们已把「待复核」标注加在 MT-Bench 与 LangChain 的数字上，仍然让它们进了正文，结果一个判 UNSUPPORTED、一个一手根本取不到。</p>
+
+  <h2>与 v2 的关系</h2>
+  <p>v2 交付物仍在盘上且不作废：<code>市场报告-1020/agentkernel-市场进入重评-1020.pdf</code>（48 页，SHA256 <code>2766192e…cacff</code>）。
+    v3 改的是<strong>四件事的判词</strong>：法规时点、竞争空位的说法、需求叙述的挂接接口、以及「本件凭什么算差异」。<strong>不改</strong>的是：
+    五道闸的结构、定价四档的形状、财务三情景、以及「研究出版 + 开源适配层先行」的排序结论。</p>
+
+  <h2>目录</h2>
+  <table class="toc">
+    <tr class="l1"><td><span class="tn">00</span>v3 摘要：那句话说反了两次</td><td class="pg" data-key="exec">5</td></tr>
+    <tr class="l1"><td><span class="tn">01</span>为什么要出 v3：抽查抓到的五处错</td><td class="pg" data-key="ch1">7</td></tr>
+    <tr class="l1"><td><span class="tn">02</span>法规时线重算：账本义务现在到底要不要</td><td class="pg" data-key="ch2">8</td></tr>
+    <tr class="l2"><td>2.1 Art.12 与 Art.26(6) 的分工</td><td class="pg" data-key="s2-1">8</td></tr>
+    <tr class="l2"><td>2.2 Omnibus 把高风险义务推到哪一天</td><td class="pg" data-key="s2-2">8</td></tr>
+    <tr class="l2"><td>2.3 自愿框架为什么撑不起预算</td><td class="pg" data-key="s2-3">9</td></tr>
+    <tr class="l1"><td><span class="tn">03</span>买方门槛三件套</td><td class="pg" data-key="ch3">10</td></tr>
+    <tr class="l2"><td>3.1 门槛真实存在，但与法规无关</td><td class="pg" data-key="s3-1">10</td></tr>
+    <tr class="l2"><td>3.2 没人要求「逐调用记录可独立验证」</td><td class="pg" data-key="s3-2">5</td></tr>
+    <tr class="l1"><td><span class="tn">04</span>竞争格局：话已被说，背书还没有</td><td class="pg" data-key="ch4">12</td></tr>
+    <tr class="l1"><td><span class="tn">05</span>本机证据现状：能证的与不能证的</td><td class="pg" data-key="ch5">14</td></tr>
+    <tr class="l1"><td><span class="tn">06</span>五条进入方式重评</td><td class="pg" data-key="ch6">16</td></tr>
+    <tr class="l1"><td><span class="tn">07</span>推荐路线与五道闸</td><td class="pg" data-key="ch7">17</td></tr>
+    <tr class="l2"><td>7.2 五道闸（v3 判据）</td><td class="pg" data-key="s7-2">17</td></tr>
+    <tr class="l1"><td><span class="tn">08</span>定价与单位经济</td><td class="pg" data-key="ch8">19</td></tr>
+    <tr class="l1"><td><span class="tn">09</span>风险登记与红队</td><td class="pg" data-key="ch9">20</td></tr>
+    <tr class="l1"><td><span class="tn">10</span>实施路线（26 周）</td><td class="pg" data-key="ch10">22</td></tr>
+    <tr class="l1"><td><span class="tn">11</span>财务三情景（C 级沿用）</td><td class="pg" data-key="ch11">23</td></tr>
+    <tr class="l1"><td><span class="tn">12</span>结论与那句 SAM 的判定</td><td class="pg" data-key="ch12">24</td></tr>
+    <tr class="l1"><td><span class="tn">A</span>方法、波次与分母</td><td class="pg" data-key="appA">25</td></tr>
+    <tr class="l1"><td><span class="tn">B</span>v2 → v3 主张对照</td><td class="pg" data-key="appB">27</td></tr>
+    <tr class="l1"><td><span class="tn">C</span>引用与分级登记</td><td class="pg" data-key="appC">28</td></tr>
+    <tr class="l1"><td><span class="tn">D</span>缺口、NOT_RUN 与对外措辞红线</td><td class="pg" data-key="appD">29</td></tr>
+  </table>
+
+  <h2>图表索引</h2>
+  <table class="toc">
+    <tr class="l2"><td>图 1 义务时线：现在能说的与还不能说的</td><td class="pg" data-key="fig1">9</td></tr>
+    <tr class="l2"><td>图 2 门槛三件套与本件可供给位置</td><td class="pg" data-key="fig2">10</td></tr>
+    <tr class="l2"><td>图 3 声明强度 × 机制背书</td><td class="pg" data-key="fig3">13</td></tr>
+    <tr class="l2"><td>图 4 证据阶梯：从「我记了」到「别人能验」</td><td class="pg" data-key="fig4">14</td></tr>
+    <tr class="l2"><td>图 5 五条进入方式在 v3 证据下的位移</td><td class="pg" data-key="fig5">16</td></tr>
+  </table>
+</section>
+<!-- ================= EXECUTIVE SUMMARY ================= -->
+<section class="chapter" id="exec">
+  <div class="chap-kicker">00 · Executive Summary</div>
+  <h1><span class="num">00</span>v3 摘要：那句话说反了两次</h1>
+
+  <p class="lede">
+    v2 在自己身上留了一句反面：「SAM 下调可能过度悲观——如果 AI 审计在 2027 年成为独立预算科目，SAM 会回升。」
+    v3 用抽查过的法规时点与买方实态判这句话，结论是：<strong>方向反了两次</strong>。
+    在<strong>法规推动</strong>这条路上它过于乐观——高风险记录类义务被 Digital Omnibus 推到 2027-12-02（Annex III）与 2028-08-02（Annex I），
+    而条文要的是「部署方保留自动生成的日志至少六个月」，不是任何机器可读格式、不是出处分档、更不是第三方件；
+    在<strong>采购推动</strong>这条路上它又过于悲观——真正会淘汰你的是 SOC 2 Type II 这道与法规无关的门，
+    而它要求的「可归属到人 + 连续留存 6–12 个月」恰好是逐调用账本天然供得上的东西。v2 把需求整个挂在「审计」这个词上，<strong>挂错了接口</strong>。
+  </p>
+
+  <h2>三个结论</h2>
+
+  <div class="callout">
+    <div class="t">结论一：合规不会在 2027 之前逼出这本账；不要把它写成销售理由</div>
+    <p>
+      读到原文的两份权威件都是这么说的：NIST 官网写 AI RMF「is intended for voluntary use」<span class="tag tag-a">A 级</span>；
+      EU AI Act 的 Art.12 只要求记录使用期间、参照数据库、输入数据与核验人员，<strong>条文本体不含留存时长</strong>，
+      「至少六个月」在 Art.26(6) <span class="tag tag-a">A 级</span>。
+      再加上执法能力这一层：截至 2026-03 仅 8 个成员国设立了市场监督单点 <span class="tag tag-d">D 级（二级转述）</span>。
+      ⇒ <strong>任何「因为 AI Act 现在需要运行时账本」的话术都必须从对外材料里删掉</strong>，它既不准确，也是我们最容易失去信任的一句话。
+    </p>
+  </div>
+
+  <div class="callout">
+    <div class="t">结论二：预算科目没有出现，但「归属 + 连续留存」这两件门槛是真的——本件该挂在这里</div>
+    <p>
+      唯一像样的「独立预算科目」正面证据，是 IDC 维护了一个 AI-enabled financial GRC 的 MarketScape 类目 <span class="tag tag-d">D 级</span>；
+      但类目由 IBM 这类平台占着，说明坑位在<strong>平台内</strong>，不在单点件上。
+      另一侧是采购实态：SOC 2 Type II 被多份材料描述为 RFP 淘汰门槛、要求 6–12 个月连续生成并留存、最常见发现项是「共享服务账号无法归属到人」
+      <span class="tag tag-d">D 级，全 Tier 3</span>。
+      ⇒ 判词：<strong>门槛真实，但没有任何一份被记录下来的买方要求说「逐调用记录必须可独立验证」</strong>（补证波专门找过，明写没找到）。
+      这是本报告最大的不确定性，v3 不把它藏进「合规趋势」。
+    </p>
+  </div>
+
+  <div class="callout">
+    <div class="t">结论三：能讲的差异收窄到四个形容词，而且要先承认先例</div>
+    <p>
+      Traccia（arXiv:2607.14309，预印本）已把「trace → SHA-256 哈希防篡改账本 → 映射 AI Act 条文」这条链做出来 <span class="tag tag-b">B 级</span>；
+      UiPath 已经把「tamper-evident audit trail for every agent action」这句话写在平台上 <span class="tag tag-b">B 级</span>；
+      LiteLLM 免费网关「每个请求都带审计日志」<span class="tag tag-b">B 级</span>；Langfuse 的审计日志与 SCIM 锁在 $2,499/月 Enterprise 档 <span class="tag tag-a">A 级（定价页原文）</span>。
+      ⇒ 还能站住的差异只剩：<strong>被动的（不执行、不调度、不写盘）、本地优先的、出处分五档且 absent 必带理由的、停止必须结算的。</strong>
+      前三个已有实物与读数，第四个目前<strong>只有计划</strong>（事件层 E1–E9 状态 Planned）。
+    </p>
+  </div>
+
+  <h2>如果只记五句话</h2>
+  <ol class="stats">
+    <li>不要卖「符合 AI Act」——连条文自己都没要求这本账的形状。</li>
+    <li>要卖的是<strong>把留存与归属变成可评估对象</strong>：监管接受的是配置判断（S3 Object Lock compliance mode + Cohasset 评估，限定语「when correctly configured」），不是内容判断 <span class="tag tag-a">A 级</span>。</li>
+    <li>「防篡改 = 可信」这句话站不住：CT 用 Merkle 树只证内部一致，「不给两方看两棵树」是 Apple 的<strong>政策</strong>不是密码学；GoDaddy/Yeti 2025 里无效签名的 SCT 是<strong>外部研究者</strong>发现的，不是树发现的 <span class="tag tag-a">A 级</span>。</li>
+    <li>可信权威托管账这个形态被 AWS 自己撤了：QLDB 支持止于 2025-07-31，迁移目标 Aurora 明确「不维护永久不可变记录，历史要作为审计数据存到库外」<span class="tag tag-a">A 级（文档横幅原文）</span>。</li>
+    <li>本件唯一被证明的东西是「机械正确 + 尺子会红」：四道闸实跑、KPI=4 与反臂 0、六态退出码、49 格逐发落账。<strong>协同体验更好从未被证明</strong>（真人 0/1）。</li>
+  </ol>
+
+  <h2>本报告可能错在哪里</h2>
+  <table class="tbl diff-table">
+    <tr><th>可能错在</th><th>为什么仍按现在这样写</th><th>错了会怎样</th></tr>
+    <tr>
+      <td>把 Omnibus 的两个日期当判词核心</td>
+      <td>Annex III→2027-12-02、Annex I→2028-08-02 由三位具名来源互证；但 <strong>EUR-Lex 一手本轮两次打不开</strong>，OJ 日期与「Chapter III Sections 1-3」这个措辞都已撤下</td>
+      <td>时点若另有出入，「别把 AI Act 当销售理由」这句判词<strong>不受影响</strong>（它同时依赖自愿属性与条文文本，两条都已核）</td>
+    </tr>
+    <tr>
+      <td>把 SOC 2 门槛说成决定性</td>
+      <td>支撑它的全部是 Tier 3 材料；我们找不到一手「客户明确要求逐调用记录可独立验证」的件，所以这句话在 v3 里被同时写成<strong>缺口</strong></td>
+      <td>若门槛其实更弱，则 §3 的挂接接口建议失去意义，本件回到「研究出版 + 开源」单腿</td>
+    </tr>
+    <tr>
+      <td>竞品声明只核到「页面这么写」</td>
+      <td>UiPath/Datadog/Vanta/Langfuse 四件读的是官方页原文；但其机制（密钥、锚、离线验证）<strong>没有任何一家公布</strong>，我们无法证明它们不做</td>
+      <td>若某家其实有外部锚，则「机制层没人背书」这句要降级为「没人把机制讲清楚」</td>
+    </tr>
+    <tr>
+      <td>市场规模一个数都不给</td>
+      <td>三家 Tier 3 基数差 2.6 倍、口径互斥；Gartner 的两个类目（模型平台 $64.3B 与 agent 软件 $206.5B）也不是同一东西</td>
+      <td>读者无法据此排序预算优先级；这是有意的取舍——<strong>宁可空着，不造数</strong></td>
+    </tr>
+  </table>
+
+  <h2>六个危险动作（v3 复核后仍然成立，加了两条新的）</h2>
+  <ul class="avoid">
+    <li>把 Art.12 说成「要求逐调用机器可读账本」——条文没这么写。</li>
+    <li>把「我们有 49 格与哈希链」当成监管可接受的证据——接受的是配置与流程判断。</li>
+    <li>用 AI 模拟读者替真人验收——裁判类文献本身是有条件可信，且人测臂至今 0/1。</li>
+    <li>把快照级数字写进正文——本轮两条被抽查推翻的正是这个来源级别。</li>
+    <li>（新）暗示首创——Traccia 已经发表，暗示一次就失去一次专业信用。</li>
+    <li>（新）宣称「挡住风险」——审计层不是防线；本件不调度、不拦截、不执行，说「挡住」就是假。</li>
+  </ul>
+
+  <p class="endnote">分级与波次分母见附录 A；v2 → v3 逐主张对照见附录 B；未跑与未取到的清单见附录 D。</p>
+</section>
+<!-- ================= CH 1-3 ================= -->
+<section class="chapter pagebreak" id="ch1">
+  <div class="chap-kicker">01 · Why a v3</div>
+  <h1><span class="num">01</span>为什么要出 v3：抽查抓到的五处错</h1>
+  <p class="lede">v3 不是因为市场变了，是因为 v2 与本轮初稿里有五处<strong>会被两分钟内复核掉的错</strong>。先把错摊开，才有资格讲后面的判词。</p>
+
+  <table class="tbl">
+    <tr><th>#</th><th>被抓到的句子</th><th>抽查判定</th><th>纠正后的口径</th></tr>
+    <tr><td>1</td><td>「Art.12 要求高风险系统在全生命周期内技术上支持自动记录事件」</td><td><span class="tag tag-c">内容大致对，时点错</span></td><td>Art.12 只规定记录使用期间、参照数据库、输入数据、核验人员；<strong>高风险义务的适用时点已被 Omnibus 推迟</strong>（见 §2.2）</td></tr>
+    <tr><td>2</td><td>「至少六个月留存」挂在 Art.12 名下</td><td><span class="tag tag-a">归属已核</span></td><td>六个月在 <strong>Art.26(6)</strong>，是部署方义务；Art.12 本体不含时长</td></tr>
+    <tr><td>3</td><td>MT-Bench：换序一致率 65%、复读失败率 8.7%/91.3%、同族自评 +10 分、人-人 81–82%</td><td><span class="tag tag-x">UNSUPPORTED，撤</span></td><td>摘要层只支撑「与人类一致率 &gt;80%」；其余四个数字与论文原件不吻合，<strong>不进正文</strong></td></tr>
+    <tr><td>4</td><td>「89% 团队已上可观测、29.5% 完全不做 eval（n≈1,300）」</td><td><span class="tag tag-x">一手取不到，撤</span></td><td>连报告名都存疑；一手报告页打开之前，这组数与 n 一律不出现</td></tr>
+    <tr><td>5</td><td>「Langfuse 把审计日志、SCIM、SSO 全锁在 Enterprise」</td><td><span class="tag tag-c">PARTIAL</span></td><td>审计日志与 SCIM 是 Enterprise；<strong>SSO 强制另出现在 $300/月 Teams 加购档</strong>。自托管许可（MIT）不写在定价页，须另取件</td></tr>
+  </table>
+
+  <div class="callout danger-row">
+    <div class="t">这五处错共同指向一条新规矩</div>
+    <p>第 3、4 条当初都带了「待复核」的标注，仍然进了正文——说明<strong>「标注了风险」不等于「没有过界」</strong>。
+      v3 起用机械口径执行：<strong>只有 A 级（读过原文正文或表格原件）的数字才允许被排版</strong>。
+      这条规矩本身也配了闸：话术闸（<code>研究-1022/话术闸.py</code>）逐行扫描四类越界话术并要求每个 `**[High]**` 同段有凭据词，五条臂全部验过会红（<code>GATE_RC=0</code>）。</p>
+  </div>
+
+  <p class="small">另有两处降级留在附录 A：RFC 9162 的「Experimental 轨 / obsolete RFC 6962」两个限定词未对 rfc-editor 核实即撤；Traccia 的「开源」未核到即撤。</p>
+</section>
+
+<section class="chapter pagebreak" id="ch2">
+  <div class="chap-kicker">02 · Regulation</div>
+  <h1><span class="num">02</span>法规时线重算：账本义务现在到底要不要</h1>
+
+  <h2 id="s2-1">2.1 Art.12 与 Art.26(6) 的分工</h2>
+  <p>读到原文的 Art.12 只要求：高风险系统在整个生命周期内<strong>技术上支持自动生成日志</strong>，记录范围包括使用期间、参照数据库、输入数据（造成匹配的那些）与核验人员，并指向 Art.26。
+    <strong>条文本体没有任何留存时长，也没有任何格式规定。</strong>
+    「至少六个月」出现在 Art.26(6)：部署方须保留系统自动生成的日志，期限按预期目的定，且「至少六个月」，除非适用的联盟或成员国法律另有规定。</p>
+  <div class="grid2">
+    <div class="card"><div class="lab">条文要的对象</div><div class="v">部署方<strong>保留</strong>系统自己生成的日志</div></div>
+    <div class="card"><div class="lab">条文没要的</div><div class="v">格式、字段、分档出处、第三方件、可独立验证</div></div>
+  </div>
+  <p class="small">⇒ 直接后果：本件的「49 格 + 五档出处」不是法定要求，它是<strong>内部复核装置</strong>——回答「谁的哪一次调用被账本改写了结果」。把后者讲清楚，比把前者说成合规要可信得多。</p>
+
+  <h2 id="s2-2">2.2 Omnibus 把高风险义务推到哪一天</h2>
+  <svg viewBox="0 0 720 168" width="100%" role="img" aria-label="EU AI Act 义务时线" style="margin:4mm 0 2mm">
+    <line x1="24" y1="96" x2="696" y2="96" stroke="#1b3a57" stroke-width="2"/>
+    <g font-family="system-ui,Microsoft YaHei" font-size="10.5" fill="#0b1f33">
+      <g><circle cx="60"  cy="96" r="5" fill="#0b6b34"/><text x="60"  y="118" text-anchor="middle">2025-02-02</text><text x="60"  y="76"  text-anchor="middle">禁令 · AI 素养</text></g>
+      <g><circle cx="188" cy="96" r="5" fill="#0b6b34"/><text x="188" y="118" text-anchor="middle">2025-08-02</text><text x="188" y="76"  text-anchor="middle">GPAI 文档义务</text></g>
+      <g><circle cx="316" cy="96" r="5" fill="#8a6d1f"/><text x="300" y="118" text-anchor="middle">2026-08-02</text><text x="298" y="76" text-anchor="middle">委员会执法权</text></g>
+      <g><circle cx="404" cy="96" r="5" fill="#8a6d1f"/><text x="404" y="118" text-anchor="middle">2026-12-02</text><text x="404" y="58"  text-anchor="middle">Art.50 部分标记/水印</text></g>
+      <g><circle cx="556" cy="96" r="7" fill="#a3151e"/><text x="556" y="118" text-anchor="middle">2027-12-02</text><text x="556" y="58"  text-anchor="middle">Annex III 高风险（含 Art.12）</text></g>
+      <g><circle cx="662" cy="96" r="5" fill="#a3151e"/><text x="662" y="138" text-anchor="middle">2028-08-02</text><text x="662" y="152" text-anchor="middle">Annex I 嵌入式</text></g>
+      <line x1="352" y1="30" x2="352" y2="160" stroke="#a3151e" stroke-width="1" stroke-dasharray="4 3"/>
+      <text x="356" y="26" fill="#a3151e" font-size="10.5">今天 2026-10-22：左侧已生效，右侧未生效</text>
+    </g>
+  </svg>
+  <table class="tbl" id="fig1">
+    <tr><th>义务组</th><th>本轮核对到的时点</th><th>依据强度</th><th>能说什么</th></tr>
+    <tr><td>禁令 + AI 素养</td><td>2025-02-02 起</td><td><span class="tag tag-d">D 级</span></td><td>早已适用，与账本无关</td></tr>
+    <tr><td>GPAI 提供方文档义务（Art.53/55）</td><td>2025-08-02 起；委员会执法权 2026-08-02</td><td><span class="tag tag-d">D 级（二级源）</span></td><td>只调第三方模型 API 的公司通常<strong>不是</strong> provider，而是下游系统提供方/部署方</td></tr>
+    <tr><td>Art.50 透明度：机读标记/水印</td><td>Omnibus 把<strong>其中部分</strong>标记与水印义务推到 2026-12-02</td><td><span class="tag tag-c">PARTIAL</span></td><td>不得写成「Art.50 自 2026-08-02 全面适用」</td></tr>
+    <tr><td>Annex III 高风险（Art.6(2)）：含 Art.12/14/11+Annex IV/26/73</td><td><strong>2027-12-02</strong></td><td><span class="tag tag-d">D 级，三位具名来源互证</span></td><td>记录类义务现在<strong>不逼</strong>你；距窗口约 14 个月</td></tr>
+    <tr><td>Annex I 嵌入式（Art.6(1)）</td><td><strong>2028-08-02</strong></td><td><span class="tag tag-d">D 级</span></td><td>更晚</td></tr>
+  </table>
+  <p class="figsrc">图 1 · 义务时线。<strong>本图不给任何「合规就绪」判断</strong>，只把「本轮能核到的时点」与「来源强度」并列，避免读者把 D 级读成已核原文。</p>
+
+  <div class="callout warn-row">
+    <div class="t">一手没打开的部分，写在这里而不是抹平</div>
+    <p>Regulation (EU) 2026/1744（Digital Omnibus on AI）的标题与编号经 ELI 条目与两家法律二级源核对；
+      但 <strong>EUR-Lex 页面本轮两次不可达</strong>，「Official Journal 2026-07-24 / 生效 07-27」与「Chapter III Sections 1-3」这两个措辞都已从正文撤下。
+      ISO/IEC 42001 的条款级记录清单在付费标准正文里（CHF 225），公开网无法核——所以我们同时拒绝两种说法：
+      既不说「42001 要求 12 个月日志」，也不说「42001 什么都不要求」。</p>
+  </div>
+
+  <h2 id="s2-3">2.3 自愿框架为什么撑不起预算</h2>
+  <p>NIST 官网原话是 AI RMF「is intended for voluntary use」，生成式 AI Profile（AI 600-1，2024-07-26）同族自愿；
+    两者提供的是风险类与建议动作清单，<strong>不规定任何特定留存件</strong>。ISACA 的实操描述更关键：因为 42001 与 27001 同族，
+    团队的真实做法是把 AI 控制项「折进既有审计节奏与证据里」——也就是说，<strong>审计师接受复用既有管线</strong>。</p>
+  <div class="callout danger-row">
+    <div class="t">中介话术样本：有人在替监管立法</div>
+    <p>一家 ISO 42001 代办机构的页面声称现场审核会问「是否保存至少 12 个月的输入输出日志供追溯」，并归给「Clause 8.2.3 及附件 B 的强制性要求」。
+      本轮在任何 A/B 级来源里都找不到这条要求。它的价值不是「证明 ISO 有这个要求」，恰恰相反——
+      <strong>它证明市场上存在把自愿框架包装成强制要求的推销话术</strong>，而这正是学界提醒要打折的那类来源（卖合规服务者自称无偏见，实则既有既得利益）。
+      ⇒ 对我们的含义：我们的客户会被这种话术教育过一遍，我们的诚实表述反而听像「卖得不够狠」。这是真实的销售摩擦，不是修辞。</p>
+  </div>
+  <p>智能体专项法律分析的位置也要更正：我们曾把 Nannini et al.《AI Agents Under EU Law》（arXiv:2604.04604，2026-04-06）称作「唯一一份」，
+    它自述为该方向<strong>第一份系统性监管映射</strong>（预印本），涉及 Standardisation Request M/613 下的草案协调标准、九类 agent 部署分类，
+    四项挑战为网络安全、人类监督、多方行动链上的透明度、<strong>运行期行为漂移</strong>。最后一项与本件同题——但它是预印本，不是监管意见，不能当依据卖。</p>
+</section>
+
+<section class="chapter pagebreak" id="ch3">
+  <div class="chap-kicker">03 · Buyer Gates</div>
+  <h1><span class="num">03</span>买方门槛三件套：归属 / 连续留存 / 可分发报告</h1>
+
+  <h2 id="s3-1">3.1 门槛真实存在，但与法规无关</h2>
+  <table class="tbl" id="fig2">
+    <tr><th>门槛</th><th>买方实际要的东西</th><th>本件能不能供上</th><th>来源强度</th></tr>
+    <tr><td>供应商资质</td><td>SOC 2 Type II 报告（被多份材料描述为 RFP 阶段即淘汰的门槛；一家有一 SOC 2 的企业会要求供应链也带 Type II）</td><td><strong>不能</strong>——本件没有报告，且这是<strong>对供应商</strong>的要求，不是对产品的要求</td><td><span class="tag tag-d">D 级</span></td></tr>
+    <tr><td>证据生成方式</td><td>Type II 要 6–12 个月<strong>持续生成并留存</strong>，不许审计前临时抓</td><td><strong>能</strong>——append-only 逐发落账正是连续生成；这是本件与门槛最直接的对接口</td><td><span class="tag tag-d">D 级</span></td></tr>
+    <tr><td>可归属</td><td>最常见发现项：共享服务账号<strong>无法归属到人</strong>、密钥进源码、缺细粒度访问控制</td><td><strong>半个</strong>——账本记的是调用与 session/发号/侧三轴，不记「人」；归属要靠宿主把主体写进入参</td><td><span class="tag tag-d">D 级</span></td></tr>
+    <tr><td>可分发</td><td>一份报告可复用分发给所有客户（这也是厂商愿意为 SOC 2 付 $12k–20k 的原因）</td><td><strong>能</strong>——本件的收口件（轨迹解剖 + 判定表 + 可复跑命令）天然是可分发形态</td><td><span class="tag tag-d">D 级</span></td></tr>
+    <tr><td>不可逆留存</td><td>监管接受的是<strong>存储配置判断</strong>：Object Lock compliance mode + Cohasset 评估，限定语「when correctly configured」</td><td><strong>不能单独供</strong>——本件不写盘、不控制存储；必须与宿主/对象存储配置件搭配讲</td><td><span class="tag tag-a">A 级</span></td></tr>
+  </table>
+  <p class="figsrc">图 2 · 门槛与本件可供给位置的对应。<strong>五行里两行是「不能」</strong>——把这张图讲成「我们满足全部」就是假。</p>
+
+  <h2 id="s3-2">3.2 没人要求「逐调用记录可独立验证」</h2>
+  <div class="callout">
+    <div class="t">这是一条自我否证的检索结果</div>
+    <p>补证波专门去找「客户/监管明确要求 agent 逐调用记录须可独立验证」的一手件，
+      <strong>结论是：没有取到</strong>，并且该路子代理在报告里明写「nearest thing is an unsourced practitioner assertion」。
+      我们把这个空洞放进正文而不是放进附录，因为它是<strong>本报告最重要的负结果</strong>：
+      如果连「要求」本身都没有被记录下来，那 v2 那句「等它成为独立预算科目」就不是乐观不乐观的问题，而是<strong>尚不存在</strong>。</p>
+  </div>
+  <p>但同一批检索给出了两个不依赖法规的正面信号：</p>
+  <ul class="grid2">
+    <li class="card"><div class="lab">买方把合规排在第一位</div><div class="v">云 AI 规模化障碍榜：治理/安全/合规 <strong>53%</strong> &gt; 数据质量 40% &gt; 成本 30% <span class="tag tag-d">D 级</span></div></li>
+    <li class="card"><div class="lab">治理成熟度是缺口</div><div class="v">约 1/5 公司对自治智能体有成熟治理模型，74% 计划部署 <span class="tag tag-d">D 级（厂商引 Deloitte）</span></div></li>
+  </ul>
+  <p>⇒ v3 的接口建议：<strong>不卖「合规要求」，卖「买方自己承认排在第一的那件事」</strong>——他们要在没有时间线压力的窗口里，把 agent 行为变成可归属、可持续留存、可分发的复核对象。这句话比「Art.12 要求你」小，但站得住。</p>
+</section>
+<!-- ================= CH 4-6 ================= -->
+<section class="chapter pagebreak" id="ch4">
+  <div class="chap-kicker">04 · Competition</div>
+  <h1><span class="num">04</span>竞争格局：话已被说，背书还没有</h1>
+  <p class="lede">v2 的判断是「这是功能市场不是平台市场」。v3 不改这个判断，但把「没人做运行时证据」这句话彻底删掉——
+    抽查显示：<strong>记录层已被商品化，声明层已被占用，机制层没人背书。</strong>我们的位置只能在第三层。</p>
+
+  <h2>4.1 五类玩家，按「说了什么 / 能证什么」重排</h2>
+  <svg viewBox="0 0 720 300" width="100%" role="img" aria-label="声明强度对机制背书散点图" style="margin:4mm 0 2mm">
+    <g stroke="#c9d6e2" stroke-width="1">
+      <line x1="70" y1="30" x2="70" y2="250"/><line x1="70" y1="250" x2="700" y2="250"/>
+      <line x1="70" y1="140" x2="700" y2="140" stroke-dasharray="3 4"/><line x1="385" y1="30" x2="385" y2="250" stroke-dasharray="3 4"/>
+    </g>
+    <g font-family="system-ui,Microsoft YaHei" font-size="10" fill="#4a5b6b">
+      <text x="74" y="22">机制背书（本轮核到的背书形态）</text><text x="52" y="248" text-anchor="end">无</text><text x="52" y="40" text-anchor="end">强</text>
+      <text x="70" y="268">声明强度（本轮核到的原文措辞）</text>
+      <text x="86" y="284">弱</text><text x="660" y="284">强</text>
+    </g>
+    <g font-family="system-ui,Microsoft YaHei" font-size="10.5" fill="#0b1f33">
+      <circle cx="640" cy="228" r="7" fill="#a3151e"/><text x="640" y="212" text-anchor="middle">UiPath「tamper-evident」</text><text x="640" y="245" text-anchor="middle" fill="#a3151e">背书=框架映射</text>
+      <circle cx="596" cy="214" r="6" fill="#8a6d1f"/><text x="596" y="200" text-anchor="middle">小厂群 Ed25519 声明</text>
+      <circle cx="330" cy="236" r="6" fill="#134d7a"/><text x="330" y="222" text-anchor="middle">Datadog（无完整性声明）</text>
+      <circle cx="300" cy="196" r="6" fill="#134d7a"/><text x="300" y="182" text-anchor="middle">Langfuse（SOC 2 档）</text>
+      <circle cx="250" cy="176" r="6" fill="#134d7a"/><text x="250" y="162" text-anchor="middle">Vanta 清单级</text>
+      <circle cx="150" cy="232" r="6" fill="#5a5a5a"/><text x="150" y="218" text-anchor="middle">LiteLLM 免费审计</text>
+      <circle cx="470" cy="120" r="6" fill="none" stroke="#0b6b34" stroke-width="2"/><text x="470" y="106" text-anchor="middle">Traccia（论文描述机制）</text>
+      <circle cx="120" cy="86" r="8" fill="none" stroke="#0b6b34" stroke-width="2" stroke-dasharray="4 3"/><text x="120" y="70" text-anchor="middle">本件目标位：说小、可验</text>
+    </g>
+    <text x="392" y="52" font-family="system-ui,Microsoft YaHei" font-size="10.5" fill="#a3151e">右上象限本轮一个都没核到</text>
+  </svg>
+  <table class="tbl" id="fig3">
+    <tr><th>类</th><th>代表（本轮核对到的原文）</th><th>声明强度</th><th>机制背书</th><th>对本件意味着什么</th></tr>
+    <tr><td>平台内建</td><td>ServiceNow：AI 业务 ACV 破 $1B、agent 部署九个月涨 9 倍（财报转述）；治理层要答「哪个 agent 替谁访问哪些数据、什么需批准、错误如何回滚」</td><td>高</td><td>未见运行时证据机制描述</td><td>问题清单与本件同题，<strong>坑位在平台里</strong>；别按平台叙事卖</td></tr>
+    <tr><td>可观测/评测</td><td>Datadog LLM Observability（官方文档原文：trace/span/token/eval，原生支持 OTel GenAI 语义约定）</td><td>中</td><td><strong>对留存、不可变、哈希、签名、legal hold、导出完整性不作任何声明</strong>（A 级：文档已读）</td><td>这是最直接的对照：他们记，但不为「完整性」负责</td></tr>
+    <tr><td>OSS 可观测</td><td>Langfuse（审计日志/SCIM = Enterprise $2,499/月；留存 30/90 天/3 年；SSO 强制另有 $300/月 Teams 加购；SOC 2 与 ISO 27001 在 Pro+）</td><td>中</td><td>靠 SOC 2 报告而非密码学</td><td><strong>「留更久」是被计量的商品</strong>，不是差异化；我们只能卖「留的东西能自证口径」</td></tr>
+    <tr><td>免费替代品</td><td>LiteLLM 网关页原文：「Model access control and guardrails, with an audit log on every request」「Your keys, your infra, your audit trail」</td><td>中</td><td>无完整性声明</td><td>买家<strong>不开任何付费件</strong>就能拿到逐请求审计——这是最硬的同质化威胁</td></tr>
+    <tr><td>声明防篡改</td><td>UiPath 平台页原文：「Every agent action, model invocation, prompt, response, and approver is logged in a tamper-evident audit trail … the same evidence regulators ask for」</td><td><strong>最高</strong></td><td><strong>只给控制框架映射</strong>（AIUC-1 对 EU AI Act / NIST AI RMF / MITRE ATLAS / ISO 42001 / OWASP LLM Top 10 / CSA AI Controls，季度复测）；无密钥管理、外部锚、离线验证描述</td><td>话被说完了。我们的差异必须讲成「机制讲得清 + 非写方可验」，而不是「我们也记」</td></tr>
+    <tr><td>合规自动化</td><td>Vanta AI Governance（官方页原文：AI Inventory with agents, models, risk levels；MCP 与工具映射；"real-time feed of all your agents"）</td><td>中</td><td><strong>清单级证据，无逐调用运行时捕获</strong>（A 级：页面已读）</td><td>他们占「控制」，我们占「调用」——可以互不吞并，但也要防止被他们的 bundle 顺手覆盖</td></tr>
+    <tr><td>学术先例</td><td>Traccia（arXiv:2607.14309，2026-07-15，预印本）：在 OTel 之上追加防篡改指纹与 SHA-256 内容哈希，把 trace 映射到监管要求，证据导出为受哈希保护的单份 JSON</td><td>中（自述）</td><td>机制在论文里描述，但「开源」未核到、未经评审、非监管接受方法</td><td><strong>必须先承认</strong>的最近先例；「哈希链 + 条文映射」不是我们发明的</td></tr>
+    <tr><td>小厂群</td><td>一份治理厂商目录列出一批声称 Ed25519 签名、哈希链、离线可验的逐决定收据件（该目录 self-published）</td><td>高（声明）</td><td>全部无公开背书；该目录明写不含保险类证据要求</td><td>说明「这句话正在被很多人说」；我们的窗口是<strong>说清楚怎么验</strong>，不是说得更响</td></tr>
+  </table>
+  <p class="figsrc">图 3 · 声明强度 × 机制背书。<strong>右上角（高声明 + 可验机制）本轮一个都没核到</strong>——这既是空位，也是「空位可能不存在」的另一种解释：也许买方根本不验。</p>
+
+  <div class="callout warn-row">
+    <div class="t">资本侧对照：这个细分的拉力很小</div>
+    <p>最接近本件定位的纯玩法子 AgentOps.ai 只募到 <strong>$2.6M 预种子</strong>（新闻稿，无 Series A、无 ARR 披露）；
+      相邻观测件 Observe 是 $145M B 轮、Dash0 报 $110M B 轮估值 $1B；被点名为「agent 审计/标准/保险」方向的 AIUC 报 $40M A 轮（累计 $55M）——
+      <strong>但该条只到聚合号，未一手核实，v3 不据此下结论</strong>。
+      读法：资本愿意为「控制平面 + 服务」出钱，不太愿意为「被动的单件」出钱。这与 v2 的功能市场判断一致。</p>
+  </div>
+
+  <div class="callout danger-row">
+    <div class="t">熊案三条（v3 复核后仍然成立）</div>
+    <p><strong>① 记录已免费。</strong>LiteLLM、Langfuse 自托管、Arize Phoenix 单容器都能记；OTel GenAI 语义约定已被云厂商与主流编码 agent 采纳，
+      买家开箱就有标准格式遥测。<br>
+      <strong>② 没有 SOC 2 就进不了门。</strong>本件作者侧没有任何审计件，且这一门槛与法规无关、无法用产品能力绕过。<br>
+      <strong>③ 合规件是没人读的勾选框。</strong>支撑证据有两类：本件自己的双臂实验量不出增益；
+      以及一项针对 LLM 追踪平台的公开审计——Arize Phoenix 鉴权开关默认关闭，一支<strong>无凭据</strong>的团队对着暴露端口取回整套后端，
+      含系统提示词与 9 个仍有效的第三方凭据。<strong>如果连「记录」本身都不被保护，「更多记录」就不是买方在意的质量。</strong></p>
+  </div>
+</section>
+
+<section class="chapter pagebreak" id="ch5">
+  <div class="chap-kicker">05 · Evidence Inventory</div>
+  <h1><span class="num">05</span>本机证据现状：能证的与不能证的</h1>
+
+  <table class="tbl" id="fig4">
+    <tr><th>阶梯</th><th>含义</th><th>本件现状</th><th>凭据</th></tr>
+    <tr><td>L0</td><td>我记了</td><td><span class="tag tag-a">达成</span></td><td>每发 49 格落账；同进程 30 发每发正好 49 条</td></tr>
+    <tr><td>L1</td><td>记录没被改</td><td><span class="tag tag-a">部分达成</span></td><td>核链不符即拒写（退出码 2）；`resume` 读回先核链</td></tr>
+    <tr><td>L2</td><td>别人能验我没改</td><td><span class="tag tag-x">未达成</span></td><td>缺外部锚与非写方验证器（CT 那条路的教训：日志方不能自证清白）</td></tr>
+    <tr><td>L3</td><td>记录能改写决策</td><td><span class="tag tag-a">达成且能量</span></td><td><strong>唯一 KPI：账本触发过几次决定</strong> —— pgagent 实跑 KPI=4，反臂 `-read-back=false` 掉回 <strong>0</strong></td></tr>
+    <tr><td>L4</td><td>停止也能交账</td><td><span class="tag tag-a">机械达成</span></td><td>六态退出码；SIGINT 先交账；被打断=6；跨进程发号撞车 0</td></tr>
+    <tr><td>L5</td><td>用户实时看得见过程</td><td><span class="tag tag-x">Planned</span></td><td>事件层 E1–E9 只有计划与两张 DOT；今天的轨迹页是<strong>跑完才写</strong></td></tr>
+    <tr><td>L6</td><td>有人因此少损失一次</td><td><span class="tag tag-x">NOT_RUN</span></td><td>真人 0/1、试读 0/1、G0 访谈 0/10、LOI 0、付费 0</td></tr>
+  </table>
+  <p class="figsrc">图 4 · 证据阶梯。对外只可讲到 L1+L3+L4，且必须同框讲 L2/L5/L6 未完成——把 L1 讲成 L2 就是 §4 里 UiPath 那种「有声明无机制」。</p>
+
+  <h2>5.1 四条可复跑闸（v3 重新跑过，读数在盘）</h2>
+  <div class="metrics">
+    <div><div class="lab">内核快闸</div><div class="num">rc 0</div><div class="tiny">go run ./cmd/kcheck</div></div>
+    <div><div class="lab">宿主测试</div><div class="num">ok</div><div class="tiny">go test ./cmd/agentd/ -count=1</div></div>
+    <div><div class="lab">编程 Agent</div><div class="num">7 道全过</div><div class="tiny">KPI 4 ｜ 反臂 0 ｜ 22 形 ｜ 30 发×49 条</div></div>
+    <div><div class="lab">AgentHub</div><div class="num">8 行全过</div><div class="tiny">打印所跑 exe 的 sha16</div></div>
+  </div>
+  <p>另加本轮新建的两把尺子与一道话术闸（管架构件与对外措辞，不再管市场结论）：
+    <code>ANCHOR_RC=0</code>、<code>MODEL_RC=0</code>、<code>GATE_RC=0</code>，三者都带会红的臂。</p>
+
+  <div class="callout">
+    <div class="t">为什么这些读数不许被拿来当「价值证明」</div>
+    <p>它们证明的是<strong>机械正确 + 尺子会红</strong>。而双臂实验给出的恰好是<strong>负结果</strong>：带内核 vs 不带内核，
+      在盲测考卷上量不出增益（严格口径 FAIL）。§11 会说明为什么这个负结果在方法学上站得住、以及它给本件画出的<strong>销售边界</strong>：
+      我们只能主张「口径可核、停止可交账」，不能主张「用了就更准」。</p>
+  </div>
+</section>
+
+<section class="chapter pagebreak" id="ch6">
+  <div class="chap-kicker">06 · Five Routes</div>
+  <h1><span class="num">06</span>五条进入方式重评</h1>
+  <table class="tbl" id="fig5">
+    <tr><th>路</th><th>v2 结论</th><th>v3 证据下的位移</th><th>为什么</th></tr>
+    <tr><td>A 开源证据适配层</td><td>先行</td><td><strong>仍先行，但门槛上调</strong></td><td>记录层已商品化（OTel 语义约定 + LiteLLM 免费审计），A 路的价值必须落在<strong>口径与结算语义</strong>，不是落在「有件开源」</td></tr>
+    <tr><td>D 研究出版 / 标准参与</td><td>先行</td><td><strong>更值得先做</strong></td><td>Traccia 与《From Agent Traces to Trust》综述说明这是被学术命名的缺口；<strong>先例已存在 ⇒ 用出版确立位置，比用营销确立位置便宜且可信</strong>；OTel/MCP 生态里「采样 10%、无签名」正是我们的可讲差异</td></tr>
+    <tr><td>B 企业私有化</td><td>条件触发</td><td><strong>条件更硬</strong></td><td>买方门槛三件套里两件套本件不能单独供（SOC 2、不可逆存储配置）；私有化必须先解决「谁为完整性背书」= L2 未达成</td></tr>
+    <tr><td>C 托管按次</td><td>不做</td><td>不做（不变）</td><td>留存已被 Langfuse/ LangSmith 按档位与留存期计量，托管件打不过既有计量形态</td></tr>
+    <tr><td>E 竞赛 / 生态</td><td>可选</td><td>可选（不变，且已有一条关死）</td><td>参赛线因学籍硬门已放弃；生态位仍可选但不作为主路</td></tr>
+  </table>
+  <p class="figsrc">图 5 · 五路位移。<strong>唯一变动方向：把「产品叙事」往前挪的是出版与标准，不是销售。</strong></p>
+
+  <h2>6.1 排序结论（v3）</h2>
+  <p>D（出版/标准）与 A（开源适配层）先行，<strong>A 的卖点从「有账本」改成「有口径」</strong>；
+    B 条件触发，触发条件写成可核对的两条：拿到 L2 机制（外部锚或非写方验证器）+ 有客户书面要求逐调用可独立验证；
+    C 不做；E 可选。</p>
+</section>
+<!-- ================= CH 7-8 ================= -->
+<section class="chapter pagebreak" id="ch7">
+  <div class="chap-kicker">07 · Route &amp; Gates</div>
+  <h1><span class="num">07</span>推荐路线与五道闸：改判据不改骨架</h1>
+  <p class="lede">v2 的五道闸结构保留——它的价值在于「每道闸都能红」。v3 只做两件事：
+    把<strong>判据换成盘上可数的东西</strong>，并把一条从未真跑过的闸（G1.5）标回它真实的状态。</p>
+
+  <h2 id="s7-1">7.1 路线</h2>
+  <ol class="flow">
+    <li><strong>先把过程投影做出来（事件层 E1–E9）</strong>：今天轨迹页是跑完才写，「实时可见」这句还说不出口。这一步是本件唯一能把 L5 从 Planned 推到 Wired 的动作。</li>
+    <li><strong>再补完整性机制（L2）</strong>：外部锚或非写方验证器。CT 的教训写死了一件事——运营日志的人不能同时是唯一验的人。</li>
+    <li><strong>并行做出版（D 路）</strong>：把「出处五档 + absent 必带理由 + 停=结算」写成可被引用的件，而不是产品页文案。先例已在（Traccia），我们不占首创，只占清晰度。</li>
+    <li><strong>销售动作放到 G2 之后</strong>：在拿到 SOC 2 之前，任何采购动作都会在同一面墙上重演。</li>
+  </ol>
+
+  <h2 id="s7-2">7.2 五道闸（v3 判据）</h2>
+  <table class="tbl">
+    <tr><th>闸</th><th>时点</th><th>通过条件（v3 改写）</th><th>当前状态</th></tr>
+    <tr><td>G0 需求</td><td>第 30 天</td><td>10 次真人访谈；≥3 个真实触发；≥1 个 POC 志愿者；≥1 个预算科目</td><td><span class="tag tag-x">0/10 · 未启动</span></td></tr>
+    <tr><td>G1 交付</td><td>第 60 天</td><td>非作者真人 ≤60 分钟产出 1 个证据包并完成 1 次修改；拒收被计数；链自洽；密钥扫描 0 命中；调用方模型代码 0 改动</td><td><span class="tag tag-x">未跑（0/1）</span></td></tr>
+    <tr><td>G1.5 增量</td><td>第 90 天</td><td>10 例 R/N 双臂：R 臂留出集通过率 ≥ N 臂 +20 个百分点；假修复率不高于 N 臂；反臂按预期失败或拒绝</td><td><span class="tag tag-x">NOT_RUN</span>；且 v2 同期另一组双臂已给出<strong>无增益</strong>的负结果</td></tr>
+    <tr><td>G2 采购</td><td>第 120 天</td><td>2 封 LOI；1 次安全审查通过；SBOM / DPA / 责任边界齐备</td><td><span class="tag tag-x">未发生</span>（SBOM 草案已在盘，未提交未审）</td></tr>
+    <tr><td>G3 完整性（v3 新增）</td><td>与 G2 并行</td><td>给出<strong>可被非写方复核</strong>的机制：锚定件 + 验签命令 + 一份第三方能独立跑通的说明书；做不到就把话术降级为「自证口径」</td><td><span class="tag tag-x">未启动</span>——这是 §4 那张「右上角为空」的唯一填补动作</td></tr>
+  </table>
+  <div class="callout danger-row">
+    <div class="t">为什么新增 G3 而不是新增销售动作</div>
+    <p>§4 显示：市面上「防篡改」的声明很多，机制描述<strong>一个都没有</strong>。
+      在声明层竞争只会让我们和 UiPath/小厂群说同一句话；在机制层竞争，输赢都可核对。
+      G3 是把自己钉在机制层的唯一办法，也顺带把「审计层≠防线」这条口径守住了。</p>
+  </div>
+
+  <h2>7.3 需求叙述的接口（v3 替换 v2 的那句）</h2>
+  <p>v2 写「买家需要为 AI Act 提供技术证据」。v3 替换为：
+    <strong>「买家已经自己把治理/安全/合规列为 AI 规模化第一障碍（53%），而他们的成熟治理模型只有约 1/5 ——
+      缺的不是记录，是把记录变成可归属、可持续、可分发复核对象的能力。」</strong>
+    这句话的每个数都带 D 级标注（二级来源/厂商转述），比原句弱，但不会在尽调第一轮被推翻。</p>
+</section>
+
+<section class="chapter pagebreak" id="ch8">
+  <div class="chap-kicker">08 · Pricing</div>
+  <h1><span class="num">08</span>定价与单位经济：用竞品锚点校 v2 的价</h1>
+
+  <h2>8.1 v2 的四档，逐项对锚</h2>
+  <table class="tbl diff-table">
+    <tr><th>档</th><th>v2 价</th><th>本轮取到的锚</th><th>v3 处理</th></tr>
+    <tr><td>社区版（免费）</td><td>适配器 + 证据包模板 + 单机账本</td><td>Langfuse 自托管免费；LiteLLM 开源即带逐请求审计</td><td><strong>保留</strong>，但明确「免费档不含完整性机制」，否则 G3 的价值被自己抹掉</td></tr>
+    <tr><td>团队版</td><td>$1.5–3.0 万/年</td><td>Langfuse Pro $199/月（≈$2.4k/年）；Enterprise $2,499/月（≈$30k/年）；LangSmith Plus $39/席/月 + 按量</td><td><span class="tag tag-c">C 级偏高</span>。锚点显示<strong>「软件订阅」这一档市场价在 $2k–30k/年</strong>，我们卡在中间但没有任何机制件可交付 ⇒ v3 建议<strong>团队版降到 $0.8–1.5 万</strong>，把它当「有人回邮件 + 模板更新」的服务层，而不是产品层</td></tr>
+    <tr><td>证据包版</td><td>$4–8 万/年（私有化、SBOM/DPA、安全审查、季度复盘）</td><td>A 级锚点唯一：SOC 2 Type II 本身对中型企业约 $12k–20k（一次性/年）；Enterprise 档普遍含 SSO/审计日志</td><td><strong>保留价格但改性质</strong>：这一档卖的不是件，是「陪你把留存配置变成可评估对象」的人力包。若没有 G3，这档<strong>不该报价</strong></td></tr>
+    <tr><td>试点</td><td>$3–5 千/6 周</td><td>无锚（本轮未取到任何同类试点定价）</td><td>保留，标注为 C 级假设；试点目的写成 G1 而非「演示」</td></tr>
+  </table>
+
+  <h2>8.2 单位经济：三件不能说的</h2>
+  <ul class="avoid">
+    <li><strong>不能说获客成本与转化。</strong>补证波明写 OSS free→paid 转化率、企业安全评审时长、试点周期「一个可信数字都没取到」，且两次检索因查询校验失败耗尽预算 ⇒ §12（研究件）与附录 D 里这块是<strong>空白</strong>，v3 不用任何代理值顶替。</li>
+    <li><strong>不能说 LTV/回本周期。</strong>依赖上一条。</li>
+    <li><strong>不能说「私有化省合规成本」。Cohasset 那条限定语「when correctly configured」意味着责任在配置方，省不掉审计。</strong></li>
+  </ul>
+
+  <p class="small">人力侧仍按 v2 的粗算：证据包不是纯软件（私有化、安全审查、审计陪同都要人力）。这里刻意不给新数字——
+    本轮没有取到任何可引用的服务定价人日基准，v2 的那组（每天成本 800 美元、年支持 3 天）是作者假设，v3 维持其 C 级标注不动。</p>
+</section>
+<!-- ================= CH 9-12 ================= -->
+<section class="chapter pagebreak" id="ch9">
+  <div class="chap-kicker">09 · Risk Register</div>
+  <h1><span class="num">09</span>风险登记与红队</h1>
+
+  <table class="tbl">
+    <tr><th>#</th><th>风险</th><th>证据（本轮）</th><th>严重度</th><th>处置</th></tr>
+    <tr><td>R1</td><td><strong>声明层已被占用，机制层空着而我们还没填</strong></td><td>UiPath「tamper-evident audit trail」原文；小厂群声称 Ed25519 签名哈希链但无公开背书</td><td>高</td><td>G3；在此之前所有对外件禁止使用 tamper-evident / 防篡改 字样</td></tr>
+    <tr><td>R2</td><td>记录层已商品化，「有账本」不构成购买理由</td><td>OTel GenAI 语义约定被云厂商与主流编码 agent 采纳；Langfuse MIT 自托管；LiteLLM 免费逐请求审计</td><td>高</td><td>叙事改口：卖口径与结算语义，不卖记录（§6.1）</td></tr>
+    <tr><td>R3</td><td>没有 SOC 2 ⇒ 采购阶段即淘汰</td><td>多份 D 级材料一致描述该门槛；本件作者侧无任何审计件</td><td>高</td><td>不做「绕开」的方案；B 路保持条件触发，条件写死（G2/G3）</td></tr>
+    <tr><td>R4</td><td>合规话术过时风险：把已推迟的义务讲成现行要求</td><td>Omnibus 把 Annex III 推到 2027-12-02；Art.50 部分义务推到 2026-12-02</td><td>中</td><td>对外件里 EU 相关句子必须带时点与分级；话术闸逐行扫</td></tr>
+    <tr><td>R5</td><td>可信权威托管账这一形态被产业撤过</td><td>QLDB 停新签、2025-07-31 止支持；Aurora「历史须存到库外」（A 级横幅原文）</td><td>中</td><td>承认外部锚是必需品而非加分项；L2 未达成前不宣称可审计</td></tr>
+    <tr><td>R6</td><td>演示中最易被问倒的一点：账本很硬但没人读</td><td>本件双臂无增益的负结果 + 「合规件是勾选框」的熊案</td><td>中</td><td>把「谁在什么时候因为这行字改了什么」写成可指认的样例，而不是抽象价值</td></tr>
+    <tr><td>R7</td><td>先例被引走：Traccia 与综述已占据学术位置</td><td>arXiv:2607.14309；《From Agent Traces to Trust》2026-09</td><td>中</td><td>D 路改为「清晰化」而非「首创」：把四档可核对差异写成对照表</td></tr>
+    <tr><td>R8</td><td>细分资本拉力小 ⇒ 无融资可得，只能低成本自持</td><td>AgentOps.ai $2.6M 预种子（新闻稿）；相邻类目 $110M–$145M 走平台叙事</td><td>中</td><td>不做需要销售团队的路径；E 路（竞赛）已有一条关死</td></tr>
+    <tr><td>R9</td><td>32% 企业因能用 AI 编码工具自建而砍掉软件采购</td><td>McKinsey 调查汇编（D 级）</td><td>中</td><td>强调「件很小、但口径要一致」——自建的失败点恰是口径漂移；这条能讲，但不许讲成「比自建便宜」</td></tr>
+    <tr><td>R10</td><td>本件自己也犯过：快照级数字进正文、把主张说成惯例</td><td>本轮抽查 13 条判词：UNSUPPORTED 1、UNVERIFIED 1、PARTIAL 7</td><td>高（信任）</td><td>只有 A 级数字可排版；每条判据配臂；对外件发布前跑话术闸</td></tr>
+  </table>
+
+  <h2>9.1 红队：三个最可能打死本件的问题</h2>
+  <ul class="grid3">
+    <li class="card"><div class="lab">问题一</div><div class="v">「你比 Langfuse 多什么？」</div><div class="tiny">可答：多口径分档与停止结算；不多留存、不多 UI。诚实答案会显得小——这是真的。</div></li>
+    <li class="card"><div class="lab">问题二</div><div class="v">「你的账本谁能验？」</div><div class="tiny">目前只有我们自己。G3 之前这个问题无解，答案必须是「还没做」。</div></li>
+    <li class="card"><div class="lab">问题三</div><div class="v">「加了它，agent 更准吗？」</div><div class="tiny">我们的双臂实验说：量不出增益。不能改口；要说的是「事后能核对，事前不改变」。</div></li>
+  </ul>
+</section>
+
+<section class="chapter pagebreak" id="ch10">
+  <div class="chap-kicker">10 · Roadmap</div>
+  <h1><span class="num">10</span>实施路线（26 周）</h1>
+  <table class="tbl">
+    <tr><th>周</th><th>动作</th><th>出口判据（可核对）</th></tr>
+    <tr><td>1–4</td><td>事件层 E1–E3：事件总线 + append-only 日志 + 停止结算</td><td>两把尺子的同类臂能红；`go test ./cmd/agentd/` 全绿且 stdout 正文逐字未变</td></tr>
+    <tr><td>5–8</td><td>E4–E6：SSE + id/重放（或明写 resumable:false）、10s 兜底、一发一锁</td><td>§8.2 前六条针在 scripted 上跑通；断线不可续必须显式声明</td></tr>
+    <tr><td>9–12</td><td>E7–E9：三行界面、与 49 格同源、八针一条命令</td><td><code>工具/事件层验收.py</code> 一行一个读数，每针带臂；NOT_RUN 明写</td></tr>
+    <tr><td>13–16</td><td>G3 机制件：外部锚 + 验签命令 + 第三方能独立跑通的说明</td><td>交给朋友跑一次，产出与我一致——<strong>不由我出报告</strong></td></tr>
+    <tr><td>17–20</td><td>D 路：把四档差异 + 结算语义写成可引用件，投稿/预印本</td><td>件里有可复跑命令与分母；引 Traccia 而非假装没有</td></tr>
+    <tr><td>21–26</td><td>G0/G1：真人访谈与证据包实操（只在 G3 有结果后再约）</td><td>10 场访谈逐场留字据；0 场就写 0 场</td></tr>
+  </table>
+  <p class="small">依赖关系写死：<strong>第 13 周前不做销售动作</strong>。理由见 §4——问题不在买方读不读，在我们拿不出可被非写方验的东西。</p>
+</section>
+
+<section class="chapter pagebreak" id="ch11">
+  <div class="chap-kicker">11 · Financial Scenarios</div>
+  <h1><span class="num">11</span>财务三情景（C 级沿用，不升格）</h1>
+  <div class="callout">
+    <div class="t">先说这一章为什么保留</div>
+    <p>本轮没有取到任何可用于替换的转化率、留存率或采购周期数据（GAP D 整块未填）。
+      <strong>没有新数据时，正确动作是保留旧假设并标清它是假设，不是编一组新的。</strong>
+      所以 v3 的三情景数字与 v2 相同，唯一改动是依据说明与团队版定价的下调建议（§8.1）。</p>
+  </div>
+  <table class="tbl">
+    <tr><th>情景</th><th>三年累计收入</th><th>关键假设</th><th>分级</th></tr>
+    <tr><td>悲观</td><td>不足 10 万美元</td><td>访谈未拿到预算科目；私有化被 SOC 2 卡死；只做 D 路</td><td><span class="tag tag-c">C</span></td></tr>
+    <tr><td>基准</td><td>约 65.9 万美元（Y3 约 50 万，净现金流约 53.9 万）</td><td>2–4 个团队版 + 1 个证据包版；<strong>不含作者人力成本</strong></td><td><span class="tag tag-c">C</span></td></tr>
+    <tr><td>乐观</td><td>贴近 SOM 上沿（约 400 万美元）</td><td>AI 审计在 2027 成为独立预算科目 ⇒ 本报告 §12 判它<strong>尚无证据</strong></td><td><span class="tag tag-c">C（乐观情景的前提未获支撑）</span></td></tr>
+  </table>
+  <p>落在 SOM 0.5–400 万美元区间内、按 ARPU 1.5–3 万美元约合 17–267 个账户——这套算法的输入全部是作者占比假设，
+    <strong>不因 v3 的任何新证据而改变，也不因 v3 而变准</strong>。它保留的唯一作用是让「这条路值多少人力」可比。</p>
+</section>
+
+<section class="chapter pagebreak" id="ch12">
+  <div class="chap-kicker">12 · Verdict</div>
+  <h1><span class="num">12</span>结论：那句 SAM 的判定</h1>
+
+  <table class="tbl verdict">
+    <tr><th>v2 留下的说法</th><th>v3 判定</th><th>依据</th></tr>
+    <tr><td>「SAM 下调可能过度悲观；若 AI 审计成为独立预算科目，SAM 会回升」</td>
+      <td><strong>不成立（现有证据不支持回升）；但下调的理由也挂错了</strong></td>
+      <td>回升所需的三个前提都没被记录到：① 记录类义务被推到 2027-12/2028-08；② 找不到任何「逐调用记录须可独立验证」的买方要求（补证波明写未取到）；③ 唯一像样的类目信号（IDC 金融 GRC）由平台占位。<br>挂错之处：真正活跃的门槛是 SOC 2 型「归属 + 连续留存」，与法规无关，且本件能供上其中两件（另两件不能）。</td></tr>
+    <tr><td>「这是功能市场，不是平台市场」</td><td><strong>成立，且比 v2 更硬</strong></td><td>记录层商品化 + 声明层被占用 + 机制层无人背书 + 细分资本拉力小（$2.6M vs $110M+）</td></tr>
+    <tr><td>「可防守差异不是哈希链或 49 格，而是证据包规范、拒收计数、版本三元组、R/N 协议」</td><td><strong>成立</strong></td><td>CT 族材料把「哈希只证内部一致」钉死；QLDB 之死是产业级反证；Traccia 已占「哈希 + 条文映射」的学术位置</td></tr>
+    <tr><td>定价四档</td><td><strong>团队版下调，证据包版无 G3 不得报价</strong></td><td>竞品档位与留存分级定价锚点（A/B 级）</td></tr>
+    <tr><td>「研究出版 + 开源先行」</td><td><strong>成立，D 路优先度上调</strong></td><td>先例已在 ⇒ 用出版确立位置比用营销便宜且可信</td></tr>
+  </table>
+
+  <h2>12.1 一段不能跳过的话</h2>
+  <p>本报告最有用的部分不是「能不能卖」，是三条<strong>否定</strong>：
+    别卖合规（连条文都不要求这个形状）、别卖防篡改（机制我们还没做）、别卖「用了更准」（我们自己的双臂量不出增益）。
+    剩下的可卖之物很小但可核对：<strong>口径可核、停止可交账、每发的依据指得回哪一格。</strong>
+    如果这三件在 2027 年之前没有买家愿意书面承认需要，本件的正确终局是 D 路的公共件，而不是 B 路的商品。</p>
+</section>
+<!-- ================= APPENDICES ================= -->
+<section class="appendix pagebreak" id="appA">
+  <h1><span class="num">A</span>方法、波次与分母</h1>
+  <h2>A.1 波次账（实际用量，非计划值）</h2>
+  <table class="tbl">
+    <tr><th>波</th><th>角色</th><th>覆盖</th><th>用量</th><th>结果</th></tr>
+    <tr><td>波 1</td><td>检索子代理 ×4 并行</td><td>合规义务 / 采购实态 / 协同契约 / 人类因素 / 账本完整性 / 裁判有效性 / 市场规模 / 竞品 / GTM</td><td>每路 8 次检索 + 5 次抓取（其中两路 12–16 次调用含重试）</td><td>100 条源进册</td></tr>
+    <tr><td>波 2</td><td>引用抽查子代理 ×1</td><td>13 条高风险声明逐条回源</td><td>12 次抓取用尽（EUR-Lex 两次不可达、一份页面 404）</td><td>SUPPORTED 4 / PARTIAL 7 / UNSUPPORTED 1 / UNVERIFIED 1</td></tr>
+    <tr><td>波 2</td><td>补证子代理 ×1</td><td>GAP A 负结果方法学 / B 在位者覆盖 / C 护栏与治理目录 / D 变现与渠道</td><td>7 次检索 + 4 次抓取</td><td>新增 19 条源（100–118）；<strong>GAP D 整块未填</strong></td></tr>
+    <tr><td>波 3</td><td>—</td><td>硬洞补取（EUR-Lex 原文、LangChain 一手、Gartner 一手、UiPath 机制、Splunk/Elastic/Chronicle/Sentinel/Drata/OpenLineage）</td><td>未起</td><td>本报告不使用推测填补这些洞</td></tr>
+  </table>
+
+  <h2>A.2 100 条源的真实成色</h2>
+  <div class="metrics">
+    <div><div class="lab">被打开读完</div><div class="num">16</div><div class="tiny">其中 Tier 1 占 11</div></div>
+    <div><div class="lab">只拿到快照</div><div class="num">77</div><div class="tiny">带数字者最高 D 级</div></div>
+    <div><div class="lab">本轮没打开</div><div class="num">7</div><div class="tiny">不可引</div></div>
+    <div><div class="lab">Tier 3</div><div class="num">42</div><div class="tiny">三个相加也只到 D/C</div></div>
+  </div>
+  <p>所以本报告的<strong>规模结论一律缺席</strong>：能被排版的市场数字只有厂商定价页与官方文档（Langfuse / Datadog / Vanta / S3 Object Lock / Apple / AWS 横幅 / RFC 6962 等），
+    其余都按 D 级引用，并在正文里带上「据具名来源转述」。这是 §8 定价能对锚、而 §11 财务只能沿用旧假设的原因。</p>
+
+  <h2>A.3 被抽查推翻的两类错误（写下来防复发）</h2>
+  <ul class="avoid">
+    <li><strong>快照级数字不该进正文</strong>，即使已标「待复核」——MT-Bench 五个数、LangChain 三个数就是这么进的，随后被撤。</li>
+    <li><strong>「标注了风险」不等于「没有过界」</strong>；配套规矩：判据的红要能点名是哪个词命中的（本轮话术闸因把整列表当一段而误伤一次，已改成行级 + 相邻匹配并加反臂）。</li>
+  </ul>
+</section>
+
+<section class="appendix pagebreak" id="appB">
+  <h1><span class="num">B</span>v2 → v3 主张对照</h1>
+  <table class="tbl diff-table">
+    <tr><th>主题</th><th>v2（2026-10-20）</th><th>v3（2026-10-22）</th><th>变动性质</th></tr>
+    <tr><td>EU 记录义务时点</td><td>引用 Art.12 作为需求来源，未标时点冲突</td><td>Annex III 2027-12-02、Annex I 2028-08-02；Art.50 部分义务 2026-12-02；Art.12 无时长、6 个月在 Art.26(6)</td><td><strong>纠错</strong></td></tr>
+    <tr><td>需求挂接接口</td><td>「为 AI Act 提供技术证据」</td><td>「归属 + 连续留存 + 可分发复核」，并明写无买方要求逐调用可独立验证</td><td><strong>改口 + 承认空洞</strong></td></tr>
+    <tr><td>TAM</td><td>27–31 亿美元（LLM 可观测 26.9 亿 + AI TRiSM 30.9 亿，相邻不相加）</td><td>不采用为规模结论：同名类目 2025 基数三家差 2.6 倍且全 Tier 3；v2 那个数是 2026 口径且未标年份</td><td><strong>降级</strong></td></tr>
+    <tr><td>SAM / SOM</td><td>1.0–2.0 亿 / 0.5–400 万美元（C 级占比假设）</td><td><strong>沿用</strong>，不重猜占比；判词改为「回升前提未获证据」</td><td>沿用 + 判词</td></tr>
+    <tr><td>可防守差异</td><td>证据包规范、拒收计数、版本三元组、R/N 协议；「不是哈希链或 49 格」</td><td><strong>成立且更硬</strong>；并新增第五项：停止必须结算</td><td>加强</td></tr>
+    <tr><td>首创性</td><td>未明确引用先例</td><td>承认 Traccia（arXiv:2607.14309）与 2026-09 综述；撤一切首创暗示</td><td><strong>纠错</strong></td></tr>
+    <tr><td>竞品</td><td>五类玩家 + 价格锚</td><td>八类（新增声明防篡改的平台、合规自动化、小厂群、学术先例）；新增「机制背书」这一列，右上角为空</td><td>扩 + 收窄主张</td></tr>
+    <tr><td>定价</td><td>免费 / 1.5–3 万 / 4–8 万 / 试点 3–5 千</td><td>团队版建议降至 0.8–1.5 万；<strong>无 G3 则证据包版不得报价</strong>；免费档明确不含完整性机制</td><td>下调 + 加前置条件</td></tr>
+    <tr><td>闸</td><td>G0/G1/G1.5/G2</td><td>结构不变；G1.5 状态如实标 NOT_RUN（另一组双臂已出负结果）；<strong>新增 G3 完整性机制</strong></td><td>加一闸</td></tr>
+    <tr><td>路线排序</td><td>D + A 先行，B 条件触发，C 不做，E 可选</td><td>同，但 D 优先度上调、B 触发条件写死两条</td><td>微调</td></tr>
+  </table>
+</section>
+
+<section class="appendix pagebreak" id="appC">
+  <h1><span class="num">C</span>引用与分级登记</h1>
+  <p>完整源册不在此重复：见 <code>研究-1022/源表-波1.md</code>（100 条，号段 C1-25 / P20-41 / L40-59 / M60-92）
+    与 <code>研究-1022/DEEP_RESEARCH_证据件合规驱动-1022-v2.md</code> §13（波 2 新增 100–118）。
+    下面只登记<strong>本报告正文实际引用的 A/B 级件</strong>——正文里任何没在这些行出现的数字，都应视为 D 级或未填。</p>
+  <table class="tbl ref">
+    <tr><th>号</th><th>件</th><th>级</th><th>正文用它说什么</th></tr>
+    <tr><td>C1</td><td>Artificial Intelligence Act Explorer · Article 12 Record-Keeping</td><td>A（已读）</td><td>记录范围；<strong>不含留存时长</strong></td></tr>
+    <tr><td>C7</td><td>nist.gov · AI Risk Management Framework</td><td>A（已读）</td><td>「intended for voluntary use」；AI 600-1 日期；修订中</td></tr>
+    <tr><td>C10</td><td>iso.org · AI 标准族板块页</td><td>A（已读）</td><td>42001 可认证；正文付费 ⇒ 条款清单不可核</td></tr>
+    <tr><td>P20</td><td>A2A Protocol Specification v1.0.0</td><td>B（波 1 读，波 2 未复）</td><td>状态机与终态关闭流</td></tr>
+    <tr><td>P21</td><td>MCP 2025-06-18 · Progress</td><td>A（波 2 复核）</td><td>progress MUST increase / MUST stop after completion / SHOULD 限流</td></tr>
+    <tr><td>P22</td><td>MCP 2025-06-18 · Cancellation</td><td>B</td><td>best-effort、无回执、迟到响应属正常</td></tr>
+    <tr><td>L41</td><td>RFC 6962 Certificate Transparency</td><td>A（已读）</td><td>§7 威胁模型=发现错误签发；可接受不完全有效证书</td></tr>
+    <tr><td>L42</td><td>Apple · CT 日志计划 / CT 政策</td><td>A（已读）</td><td>「不给两方看两棵树」；仍要求一张符合 6962 的 SCT</td></tr>
+    <tr><td>L43</td><td>Mozilla bug 1969296（GoDaddy / DigiCert Yeti2025）</td><td>A（已读）</td><td>无效 SCT 由外部研究者发现；2025-07-25 结案</td></tr>
+    <tr><td>L47/L48</td><td>AWS S3 Object Lock · IBM Ceph Object Lock</td><td>A（已读）</td><td>compliance mode 不可覆盖；Cohasset 对 SEC 17a-4/CFTC/FINRA；「when correctly configured」</td></tr>
+    <tr><td>L50/L51</td><td>AWS QLDB 文档横幅 · 2018 发布帖</td><td>A/B</td><td>支持止于 2025-07-31；Aurora 不维护永久不可变记录；原始营销语</td></tr>
+    <tr><td>M77</td><td>Langfuse 定价页</td><td>A（已读）</td><td>Enterprise $2,499/月；审计日志/SCIM 档位；SSO 强制在 Teams 加购；留存 30/90 天/3 年；SOC 2 Pro+</td></tr>
+    <tr><td>M87</td><td>arXiv:2607.14309 Traccia</td><td>B（预印本）</td><td>哈希防篡改 trace 账本映射监管条文</td></tr>
+    <tr><td>[100]</td><td>arXiv:2606.06454 预注册两档消融</td><td>A（已读）</td><td>前沿模型贴天花板、预注册 +5 分不成立；小模型 +20–22 分</td></tr>
+    <tr><td>[111]</td><td>Datadog LLM Observability 文档</td><td>A（已读）</td><td>OTel GenAI 原生支持；<strong>无留存/不可变/签名/导出声明</strong></td></tr>
+    <tr><td>[112]</td><td>Vanta AI Governance 产品页</td><td>A（已读）</td><td>清单级证据；无逐调用运行时捕获</td></tr>
+    <tr><td>[113]</td><td>UiPath 控制平面页</td><td>B（原文声明）</td><td>「tamper-evident audit trail」；背书仅框架映射</td></tr>
+    <tr><td>[115]</td><td>《From Agent Traces to Trust》综述</td><td>B（摘要级）</td><td>执行溯源 = 过程级问责基础；自治度提高使行为更难验证</td></tr>
+  </table>
+</section>
+
+<section class="appendix pagebreak" id="appD">
+  <h1><span class="num">D</span>缺口、NOT_RUN 与对外措辞红线</h1>
+  <h2>D.1 未跑 / 未取到（一律不折成 0）</h2>
+  <table class="tbl">
+    <tr><th>项</th><th>状态</th><th>缺什么</th></tr>
+    <tr><td>真人 G0 访谈</td><td><span class="tag tag-x">0/10</span></td><td>约不到人；本件无渠道成本预算</td></tr>
+    <tr><td>试读交接</td><td><span class="tag tag-x">0/1</span></td><td>对方未读</td></tr>
+    <tr><td>G1 真人交付、G1.5 R/N 双臂、G2 LOI/安全审查</td><td><span class="tag tag-x">未发生</span></td><td>上游未启动</td></tr>
+    <tr><td>真模型端点长任务（&gt;10s）进度读数</td><td><span class="tag tag-x">NOT_RUN</span></td><td>未配端点；现有读数全是本机规则或假端点</td></tr>
+    <tr><td>事件层 E1–E9（实时过程可见）</td><td><span class="tag tag-x">Planned</span></td><td>代码一行未动；今天轨迹页是跑完才写</td></tr>
+    <tr><td>外部锚 / 非写方验证（L2）</td><td><span class="tag tag-x">未启动</span></td><td>G3 的对象；此前禁止使用 tamper-evident 字样</td></tr>
+    <tr><td>EUR-Lex 一手（Omnibus 原文）</td><td><span class="tag tag-x">两次不可达</span></td><td>时点判词因此只到 D 级</td></tr>
+    <tr><td>Gartner 原新闻稿 / LangChain 报告 / ISO 42001 条款 / Splunk·Elastic·Chronicle·Sentinel·Drata·OpenLineage</td><td><span class="tag tag-x">未取到</span></td><td>403 / 找不到 / 付费墙 / 检索预算耗尽</td></tr>
+    <tr><td>OSS 转化率、企业安全评审时长、试点周期、渠道效果</td><td><span class="tag tag-x">整块未填</span></td><td>无代理值可用，也不造</td></tr>
+  </table>
+
+  <h2>D.2 对外措辞红线（发布前逐条核，可用 <code>话术闸.py</code> 扫）</h2>
+  <ul class="avoid">
+    <li>不得说「符合 EU AI Act / 满足 Art.12 / 通过 42001」——本件不是合规件，也不主张符合。</li>
+    <li>不得说「业界都要求受理回执与结算」——三家规范都没有这两件，它们是我们的附加层。</li>
+    <li>不得说「防篡改 / tamper-evident」——G3 之前我们没有机制。</li>
+    <li>不得说「用了更准 / 显著降低风险」——双臂实验量不出增益；审计层不是防线，不拦截、不调度、不执行。</li>
+    <li>不得把 absent 讲成 0，也不得把快照级数字排版进正文；每个数要能指回 A/B 级件或盘上读数。</li>
+    <li>不得暗示首创——Traccia 已在 2026-07 发表；我们的位置是清晰度与可核对性。</li>
+  </ul>
+
+  <h2>D.3 与 v2 的交付差异</h2>
+  <p>v2 的 48 页 PDF 与其源件仍在 <code>市场报告-1020/</code>，不作废、不覆盖。v3 只出<strong>本文档</strong>（HTML + PDF + MANIFEST），
+    两版对照读法：想知道「为什么值得看这个件」读 v2，想知道「哪些话现在不能说」读 v3。</p>
+  <p class="endnote">本报告全部本机读数可用四条命令复跑（见 <code>AGENTS.md</code>）；两把架构尺子与话术闸的退出码语义写在 <code>事件层-1022/README.md</code> 与 <code>研究-1022/方法与分母.md</code>：
+    退出码 3 有两种成因——坏件，<strong>或臂没红</strong>；臂不红时「全过」不作数。</p>
+</section>

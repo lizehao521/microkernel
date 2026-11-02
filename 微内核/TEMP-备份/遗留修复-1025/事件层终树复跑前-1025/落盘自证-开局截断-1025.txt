@@ -1,0 +1,16 @@
+产品字节：改后 验收-事件层-1022.py ｜ 14729 B ｜ sha d9ff0b862fd9fbd8
+对照字节：改前 验收-事件层-1022.py.改前-B1前-1025 ｜ 12090 B ｜ sha 96f307ab3e9b524c
+种子读数：报告-验收.txt.改前现那份-1025 ｜ 1355 B ｜ sha 630e712f42edbfb1（两臂开跑前它就在正式名上）
+两臂只差产品字节；输入同源：DOC=C:\Users\Admin\Desktop\微内核\研究-协同工作-1022.md ｜ go=C:/Users/Admin/sdk/go/bin/go.exe ｜ 树=C:/Users/Admin/Desktop/微内核/微内核/微内核
+
+== E1 崩在第一发检查之前（不存在的 go.exe：`list_tests()` 抛未捕获异常）==
+  改后（.part+replace）          正式名 sha=630e712f42edbfb1（改前那一份=630e712f42edbfb1）⇒ 保住上一趟 ｜ .part 行数=0 ｜ 子件 rc=1，崩前上屏的读数行数=0（一行都没 emit）
+  改前（开局截正式名）                 正式名 sha=e3b0c44298fc1c14（改前那一份=630e712f42edbfb1）⇒ 被这一趟改了 ｜ .part 行数=没有 .part 这个文件 ｜ 子件 rc=1，崩前上屏的读数行数=0（一行都没 emit）
+  E1 结论：改后保住=True ｜ 改前丢掉=True（改后=(1355, 18) 改前=(0, 0) 字节/行）
+
+== E2 跑到中途被打断（触发点=子件自己印的第一行 `PIN-`，上限 240 秒）==
+  改后（.part+replace）          正式名 sha=630e712f42edbfb1（改前那一份=630e712f42edbfb1）⇒ 保住上一趟 ｜ .part 行数=0 ｜ 打断在 PIN-01 \u56de\u6267 GREEN tests=10 rc=0 arms_B（等了 3.5 秒，kill 时还在跑=True）
+  改前（开局截正式名）                 正式名 sha=e3b0c44298fc1c14（改前那一份=630e712f42edbfb1）⇒ 被这一趟改了 ｜ .part 行数=没有 .part 这个文件 ｜ 打断在 PIN-01 \u56de\u6267 GREEN tests=10 rc=0 arms_B（等了 3.6 秒，kill 时还在跑=True）
+  E2 结论：改后保住=True ｜ 改前丢掉=True（改后=PIN-01 \u56de\u6267 GREEN tests=10 rc=0 arms_BIT=0 改前=PIN-01 \u56de\u6267 GREEN tests=10 rc=0 arms_BIT=0 字节/行）｜ 两臂都真打断=True
+
+双臂成对：OK（E1）OK（E2）—— 两半都要「改后保住 / 改前丢掉」，缺一半就是臂没接上

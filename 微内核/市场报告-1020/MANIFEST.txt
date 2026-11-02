@@ -1,0 +1,18 @@
+REPORT MANIFEST
+built_at=2026-10-20 00:47:17
+html=报告.html
+pdf=agentkernel-市场进入重评-1020.pdf
+pdf_pages=48
+pdf_bytes=1647883
+html_bytes=151683
+pdf_sha256=2766192e49349acfbfd33bdc2a4c452de226c8fd8269d44f19cd62d3d16cacff
+html_sha256=607e30eed515d61085dbd8f299d7c20c90e8652bf926c56e5ff3a3f651569c2c
+cjk_chars_extracted=18141
+toc_keys_expected=49
+toc_keys_filled=49
+body_start_page=6
+edge=C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+render=Microsoft Edge headless via CDP Page.printToPDF, custom footer, no URL
+extract=pdftotext -enc UTF-8
+missing_keys=0
+secret_pattern=0

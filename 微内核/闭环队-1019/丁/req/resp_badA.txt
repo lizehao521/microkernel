@@ -1,0 +1,1 @@
+{"id":40,"jsonrpc":"2.0","result":{"content":[{"text":"整发拒收（拒收累计 1 次）：kernel: 输出侧账不自洽，第 2 发整发拒收（输入侧也不写）：kernel: 过网线的请求体字节 有数 320 却没说谁算的（basis 空）—— 这一格会被下游当成实测","type":"text"}],"isError":true}}

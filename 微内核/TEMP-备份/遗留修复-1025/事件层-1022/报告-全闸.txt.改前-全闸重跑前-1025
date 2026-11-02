@@ -1,0 +1,11 @@
+tree=C:/Users/Admin/Desktop/微内核/微内核/微内核
+go vet ./cmd/agentd    rc=0     0s | tail<-stdout | 
+go test -count=1       rc=0    21s | tail<-stdout | ok  	agentkernel/cmd/agentd	19.798s
+kcheck（内核快闸）           rc=0     1s | tail<-stdout |  / ✓ 全部通过（项数由上面自己数，不抄在这里）
+锚点核对（尺子一）              rc=0     0s | tail<-reading | 合计：命中 29 ｜ 未命中 0 ｜ 缺文件 0 ｜ 行越界 0 ｜ 共 29 行 / 结论：evidence.md 的 29 条锚点全部回盘命中，且臂能红。
+证据模型核对（尺子二）            rc=0     0s | tail<-reading |  / 结论：sourceRefs 123 条回盘（符号可核 53 条全指到行，仅存在性 70 条未验符号），端点闭合，状态口径合规，6 臂能红。
+尺子自证（旧病复现）             rc=0     1s | tail<-reading |  / 结论：0 条自证不过。每个旧病各有一条臂钉住，注回去就红；基准全绿（自证共 10 条，条数由这份清单自己数）。
+验收-事件层（八条针）            rc=0    29s | tail<-reading | NOT_RUN 真人可读性 ｜ NOT_RUN：界面可读性没请真人读过。 / conclusion=ALL-PINS-GREEN-WITH-ARMS
+臂检 跳过（--skip-arms）⇒ 这一趟没重跑变异，只核下面那行新鲜度
+arm-reading FRESH | rows=82 verdicts={"BIT": 81, "BIT-CRASH": 1}
+conclusion=ALL-GATES-GREEN

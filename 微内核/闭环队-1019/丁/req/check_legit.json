@@ -1,0 +1,53 @@
+{"jsonrpc":"2.0","id":20,"method":"tools/call","params":{"name":"kernel.check_call","arguments":{
+"session":"calib-sess",
+"actor":"anti-arm",
+"input":{
+  "Call":1,
+  "Order":["system","user"],
+  "Parts":[
+    {"Kind":"system","Parts":1,"Bytes":200},
+    {"Kind":"user","Parts":1,"Bytes":100}
+  ],
+  "ContentBytes":300,
+  "Tokens":{"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"分词器在对端，本端点不回 usage，如实记缺席不是 0"},
+  "Budget":{
+    "CallBytesCeiling":100000,
+    "TransportSlackPct":10,
+    "ContentCeiling":90000,
+    "Shares":{"system":20,"user":30},
+    "LeftoverPct":50,
+    "FixedOverhead":{"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"骨架加模型名开销未单独量到"},
+    "EffectiveCeiling":90000,
+    "ClampRounds":0
+  },
+  "Cuts":[],
+  "Notice":{"Sent":false,"Trimmed":false,"Why":"","Text":""}
+},
+"output":{
+  "Call":1,
+  "Streaming":false,
+  "Finish":{"Reason":"stop","Said":true},
+  "Model":"agnes-3.0-flash",
+  "ModelSaid":true,
+  "WireFormat":"chat.completion",
+  "WireFormatSaid":true,
+  "Says":{"Bytes":50,"Kept":50,"SHA256":"0000000000000000000000000000000000000000000000000000000000000000"},
+  "UsageIn":{"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"端点不提供 usage 字段"},
+  "UsageOut":{"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"端点不提供 usage 字段"},
+  "WireBytesOut":{"N":320,"Basis":1,"Source":"","Absent":false,"Refused":false,"Why":""},
+  "WireBytesIn":{"N":400,"Basis":1,"Source":"","Absent":false,"Refused":false,"Why":""},
+  "Chunks":{"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"非流式，不分帧"},
+  "FirstByteMs":{"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"非流式，无首帧"},
+  "MaxGapMs":{"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"非流式，无帧间等待"},
+  "ToolCalls":0,
+  "Malformed":0,
+  "MalformedStreak":0,
+  "Failure":{
+    "Kind":"",
+    "Detail":"",
+    "Status":{"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"没故障，未收到状态码"},
+    "RetryAfterMs":{"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"没故障，对端没要求等待"},
+    "Downgrade":false
+  }
+}
+}}}

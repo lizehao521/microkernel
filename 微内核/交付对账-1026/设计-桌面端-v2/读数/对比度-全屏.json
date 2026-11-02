@@ -1,0 +1,217 @@
+{
+  "url": "http://127.0.0.1:51170/",
+  "build": "4db8f042",
+  "when": "2026-10-25T22:18:29.807Z",
+  "thresholds": {
+    "normal": 4.5,
+    "large": 3
+  },
+  "totals": {
+    "checked": 2535,
+    "failures": 0,
+    "gradientApprox": 1314,
+    "backgroundImage": 0,
+    "disabled": 30,
+    "opacity": 9,
+    "hidden": 1519,
+    "noText": 4001,
+    "ariaHidden": 952
+  },
+  "states": [
+    {
+      "name": "operate",
+      "checked": 167,
+      "failures": [],
+      "failureCount": 0,
+      "skip": {
+        "gradientApprox": 124,
+        "backgroundImage": 0,
+        "disabled": 3,
+        "opacity": 1,
+        "hidden": 90,
+        "noText": 266,
+        "ariaHidden": 24
+      }
+    },
+    {
+      "name": "operate-D1",
+      "checked": 167,
+      "failures": [],
+      "failureCount": 0,
+      "skip": {
+        "gradientApprox": 124,
+        "backgroundImage": 0,
+        "disabled": 3,
+        "opacity": 1,
+        "hidden": 90,
+        "noText": 266,
+        "ariaHidden": 24
+      }
+    },
+    {
+      "name": "drawer-claims",
+      "checked": 208,
+      "failures": [],
+      "failureCount": 0,
+      "skip": {
+        "gradientApprox": 124,
+        "backgroundImage": 0,
+        "disabled": 3,
+        "opacity": 1,
+        "hidden": 90,
+        "noText": 296,
+        "ariaHidden": 21
+      }
+    },
+    {
+      "name": "drawer-cells",
+      "checked": 483,
+      "failures": [],
+      "failureCount": 0,
+      "skip": {
+        "gradientApprox": 119,
+        "backgroundImage": 0,
+        "disabled": 2,
+        "opacity": 1,
+        "hidden": 90,
+        "noText": 381,
+        "ariaHidden": 21
+      }
+    },
+    {
+      "name": "drawer-source",
+      "checked": 208,
+      "failures": [],
+      "failureCount": 0,
+      "skip": {
+        "gradientApprox": 119,
+        "backgroundImage": 0,
+        "disabled": 2,
+        "opacity": 1,
+        "hidden": 90,
+        "noText": 273,
+        "ariaHidden": 21
+      }
+    },
+    {
+      "name": "drawer-steps",
+      "checked": 264,
+      "failures": [],
+      "failureCount": 0,
+      "skip": {
+        "gradientApprox": 124,
+        "backgroundImage": 0,
+        "disabled": 3,
+        "opacity": 1,
+        "hidden": 90,
+        "noText": 284,
+        "ariaHidden": 21
+      }
+    },
+    {
+      "name": "drawer-events",
+      "checked": 275,
+      "failures": [],
+      "failureCount": 0,
+      "skip": {
+        "gradientApprox": 119,
+        "backgroundImage": 0,
+        "disabled": 2,
+        "opacity": 1,
+        "hidden": 90,
+        "noText": 312,
+        "ariaHidden": 21
+      }
+    },
+    {
+      "name": "kernel-modal",
+      "checked": 189,
+      "failures": [],
+      "failureCount": 0,
+      "skip": {
+        "gradientApprox": 119,
+        "backgroundImage": 0,
+        "disabled": 2,
+        "opacity": 1,
+        "hidden": 90,
+        "noText": 314,
+        "ariaHidden": 130
+      }
+    },
+    {
+      "name": "decision-modal",
+      "checked": 176,
+      "failures": [],
+      "failureCount": 0,
+      "skip": {
+        "gradientApprox": 119,
+        "backgroundImage": 0,
+        "disabled": 2,
+        "opacity": 1,
+        "hidden": 90,
+        "noText": 313,
+        "ariaHidden": 151
+      }
+    },
+    {
+      "name": "dialogue-empty",
+      "checked": 89,
+      "failures": [],
+      "failureCount": 0,
+      "skip": {
+        "gradientApprox": 46,
+        "backgroundImage": 0,
+        "disabled": 2,
+        "opacity": 0,
+        "hidden": 164,
+        "noText": 313,
+        "ariaHidden": 165
+      }
+    },
+    {
+      "name": "dialogue-answers",
+      "checked": 102,
+      "failures": [],
+      "failureCount": 0,
+      "skip": {
+        "gradientApprox": 59,
+        "backgroundImage": 0,
+        "disabled": 2,
+        "opacity": 0,
+        "hidden": 181,
+        "noText": 346,
+        "ariaHidden": 165
+      }
+    },
+    {
+      "name": "memory-decisions",
+      "checked": 122,
+      "failures": [],
+      "failureCount": 0,
+      "skip": {
+        "gradientApprox": 76,
+        "backgroundImage": 0,
+        "disabled": 1,
+        "opacity": 0,
+        "hidden": 191,
+        "noText": 371,
+        "ariaHidden": 164
+      }
+    },
+    {
+      "name": "memory-empty",
+      "checked": 85,
+      "failures": [],
+      "failureCount": 0,
+      "skip": {
+        "gradientApprox": 42,
+        "backgroundImage": 0,
+        "disabled": 3,
+        "opacity": 0,
+        "hidden": 173,
+        "noText": 266,
+        "ariaHidden": 24
+      }
+    }
+  ]
+}

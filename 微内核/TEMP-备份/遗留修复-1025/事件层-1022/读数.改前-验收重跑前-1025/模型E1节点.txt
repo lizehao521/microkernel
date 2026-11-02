@@ -1,0 +1,163 @@
+{
+ "id": "ev.bus",
+ "label": "r.emit(event) 事件总线",
+ "type": "module",
+ "state": "current",
+ "confidence": "high",
+ "diagram": "event-layer-target.dot:bus",
+ "description": "E1 已落地：在现有 say 位置并挂，stdout 正文不改写；拒收必须喊出来",
+ "sourceRefs": [
+  "微内核/微内核/cmd/agentd/events.go:111",
+  "微内核/微内核/cmd/agentd/events.go:178",
+  "微内核/微内核/cmd/agentd/loop.go:121"
+ ]
+}
+{
+ "id": "ev.log",
+ "label": "append-only 事件日志 (session,turn,seq)",
+ "type": "database",
+ "state": "current",
+ "confidence": "high",
+ "diagram": "event-layer-target.dot:elog",
+ "description": "E1 已落地：先落盘（含 Sync）再算落了；absent 无 why 在 emit 入口即拒",
+ "sourceRefs": [
+  "微内核/微内核/cmd/agentd/events.go:130",
+  "微内核/微内核/cmd/agentd/events.go:139",
+  "微内核/微内核/cmd/agentd/events.go:144"
+ ]
+}
+{
+ "id": "host.hooks",
+ "label": "宿主挂点（7 处 emit）",
+ "type": "module",
+ "state": "current",
+ "confidence": "high",
+ "diagram": "event-layer-target.dot:（挂点在 loop 内，图上以 t-loop-bus 一条边代表）",
+ "description": "run_started / shot_started / precheck×2 / recorded×2 / run_settled；分支覆盖不全，缺的路径记在 unknowns",
+ "sourceRefs": [
+  "微内核/微内核/cmd/agentd/loop.go:173",
+  "微内核/微内核/cmd/agentd/loop.go:188",
+  "微内核/微内核/cmd/agentd/loop.go:195",
+  "微内核/微内核/cmd/agentd/loop.go:206",
+  "微内核/微内核/cmd/agentd/loop.go:228",
+  "微内核/微内核/cmd/agentd/loop.go:608"
+ ]
+}
+{
+ "id": "host.eventTests",
+ "label": "事件层测试（6 支，含 2 支臂）",
+ "type": "risk",
+ "state": "current",
+ "confidence": "high",
+ "diagram": "（不在图上）",
+ "description": "序号递增 / absent 无 why 被拒 / 序号臂接重复与回退 / stdout 掩掉时钟读数后不变 / 拒收必须喊出来 / 事件不带原话正文",
+ "sourceRefs": [
+  "微内核/微内核/cmd/agentd/events_test.go:111",
+  "微内核/微内核/cmd/agentd/events_test.go:152"
+ ]
+}
+{
+ "id": "host.eventFlags",
+ "label": "-events / -events-out 旗标",
+ "type": "decision",
+ "state": "current",
+ "confidence": "high",
+ "diagram": "（不在图上）",
+ "description": "落点默认由 --journal-out 推导；两处都空则只在内存数序并走 stderr 明说",
+ "sourceRefs": [
+  "微内核/微内核/cmd/agentd/main.go:40",
+  "微内核/微内核/cmd/agentd/main.go:83"
+ ]
+}
+{
+ "id": "ev.accept",
+ "label": "turn_accepted 受理事件",
+ "type": "decision",
+ "state": "target",
+ "confidence": "low",
+ "diagram": "event-layer-target.dot:accept",
+ "description": "**本件主张，非行业标准**：MCP/A2A/LSP 均无受理回执语义（见研究件引用区 P20-P23）",
+ "sourceRefs": [
+  "研究-协同工作-1022.md"
+ ],
+ "planRef": "事件层-1022/计划-agentd事件层.json:E2"
+}
+{
+ "id": "ev.settle",
+ "label": "turn_interrupted → turn_settled 结算",
+ "type": "decision",
+ "state": "target",
+ "confidence": "low",
+ "diagram": "event-layer-target.dot:settle",
+ "description": "停在哪/已发生/没发生三样；不补步。**本件主张**：MCP 取消是 best-effort、无回执无结算",
+ "sourceRefs": [
+  "研究-协同工作-1022.md",
+  "编程Agent-1020/src/pgagent/loop.go"
+ ],
+ "planRef": "事件层-1022/计划-agentd事件层.json:E3"
+}
+{
+ "id": "ev.sse",
+ "label": "SSE 投送 + id / Last-Event-ID 重放",
+ "type": "service",
+ "state": "target",
+ "confidence": "low",
+ "diagram": "event-layer-target.dot:sse",
+ "description": "游标四态与「服务端不发 id 就没有续传」为待补形状（引用 P25/P26 尚为快照级）",
+ "sourceRefs": [
+  "研究-协同工作-1022.md",
+  "微内核/微内核/cmd/agentd/fakesrv.go:107-135"
+ ],
+ "planRef": "事件层-1022/计划-agentd事件层.json:E4"
+}
+{
+ "id": "ev.watchdog",
+ "label": "10s 兜底进度 progress_tick / why_late",
+ "type": "module",
+ "state": "target",
+ "confidence": "low",
+ "diagram": "event-layer-target.dot:watchdog",
+ "sourceRefs": [
+  "研究-协同工作-1022.md"
+ ],
+ "planRef": "事件层-1022/计划-agentd事件层.json:E5"
+}
+{
+ "id": "ev.lock",
+ "label": "一发一锁（并发直拒，不排队不混列）",
+ "type": "decision",
+ "state": "target",
+ "confidence": "low",
+ "diagram": "event-layer-target.dot:lock",
+ "sourceRefs": [
+  "研究-协同工作-1022.md"
+ ],
+ "planRef": "事件层-1022/计划-agentd事件层.json:E6"
+}
+{
+ "id": "ev.ui",
+ "label": "三行界面 现在/已经/接下来",
+ "type": "capability",
+ "state": "target",
+ "confidence": "low",
+ "diagram": "event-layer-target.dot:ui",
+ "description": "只投影，不自算；真人可读性 0/1 未测",
+ "sourceRefs": [
+  "研究-协同工作-1022.md",
+  "编程Agent-1020/工具/收口表.py"
+ ],
+ "planRef": "事件层-1022/计划-agentd事件层.json:E7"
+}
+{
+ "id": "ev.harness",
+ "label": "工具/事件层验收.py（八条针一条命令）",
+ "type": "risk",
+ "state": "target",
+ "confidence": "low",
+ "diagram": "event-layer-target.dot:harness",
+ "description": "还不存在；不存在就没有「已验收」可读",
+ "sourceRefs": [
+  "研究-协同工作-1022.md"
+ ],
+ "planRef": "事件层-1022/计划-agentd事件层.json:E9"
+}

@@ -1,0 +1,2795 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>收货台 Receiving Desk — 交付对账桌面端原型</title>
+<style>
+:root {
+  --paper: #f3f2ed;
+  --surface: #ffffff;
+  --surface-2: #faf9f5;
+  --surface-3: #eeede6;
+  --ink: #17191e;
+  --ink-2: #4b505b;
+  --ink-3: #646974;
+  --ink-4: #a3a7b0;
+  --line: #e4e2da;
+  --line-2: #d3d0c6;
+  --accent: #1f49d6;
+  --accent-weak: #e9eeff;
+  --accent-ink: #1637a8;
+  --ok: #0e7a4d;
+  --ok-bg: #e7f4ec;
+  --ok-line: #bfe3cd;
+  --bad: #b42318;
+  --bad-bg: #fdeceb;
+  --bad-line: #f5c6c2;
+  --warn: #8a5a00;
+  --warn-bg: #fdf3dd;
+  --warn-line: #ecd9a8;
+  --unk: #5c6270;
+  --unk-bg: #eef0f4;
+  --unk-line: #d8dbe2;
+  --relay: #6a5a9a;
+  --relay-bg: #f4f0fb;
+  --relay-line: #ddd4ef;
+  --side: #16181d;
+  --side-2: #1e2128;
+  --side-3: #2a2e37;
+  --side-text: #a9aeb9;
+  --side-dim: #868c98;
+  --r-s: 4px;
+  --r-m: 8px;
+  --r-l: 12px;
+  --shadow-1: 0 1px 2px rgba(20, 22, 28, .05);
+  --shadow-2: 0 12px 32px rgba(20, 22, 28, .14), 0 2px 8px rgba(20, 22, 28, .06);
+  --mono: "Cascadia Mono", "Cascadia Code", Consolas, "Courier New", monospace;
+  --sans: "Segoe UI", "Microsoft YaHei UI", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+button, input, select, textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button { cursor: pointer; }
+
+::selection { background: var(--accent-weak); }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+.mono { font-family: var(--mono); font-variant-ligatures: none; }
+.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* ---------- app shell ---------- */
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  min-height: 0;
+}
+
+.titlebar {
+  height: 44px;
+  flex: 0 0 44px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 12px 0 16px;
+  background: var(--side);
+  color: #d7dae0;
+  border-bottom: 1px solid #0e1014;
+  user-select: none;
+}
+
+.traffic { display: flex; gap: 7px; padding-right: 6px; }
+.traffic i {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: #3a3f49; display: block;
+}
+.traffic i:nth-child(1) { background: #b4554b; }
+.traffic i:nth-child(2) { background: #a8833f; }
+.traffic i:nth-child(3) { background: #4f7d55; }
+
+.app-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: .02em;
+  color: #f0f1f4;
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  white-space: nowrap;
+}
+.app-title span {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--side-dim);
+}
+
+.titlebar-center {
+  flex: 1;
+  text-align: center;
+  font-size: 11.5px;
+  color: var(--side-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.titlebar-center b { color: #b8bdc7; font-weight: 500; }
+
+.titlebar-right { display: flex; align-items: center; gap: 8px; }
+
+.ro-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  letter-spacing: .04em;
+  color: #9fdcb8;
+  border: 1px solid #2f4a3a;
+  background: #1a2a21;
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+.ro-badge i { width: 5px; height: 5px; border-radius: 50%; background: #55c98a; }
+
+.icon-btn {
+  width: 28px; height: 28px;
+  display: inline-grid; place-items: center;
+  border: 1px solid transparent;
+  border-radius: var(--r-s);
+  background: transparent;
+  color: #9aa0ab;
+}
+.icon-btn:hover { background: var(--side-3); color: #e6e8ec; }
+.icon-btn svg { width: 15px; height: 15px; }
+
+.shell {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+/* ---------- sidebar ---------- */
+
+.sidebar {
+  width: 236px;
+  flex: 0 0 236px;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--side);
+  color: var(--side-text);
+  border-right: 1px solid #0e1014;
+  padding: 14px 12px 10px;
+  overflow-y: auto;
+}
+
+.workspace {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: var(--r-m);
+  background: var(--side-2);
+  border: 1px solid #262a32;
+}
+.workspace-mark {
+  width: 28px; height: 28px;
+  flex: 0 0 28px;
+  border-radius: 6px;
+  background: #e8e4d6;
+  color: #23252b;
+  display: grid; place-items: center;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+}
+.workspace-text { min-width: 0; }
+.workspace-text b {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #eceef2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.workspace-text small {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--side-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav { margin-top: 16px; display: flex; flex-direction: column; gap: 2px; }
+.nav-label {
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--side-dim);
+  padding: 0 10px 6px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: var(--r-s);
+  background: transparent;
+  color: var(--side-text);
+  text-align: left;
+  font-size: 12.5px;
+  position: relative;
+}
+.nav-item svg { width: 15px; height: 15px; opacity: .8; }
+.nav-item:hover { background: var(--side-2); color: #e3e5e9; }
+.nav-item[aria-current="page"] {
+  background: var(--side-3);
+  color: #ffffff;
+  font-weight: 600;
+}
+.nav-item[aria-current="page"]::before {
+  content: "";
+  position: absolute;
+  left: -12px; top: 8px; bottom: 8px;
+  width: 2px;
+  background: #7f9bff;
+}
+.nav-item .count {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: #cfd3da;
+  background: #333844;
+  border-radius: 999px;
+  padding: 1px 6px;
+}
+.nav-item .count.hot { background: #5a2a24; color: #ffb4aa; }
+
+.side-section { margin-top: 22px; }
+.source-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  font-size: 11.5px;
+  color: var(--side-text);
+}
+.source-row .dot { width: 6px; height: 6px; border-radius: 50%; flex: 0 0 6px; }
+.source-row .dot.ok { background: #55c98a; }
+.source-row .dot.warn { background: #e5b45a; }
+.source-row .dot.off { background: #6f7580; }
+.source-row small {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--side-dim);
+}
+
+.side-foot {
+  margin-top: auto;
+  padding: 14px 10px 4px;
+  border-top: 1px solid #242832;
+  font-size: 10.5px;
+  color: var(--side-dim);
+  line-height: 1.6;
+}
+.side-foot b { color: #b9bec8; font-weight: 500; }
+.side-foot .mono { font-size: 10px; }
+
+/* ---------- main ---------- */
+
+.main {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  background:
+    radial-gradient(1200px 500px at 15% -10%, #ffffff 0%, rgba(255,255,255,0) 60%),
+    var(--paper);
+}
+
+.screen { display: none; min-height: 100%; }
+.screen.is-active { display: block; }
+
+.screen-inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 26px 30px 40px;
+}
+
+.page-head {
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+  margin-bottom: 22px;
+}
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-family: var(--mono);
+  margin-bottom: 6px;
+}
+.page-head h1 {
+  margin: 0;
+  font-size: 25px;
+  line-height: 1.2;
+  letter-spacing: -.015em;
+  font-weight: 600;
+}
+.page-head .sub {
+  margin: 7px 0 0;
+  font-size: 12.5px;
+  color: var(--ink-2);
+}
+.page-head .sub .mono { font-size: 11.5px; color: var(--ink-3); }
+.head-actions { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 32px;
+  padding: 0 13px;
+  border-radius: var(--r-s);
+  border: 1px solid var(--line-2);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 12.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background .12s ease, border-color .12s ease, color .12s ease;
+}
+.btn svg { width: 14px; height: 14px; }
+.btn:hover { background: var(--surface-3); }
+.btn.primary {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #fff;
+}
+.btn.primary:hover { background: #2b2f38; }
+.btn.accent {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.btn.accent:hover { background: var(--accent-ink); }
+.btn.danger {
+  background: var(--bad);
+  border-color: var(--bad);
+  color: #fff;
+}
+.btn.danger:hover { background: #931c13; }
+.btn.ghost { background: transparent; border-color: transparent; color: var(--ink-2); }
+.btn.ghost:hover { background: var(--surface-3); color: var(--ink); }
+.btn.sm { height: 27px; padding: 0 9px; font-size: 11.5px; }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+
+/* ---------- triage cards ---------- */
+
+.triage {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.triage-card {
+  position: relative;
+  text-align: left;
+  padding: 14px 15px 13px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-m);
+  box-shadow: var(--shadow-1);
+  transition: border-color .12s ease, transform .12s ease;
+}
+.triage-card::before {
+  content: "";
+  position: absolute;
+  left: 14px; right: 14px; top: -1px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--unk);
+}
+.triage-card[data-kind="ok"]::before { background: var(--ok); }
+.triage-card[data-kind="bad"]::before { background: var(--bad); }
+.triage-card[data-kind="warn"]::before { background: #c99a2e; }
+.triage-card:hover { border-color: var(--line-2); transform: translateY(-1px); }
+.triage-card.is-on { border-color: var(--ink); box-shadow: 0 0 0 1px var(--ink), var(--shadow-1); }
+.triage-card .t-label {
+  font-size: 11.5px;
+  color: var(--ink-2);
+  display: flex; align-items: center; gap: 6px;
+}
+.triage-card .t-label .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.triage-card .t-num {
+  font-family: var(--mono);
+  font-size: 28px;
+  line-height: 1.1;
+  letter-spacing: -.03em;
+  margin: 8px 0 2px;
+  font-weight: 500;
+}
+.triage-card[data-kind="ok"] .t-num { color: var(--ok); }
+.triage-card[data-kind="bad"] .t-num { color: var(--bad); }
+.triage-card[data-kind="warn"] .t-num { color: var(--warn); }
+.triage-card .t-note { font-size: 11px; color: var(--ink-3); }
+
+/* ---------- table card ---------- */
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-m);
+  box-shadow: var(--shadow-1);
+}
+
+.table-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+.chips { display: flex; gap: 4px; flex-wrap: wrap; }
+.chip {
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink-2);
+  font-size: 11.5px;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.chip:hover { background: var(--surface-2); }
+.chip.is-on {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #fff;
+}
+.chip .n { font-family: var(--mono); font-size: 10px; opacity: .7; }
+
+.search {
+  margin-left: auto;
+  display: flex; align-items: center; gap: 7px;
+  height: 28px;
+  padding: 0 9px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-s);
+  background: var(--surface-2);
+  min-width: 210px;
+}
+.search svg { width: 13px; height: 13px; color: var(--ink-3); }
+.search input {
+  border: 0; outline: 0; background: transparent;
+  width: 100%; font-size: 12px;
+}
+.search kbd {
+  font-family: var(--mono); font-size: 9.5px;
+  color: var(--ink-3);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 0 4px;
+  background: var(--surface);
+}
+
+.deliveries { width: 100%; border-collapse: collapse; }
+.deliveries thead th {
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 500;
+  text-align: left;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-2);
+  white-space: nowrap;
+}
+.deliveries tbody tr {
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+  transition: background .1s ease;
+}
+.deliveries tbody tr:last-child { border-bottom: 0; }
+.deliveries tbody tr:hover { background: #fbfaf7; }
+.deliveries tbody tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.deliveries td { padding: 12px; vertical-align: middle; }
+
+.d-main { min-width: 240px; }
+.d-id {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-3);
+  display: flex; align-items: center; gap: 6px;
+  margin-bottom: 2px;
+}
+.d-title { font-size: 13px; font-weight: 600; letter-spacing: -.005em; }
+.d-sub { font-size: 11.5px; color: var(--ink-3); margin-top: 2px; }
+
+.agent-cell { display: flex; align-items: center; gap: 8px; min-width: 130px; }
+.agent-mark {
+  width: 24px; height: 24px;
+  border-radius: 6px;
+  display: grid; place-items: center;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  background: var(--surface-3);
+  color: var(--ink-2);
+  border: 1px solid var(--line);
+  flex: 0 0 24px;
+}
+.agent-cell b { display: block; font-size: 11.5px; font-weight: 500; }
+.agent-cell small { display: block; font-size: 10.5px; color: var(--ink-3); }
+
+.claims-cell { min-width: 120px; }
+.claims-cell .c-line {
+  display: flex; align-items: baseline; gap: 5px;
+  font-size: 11.5px; color: var(--ink-2);
+}
+.claims-cell .c-line b { font-family: var(--mono); font-weight: 500; font-size: 12px; color: var(--ink); }
+.mini-bars { display: flex; gap: 2px; margin-top: 6px; height: 4px; width: 96px; }
+.mini-bars i { flex: 1; border-radius: 1px; background: var(--unk-line); }
+.mini-bars i.ok { background: #59a97d; }
+.mini-bars i.bad { background: #d46257; }
+.mini-bars i.absent { background: #d9bc74; }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border-radius: var(--r-s);
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+.badge .dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.badge.ok { color: var(--ok); background: var(--ok-bg); border-color: var(--ok-line); }
+.badge.bad { color: var(--bad); background: var(--bad-bg); border-color: var(--bad-line); }
+.badge.warn { color: var(--warn); background: var(--warn-bg); border-color: var(--warn-line); }
+.badge.unk { color: var(--unk); background: var(--unk-bg); border-color: var(--unk-line); }
+.badge.plain { color: var(--ink-2); background: var(--surface-2); border-color: var(--line); }
+
+.sources-cell { min-width: 150px; }
+.source-pips { display: flex; gap: 3px; margin-bottom: 5px; }
+.source-pips i {
+  width: 22px; height: 16px;
+  border-radius: 3px;
+  display: grid; place-items: center;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-style: normal;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  color: var(--ink-3);
+}
+.source-pips i.ok { background: var(--ok-bg); border-color: var(--ok-line); color: var(--ok); }
+.source-pips i.bad { background: var(--bad-bg); border-color: var(--bad-line); color: var(--bad); }
+.source-pips i.warn { background: var(--warn-bg); border-color: var(--warn-line); color: var(--warn); }
+.sources-cell small { font-size: 10.5px; color: var(--ink-3); }
+
+.wait-cell { white-space: nowrap; }
+.wait-cell .w1 { font-size: 12px; }
+.wait-cell .w2 { font-size: 10.5px; color: var(--ink-3); font-family: var(--mono); }
+
+.row-cta {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 11.5px; color: var(--ink-2);
+  opacity: .75;
+}
+tr:hover .row-cta { opacity: 1; color: var(--ink); }
+.row-cta svg { width: 13px; height: 13px; }
+
+.table-foot {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-top: 1px solid var(--line);
+  font-size: 11px;
+  color: var(--ink-3);
+  flex-wrap: wrap;
+}
+.table-foot .spacer { margin-left: auto; }
+.table-foot .mono { font-size: 10px; }
+
+/* ---------- empty / loading / error ---------- */
+
+.state-box {
+  padding: 56px 24px;
+  text-align: center;
+}
+.state-box .state-icon {
+  width: 46px; height: 46px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--surface-3);
+  color: var(--ink-3);
+  border: 1px solid var(--line);
+}
+.state-box .state-icon svg { width: 20px; height: 20px; }
+.state-box h3 { margin: 0 0 6px; font-size: 15px; font-weight: 600; }
+.state-box p { margin: 0 auto 14px; max-width: 400px; font-size: 12px; color: var(--ink-2); }
+.state-box.error .state-icon { background: var(--bad-bg); color: var(--bad); border-color: var(--bad-line); }
+
+.skeleton-row {
+  display: flex; gap: 14px; align-items: center;
+  padding: 15px 12px;
+  border-bottom: 1px solid var(--line);
+}
+.sk { background: linear-gradient(90deg, #eeede7 25%, #f6f5f0 37%, #eeede7 63%); background-size: 400% 100%; animation: shimmer 1.3s ease infinite; border-radius: 3px; }
+@keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }
+.sk.t1 { width: 200px; height: 12px; }
+.sk.t2 { width: 90px; height: 10px; }
+.sk.t3 { width: 60px; height: 20px; }
+.sk.t4 { width: 110px; height: 10px; }
+
+/* ---------- detail ---------- */
+
+.detail-head { margin-bottom: 14px; }
+.crumbs {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11.5px; color: var(--ink-3);
+  margin-bottom: 12px;
+}
+.crumbs button {
+  border: 0; background: none; padding: 0; color: var(--ink-3);
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.crumbs button:hover { color: var(--ink); }
+.crumbs svg { width: 12px; height: 12px; }
+.crumbs span { color: var(--ink-3); }
+
+.detail-title-row { display: flex; align-items: flex-start; gap: 16px; }
+.detail-title-row h1 {
+  margin: 0;
+  font-size: 23px;
+  letter-spacing: -.015em;
+  font-weight: 600;
+}
+.detail-meta {
+  display: flex; flex-wrap: wrap; gap: 6px 14px;
+  margin-top: 7px;
+  font-size: 11.5px; color: var(--ink-3);
+}
+.detail-meta span { display: inline-flex; align-items: center; gap: 5px; }
+.detail-meta svg { width: 12px; height: 12px; }
+.detail-meta .mono { font-size: 10.5px; }
+
+.status-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 13px 15px;
+  border-radius: var(--r-m);
+  border: 1px solid var(--warn-line);
+  background: var(--warn-bg);
+  margin: 16px 0 18px;
+}
+.status-banner.ok { border-color: var(--ok-line); background: var(--ok-bg); }
+.status-banner.bad { border-color: var(--bad-line); background: var(--bad-bg); }
+.status-banner .s-icon {
+  width: 26px; height: 26px; flex: 0 0 26px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  background: rgba(255,255,255,.65);
+  border: 1px solid currentColor;
+  color: var(--warn);
+}
+.status-banner.ok .s-icon { color: var(--ok); }
+.status-banner.bad .s-icon { color: var(--bad); }
+.status-banner .s-icon svg { width: 14px; height: 14px; }
+.status-banner .s-body { flex: 1; min-width: 0; }
+.status-banner .s-line {
+  display: flex; align-items: center; gap: 9px; flex-wrap: wrap;
+}
+.status-banner .s-line b { font-size: 13px; font-weight: 600; }
+.status-banner .s-code {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .04em;
+  color: inherit; opacity: .75;
+}
+.status-banner .s-why {
+  margin: 4px 0 0; font-size: 12px; color: var(--ink-2);
+  max-width: 780px;
+}
+.status-banner .s-rc {
+  font-family: var(--mono); font-size: 10px;
+  border: 1px solid currentColor; border-radius: 3px;
+  padding: 1px 5px; opacity: .7;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 312px;
+  gap: 16px;
+  align-items: start;
+}
+
+.section-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+}
+.section-head h2 {
+  margin: 0; font-size: 13px; font-weight: 600; letter-spacing: -.005em;
+}
+.section-head .count {
+  font-family: var(--mono); font-size: 10px; color: var(--ink-3);
+  background: var(--surface-3); border-radius: 999px; padding: 1px 6px;
+}
+.section-head .tools { margin-left: auto; display: flex; gap: 6px; }
+
+.claim-table { width: 100%; border-collapse: collapse; }
+.claim-table thead th {
+  font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--ink-3); font-weight: 500; text-align: left;
+  padding: 8px 14px; border-bottom: 1px solid var(--line);
+  background: var(--surface-2);
+  white-space: nowrap;
+}
+.claim-table tbody tr {
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+}
+.claim-table tbody tr:last-child { border-bottom: 0; }
+.claim-table tbody tr:hover { background: #fbfaf7; }
+.claim-table tbody tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.claim-table td { padding: 11px 14px; vertical-align: top; }
+
+.claim-id {
+  font-family: var(--mono); font-size: 10.5px; color: var(--ink-3);
+  display: flex; flex-direction: column; gap: 4px;
+}
+.kind-chip {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--ink-3);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 0 4px;
+  background: var(--surface-2);
+  width: fit-content;
+}
+.claim-why { font-size: 12.5px; color: var(--ink); max-width: 300px; }
+.claim-where {
+  margin-top: 3px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--ink-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 300px;
+}
+
+.verdict {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 500; white-space: nowrap;
+}
+.verdict .dot { width: 6px; height: 6px; border-radius: 50%; }
+.verdict.ok { color: var(--ok); }
+.verdict.ok .dot { background: var(--ok); }
+.verdict.bad { color: var(--bad); }
+.verdict.bad .dot { background: var(--bad); }
+.verdict.absent { color: var(--warn); }
+.verdict.absent .dot { background: #c99a2e; }
+
+.basis-chip {
+  display: inline-block;
+  font-size: 9.5px;
+  border-radius: 3px;
+  padding: 1px 5px;
+  border: 1px solid var(--line);
+  color: var(--ink-2);
+  background: var(--surface-2);
+  white-space: nowrap;
+}
+.basis-chip.measured { color: #1f5fa8; border-color: #c9dcf3; background: #eef5fd; }
+.basis-chip.relayed { color: var(--relay); border-color: var(--relay-line); background: var(--relay-bg); }
+.basis-chip.absent { color: var(--warn); border-color: var(--warn-line); background: var(--warn-bg); }
+
+.evidence-cell { font-size: 11px; color: var(--ink-2); max-width: 260px; }
+.evidence-cell .ev-line {
+  display: flex; gap: 5px; align-items: baseline;
+  font-family: var(--mono); font-size: 10px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.evidence-cell .ev-line .lbl { color: var(--ink-3); flex: 0 0 22px; }
+.evidence-cell .ev-line.bad .val { color: var(--bad); }
+.evidence-cell .ev-note { font-size: 10.5px; color: var(--ink-3); margin-top: 3px; }
+
+/* ---------- right rail ---------- */
+
+.rail { display: flex; flex-direction: column; gap: 12px; position: sticky; top: 16px; }
+.rail-card { padding: 0; }
+.rail-body { padding: 13px 14px; }
+.rail-card h3 {
+  margin: 0;
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 500;
+  font-family: var(--mono);
+}
+
+.decision-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.decision-actions .btn { width: 100%; height: 35px; }
+.decision-note {
+  margin-top: 10px;
+  font-size: 10.5px;
+  color: var(--ink-3);
+  line-height: 1.55;
+}
+.decision-state {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px;
+  border-radius: var(--r-s);
+  background: var(--ok-bg);
+  border: 1px solid var(--ok-line);
+  color: var(--ok);
+  font-size: 11.5px;
+  margin-top: 10px;
+}
+.decision-state.bad { background: var(--bad-bg); border-color: var(--bad-line); color: var(--bad); }
+
+.evidence-list { display: flex; flex-direction: column; gap: 9px; margin-top: 10px; }
+.evidence-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 8px 9px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-s);
+  background: var(--surface-2);
+  width: 100%;
+  text-align: left;
+}
+.evidence-item:hover { border-color: var(--line-2); background: var(--surface); }
+.evidence-item .e-dot { width: 7px; height: 7px; border-radius: 50%; flex: 0 0 7px; }
+.evidence-item .e-dot.ok { background: var(--ok); }
+.evidence-item .e-dot.warn { background: #c99a2e; }
+.evidence-item .e-dot.bad { background: var(--bad); }
+.evidence-item .e-dot.off { background: var(--ink-4); }
+.evidence-item .e-body { flex: 1; min-width: 0; }
+.evidence-item b { display: block; font-size: 11.5px; font-weight: 500; }
+.evidence-item small { display: block; font-size: 10px; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.evidence-item .e-state { font-family: var(--mono); font-size: 9px; }
+.evidence-item .e-state.ok { color: var(--ok); }
+.evidence-item .e-state.warn { color: var(--warn); }
+.evidence-item .e-state.bad { color: var(--bad); }
+
+.relayed-list { margin: 8px 0 0; padding: 0; list-style: none; }
+.relayed-list li {
+  display: flex; align-items: center; gap: 8px;
+  padding: 5px 0;
+  border-bottom: 1px dashed var(--line);
+  font-size: 11px;
+}
+.relayed-list li:last-child { border-bottom: 0; }
+.relayed-list .k { font-family: var(--mono); font-size: 10px; color: var(--ink-2); }
+.relayed-list .v { margin-left: auto; font-family: var(--mono); font-size: 10px; color: var(--ink); }
+.relayed-list .tag {
+  font-size: 9.5px; letter-spacing: .04em; color: var(--relay);
+  border: 1px solid var(--relay-line); background: var(--relay-bg); border-radius: 3px;
+  padding: 0 4px;
+}
+
+.receipt-facts { display: grid; gap: 8px; margin-top: 10px; }
+.receipt-facts div { display: flex; gap: 8px; font-size: 10.5px; }
+.receipt-facts dt { color: var(--ink-3); flex: 0 0 62px; }
+.receipt-facts dd { margin: 0; font-family: var(--mono); font-size: 10px; color: var(--ink-2); word-break: break-all; }
+
+.rail-card .foot-note {
+  border-top: 1px solid var(--line);
+  padding: 10px 14px;
+  font-size: 10px;
+  color: var(--ink-3);
+  line-height: 1.55;
+  background: var(--surface-2);
+  border-radius: 0 0 var(--r-m) var(--r-m);
+}
+
+/* ---------- drawer ---------- */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 22, 28, .32);
+  backdrop-filter: blur(1px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .18s ease;
+  z-index: 40;
+}
+.overlay.is-open { opacity: 1; pointer-events: auto; }
+
+.drawer {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: min(620px, 92vw);
+  background: var(--surface);
+  box-shadow: var(--shadow-2);
+  transform: translateX(102%);
+  transition: transform .22s cubic-bezier(.22,.61,.36,1);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+}
+.drawer.is-open { transform: translateX(0); }
+.drawer-head {
+  padding: 15px 18px 13px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.drawer-head .d-kicker {
+  font-family: var(--mono); font-size: 10px; color: var(--ink-3);
+  letter-spacing: .06em; margin-bottom: 3px;
+}
+.drawer-head h2 { margin: 0; font-size: 16px; font-weight: 600; letter-spacing: -.01em; }
+.drawer-head .d-sub { margin: 4px 0 0; font-size: 11.5px; color: var(--ink-2); }
+.drawer-close { margin-left: auto; }
+.drawer-tabs {
+  display: flex; gap: 2px; padding: 8px 14px 0;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-2);
+}
+.drawer-tab {
+  border: 0; background: transparent;
+  padding: 7px 10px 9px;
+  font-size: 11.5px; color: var(--ink-3);
+  border-bottom: 2px solid transparent;
+}
+.drawer-tab:hover { color: var(--ink); }
+.drawer-tab.is-on { color: var(--ink); border-bottom-color: var(--ink); font-weight: 600; }
+.drawer-body { flex: 1; overflow-y: auto; padding: 16px 18px 24px; }
+.drawer-pane { display: none; }
+.drawer-pane.is-on { display: block; }
+
+.code {
+  margin: 0;
+  background: #f7f6f1;
+  border: 1px solid var(--line);
+  border-radius: var(--r-s);
+  overflow: auto;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.65;
+}
+.code table { border-collapse: collapse; width: 100%; }
+.code td { padding: 0 10px; vertical-align: top; white-space: pre; }
+.code td.ln {
+  width: 34px;
+  text-align: right;
+  color: var(--ink-3);
+  user-select: none;
+  border-right: 1px solid var(--line);
+  background: #f2f1ea;
+}
+.code tr.hit td { background: #fff3cf; }
+.code tr.hit td.ln { background: #f5e6b6; color: #7a5b00; }
+.code .tok-k { color: #1f49b0; }
+.code .tok-s { color: #0e7a4d; }
+.code .tok-c { color: #8b8f99; font-style: italic; }
+
+.evidence-meta {
+  display: flex; flex-wrap: wrap; gap: 6px 16px;
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-s);
+  background: var(--surface-2);
+  margin-bottom: 12px;
+  font-size: 10.5px; color: var(--ink-2);
+}
+.evidence-meta .mono { font-size: 10px; color: var(--ink); }
+.drawer-note {
+  margin: 14px 0 0;
+  font-size: 11px; color: var(--ink-3); line-height: 1.6;
+}
+.absent-box {
+  border: 1px dashed var(--warn-line);
+  background: var(--warn-bg);
+  border-radius: var(--r-m);
+  padding: 18px;
+  text-align: center;
+}
+.absent-box .a-title { font-size: 13px; font-weight: 600; color: var(--warn); margin-bottom: 5px; }
+.absent-box p { margin: 0 auto; max-width: 380px; font-size: 11.5px; color: var(--ink-2); line-height: 1.65; }
+
+/* ---------- modal ---------- */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  z-index: 60;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .16s ease;
+}
+.modal.is-open { opacity: 1; pointer-events: auto; }
+.modal-card {
+  width: min(500px, 94vw);
+  background: var(--surface);
+  border-radius: var(--r-l);
+  box-shadow: var(--shadow-2);
+  border: 1px solid var(--line);
+  transform: translateY(6px);
+  transition: transform .16s ease;
+}
+.modal.is-open .modal-card { transform: translateY(0); }
+.modal-head { padding: 18px 20px 0; }
+.modal-head h2 { margin: 0; font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
+.modal-head p { margin: 6px 0 0; font-size: 12px; color: var(--ink-2); }
+.modal-body { padding: 16px 20px 4px; }
+.modal-foot {
+  display: flex; justify-content: flex-end; gap: 8px;
+  padding: 14px 20px 18px;
+}
+.reason-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.reason-chip {
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 11px;
+  color: var(--ink-2);
+}
+.reason-chip:hover { border-color: var(--line-2); background: var(--surface); }
+.reason-chip.is-on { background: var(--bad-bg); border-color: var(--bad-line); color: var(--bad); }
+.field-label { font-size: 11px; color: var(--ink-2); font-weight: 500; display: block; margin-bottom: 6px; }
+textarea.reason-input {
+  width: 100%;
+  min-height: 74px;
+  resize: vertical;
+  border: 1px solid var(--line);
+  border-radius: var(--r-s);
+  background: var(--surface-2);
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.55;
+}
+textarea.reason-input:focus { outline: 2px solid var(--accent); outline-offset: -1px; background: var(--surface); }
+.modal-hint { font-size: 10.5px; color: var(--ink-3); margin-top: 6px; line-height: 1.5; }
+
+/* ---------- toast ---------- */
+
+.toast-wrap {
+  position: fixed;
+  left: 50%;
+  bottom: 26px;
+  transform: translateX(-50%);
+  z-index: 70;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  pointer-events: none;
+}
+.toast {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--ink);
+  color: #fff;
+  border-radius: var(--r-m);
+  padding: 9px 14px;
+  font-size: 12px;
+  box-shadow: var(--shadow-2);
+  animation: toast-in .18s ease;
+}
+.toast svg { width: 14px; height: 14px; color: #8fe0b2; }
+.toast.bad svg { color: #ffb4aa; }
+@keyframes toast-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ---------- history / rules / settings ---------- */
+
+.day-group { margin-bottom: 20px; }
+.day-head {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 11px; color: var(--ink-3);
+  margin-bottom: 8px;
+}
+.day-head .line { flex: 1; height: 1px; background: var(--line); }
+.history-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 13px 15px;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+}
+.history-row:last-child { border-bottom: 0; }
+.history-row:hover { background: #fbfaf7; }
+.history-row .h-status { width: 8px; height: 8px; border-radius: 50%; flex: 0 0 8px; }
+.history-row .h-status.ok { background: var(--ok); }
+.history-row .h-status.bad { background: var(--bad); }
+.history-row .h-status.warn { background: #c99a2e; }
+.history-row .h-main { flex: 1; min-width: 0; }
+.history-row .h-title { font-size: 12.5px; font-weight: 500; }
+.history-row .h-meta { font-size: 10.5px; color: var(--ink-3); margin-top: 2px; }
+.history-row .h-meta .mono { font-size: 10px; }
+.history-row .h-decision { font-size: 11px; color: var(--ink-2); width: 78px; }
+.history-row .h-date { font-family: var(--mono); font-size: 10px; color: var(--ink-3); width: 92px; text-align: right; }
+
+.doc { max-width: 840px; }
+.doc h2 {
+  font-size: 16px; font-weight: 600; letter-spacing: -.01em;
+  margin: 26px 0 8px;
+}
+.doc h2:first-child { margin-top: 0; }
+.doc p { font-size: 12.5px; color: var(--ink-2); line-height: 1.7; margin: 0 0 10px; }
+.doc .rule-list { display: grid; gap: 8px; margin: 10px 0 0; padding: 0; list-style: none; }
+.doc .rule-list li {
+  display: flex; gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-s);
+  background: var(--surface);
+  font-size: 12px;
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+.doc .rule-list b { color: var(--ink); font-weight: 600; }
+.doc .rule-list .idx {
+  font-family: var(--mono); font-size: 10px; color: var(--ink-3);
+  flex: 0 0 22px; padding-top: 1px;
+}
+.kind-table { width: 100%; border-collapse: collapse; margin-top: 8px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-m); overflow: hidden; }
+.kind-table th, .kind-table td {
+  text-align: left; padding: 8px 12px; font-size: 11.5px;
+  border-bottom: 1px solid var(--line);
+}
+.kind-table th { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-3); background: var(--surface-2); font-weight: 500; }
+.kind-table tr:last-child td { border-bottom: 0; }
+.kind-table td:first-child { font-family: var(--mono); font-size: 10.5px; color: var(--ink-2); }
+
+.settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.setting-card { padding: 15px 16px; }
+.setting-card h3 { margin: 0 0 4px; font-size: 12.5px; font-weight: 600; }
+.setting-card p { margin: 0 0 10px; font-size: 11.5px; color: var(--ink-3); line-height: 1.6; }
+.setting-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 0;
+  border-top: 1px dashed var(--line);
+  font-size: 11.5px;
+}
+.setting-row:first-of-type { border-top: 0; }
+.setting-row .k { color: var(--ink-2); flex: 1; }
+.setting-row .v { font-family: var(--mono); font-size: 10px; color: var(--ink-3); max-width: 55%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.switch {
+  width: 32px; height: 18px; border-radius: 999px;
+  background: var(--ok); position: relative; border: 0;
+  flex: 0 0 32px;
+}
+.switch::after {
+  content: ""; position: absolute; top: 2px; right: 2px;
+  width: 14px; height: 14px; border-radius: 50%; background: #fff;
+}
+.switch.locked { background: var(--ok); cursor: not-allowed; }
+.switch.off { background: var(--line-2); }
+.switch.off::after { right: auto; left: 2px; }
+
+/* ---------- statusbar ---------- */
+
+.statusbar {
+  flex: 0 0 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 14px;
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+  font-size: 10px;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.statusbar .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--ok); display: inline-block; margin-right: 5px; }
+.statusbar .spacer { margin-left: auto; }
+.statusbar .mono { font-size: 9.5px; }
+.statusbar .demo { color: var(--warn); }
+
+/* ---------- 49-cell journal grid ---------- */
+
+.cellgrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  max-width: 252px;
+  margin: 2px 0 10px;
+}
+.cell {
+  aspect-ratio: 1;
+  border-radius: 2px;
+  background: var(--surface-3);
+  border: 1px solid var(--line);
+}
+.cell.ok { background: var(--ok-bg); border-color: var(--ok-line); }
+
+.verdict.unk { color: var(--unk); }
+.verdict.unk .dot { background: var(--unk); }
+
+/* ---------- misc ---------- */
+
+.kbd-hint { font-size: 10px; color: var(--ink-3); }
+.divider { height: 1px; background: var(--line); margin: 10px 0; }
+.fade-in { animation: fade-in .18s ease; }
+@keyframes fade-in { from { opacity: 0; transform: translateY(2px); } to { opacity: 1; transform: none; } }
+
+@media (max-width: 1120px) {
+  .detail-grid { grid-template-columns: 1fr; }
+  .rail { position: static; }
+  .triage { grid-template-columns: repeat(2, 1fr); }
+  .settings-grid { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+</style>
+</head>
+<body>
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="i-queue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v12H4z"/><path d="M4 13h4l2 3h4l2-3h4"/><path d="M8 21h8"/></symbol>
+  <symbol id="i-history" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-rules" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h9a2 2 0 0 1 2 2v14H8a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="M6 18H4a2 2 0 0 1 0-4h4"/><path d="M12 9l2 2 3-3"/></symbol>
+  <symbol id="i-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9.5 17h-19z"/><path d="M12 9v5M12 17.2v.1"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.8v.1"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5"/><path d="M5 20h14"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></symbol>
+  <symbol id="i-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3M13 15h4"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.4-3 7.4-7 9-4-1.6-7-4.6-7-9V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></symbol>
+  <symbol id="i-filter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16l-6 8v6l-4-2v-4z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 1.8"/></symbol>
+  <symbol id="i-database" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="7.5" ry="3"/><path d="M4.5 6v6c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3V6"/><path d="M4.5 12v6c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3v-6"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1.2 1.2"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1.2-1.2"/></symbol>
+</svg>
+
+<div class="app">
+
+  <!-- Titlebar -->
+  <header class="titlebar">
+    <div class="traffic" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="app-title">收货台 <span>Receiving Desk</span></div>
+    <div class="titlebar-center">工作区 <b>微内核 / 交付对账</b> · 证据根 <span class="mono">~/Desktop/微内核</span></div>
+    <div class="titlebar-right">
+      <span class="ro-badge"><i></i>只读模式</span>
+      <button class="icon-btn" title="设置" aria-label="设置" data-nav="settings"><svg><use href="#i-settings"/></svg></button>
+    </div>
+  </header>
+
+  <div class="shell">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="workspace">
+        <div class="workspace-mark">收</div>
+        <div class="workspace-text">
+          <b>交付对账 · 桌面端</b>
+          <small>C:\Users\Admin\Desktop\微内核</small>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="主导航">
+        <div class="nav-label">工作台</div>
+        <button class="nav-item" data-nav="queue" aria-current="page">
+          <svg><use href="#i-queue"/></svg>队列
+          <span class="count hot" id="navQueueCount">6</span>
+        </button>
+        <button class="nav-item" data-nav="history">
+          <svg><use href="#i-history"/></svg>回执历史
+          <span class="count" id="navHistoryCount">4</span>
+        </button>
+        <div class="nav-label" style="margin-top:14px">理解与配置</div>
+        <button class="nav-item" data-nav="rules">
+          <svg><use href="#i-rules"/></svg>核对规则
+        </button>
+        <button class="nav-item" data-nav="settings">
+          <svg><use href="#i-settings"/></svg>设置
+        </button>
+      </nav>
+
+      <div class="side-section">
+        <div class="nav-label">本机证据源</div>
+        <div class="source-row"><span class="dot ok"></span>pgagent 轨迹<small>13 步</small></div>
+        <div class="source-row"><span class="dot ok"></span>agentd 事件层<small>E1–E8</small></div>
+        <div class="source-row"><span class="dot ok"></span>内核账本<small>2940 条</small></div>
+        <div class="source-row"><span class="dot warn"></span>交付源码<small>1 单缺</small></div>
+      </div>
+
+      <div class="side-foot">
+        <b>只读 · 不联网 · 不跑模型</b><br>
+        不执行被交付的代码；证据不出本机。<br>
+        <span class="mono">v0.1 · prototype · 10-26</span>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main" id="main">
+
+      <!-- ============ Queue ============ -->
+      <section class="screen is-active" id="screen-queue" aria-labelledby="queueTitle">
+        <div class="screen-inner">
+          <div class="page-head">
+            <div>
+              <div class="eyebrow">Queue · 队列</div>
+              <h1 id="queueTitle">待处理交付</h1>
+              <p class="sub"><span id="queueSub">6 单 · 2 单核不了 · 最早等待 2 小时</span> <span class="kbd-hint">（样例数据：3 份实测回执 + 3 条演示占位）</span></p>
+            </div>
+            <div class="head-actions">
+              <button class="btn ghost" id="refreshBtn"><svg><use href="#i-refresh"/></svg>重新读取</button>
+              <button class="btn primary" id="importBtn"><svg><use href="#i-plus"/></svg>导入交付声明…</button>
+            </div>
+          </div>
+
+          <div class="triage" id="triage">
+            <button class="triage-card" data-filter="ok" data-kind="ok" aria-pressed="false">
+              <div class="t-label"><span class="dot" style="color:var(--ok)"></span>可收</div>
+              <div class="t-num" data-count="ok">2</div>
+              <div class="t-note">每条声明都由盘上证据复核通过</div>
+            </button>
+            <button class="triage-card" data-filter="bad" data-kind="bad" aria-pressed="false">
+              <div class="t-label"><span class="dot" style="color:var(--bad)"></span>需退</div>
+              <div class="t-num" data-count="bad">1</div>
+              <div class="t-note">声明与盘上事实不符，必须退回</div>
+            </button>
+            <button class="triage-card" data-filter="warn" data-kind="warn" aria-pressed="false">
+              <div class="t-label"><span class="dot" style="color:var(--warn)"></span>核不了</div>
+              <div class="t-num" data-count="warn">2</div>
+              <div class="t-note">证据缺席，不等于通过</div>
+            </button>
+            <button class="triage-card" data-filter="processing" data-kind="unk" aria-pressed="false">
+              <div class="t-label"><span class="dot" style="color:var(--unk)"></span>处理中</div>
+              <div class="t-num" data-count="processing">1</div>
+              <div class="t-note">正在只读核对，尚未出回执</div>
+            </button>
+          </div>
+
+          <div class="panel">
+            <div class="table-tools">
+              <div class="chips" id="queueChips">
+                <button class="chip is-on" data-filter="all">全部 <span class="n" data-chip-count="all">6</span></button>
+                <button class="chip" data-filter="ok">可收 <span class="n" data-chip-count="ok">2</span></button>
+                <button class="chip" data-filter="bad">需退 <span class="n" data-chip-count="bad">1</span></button>
+                <button class="chip" data-filter="warn">核不了 <span class="n" data-chip-count="warn">2</span></button>
+                <button class="chip" data-filter="processing">处理中 <span class="n" data-chip-count="processing">1</span></button>
+              </div>
+              <div class="search">
+                <svg><use href="#i-search"/></svg>
+                <input id="queueSearch" type="search" placeholder="搜索交付、Agent、仓库…" aria-label="搜索交付">
+                <kbd>/</kbd>
+              </div>
+            </div>
+
+            <div id="queueBody">
+              <table class="deliveries">
+                <thead>
+                  <tr>
+                    <th>交付</th>
+                    <th>来源 Agent</th>
+                    <th>声明</th>
+                    <th>判定</th>
+                    <th>证据源</th>
+                    <th>等待</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="queueRows"></tbody>
+              </table>
+            </div>
+
+            <div id="queueState" hidden></div>
+
+            <div class="table-foot">
+              <span><svg style="width:11px;height:11px;vertical-align:-1px"><use href="#i-shield"/></svg> 核对只读：不执行代码、不联网、不跑模型</span>
+              <span class="spacer"></span>
+              <span class="mono" id="queueFootCount">6 / 6 单</span>
+            </div>
+          </div>
+
+          <p class="kbd-hint" style="margin:12px 2px 0">提示：按 <span class="mono">/</span> 聚焦搜索，<span class="mono">Esc</span> 关闭抽屉；判定与依据档取自 10-26 实测回执。</p>
+        </div>
+      </section>
+
+      <!-- ============ Detail ============ -->
+      <section class="screen" id="screen-detail" aria-labelledby="detailTitle">
+        <div class="screen-inner">
+          <div class="detail-head">
+            <div class="crumbs">
+              <button data-nav="queue"><svg><use href="#i-back"/></svg>队列</button>
+              <span>/</span>
+              <span class="mono" id="crumbId">DLV-1023-0042</span>
+            </div>
+            <div class="detail-title-row">
+              <div style="flex:1;min-width:0">
+                <h1 id="detailTitle">审查 6 行 Python 并给出修法</h1>
+                <div class="detail-meta" id="detailMeta"></div>
+              </div>
+              <div class="head-actions">
+                <button class="btn ghost" id="detailBackTop"><svg><use href="#i-back"/></svg>返回队列</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="status-banner" id="statusBanner" role="status">
+            <div class="s-icon"><svg><use href="#i-alert"/></svg></div>
+            <div class="s-body">
+              <div class="s-line">
+                <b id="bannerTitle">核不了</b>
+                <span class="s-code" id="bannerCode">NOT-ACCEPTED-UNVERIFIED</span>
+                <span class="s-rc" id="bannerRc">rc 3</span>
+              </div>
+              <p class="s-why" id="bannerWhy">8 条声明只有交付方自报；源码未随交付提交，D3 无法回盘。</p>
+            </div>
+          </div>
+
+          <div class="detail-grid">
+            <div class="panel" style="min-width:0">
+              <div class="section-head">
+                <h2>声明逐条核对</h2>
+                <span class="count" id="claimCount">9 条</span>
+                <span class="badge plain" id="claimMix" style="font-size:10px">1 盘上 / 8 转述</span>
+                <div class="tools">
+                  <button class="btn sm ghost" id="expandAllBtn">全部展开</button>
+                </div>
+              </div>
+              <table class="claim-table">
+                <thead>
+                  <tr>
+                    <th style="width:92px">声明</th>
+                    <th>内容</th>
+                    <th style="width:82px">判定</th>
+                    <th style="width:70px">依据档</th>
+                    <th>证据</th>
+                  </tr>
+                </thead>
+                <tbody id="claimRows"></tbody>
+              </table>
+              <div class="table-foot">
+                <span>点任一行查看证据；缺席项会写明「为什么缺席」</span>
+                <span class="spacer"></span>
+                <span class="mono" id="claimFoot">9 / 9 行</span>
+              </div>
+            </div>
+
+            <aside class="rail" aria-label="决定与证据">
+              <div class="panel rail-card">
+                <div class="rail-body">
+                  <h3>决定 DECISION</h3>
+                  <div class="decision-actions">
+                    <button class="btn accent" id="acceptBtn"><svg><use href="#i-check"/></svg>收下这版交付</button>
+                    <button class="btn danger" id="returnBtn"><svg><use href="#i-x"/></svg>退回并写理由</button>
+                  </div>
+                  <div id="decisionState"></div>
+                  <p class="decision-note" id="decisionNote">收下 = 把决定写进回执，并保留这份核对的结论；它不改变声明的真假，也不为代码质量背书。</p>
+                </div>
+              </div>
+
+              <div class="panel rail-card">
+                <div class="rail-body">
+                  <h3>证据源 SOURCES</h3>
+                  <div class="evidence-list" id="evidenceList"></div>
+                </div>
+                <div class="foot-note">证据源判红即整单退回；缺席记 ABSENT，不折算成通过。</div>
+              </div>
+
+              <div class="panel rail-card">
+                <div class="rail-body">
+                  <h3>回执 RECEIPT</h3>
+                  <dl class="receipt-facts" id="receiptFacts"></dl>
+                  <div style="display:flex;gap:8px;margin-top:12px">
+                    <button class="btn sm" id="exportBtn" style="flex:1"><svg><use href="#i-download"/></svg>导出回执</button>
+                    <button class="btn sm ghost" id="copyBtn" aria-label="复制回执摘要">复制摘要</button>
+                  </div>
+                </div>
+                <div class="foot-note">回执钉住工具与声明指纹；只对「声明 vs 盘上证据」负责。</div>
+              </div>
+
+              <div class="panel rail-card" id="relayedCard">
+                <div class="rail-body">
+                  <h3>交付方自报 RELAYED</h3>
+                  <ul class="relayed-list" id="relayedList"></ul>
+                </div>
+                <div class="foot-note">这些值来自交付方，本件不重算；只登记，不升格为实测。</div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ History ============ -->
+      <section class="screen" id="screen-history" aria-labelledby="historyTitle">
+        <div class="screen-inner">
+          <div class="page-head">
+            <div>
+              <div class="eyebrow">Receipts · 回执历史</div>
+              <h1 id="historyTitle">回执历史</h1>
+              <p class="sub">每张回执都能离线打开、转发给第三人；这里只留判定与决定，不留信任。</p>
+            </div>
+            <div class="head-actions">
+              <button class="btn ghost"><svg><use href="#i-filter"/></svg>筛选</button>
+              <button class="btn" id="historyExport"><svg><use href="#i-download"/></svg>导出全部</button>
+            </div>
+          </div>
+
+          <div class="day-group">
+            <div class="day-head"><span class="mono">2026-10-26</span><span class="line"></span><span>今天 · 2 份回执</span></div>
+            <div class="panel">
+              <div class="history-row" data-delivery="good">
+                <span class="h-status ok"></span>
+                <div class="h-main">
+                  <div class="h-title">修复均值函数并补 3 条测试</div>
+                  <div class="h-meta">示例 Agent · 8 条声明全过 · <span class="mono">ACCEPTED</span></div>
+                </div>
+                <div class="h-decision">已收下</div>
+                <div class="h-date">01:52</div>
+              </div>
+              <div class="history-row" data-delivery="liar">
+                <span class="h-status bad"></span>
+                <div class="h-main">
+                  <div class="h-title">同一声明，盘上未改</div>
+                  <div class="h-meta">示例 Agent · 5 条不符 · <span class="mono">NOT-ACCEPTED-MISMATCH</span></div>
+                </div>
+                <div class="h-decision">已退回</div>
+                <div class="h-date">01:52</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="day-group">
+            <div class="day-head"><span class="mono">2026-10-23</span><span class="line"></span><span>真端点首次交付 · 1 份回执</span></div>
+            <div class="panel">
+              <div class="history-row" data-delivery="real">
+                <span class="h-status warn"></span>
+                <div class="h-main">
+                  <div class="h-title">审查 6 行 Python 并给出修法</div>
+                  <div class="h-meta">pgagent · 9 条声明：8 转述 / 1 缺席 · <span class="mono">UNVERIFIED</span></div>
+                </div>
+                <div class="h-decision">未决定</div>
+                <div class="h-date">10-23</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="day-group">
+            <div class="day-head"><span class="line"></span><span>更早 · 形状样例（与本交付无因果关系）</span><span class="line"></span></div>
+            <div class="panel">
+              <div class="history-row" data-delivery="journal">
+                <span class="h-status ok"></span>
+                <div class="h-main">
+                  <div class="h-title">客服靶场账本导出 · 2940 条</div>
+                  <div class="h-meta">agentd · seal 2940/2940 · 60 组 × 49 格 · <span class="mono">ACCEPTED</span></div>
+                </div>
+                <div class="h-decision">已归档</div>
+                <div class="h-date">10-23</div>
+              </div>
+            </div>
+          </div>
+
+          <p class="kbd-hint" style="margin-top:4px">历史数据取自 10-26 盘上读数；原型不修改任何回执文件。</p>
+        </div>
+      </section>
+
+      <!-- ============ Rules ============ -->
+      <section class="screen" id="screen-rules" aria-labelledby="rulesTitle">
+        <div class="screen-inner">
+          <div class="page-head">
+            <div>
+              <div class="eyebrow">Rules · 核对规则</div>
+              <h1 id="rulesTitle">三种判定，不许塌成两种</h1>
+              <p class="sub">这份应用只负责一件事：把「声明」对到「盘上证据」。不判代码对错。</p>
+            </div>
+          </div>
+
+          <div class="doc">
+            <h2>判定语义</h2>
+            <ul class="rule-list">
+              <li><span class="idx">01</span><span><b>MATCH</b> — 声明与盘上证据一致。「一致」不等于「正确」：只说明这条声明没有说谎。</span></li>
+              <li><span class="idx">02</span><span><b>MISMATCH</b> — 声明与盘上事实不符，整单必须退回；退回理由会写进回执。</span></li>
+              <li><span class="idx">03</span><span><b>ABSENT</b> — 量不到，绝不写成 0。必须写明为什么缺席（文件未随交付、行号缺失、源不可读）。</span></li>
+            </ul>
+
+            <h2>依据档</h2>
+            <ul class="rule-list">
+              <li><span class="idx">D</span><span><b>measured（实量）</b> — 本件自己从盘上读到的值。只有 <span class="mono">evidence_class = "disk"</span> 的声明才可能落到这一档。</span></li>
+              <li><span class="idx">R</span><span><b>relayed（转述）</b> — 来自交付方自己的产物或自述，本件不重算。转述通过再多，也不会把整单推成 ACCEPTED。</span></li>
+              <li><span class="idx">A</span><span><b>absent（缺席）</b> — 该有而没有。它与「本来就没这回事」分开记；后者是 VACUOUS。</span></li>
+            </ul>
+
+            <h2>整单状态</h2>
+            <ul class="rule-list">
+              <li><span class="idx">0</span><span><b>ACCEPTED</b> — 每条声明都由盘上证据复核通过，且没有仅凭自报的项。</span></li>
+              <li><span class="idx">2</span><span><b>NOT-ACCEPTED-MISMATCH</b> — 有声明与盘上事实不符，或某个证据源判红。</span></li>
+              <li><span class="idx">3</span><span><b>NOT-ACCEPTED-UNVERIFIED</b> — 有声明回不了盘、证据源核不全，或有仅凭自报的项。</span></li>
+            </ul>
+
+            <h2>声明类型（v1 支持的核对）</h2>
+            <table class="kind-table">
+              <thead><tr><th>kind</th><th>核对什么</th><th>缺席时</th></tr></thead>
+              <tbody>
+                <tr><td>file_exists / file_absent</td><td>文件在 / 不在</td><td>路径越界或不可读记 ABSENT</td></tr>
+                <tr><td>file_sha256</td><td>64 位或 16 位前缀指纹</td><td>文件缺失记 ABSENT</td></tr>
+                <tr><td>file_bytes / file_lines</td><td>字节数 / 行数</td><td>文件缺失记 ABSENT</td></tr>
+                <tr><td>file_contains</td><td>某行 / 任意行含子串</td><td>行号越界记 ABSENT</td></tr>
+                <tr><td>log_exit / log_contains</td><td>末行 exit_code=N / 日志含子串</td><td>找不到记 ABSENT，不当 0</td></tr>
+                <tr><td>json_value / json_len</td><td>JSON 某格的值与类型 / 长度</td><td>读不出记 ABSENT</td></tr>
+              </tbody>
+            </table>
+
+            <h2>边界（不可协商）</h2>
+            <ul class="rule-list">
+              <li><span class="idx">1</span><span><b>只读</b> — 不执行被交付的代码，不修改任何输入文件；输入前后 sha256 必须不变。</span></li>
+              <li><span class="idx">2</span><span><b>不联网、不跑模型</b> — 证据与代码不出本机；回执离线可开。</span></li>
+              <li><span class="idx">3</span><span><b>不判对错</b> — 只核「声明 vs 盘上证据」是否一致；证据怎么产生的，本件证不了。</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ Settings ============ -->
+      <section class="screen" id="screen-settings" aria-labelledby="settingsTitle">
+        <div class="screen-inner">
+          <div class="page-head">
+            <div>
+              <div class="eyebrow">Settings · 设置</div>
+              <h1 id="settingsTitle">本机与边界</h1>
+              <p class="sub">原型里这些开关是锁死的；真实版本也不提供关闭只读的选项。</p>
+            </div>
+          </div>
+
+          <div class="settings-grid">
+            <div class="panel setting-card">
+              <h3>证据路径</h3>
+              <p>声明里的相对路径按声明文件所在目录解析。</p>
+              <div class="setting-row"><span class="k">工作区根</span><span class="v" title="C:\Users\Admin\Desktop\微内核">C:\Users\Admin\Desktop\微内核</span></div>
+              <div class="setting-row"><span class="k">pgagent 轨迹</span><span class="v">PDF-1022\真端点-1023\读数</span></div>
+              <div class="setting-row"><span class="k">agentd 事件</span><span class="v">agentd-真端点.events.jsonl</span></div>
+              <div class="setting-row"><span class="k">内核账本</span><span class="v">构建-1017\客服靶场\导出</span></div>
+              <button class="btn sm" style="margin-top:10px">重新定位…</button>
+            </div>
+
+            <div class="panel setting-card">
+              <h3>边界开关（锁定）</h3>
+              <p>这些是产品定义，不是偏好设置。</p>
+              <div class="setting-row"><span class="k">不执行被交付代码</span><button class="switch locked" aria-label="不执行被交付代码（锁定开启）" disabled></button></div>
+              <div class="setting-row"><span class="k">不联网 / 不跑模型</span><button class="switch locked" aria-label="不联网（锁定开启）" disabled></button></div>
+              <div class="setting-row"><span class="k">输入文件只读</span><button class="switch locked" aria-label="输入文件只读（锁定开启）" disabled></button></div>
+              <div class="setting-row"><span class="k">自报读数不重算</span><button class="switch locked" aria-label="自报读数不重算（锁定开启）" disabled></button></div>
+            </div>
+
+            <div class="panel setting-card">
+              <h3>声明模板</h3>
+              <p>把模板给 Agent，让它在交付时自动生成机器可核的声明；负责人不必手写 JSON。</p>
+              <pre class="code" style="padding:10px 12px;font-size:10px;line-height:1.6">{
+  "session": "谁的哪次交付",
+  "claims": [
+    {"id": "C1", "kind": "file_sha256",
+     "path": "工作区/x.py", "value": "&lt;64 位或 16 位前缀&gt;",
+     "evidence_class": "disk", "why": "为什么核这条"}
+  ]
+}</pre>
+              <div style="display:flex;gap:8px;margin-top:10px">
+                <button class="btn sm" id="copyTemplate">复制模板</button>
+                <button class="btn sm ghost">打开规则</button>
+              </div>
+            </div>
+
+            <div class="panel setting-card">
+              <h3>关于</h3>
+              <p>收货台是「交付对账」的桌面入口：队列、分诊、收 / 退、回执。核对引擎与判据在现有 CLI 里，原型不重复实现。</p>
+              <div class="setting-row"><span class="k">版本</span><span class="v">0.1 · prototype</span></div>
+              <div class="setting-row"><span class="k">原型日期</span><span class="v">2026-10-26</span></div>
+              <div class="setting-row"><span class="k">数据</span><span class="v">3 份实测回执 + 演示占位</span></div>
+              <div class="setting-row"><span class="k">设计源</span><span class="v">Frame B · 团队收货台</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <footer class="statusbar">
+    <span><span class="dot"></span>只读 · 不联网 · 不跑模型</span>
+    <span class="mono">证据根 ~/Desktop/微内核</span>
+    <span class="spacer"></span>
+    <span class="demo" id="demoLabel">演示状态：正常</span>
+    <label class="sr-only" for="demoState">演示状态</label>
+    <select id="demoState" class="mono" style="font-size:9.5px;border:1px solid var(--line);border-radius:3px;background:var(--surface);color:var(--ink-3);height:18px;padding:0 2px">
+      <option value="normal">正常</option>
+      <option value="empty">空队列</option>
+      <option value="loading">读取中</option>
+      <option value="error">读取失败</option>
+    </select>
+    <span class="mono">v0.1 prototype · 样例数据</span>
+  </footer>
+</div>
+
+<!-- Drawer -->
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true">
+  <div class="drawer-head">
+    <div style="flex:1;min-width:0">
+      <div class="d-kicker" id="drawerKicker">D3 · file_sha256 · ABSENT</div>
+      <h2 id="drawerTitle">交付报出的源码指纹（16 位前缀）</h2>
+      <p class="d-sub" id="drawerSub">源文件/待审.py · 盘上找不到这份文件</p>
+    </div>
+    <button class="icon-btn drawer-close" id="drawerClose" aria-label="关闭证据抽屉" style="color:var(--ink-3)"><svg><use href="#i-x"/></svg></button>
+  </div>
+  <div class="drawer-tabs" role="tablist" aria-label="证据类型">
+    <button class="drawer-tab is-on" role="tab" aria-selected="true" data-pane="file">文件</button>
+    <button class="drawer-tab" role="tab" aria-selected="false" data-pane="log">日志</button>
+    <button class="drawer-tab" role="tab" aria-selected="false" data-pane="event">轨迹</button>
+    <button class="drawer-tab" role="tab" aria-selected="false" data-pane="journal">账本</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-pane is-on" id="pane-file"></div>
+    <div class="drawer-pane" id="pane-log"></div>
+    <div class="drawer-pane" id="pane-event"></div>
+    <div class="drawer-pane" id="pane-journal"></div>
+    <p class="drawer-note">抽屉只展示回执里登记过的证据；不会现场执行命令、不会读取声明以外的路径。</p>
+  </div>
+</aside>
+
+<!-- Decision modal -->
+<div class="modal" id="decisionModal" role="dialog" aria-modal="true" aria-labelledby="decisionTitle">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h2 id="decisionTitle">收下这版交付？</h2>
+      <p id="decisionSub">把决定写进回执；后续任何人都能看见当时凭什么收。</p>
+    </div>
+    <div class="modal-body">
+      <div id="acceptBody">
+        <div class="evidence-meta" style="margin-bottom:0">
+          <span>整单 <b class="mono" id="modalStatus">NOT-ACCEPTED-UNVERIFIED</b></span>
+          <span>声明 <b class="mono" id="modalClaims">9 条</b></span>
+          <span>实量 <b class="mono" id="modalMeasured">1</b> / 转述 <b class="mono" id="modalRelayed">8</b></span>
+        </div>
+        <p class="modal-hint" id="acceptHint">这单仍有声明无法回盘。收下只会记录「我知道它核不了」；历史与回执会保持核不了状态。</p>
+      </div>
+      <div id="returnBody" hidden>
+        <label class="field-label" for="reasonInput">退回理由（会写进回执，发给交付方）</label>
+        <div class="reason-chips" id="reasonChips">
+          <button class="reason-chip" type="button">声明与盘上不符</button>
+          <button class="reason-chip" type="button">声明无法回盘</button>
+          <button class="reason-chip" type="button">缺证据源</button>
+          <button class="reason-chip" type="button">测试结论已过期</button>
+          <button class="reason-chip" type="button">自报项过多</button>
+        </div>
+        <textarea class="reason-input" id="reasonInput" placeholder="写清楚哪几条不成立、需要补什么证据…"></textarea>
+        <p class="modal-hint">退单不会修改对方的工作区；它只生成一张带理由的回执。</p>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" id="modalCancel">取消</button>
+      <button class="btn accent" id="modalConfirm">确认收下</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  var $ = function (sel, root) { return (root || document).querySelector(sel); };
+  var $$ = function (sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); };
+
+  var DELIVERIES = [
+    {
+      id: 'DLV-1023-0042',
+      key: 'real',
+      title: '审查 6 行 Python 并给出修法',
+      agent: 'pgagent',
+      agentSub: 'MiniMax-M2.5 · 真端点',
+      repo: 'PDF-1022 / 真端点-1023',
+      at: '10-23 21:40',
+      wait: '2 小时',
+      status: 'warn',
+      statusLabel: '核不了',
+      statusCode: 'NOT-ACCEPTED-UNVERIFIED',
+      rc: 3,
+      why: '1 条声明无法回盘核：D3；证据源核不全：pgagent；8 条声明只有交付方自己的产物作证：D1, D2, D4–D9。',
+      decidable: true,
+      sources: { pgagent: 'warn', agentd: 'ok', journal: 'ok' },
+      sourceNote: '3 源 · 1 缺',
+      claims: [
+        { id: 'D1', kind: 'json_value', cls: 'self', basis: 'relayed', verdict: 'ok', why: '这是本会话的第 1 发', target: 'pgagent-真端点.json#result.turn', expected: '1', actual: '1', detail: '' },
+        { id: 'D2', kind: 'json_value', cls: 'self', basis: 'relayed', verdict: 'ok', why: '被审代码被数成 6 行', target: 'pgagent-真端点.json#result.metrics.lines', expected: '6', actual: '6', detail: '' },
+        { id: 'D3', kind: 'file_sha256', cls: 'disk', basis: 'absent', verdict: 'absent', why: '交付报出的源码指纹（16 位前缀）', target: '源文件/待审.py', expected: '05bdf4a2f686c85b', actual: null, detail: '文件不存在，读不到内容：源文件/待审.py' },
+        { id: 'D4', kind: 'json_len', cls: 'self', basis: 'relayed', verdict: 'ok', why: '找到 1 条问题', target: 'pgagent-真端点.json#result.findings', expected: '1', actual: '1', detail: '' },
+        { id: 'D5', kind: 'json_len', cls: 'self', basis: 'relayed', verdict: 'ok', why: '另有 6 条未决', target: 'pgagent-真端点.json#result.unknowns', expected: '6', actual: '6', detail: '' },
+        { id: 'D6', kind: 'json_value', cls: 'self', basis: 'relayed', verdict: 'ok', why: '账本有 4 格改写了这一发的结果', target: 'pgagent-真端点.json#result.kpi_ledger_decided', expected: '4', actual: '4', detail: '' },
+        { id: 'D7', kind: 'json_value', cls: 'self', basis: 'relayed', verdict: 'ok', why: '13 步整列自洽', target: 'pgagent-真端点.json#result.trace_sane', expected: 'true', actual: 'true', detail: '' },
+        { id: 'D8', kind: 'json_value', cls: 'self', basis: 'relayed', verdict: 'ok', why: '跨发账链对得上', target: 'pgagent-真端点.json#result.chain_sane', expected: 'true', actual: 'true', detail: '' },
+        { id: 'D9', kind: 'json_value', cls: 'self', basis: 'relayed', verdict: 'ok', why: '五档加总 7 条', target: 'pgagent-真端点.json#result.provenance_mix.total', expected: '7', actual: '7', detail: '' }
+      ],
+      relayed: [
+        { k: 'trace_sane', v: 'true' },
+        { k: 'chain_sane', v: 'true' },
+        { k: 'kpi_ledger_decided', v: '4' },
+        { k: 'mix_identity_ok', v: 'true' }
+      ],
+      receipt: { generated: '2026-10-26 01:52', tool: '7994b666…', spec: 'e1fce41a…', landing: '9/9 rows OK', note: '源码未随交付提交' },
+      decision: null
+    },
+    {
+      id: 'DLV-1026-0007',
+      key: 'good',
+      title: '修复均值函数并补 3 条测试',
+      agent: '示例 Agent',
+      agentSub: '好交付样例',
+      repo: '示例-编程 / 工作区',
+      at: '01:52',
+      wait: '18 分钟',
+      status: 'ok',
+      statusLabel: '可收',
+      statusCode: 'ACCEPTED',
+      rc: 0,
+      why: '每条声明都由盘上证据复核通过，且没有仅凭自报的项。',
+      decidable: true,
+      sources: { pgagent: 'ok', agentd: 'ok', journal: 'ok' },
+      sourceNote: '3 源全绿',
+      claims: [
+        { id: 'C1', kind: 'file_sha256', cls: 'disk', basis: 'measured', verdict: 'ok', why: '修好的文件指纹', target: '工作区/calc.py', expected: 'e5e1efde…4f640', actual: 'e5e1efde…4f640', detail: '64 位全量一致' },
+        { id: 'C2', kind: 'file_contains', cls: 'disk', basis: 'measured', verdict: 'ok', why: '空列表分支已补上', target: '工作区/calc.py:3', expected: 'if not xs:', actual: '第 3 行命中', detail: '' },
+        { id: 'C3', kind: 'log_exit', cls: 'disk', basis: 'measured', verdict: 'ok', why: '测试进程正常退出', target: '工作区/test.log', expected: '0', actual: 'exit_code=0', detail: '' },
+        { id: 'C4', kind: 'log_contains', cls: 'disk', basis: 'measured', verdict: 'ok', why: '日志报告 1 件通过', target: '工作区/test.log', expected: 'OK · 1 件', actual: '末行命中', detail: '' },
+        { id: 'C5', kind: 'file_absent', cls: 'disk', basis: 'measured', verdict: 'ok', why: '调试文件未残留', target: '工作区/debug.log', expected: '不存在', actual: '确认不存在', detail: '' },
+        { id: 'C6', kind: 'file_bytes', cls: 'disk', basis: 'measured', verdict: 'ok', why: '输入文件字节数', target: '工作区/input.txt', expected: '99', actual: '99', detail: '' },
+        { id: 'C7', kind: 'file_lines', cls: 'disk', basis: 'measured', verdict: 'ok', why: '输入文件行数', target: '工作区/input.txt', expected: '4', actual: '4', detail: '' },
+        { id: 'C8', kind: 'log_contains', cls: 'disk', basis: 'measured', verdict: 'ok', why: '确实跑了 3 条测试', target: '工作区/test.log', expected: 'Ran 3 tests', actual: '命中', detail: '' }
+      ],
+      relayed: [],
+      receipt: { generated: '2026-10-26 01:52', tool: '7994b666…', spec: '样例声明', landing: '8/8 rows OK', note: '示例工作区未交付源码审查' },
+      decision: 'accepted'
+    },
+    {
+      id: 'DLV-1026-0008',
+      key: 'liar',
+      title: '同一声明，盘上未改',
+      agent: '示例 Agent',
+      agentSub: '谎报样例',
+      repo: '示例-编程-谎报 / 工作区',
+      at: '01:52',
+      wait: '16 分钟',
+      status: 'bad',
+      statusLabel: '需退',
+      statusCode: 'NOT-ACCEPTED-MISMATCH',
+      rc: 2,
+      why: '5 条声明与盘上事实不符：C1, C2, C3, C4, C5。3 条真话仍绿。',
+      decidable: true,
+      sources: { pgagent: 'ok', agentd: 'ok', journal: 'ok' },
+      sourceNote: '3 源全绿',
+      claims: [
+        { id: 'C1', kind: 'file_sha256', cls: 'disk', basis: 'measured', verdict: 'bad', why: '修好的文件指纹', target: '工作区/calc.py', expected: 'e5e1efde…4f640', actual: '13e046f5…463208', detail: '文件没有改' },
+        { id: 'C2', kind: 'file_contains', cls: 'disk', basis: 'measured', verdict: 'bad', why: '空列表分支已补上', target: '工作区/calc.py:3', expected: 'if not xs:', actual: 'return sum(xs) / len(xs)', detail: '第 3 行仍是旧实现' },
+        { id: 'C3', kind: 'log_exit', cls: 'disk', basis: 'measured', verdict: 'bad', why: '测试进程正常退出', target: '工作区/test.log', expected: '0', actual: 'exit_code=1', detail: '' },
+        { id: 'C4', kind: 'log_contains', cls: 'disk', basis: 'measured', verdict: 'bad', why: '日志报告 1 件通过', target: '工作区/test.log', expected: 'OK · 1 件', actual: 'OK · 0 件', detail: '' },
+        { id: 'C5', kind: 'file_absent', cls: 'disk', basis: 'measured', verdict: 'bad', why: '调试文件未残留', target: '工作区/debug.log', expected: '不存在', actual: '存在：27 字节', detail: '' },
+        { id: 'C6', kind: 'file_bytes', cls: 'disk', basis: 'measured', verdict: 'ok', why: '输入文件字节数', target: '工作区/input.txt', expected: '43', actual: '43', detail: '' },
+        { id: 'C7', kind: 'file_lines', cls: 'disk', basis: 'measured', verdict: 'ok', why: '输入文件行数', target: '工作区/input.txt', expected: '2', actual: '2', detail: '' },
+        { id: 'C8', kind: 'log_contains', cls: 'disk', basis: 'measured', verdict: 'ok', why: '确实跑了 3 条测试', target: '工作区/test.log', expected: 'Ran 3 tests', actual: '命中', detail: '' }
+      ],
+      relayed: [],
+      receipt: { generated: '2026-10-26 01:52', tool: '7994b666…', spec: '样例声明', landing: '8/8 rows OK', note: '同一份声明，盘上未改' },
+      decision: 'returned',
+      reason: '声明与盘上不符'
+    },
+    {
+      id: 'DLV-1020-0113',
+      key: 'hub',
+      title: '13 题业务回归 · 第 41 发',
+      agent: 'AgentHub',
+      agentSub: 'hubd · 长窗',
+      repo: 'AgentHub-1021 / 读数',
+      at: '01:12 起',
+      wait: '进行中',
+      status: 'processing',
+      statusLabel: '处理中',
+      statusCode: 'RUNNING',
+      rc: null,
+      why: '正在只读核对 13 题的发位与判据；当前 7/13，尚未生成回执。',
+      decidable: false,
+      sources: { pgagent: 'warn', agentd: 'ok', journal: 'off' },
+      sourceNote: '进行中 · 2 源',
+      claims: [],
+      relayed: [],
+      receipt: { generated: '—', tool: '—', spec: '—', landing: '—', note: '尚未落回执' }
+    },
+    {
+      id: 'DLV-1018-0294',
+      key: 'journal',
+      title: '客服靶场账本导出 · 2940 条',
+      agent: 'agentd',
+      agentSub: '事件层 · 形状样例',
+      repo: '构建-1017 / 客服靶场',
+      at: '10-23',
+      wait: '3 天',
+      status: 'ok',
+      statusLabel: '可收',
+      statusCode: 'ACCEPTED',
+      rc: 0,
+      why: 'seal 2940/2940 重算通过；60 组 × 49 格，20 入 / 29 出。',
+      decidable: true,
+      sources: { pgagent: 'off', agentd: 'ok', journal: 'ok' },
+      sourceNote: '2 源 · 1 不涉及',
+      claims: [
+        { id: 'J2', kind: 'file_lines', cls: 'disk', basis: 'measured', verdict: 'ok', why: '账本记录条数', target: '账本-全量-1018.jsonl', expected: '2940', actual: '2940', detail: '表头行单独计' },
+        { id: 'J4', kind: 'file_sha256', cls: 'disk', basis: 'measured', verdict: 'ok', why: 'seal 逐条重算', target: '账本-全量-1018.jsonl', expected: '2940/2940', actual: '2940/2940', detail: '' },
+        { id: 'J8', kind: 'json_len', cls: 'disk', basis: 'measured', verdict: 'ok', why: '49 格分组', target: '账本-全量-1018.jsonl#groups', expected: '60 组 × 49 格', actual: '60 × 49', detail: '20 入 / 29 出' }
+      ],
+      relayed: [],
+      receipt: { generated: '2026-10-23', tool: '对账单 1.0', spec: '形状样例', landing: '3/3 rows OK', note: '与本交付无因果关系' },
+      decision: 'archived'
+    },
+    {
+      id: 'DLV-1026-0009',
+      key: 'pending',
+      title: '新交付 · 声明尚未生成',
+      agent: '未署名',
+      agentSub: '等待导入',
+      repo: '—',
+      at: '刚刚',
+      wait: '刚刚',
+      status: 'warn',
+      statusLabel: '待核',
+      statusCode: 'NO-CLAIMS',
+      rc: null,
+      why: '交付方尚未生成机器可核的声明；没有可核对象，不能当作通过。',
+      decidable: false,
+      sources: { pgagent: 'off', agentd: 'off', journal: 'off' },
+      sourceNote: '0 源 · 未导入',
+      claims: [],
+      relayed: [],
+      receipt: { generated: '—', tool: '—', spec: '—', landing: '—', note: '没有声明可核' }
+    }
+  ];
+
+  var state = {
+    screen: 'queue',
+    filter: 'all',
+    q: '',
+    demo: 'normal',
+    current: null,
+    modal: null
+  };
+
+  function statusClass(s) {
+    if (s === 'ok') return 'ok';
+    if (s === 'bad') return 'bad';
+    if (s === 'processing') return 'unk';
+    return 'warn';
+  }
+
+  function basisText(b) {
+    return b === 'measured' ? '实量' : b === 'relayed' ? '转述' : '缺席';
+  }
+
+  function verdictText(v) {
+    return v === 'ok' ? 'MATCH' : v === 'bad' ? 'MISMATCH' : v === 'absent' ? 'ABSENT' : '进行中';
+  }
+
+  function verdictClass(v) {
+    return v === 'ok' ? 'ok' : v === 'bad' ? 'bad' : v === 'absent' ? 'absent' : 'unk';
+  }
+
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function counts() {
+    var c = { ok: 0, bad: 0, warn: 0, processing: 0 };
+    DELIVERIES.forEach(function (d) {
+      if (d.status === 'processing') c.processing++;
+      else if (d.status === 'ok') c.ok++;
+      else if (d.status === 'bad') c.bad++;
+      else c.warn++;
+    });
+    return c;
+  }
+
+  function refreshCounts() {
+    var mode = state.demo;
+    var c = counts();
+    $$('[data-count]').forEach(function (el) {
+      var k = el.getAttribute('data-count');
+      el.textContent = mode === 'normal' ? (c[k] || 0) : mode === 'empty' ? '0' : '—';
+    });
+    $$('[data-chip-count]').forEach(function (el) {
+      var k = el.getAttribute('data-chip-count');
+      el.textContent = mode === 'normal' ? (k === 'all' ? DELIVERIES.length : (c[k] || 0)) : mode === 'empty' ? '0' : '—';
+    });
+    var nav = $('#navQueueCount');
+    if (nav) nav.textContent = mode === 'normal' ? String(DELIVERIES.length) : mode === 'empty' ? '0' : '—';
+    var sub = $('#queueSub');
+    if (sub) {
+      sub.textContent = mode === 'normal'
+        ? DELIVERIES.length + ' 单 · ' + c.warn + ' 单核不了 · ' + c.bad + ' 单需退'
+        : mode === 'empty' ? '0 单 · 队列已空'
+        : mode === 'loading' ? '读取中…' : '读取失败 · 证据根不可读';
+    }
+    var hist = $('#navHistoryCount');
+    if (hist) hist.textContent = String($$('.history-row[data-delivery]').length);
+  }
+
+  function syncHistory() {
+    $$('.history-row[data-delivery]').forEach(function (row) {
+      var key = row.getAttribute('data-delivery');
+      var d = DELIVERIES.filter(function (x) { return x.key === key; })[0];
+      var el = row.querySelector('.h-decision');
+      if (!d || !el) return;
+      if (d.decision === 'accepted') el.textContent = d.status === 'warn' ? '已收下 · 仍核不了' : '已收下';
+      else if (d.decision === 'returned') el.textContent = '已退回';
+      else if (d.decision === 'archived') el.textContent = '已归档';
+      else el.textContent = '未决定';
+    });
+  }
+
+  function barsHTML(d) {
+    if (!d.claims.length) {
+      return '<div class="mini-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>';
+    }
+    return '<div class="mini-bars" aria-hidden="true">' + d.claims.map(function (c) {
+      var cls = c.verdict === 'ok' ? 'ok' : c.verdict === 'bad' ? 'bad' : 'absent';
+      return '<i class="' + cls + '"></i>';
+    }).join('') + '</div>';
+  }
+
+  function sourcePips(d) {
+    var map = { pgagent: 'P', agentd: 'E', journal: 'J' };
+    return '<div class="source-pips" aria-hidden="true">' + Object.keys(map).map(function (k) {
+      var s = d.sources[k];
+      var cls = s === 'ok' ? 'ok' : s === 'bad' ? 'bad' : s === 'warn' ? 'warn' : '';
+      return '<i class="' + cls + '" title="' + esc(k) + ': ' + esc(s) + '">' + map[k] + '</i>';
+    }).join('') + '</div>';
+  }
+
+  function rowsForQueue() {
+    var q = state.q.trim().toLowerCase();
+    return DELIVERIES.filter(function (d) {
+      var f = state.filter;
+      var okFilter = f === 'all' ||
+        (f === 'ok' && d.status === 'ok') ||
+        (f === 'bad' && d.status === 'bad') ||
+        (f === 'warn' && d.status === 'warn') ||
+        (f === 'processing' && d.status === 'processing');
+      if (!okFilter) return false;
+      if (!q) return true;
+      return (d.id + ' ' + d.title + ' ' + d.agent + ' ' + d.repo).toLowerCase().indexOf(q) >= 0;
+    });
+  }
+
+  function rowHTML(d) {
+    var counts = { ok: 0, bad: 0, absent: 0 };
+    d.claims.forEach(function (c) {
+      if (c.verdict === 'ok') counts.ok++;
+      else if (c.verdict === 'bad') counts.bad++;
+      else counts.absent++;
+    });
+    var claimsLine;
+    if (!d.claims.length) {
+      claimsLine = d.key === 'pending' ? '0 条 · 尚未生成' : '— · 核对中';
+    } else {
+      claimsLine = '<b>' + d.claims.length + '</b> 条 · ' + counts.ok + ' 过' +
+        (counts.bad ? ' / ' + counts.bad + ' 不符' : '') +
+        (counts.absent ? ' / ' + counts.absent + ' 缺席' : '');
+    }
+    return '' +
+      '<tr data-open="' + esc(d.id) + '" tabindex="0">' +
+        '<td class="d-main">' +
+          '<div class="d-id"><span class="mono">' + esc(d.id) + '</span>' + (d.key === 'real' || d.key === 'good' || d.key === 'liar' ? '<span class="badge plain" style="font-size:8.5px;padding:0 4px">实测回执</span>' : '<span class="badge plain" style="font-size:8.5px;padding:0 4px">演示占位</span>') + '</div>' +
+          '<div class="d-title">' + esc(d.title) + '</div>' +
+          '<div class="d-sub">' + esc(d.repo) + '</div>' +
+        '</td>' +
+        '<td><div class="agent-cell"><div class="agent-mark">' + esc(d.agent.slice(0, 2)) + '</div><div><b>' + esc(d.agent) + '</b><small>' + esc(d.agentSub) + '</small></div></div></td>' +
+        '<td class="claims-cell"><div class="c-line">' + claimsLine + '</div>' + barsHTML(d) + '</td>' +
+        '<td><span class="badge ' + statusClass(d.status) + '"><span class="dot"></span>' + esc(d.statusLabel) + '</span></td>' +
+        '<td class="sources-cell">' + sourcePips(d) + '<small>' + esc(d.sourceNote) + '</small></td>' +
+        '<td class="wait-cell"><div class="w1">' + esc(d.wait) + '</div><div class="w2">' + esc(d.at) + '</div></td>' +
+        '<td><span class="row-cta">' + (d.decidable ? '核对' : '查看') + ' <svg><use href="#i-arrow"/></svg></span></td>' +
+      '</tr>';
+  }
+
+  function stateBox(kind) {
+    if (kind === 'loading') {
+      var rows = '';
+      for (var i = 0; i < 5; i++) {
+        rows += '<div class="skeleton-row"><span class="sk t1"></span><span class="sk t2"></span><span class="sk t3"></span><span class="sk t4"></span></div>';
+      }
+      return '<div aria-label="读取中">' + rows + '</div>';
+    }
+    if (kind === 'empty') {
+      return '<div class="state-box"><div class="state-icon"><svg><use href="#i-queue"/></svg></div><h3>队列是空的</h3><p>没有待核对的交付。把 Agent 的交付声明拖进来，或让它按模板自动生成。</p><button class="btn primary" data-import>导入交付声明…</button></div>';
+    }
+    return '<div class="state-box error"><div class="state-icon"><svg><use href="#i-alert"/></svg></div><h3>读取失败</h3><p>证据根不可读：<span class="mono">~/Desktop/微内核</span>。检查路径后重试；本件不会联网寻找替代源。</p><button class="btn" data-retry>重试读取</button></div>';
+  }
+
+  function renderQueue() {
+    var table = $('#queueBody');
+    var stateEl = $('#queueState');
+    var foot = $('#queueFootCount');
+    if (state.demo !== 'normal') {
+      table.hidden = true;
+      stateEl.hidden = false;
+      stateEl.innerHTML = stateBox(state.demo);
+      foot.textContent = state.demo === 'empty' ? '0 / 0 单' : '—';
+      refreshCounts();
+      return;
+    }
+    table.hidden = false;
+    stateEl.hidden = true;
+    var rows = rowsForQueue();
+    var tbody = $('#queueRows');
+    if (!rows.length) {
+      tbody.innerHTML = '<tr><td colspan="7"><div class="state-box" style="padding:36px"><div class="state-icon"><svg><use href="#i-search"/></svg></div><h3>没有符合条件的单</h3><p>换个筛选或清空搜索。</p></div></td></tr>';
+    } else {
+      tbody.innerHTML = rows.map(rowHTML).join('');
+    }
+    foot.textContent = rows.length + ' / ' + DELIVERIES.length + ' 单';
+    refreshCounts();
+  }
+
+  function detailMetaHTML(d) {
+    return '' +
+      '<span><svg><use href="#i-link"/></svg><span class="mono">' + esc(d.id) + '</span></span>' +
+      '<span><svg><use href="#i-terminal"/></svg>' + esc(d.agent) + '</span>' +
+      '<span><svg><use href="#i-clock"/></svg>' + esc(d.at) + '</span>' +
+      '<span><svg><use href="#i-file"/></svg>' + esc(d.repo) + '</span>';
+  }
+
+  function bannerFor(d) {
+    var cls = d.status === 'ok' ? 'ok' : d.status === 'bad' ? 'bad' : '';
+    var title = d.status === 'ok' ? '可收' : d.status === 'bad' ? '需退' : d.status === 'processing' ? '处理中' : d.statusLabel === '待核' ? '待核' : '核不了';
+    return {
+      cls: cls,
+      title: title,
+      code: d.statusCode,
+      rc: d.rc == null ? '' : 'rc ' + d.rc,
+      icon: d.status === 'ok' ? 'i-check' : d.status === 'processing' ? 'i-clock' : 'i-alert'
+    };
+  }
+
+  function claimRowHTML(c, d) {
+    var expected = c.expected == null ? '—' : String(c.expected);
+    var actual = c.actual == null ? '—' : String(c.actual);
+    var ev;
+    if (c.verdict === 'absent') {
+      ev = '<div class="ev-line bad"><span class="lbl">盘上</span><span class="val">读不到</span></div><div class="ev-note">' + esc(c.detail || '缺席，原因未写') + '</div>';
+    } else if (c.verdict === 'bad') {
+      ev = '<div class="ev-line"><span class="lbl">期望</span><span class="val">' + esc(expected) + '</span></div><div class="ev-line bad"><span class="lbl">盘上</span><span class="val">' + esc(actual) + '</span></div>';
+    } else {
+      ev = '<div class="ev-line"><span class="lbl">值</span><span class="val">' + esc(actual) + '</span></div>' + (c.detail ? '<div class="ev-note">' + esc(c.detail) + '</div>' : '');
+    }
+    return '' +
+      '<tr data-claim="' + esc(c.id) + '" tabindex="0">' +
+        '<td><div class="claim-id"><span>' + esc(c.id) + '</span><span class="kind-chip">' + esc(c.kind) + '</span></div></td>' +
+        '<td><div class="claim-why">' + esc(c.why) + '</div><div class="claim-where">' + esc(c.target) + '</div></td>' +
+        '<td><span class="verdict ' + verdictClass(c.verdict) + '"><span class="dot"></span>' + verdictText(c.verdict) + '</span></td>' +
+        '<td><span class="basis-chip ' + esc(c.basis) + '">' + basisText(c.basis) + '</span></td>' +
+        '<td class="evidence-cell">' + ev + '</td>' +
+      '</tr>';
+  }
+
+  function sourceListHTML(d) {
+    var meta = {
+      pgagent: { name: 'pgagent 轨迹', note: d.key === 'real' ? 'P10 缺席：源码未随交付提交' : d.key === 'hub' ? '本单无关联轨迹' : 'P0–P10 已核' },
+      agentd: { name: 'agentd 事件层', note: d.key === 'real' ? 'E1–E8 · 会话 real-agentd-1' : 'E1–E8 · 结构自洽' },
+      journal: { name: '内核账本', note: d.key === 'journal' ? 'seal 2940/2940 · 60 × 49' : 'J0–J9 · 形状样例' }
+    };
+    return ['pgagent', 'agentd', 'journal'].map(function (k) {
+      var s = d.sources[k];
+      var cls = s === 'ok' ? 'ok' : s === 'bad' ? 'bad' : s === 'warn' ? 'warn' : 'off';
+      var label = s === 'ok' ? 'GREEN' : s === 'bad' ? 'RED' : s === 'warn' ? 'ABSENT' : 'NOT-USED';
+      return '<button class="evidence-item" data-src="' + k + '">' +
+        '<span class="e-dot ' + cls + '"></span>' +
+        '<span class="e-body"><b>' + meta[k].name + '</b><small>' + esc(meta[k].note) + '</small></span>' +
+        '<span class="e-state ' + (cls === 'off' ? '' : cls) + '">' + label + '</span>' +
+      '</button>';
+    }).join('');
+  }
+
+  function renderDetail(d) {
+    state.current = d;
+    $('#crumbId').textContent = d.id;
+    $('#detailTitle').textContent = d.title;
+    $('#detailMeta').innerHTML = detailMetaHTML(d);
+    var b = bannerFor(d);
+    var banner = $('#statusBanner');
+    banner.className = 'status-banner ' + b.cls;
+    $('.s-icon svg use', banner).setAttribute('href', '#' + b.icon);
+    $('#bannerTitle').textContent = b.title;
+    $('#bannerCode').textContent = b.code;
+    $('#bannerRc').textContent = b.rc;
+    $('#bannerRc').style.display = b.rc ? '' : 'none';
+    $('#bannerWhy').textContent = d.why;
+
+    var disk = d.claims.filter(function (c) { return c.cls === 'disk'; }).length;
+    var self = d.claims.length - disk;
+    $('#claimCount').textContent = d.claims.length + ' 条';
+    $('#claimMix').textContent = disk + ' 盘上 / ' + self + ' 自报';
+
+    var tbody = $('#claimRows');
+    if (!d.claims.length) {
+      tbody.innerHTML = '<tr><td colspan="5"><div class="state-box" style="padding:34px"><div class="state-icon"><svg><use href="#i-file"/></svg></div><h3>' + (d.key === 'pending' ? '没有可核声明' : '正在逐条核对') + '</h3><p>' + esc(d.why) + '</p></div></td></tr>';
+    } else {
+      tbody.innerHTML = d.claims.map(function (c) { return claimRowHTML(c, d); }).join('');
+    }
+    $('#claimFoot').textContent = d.claims.length + ' / ' + d.claims.length + ' 行';
+
+    $('#evidenceList').innerHTML = sourceListHTML(d);
+
+    var facts = d.receipt;
+    $('#receiptFacts').innerHTML = '' +
+      '<div><dt>生成</dt><dd>' + esc(facts.generated) + '</dd></div>' +
+      '<div><dt>工具</dt><dd>' + esc(facts.tool) + '</dd></div>' +
+      '<div><dt>声明</dt><dd>' + esc(facts.spec) + '</dd></div>' +
+      '<div><dt>落盘</dt><dd>' + esc(facts.landing) + '</dd></div>';
+
+    var relayed = $('#relayedCard');
+    if (d.relayed.length) {
+      relayed.hidden = false;
+      $('#relayedList').innerHTML = d.relayed.map(function (r) {
+        return '<li><span class="k">' + esc(r.k) + '</span><span class="tag">转述</span><span class="v">' + esc(r.v) + '</span></li>';
+      }).join('');
+    } else {
+      relayed.hidden = true;
+    }
+
+    var accept = $('#acceptBtn');
+    var ret = $('#returnBtn');
+    var mustReturn = d.status === 'bad';
+    accept.disabled = !d.decidable || mustReturn;
+    ret.disabled = !d.decidable;
+    accept.title = mustReturn ? '有声明与盘上不符，整单必须退回' : '';
+
+    var note = $('#decisionNote');
+    if (note) {
+      note.textContent = !d.decidable
+        ? (d.key === 'pending' ? '没有可核对的声明，收 / 退都无从谈起；先让交付方补齐声明。' : '只读核对尚未完成，出回执前不能决定。')
+        : mustReturn ? '有声明与盘上事实不符（MISMATCH），按规则整单必须退回；不能收下。'
+        : d.status === 'warn' ? '收下 = 记录决定并保留核不了结论；历史与回执仍标 UNVERIFIED，不会变成通过。'
+        : '收下 = 把决定写进回执；它不为代码质量或测试充分性背书。';
+    }
+
+    var ds = $('#decisionState');
+    if (d.decision === 'accepted') {
+      ds.innerHTML = '<div class="decision-state"><svg style="width:13px;height:13px"><use href="#i-check"/></svg>已收下 · 决定已写进回执（样例）</div>';
+    } else if (d.decision === 'returned') {
+      ds.innerHTML = '<div class="decision-state bad"><svg style="width:13px;height:13px"><use href="#i-x"/></svg>已退回：' + esc(d.reason || '未填理由') + '</div>';
+    } else if (!d.decidable) {
+      ds.innerHTML = '<div class="decision-state" style="background:var(--unk-bg);border-color:var(--unk-line);color:var(--unk)"><svg style="width:13px;height:13px"><use href="#i-clock"/></svg>' + (d.key === 'pending' ? '没有声明，无法收 / 退' : '核对中，暂不能决定') + '</div>';
+    } else {
+      ds.innerHTML = '';
+    }
+  }
+
+  function navigate(screen) {
+    state.screen = screen;
+    $$('.screen').forEach(function (s) { s.classList.toggle('is-active', s.id === 'screen-' + screen); });
+    $$('.nav-item').forEach(function (b) {
+      var target = b.getAttribute('data-nav');
+      var active = target === screen || (screen === 'detail' && target === 'queue');
+      if (active) b.setAttribute('aria-current', 'page');
+      else b.removeAttribute('aria-current');
+    });
+    $('#main').scrollTop = 0;
+    if (screen === 'queue') renderQueue();
+  }
+
+  function openDetail(id) {
+    var d = DELIVERIES.filter(function (x) { return x.id === id || x.key === id; })[0];
+    if (!d) return;
+    renderDetail(d);
+    navigate('detail');
+  }
+
+  /* ---------- drawer ---------- */
+
+  function codeTable(lines, hit) {
+    return '<pre class="code"><table>' + lines.map(function (line, i) {
+      var n = i + 1;
+      return '<tr' + (hit === n ? ' class="hit"' : '') + '><td class="ln">' + n + '</td><td>' + esc(line) + '</td></tr>';
+    }).join('') + '</table></pre>';
+  }
+
+  function metaRow(d, c) {
+    return '<div class="evidence-meta">' +
+      '<span>声明 <b class="mono">' + esc(c.id) + '</b></span>' +
+      '<span>kind <b class="mono">' + esc(c.kind) + '</b></span>' +
+      '<span>依据档 <b class="mono">' + esc(c.basis) + '</b></span>' +
+      '<span>来源 <b class="mono">' + (c.cls === 'disk' ? '盘上' : '交付方自报') + '</b></span>' +
+    '</div>';
+  }
+
+  function paneNotApplicable(what) {
+    return '<div class="state-box" style="padding:28px 12px"><div class="state-icon"><svg><use href="#i-info"/></svg></div><h3>这一类证据不涉及本声明</h3><p>本声明核对的是' + esc(what) + '；抽屉只展示回执登记过的证据。</p></div>';
+  }
+
+  function filePane(c) {
+    if (c.verdict === 'absent') {
+      return metaRow(null, c) +
+        '<div class="absent-box"><div class="a-title">ABSENT · 读不到</div><p>' + esc(c.detail || '文件不存在，读不到内容。') + '</p></div>' +
+        '<p class="drawer-note">缺席不是 0，也不是通过。回执会保留这条缺席及原因；收下这单也不会把它改成 MATCH。</p>';
+    }
+    if (c.kind === 'file_contains') {
+      var lines = ['def mean(xs):', '    if not xs:', '        return 0', '    return sum(xs) / len(xs)'];
+      if (c.verdict === 'bad') lines = ['def mean(xs):', '    # TODO: handle empty list', '    return sum(xs) / len(xs)'];
+      return metaRow(null, c) +
+        codeTable(lines, c.verdict === 'bad' ? 3 : 2) +
+        '<p class="drawer-note">命中行已高亮；文本按 UTF-8 读取，行号从 1 起。</p>';
+    }
+    return metaRow(null, c) +
+      '<div class="evidence-meta" style="margin-bottom:0">' +
+        '<span>路径 <b class="mono">' + esc(c.target) + '</b></span>' +
+        '<span>期望 <b class="mono">' + esc(c.expected == null ? '—' : c.expected) + '</b></span>' +
+        '<span>盘上 <b class="mono">' + esc(c.actual == null ? '—' : c.actual) + '</b></span>' +
+      '</div>' +
+      '<p class="drawer-note">' + esc(c.detail || '值与声明一致。') + '</p>';
+  }
+
+  function logPane(c) {
+    if (c.kind !== 'log_exit' && c.kind !== 'log_contains') return paneNotApplicable('文件或 JSON 值');
+    var tail = ['Ran 3 tests in 0.041s', '', 'OK · 1 件', c.verdict === 'bad' ? 'exit_code=1' : 'exit_code=0'];
+    return metaRow(null, c) + codeTable(tail, c.kind === 'log_exit' ? 4 : 3) +
+      '<p class="drawer-note">log_exit 只认最后一行 <span class="mono">exit_code=N</span>；找不到这一行记 ABSENT，不当 0。</p>';
+  }
+
+  function tracePane(c) {
+    if (c.kind !== 'json_value' && c.kind !== 'json_len') return paneNotApplicable('文件、日志或账本');
+    var path = c.target.split('#')[0];
+    var key = c.target.split('#')[1] || '';
+    return metaRow(null, c) +
+      '<pre class="code"><table>' +
+        '<tr><td class="ln">1</td><td>{</td></tr>' +
+        '<tr><td class="ln">2</td><td>  "result": {</td></tr>' +
+        '<tr class="hit"><td class="ln">3</td><td>    "' + esc(key.split('.').slice(-1)[0]) + '": ' + esc(c.actual) + '</td></tr>' +
+        '<tr><td class="ln">4</td><td>  }</td></tr>' +
+        '<tr><td class="ln">5</td><td>}</td></tr>' +
+      '</table></pre>' +
+      '<p class="drawer-note">来自 <span class="mono">' + esc(path) + '</span>。这是交付方的轨迹产物，依据档仍是转述；本件不重算模型行为。</p>';
+  }
+
+  function journalPane(c, d) {
+    var cells = '';
+    for (var i = 0; i < 49; i++) {
+      var cls = (i % 7 === 3 || i === 21 || i === 34) ? ' ok' : '';
+      cells += '<span class="cell' + cls + '"></span>';
+    }
+    return metaRow(null, c) +
+      '<div class="evidence-meta" style="margin-bottom:10px"><span>seal <b class="mono">2940 / 2940</b></span><span>分组 <b class="mono">60</b></span><span>每格 <b class="mono">49</b></span></div>' +
+      '<div class="cellgrid" aria-hidden="true">' + cells + '</div>' +
+      '<p class="drawer-note">49 格结构自洽（20 入 / 29 出）；本件只核形状，不核每格内容对不对。' + (d.key === 'journal' ? '' : '此账本为形状样例，与本交付无因果关系。') + '</p>';
+  }
+
+  function openDrawer(claim) {
+    var d = state.current;
+    $('#drawerKicker').textContent = claim.id + ' · ' + claim.kind + ' · ' + verdictText(claim.verdict);
+    $('#drawerTitle').textContent = claim.why;
+    $('#drawerSub').textContent = claim.target;
+    $('#pane-file').innerHTML = filePane(claim);
+    $('#pane-log').innerHTML = logPane(claim);
+    $('#pane-event').innerHTML = tracePane(claim);
+    $('#pane-journal').innerHTML = journalPane(claim, d);
+    var defaultPane = claim.kind.indexOf('log_') === 0 ? 'log' : claim.kind.indexOf('json_') === 0 ? 'event' : 'file';
+    setDrawerTab(defaultPane);
+    $('#drawer').classList.add('is-open');
+    $('#drawer').setAttribute('aria-hidden', 'false');
+    $('#overlay').classList.add('is-open');
+    $('#drawerClose').focus();
+  }
+
+  function setDrawerTab(pane) {
+    $$('.drawer-tab').forEach(function (t) {
+      var on = t.getAttribute('data-pane') === pane;
+      t.classList.toggle('is-on', on);
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    $$('.drawer-pane').forEach(function (p) { p.classList.toggle('is-on', p.id === 'pane-' + pane); });
+  }
+
+  function closeDrawer() {
+    $('#drawer').classList.remove('is-open');
+    $('#drawer').setAttribute('aria-hidden', 'true');
+    $('#overlay').classList.remove('is-open');
+  }
+
+  /* ---------- modal ---------- */
+
+  function openModal(mode) {
+    var d = state.current;
+    if (!d || !d.decidable) return;
+    if (mode === 'accept' && d.status === 'bad') { toast('有 MISMATCH 的交付必须退回', true); return; }
+    state.modal = mode;
+    var isReturn = mode === 'return';
+    $('#decisionTitle').textContent = isReturn ? '退回这版交付？' : '收下这版交付？';
+    $('#decisionSub').textContent = isReturn
+      ? '退单必须写理由；理由会写进回执，交付方与后来人都能看到。'
+      : '把决定写进回执；后续任何人都能看见当时凭什么收。';
+    $('#acceptBody').hidden = isReturn;
+    $('#returnBody').hidden = !isReturn;
+    $('#modalConfirm').textContent = isReturn ? '确认退回' : '确认收下';
+    $('#modalConfirm').className = 'btn ' + (isReturn ? 'danger' : 'accent');
+    $('#reasonInput').value = '';
+    $$('.reason-chip').forEach(function (c) { c.classList.remove('is-on'); });
+    var disk = d.claims.filter(function (c) { return c.cls === 'disk'; }).length;
+    $('#modalStatus').textContent = d.statusCode;
+    $('#modalClaims').textContent = d.claims.length + ' 条';
+    $('#modalMeasured').textContent = disk;
+    $('#modalRelayed').textContent = (d.claims.length - disk);
+    $('#acceptHint').textContent = d.status === 'ok'
+      ? '这一单每条声明都由盘上证据复核通过；收下只确认这一点，不为代码质量背书。'
+      : '这单仍有声明无法回盘或与盘上不符。收下只会记录「我知道它核不了」；历史与回执会保持核不了 / 需退状态。';
+    updateConfirmState();
+    $('#decisionModal').classList.add('is-open');
+    setTimeout(function () { (isReturn ? $('#reasonInput') : $('#modalConfirm')).focus(); }, 30);
+  }
+
+  function updateConfirmState() {
+    if (state.modal !== 'return') {
+      $('#modalConfirm').disabled = false;
+      return;
+    }
+    $('#modalConfirm').disabled = $('#reasonInput').value.trim().length === 0;
+  }
+
+  function closeModal() {
+    $('#decisionModal').classList.remove('is-open');
+    state.modal = null;
+  }
+
+  function confirmDecision() {
+    var d = state.current;
+    if (!d || !state.modal) return;
+    if (state.modal === 'return') {
+      var reason = $('#reasonInput').value.trim();
+      if (!reason) return;
+      d.decision = 'returned';
+      d.reason = reason;
+      toast('已退回 · 理由已写入回执（样例）', true);
+    } else {
+      if (d.status === 'bad') { toast('有 MISMATCH 的交付必须退回', true); return; }
+      d.decision = 'accepted';
+      toast('已收下 · 决定已写入回执（样例）', false);
+    }
+    closeModal();
+    renderDetail(d);
+    syncHistory();
+  }
+
+  /* ---------- toast ---------- */
+
+  function toast(msg, bad) {
+    var wrap = $('#toastWrap');
+    var el = document.createElement('div');
+    el.className = 'toast' + (bad ? ' bad' : '');
+    el.innerHTML = '<svg><use href="#' + (bad ? 'i-alert' : 'i-check') + '"/></svg><span>' + esc(msg) + '</span>';
+    wrap.appendChild(el);
+    setTimeout(function () {
+      el.style.transition = 'opacity .2s ease';
+      el.style.opacity = '0';
+      setTimeout(function () { el.remove(); }, 220);
+    }, 3200);
+  }
+
+  /* ---------- export / copy ---------- */
+
+  function downloadReceipt() {
+    var d = state.current;
+    if (!d) return;
+    var payload = {
+      receipt_version: 1,
+      prototype: true,
+      generated_at: new Date().toISOString(),
+      delivery: { id: d.id, title: d.title, agent: d.agent, status: d.statusCode },
+      decision: d.decision || 'undecided',
+      reason: d.reason || '',
+      claims: d.claims.map(function (c) {
+        return { id: c.id, kind: c.kind, why: c.why, verdict: verdictText(c.verdict), basis: c.basis, expected: c.expected, actual: c.actual };
+      }),
+      note: '原型导出的样例回执；未连接真实核对引擎。'
+    };
+    var blob = new Blob([JSON.stringify(payload, null, 2) + '\n'], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = '回执-' + d.id + '-样例.json';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    toast('回执已导出（样例）', false);
+  }
+
+  function copySummary() {
+    var d = state.current;
+    if (!d) return;
+    var disk = d.claims.filter(function (c) { return c.cls === 'disk'; }).length;
+    var txt = d.id + ' ' + d.title + '\n状态：' + d.statusCode + '（' + d.statusLabel + '）\n' +
+      '声明：' + d.claims.length + ' 条（盘上 ' + disk + ' / 自报 ' + (d.claims.length - disk) + '）\n' +
+      '判定：' + d.why;
+    function fallback() {
+      var ta = document.createElement('textarea');
+      ta.value = txt;
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); toast('摘要已复制', false); }
+      catch (e) { toast('复制失败：浏览器拦截了剪贴板', true); }
+      ta.remove();
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(function () { toast('摘要已复制', false); }, fallback);
+    } else fallback();
+  }
+
+  /* ---------- events ---------- */
+
+  function bind() {
+    $$('[data-nav]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var target = b.getAttribute('data-nav');
+        if (target === 'detail') return;
+        closeDrawer();
+        navigate(target);
+      });
+    });
+
+    $('#queueRows').addEventListener('click', function (e) {
+      var tr = e.target.closest('tr[data-open]');
+      if (tr) openDetail(tr.getAttribute('data-open'));
+    });
+    $('#queueRows').addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      var tr = e.target.closest('tr[data-open]');
+      if (tr) { e.preventDefault(); openDetail(tr.getAttribute('data-open')); }
+    });
+
+    $$('#triage .triage-card').forEach(function (card) {
+      card.addEventListener('click', function () {
+        var f = card.getAttribute('data-filter');
+        state.filter = state.filter === f ? 'all' : f;
+        syncFilters();
+        renderQueue();
+      });
+    });
+
+    $('#queueChips').addEventListener('click', function (e) {
+      var chip = e.target.closest('.chip');
+      if (!chip) return;
+      state.filter = chip.getAttribute('data-filter');
+      syncFilters();
+      renderQueue();
+    });
+
+    $('#queueSearch').addEventListener('input', function (e) {
+      state.q = e.target.value;
+      renderQueue();
+    });
+
+    $('#demoState').addEventListener('change', function (e) {
+      state.demo = e.target.value;
+      $('#demoLabel').textContent = '演示状态：' + e.target.options[e.target.selectedIndex].text;
+      renderQueue();
+    });
+
+    document.addEventListener('click', function (e) {
+      if (e.target.closest('[data-retry]')) { state.demo = 'normal'; $('#demoState').value = 'normal'; $('#demoLabel').textContent = '演示状态：正常'; renderQueue(); }
+      if (e.target.closest('[data-import]')) toast('导入入口：原型不连接文件系统', false);
+    });
+
+    $('#refreshBtn').addEventListener('click', function () {
+      state.demo = 'loading';
+      $('#demoState').value = 'loading';
+      $('#demoLabel').textContent = '演示状态：读取中';
+      renderQueue();
+      setTimeout(function () {
+        state.demo = 'normal';
+        $('#demoState').value = 'normal';
+        $('#demoLabel').textContent = '演示状态：正常';
+        renderQueue();
+        toast('已重新读取 6 单（样例）', false);
+      }, 900);
+    });
+
+    $('#importBtn').addEventListener('click', function () { toast('导入入口：原型不连接文件系统', false); });
+
+    $('#claimRows').addEventListener('click', function (e) {
+      var tr = e.target.closest('tr[data-claim]');
+      if (!tr || !state.current) return;
+      var id = tr.getAttribute('data-claim');
+      var claim = state.current.claims.filter(function (c) { return c.id === id; })[0];
+      if (claim) openDrawer(claim);
+    });
+    $('#claimRows').addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      var tr = e.target.closest('tr[data-claim]');
+      if (!tr) return;
+      e.preventDefault();
+      tr.click();
+    });
+
+    $('#drawerClose').addEventListener('click', closeDrawer);
+    $('#overlay').addEventListener('click', closeDrawer);
+    $$('.drawer-tab').forEach(function (t) {
+      t.addEventListener('click', function () { setDrawerTab(t.getAttribute('data-pane')); });
+    });
+
+    $('#evidenceList').addEventListener('click', function (e) {
+      var b = e.target.closest('.evidence-item');
+      if (!b) return;
+      var src = b.getAttribute('data-src');
+      var d = state.current;
+      var label = src === 'pgagent' ? 'pgagent 轨迹' : src === 'agentd' ? 'agentd 事件层' : '内核账本';
+      toast(label + '：' + (d.sources[src] === 'ok' ? 'GREEN' : d.sources[src] === 'warn' ? 'ABSENT' : d.sources[src] === 'bad' ? 'RED' : '未使用'), d.sources[src] === 'bad' || d.sources[src] === 'warn');
+    });
+
+    $('#acceptBtn').addEventListener('click', function () { openModal('accept'); });
+    $('#returnBtn').addEventListener('click', function () { openModal('return'); });
+    $('#modalCancel').addEventListener('click', closeModal);
+    $('#modalConfirm').addEventListener('click', confirmDecision);
+    $('#decisionModal').addEventListener('click', function (e) { if (e.target === $('#decisionModal')) closeModal(); });
+
+    $('#reasonChips').addEventListener('click', function (e) {
+      var chip = e.target.closest('.reason-chip');
+      if (!chip) return;
+      chip.classList.toggle('is-on');
+      var on = $$('.reason-chip.is-on').map(function (x) { return x.textContent; });
+      $('#reasonInput').value = on.join('；');
+      updateConfirmState();
+    });
+    $('#reasonInput').addEventListener('input', updateConfirmState);
+
+    $('#exportBtn').addEventListener('click', downloadReceipt);
+    $('#copyBtn').addEventListener('click', copySummary);
+    $('#historyExport').addEventListener('click', function () { toast('导出全部：原型不写盘', false); });
+
+    $$('.history-row').forEach(function (row) {
+      row.addEventListener('click', function () { openDetail(row.getAttribute('data-delivery')); });
+    });
+
+    $('#detailBackTop').addEventListener('click', function () { navigate('queue'); });
+
+    $('#expandAllBtn').addEventListener('click', function () {
+      var d = state.current;
+      if (!d || !d.claims.length) return;
+      toast('逐条证据已在右侧抽屉；点任一行展开', false);
+    });
+
+    $('#copyTemplate').addEventListener('click', function () {
+      toast('模板已复制（样例）', false);
+    });
+
+    window.addEventListener('hashchange', applyRoute);
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        if ($('#decisionModal').classList.contains('is-open')) closeModal();
+        else if ($('#drawer').classList.contains('is-open')) closeDrawer();
+      }
+      var tag = (e.target.tagName || '').toLowerCase();
+      if (e.key === '/' && tag !== 'input' && tag !== 'textarea') {
+        e.preventDefault();
+        if (state.screen !== 'queue') navigate('queue');
+        $('#queueSearch').focus();
+      }
+    });
+  }
+
+  function syncFilters() {
+    $$('#triage .triage-card').forEach(function (c) {
+      var on = c.getAttribute('data-filter') === state.filter;
+      c.classList.toggle('is-on', on);
+      c.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    $$('#queueChips .chip').forEach(function (c) {
+      c.classList.toggle('is-on', c.getAttribute('data-filter') === state.filter);
+    });
+  }
+
+  function applyRoute() {
+    var h = decodeURIComponent((location.hash || '').replace(/^#/, ''));
+    if (!h) return;
+    var q = {};
+    h.split('&').forEach(function (kv) {
+      var p = kv.split('=');
+      if (p[0]) q[p[0]] = p.slice(1).join('=');
+    });
+    if (q.screen) navigate(q.screen);
+    if (q.state && q.state !== 'normal') {
+      state.demo = q.state;
+      var sel = $('#demoState');
+      var lbl = $('#demoLabel');
+      if (sel) sel.value = q.state;
+      if (lbl) lbl.textContent = '演示状态：' + ((sel && sel.options[sel.selectedIndex] || {}).text || q.state);
+      navigate('queue');
+    }
+    var id = q.d || q.id;
+    if (id) {
+      openDetail(id);
+      if (q.claim && state.current) {
+        var c = state.current.claims.filter(function (x) { return x.id === q.claim; })[0];
+        if (c) {
+          openDrawer(c);
+          if (q.pane && ['file', 'log', 'event', 'journal'].indexOf(q.pane) >= 0) setDrawerTab(q.pane);
+        }
+      }
+      if (q.modal && !$('#drawer').classList.contains('is-open')) openModal(q.modal);
+    }
+  }
+
+  function init() {
+    refreshCounts();
+    bind();
+    renderQueue();
+    syncHistory();
+    navigate('queue');
+    applyRoute();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+
+</script>
+</body>
+</html>

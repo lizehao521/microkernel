@@ -1,0 +1,82 @@
+<!-- ================= CH 9-12 ================= -->
+<section class="chapter pagebreak" id="ch9">
+  <div class="chap-kicker">09 · Risk Register</div>
+  <h1><span class="num">09</span>风险登记与红队</h1>
+
+  <table class="tbl">
+    <tr><th>#</th><th>风险</th><th>证据（本轮）</th><th>严重度</th><th>处置</th></tr>
+    <tr><td>R1</td><td><strong>声明层已被占用，机制层空着而我们还没填</strong></td><td>UiPath「tamper-evident audit trail」原文；小厂群声称 Ed25519 签名哈希链但无公开背书</td><td>高</td><td>G3；在此之前所有对外件禁止使用 tamper-evident / 防篡改 字样</td></tr>
+    <tr><td>R2</td><td>记录层已商品化，「有账本」不构成购买理由</td><td>OTel GenAI 语义约定被云厂商与主流编码 agent 采纳；Langfuse MIT 自托管；LiteLLM 免费逐请求审计</td><td>高</td><td>叙事改口：卖口径与结算语义，不卖记录（§6.1）</td></tr>
+    <tr><td>R3</td><td>没有 SOC 2 ⇒ 采购阶段即淘汰</td><td>多份 D 级材料一致描述该门槛；本件作者侧无任何审计件</td><td>高</td><td>不做「绕开」的方案；B 路保持条件触发，条件写死（G2/G3）</td></tr>
+    <tr><td>R4</td><td>合规话术过时风险：把已推迟的义务讲成现行要求</td><td>Omnibus 把 Annex III 推到 2027-12-02；Art.50 部分义务推到 2026-12-02</td><td>中</td><td>对外件里 EU 相关句子必须带时点与分级；话术闸逐行扫</td></tr>
+    <tr><td>R5</td><td>可信权威托管账这一形态被产业撤过</td><td>QLDB 停新签、2025-07-31 止支持；Aurora「历史须存到库外」（A 级横幅原文）</td><td>中</td><td>承认外部锚是必需品而非加分项；L2 未达成前不宣称可审计</td></tr>
+    <tr><td>R6</td><td>演示中最易被问倒的一点：账本很硬但没人读</td><td>本件双臂无增益的负结果 + 「合规件是勾选框」的熊案</td><td>中</td><td>把「谁在什么时候因为这行字改了什么」写成可指认的样例，而不是抽象价值</td></tr>
+    <tr><td>R7</td><td>先例被引走：Traccia 与综述已占据学术位置</td><td>arXiv:2607.14309；《From Agent Traces to Trust》2026-09</td><td>中</td><td>D 路改为「清晰化」而非「首创」：把四档可核对差异写成对照表</td></tr>
+    <tr><td>R8</td><td>细分资本拉力小 ⇒ 无融资可得，只能低成本自持</td><td>AgentOps.ai $2.6M 预种子（新闻稿）；相邻类目 $110M–$145M 走平台叙事</td><td>中</td><td>不做需要销售团队的路径；E 路（竞赛）已有一条关死</td></tr>
+    <tr><td>R9</td><td>32% 企业因能用 AI 编码工具自建而砍掉软件采购</td><td>McKinsey 调查汇编（D 级）</td><td>中</td><td>强调「件很小、但口径要一致」——自建的失败点恰是口径漂移；这条能讲，但不许讲成「比自建便宜」</td></tr>
+    <tr><td>R10</td><td>本件自己也犯过：快照级数字进正文、把主张说成惯例</td><td>本轮抽查 13 条判词：UNSUPPORTED 1、UNVERIFIED 1、PARTIAL 7</td><td>高（信任）</td><td>只有 A 级数字可排版；每条判据配臂；对外件发布前跑话术闸</td></tr>
+  </table>
+
+  <h2>9.1 红队：三个最可能打死本件的问题</h2>
+  <ul class="grid3">
+    <li class="card"><div class="lab">问题一</div><div class="v">「你比 Langfuse 多什么？」</div><div class="tiny">可答：多口径分档与停止结算；不多留存、不多 UI。诚实答案会显得小——这是真的。</div></li>
+    <li class="card"><div class="lab">问题二</div><div class="v">「你的账本谁能验？」</div><div class="tiny">目前只有我们自己。G3 之前这个问题无解，答案必须是「还没做」。</div></li>
+    <li class="card"><div class="lab">问题三</div><div class="v">「加了它，agent 更准吗？」</div><div class="tiny">我们的双臂实验说：量不出增益。不能改口；要说的是「事后能核对，事前不改变」。</div></li>
+  </ul>
+</section>
+
+<section class="chapter pagebreak" id="ch10">
+  <div class="chap-kicker">10 · Roadmap</div>
+  <h1><span class="num">10</span>实施路线（26 周）</h1>
+  <table class="tbl">
+    <tr><th>周</th><th>动作</th><th>出口判据（可核对）</th></tr>
+    <tr><td>1–4</td><td>事件层 E1–E3：事件总线 + append-only 日志 + 停止结算</td><td>两把尺子的同类臂能红；`go test ./cmd/agentd/` 全绿且 stdout 正文逐字未变</td></tr>
+    <tr><td>5–8</td><td>E4–E6：SSE + id/重放（或明写 resumable:false）、10s 兜底、一发一锁</td><td>§8.2 前六条针在 scripted 上跑通；断线不可续必须显式声明</td></tr>
+    <tr><td>9–12</td><td>E7–E9：三行界面、与 49 格同源、八针一条命令</td><td><code>工具/事件层验收.py</code> 一行一个读数，每针带臂；NOT_RUN 明写</td></tr>
+    <tr><td>13–16</td><td>G3 机制件：外部锚 + 验签命令 + 第三方能独立跑通的说明</td><td>交给朋友跑一次，产出与我一致——<strong>不由我出报告</strong></td></tr>
+    <tr><td>17–20</td><td>D 路：把四档差异 + 结算语义写成可引用件，投稿/预印本</td><td>件里有可复跑命令与分母；引 Traccia 而非假装没有</td></tr>
+    <tr><td>21–26</td><td>G0/G1：真人访谈与证据包实操（只在 G3 有结果后再约）</td><td>10 场访谈逐场留字据；0 场就写 0 场</td></tr>
+  </table>
+  <p class="small">依赖关系写死：<strong>第 13 周前不做销售动作</strong>。理由见 §4——问题不在买方读不读，在我们拿不出可被非写方验的东西。</p>
+</section>
+
+<section class="chapter pagebreak" id="ch11">
+  <div class="chap-kicker">11 · Financial Scenarios</div>
+  <h1><span class="num">11</span>财务三情景（C 级沿用，不升格）</h1>
+  <div class="callout">
+    <div class="t">先说这一章为什么保留</div>
+    <p>本轮没有取到任何可用于替换的转化率、留存率或采购周期数据（GAP D 整块未填）。
+      <strong>没有新数据时，正确动作是保留旧假设并标清它是假设，不是编一组新的。</strong>
+      所以 v3 的三情景数字与 v2 相同，唯一改动是依据说明与团队版定价的下调建议（§8.1）。</p>
+  </div>
+  <table class="tbl">
+    <tr><th>情景</th><th>三年累计收入</th><th>关键假设</th><th>分级</th></tr>
+    <tr><td>悲观</td><td>不足 10 万美元</td><td>访谈未拿到预算科目；私有化被 SOC 2 卡死；只做 D 路</td><td><span class="tag tag-c">C</span></td></tr>
+    <tr><td>基准</td><td>约 65.9 万美元（Y3 约 50 万，净现金流约 53.9 万）</td><td>2–4 个团队版 + 1 个证据包版；<strong>不含作者人力成本</strong></td><td><span class="tag tag-c">C</span></td></tr>
+    <tr><td>乐观</td><td>贴近 SOM 上沿（约 400 万美元）</td><td>AI 审计在 2027 成为独立预算科目 ⇒ 本报告 §12 判它<strong>尚无证据</strong></td><td><span class="tag tag-c">C（乐观情景的前提未获支撑）</span></td></tr>
+  </table>
+  <p>落在 SOM 0.5–400 万美元区间内、按 ARPU 1.5–3 万美元约合 17–267 个账户——这套算法的输入全部是作者占比假设，
+    <strong>不因 v3 的任何新证据而改变，也不因 v3 而变准</strong>。它保留的唯一作用是让「这条路值多少人力」可比。</p>
+</section>
+
+<section class="chapter pagebreak" id="ch12">
+  <div class="chap-kicker">12 · Verdict</div>
+  <h1><span class="num">12</span>结论：那句 SAM 的判定</h1>
+
+  <table class="tbl verdict">
+    <tr><th>v2 留下的说法</th><th>v3 判定</th><th>依据</th></tr>
+    <tr><td>「SAM 下调可能过度悲观；若 AI 审计成为独立预算科目，SAM 会回升」</td>
+      <td><strong>不成立（现有证据不支持回升）；但下调的理由也挂错了</strong></td>
+      <td>回升所需的三个前提都没被记录到：① 记录类义务被推到 2027-12/2028-08；② 找不到任何「逐调用记录须可独立验证」的买方要求（补证波明写未取到）；③ 唯一像样的类目信号（IDC 金融 GRC）由平台占位。<br>挂错之处：真正活跃的门槛是 SOC 2 型「归属 + 连续留存」，与法规无关，且本件能供上其中两件（另两件不能）。</td></tr>
+    <tr><td>「这是功能市场，不是平台市场」</td><td><strong>成立，且比 v2 更硬</strong></td><td>记录层商品化 + 声明层被占用 + 机制层无人背书 + 细分资本拉力小（$2.6M vs $110M+）</td></tr>
+    <tr><td>「可防守差异不是哈希链或 49 格，而是证据包规范、拒收计数、版本三元组、R/N 协议」</td><td><strong>成立</strong></td><td>CT 族材料把「哈希只证内部一致」钉死；QLDB 之死是产业级反证；Traccia 已占「哈希 + 条文映射」的学术位置</td></tr>
+    <tr><td>定价四档</td><td><strong>团队版下调，证据包版无 G3 不得报价</strong></td><td>竞品档位与留存分级定价锚点（A/B 级）</td></tr>
+    <tr><td>「研究出版 + 开源先行」</td><td><strong>成立，D 路优先度上调</strong></td><td>先例已在 ⇒ 用出版确立位置比用营销便宜且可信</td></tr>
+  </table>
+
+  <h2>12.1 一段不能跳过的话</h2>
+  <p>本报告最有用的部分不是「能不能卖」，是三条<strong>否定</strong>：
+    别卖合规（连条文都不要求这个形状）、别卖防篡改（机制我们还没做）、别卖「用了更准」（我们自己的双臂量不出增益）。
+    剩下的可卖之物很小但可核对：<strong>口径可核、停止可交账、每发的依据指得回哪一格。</strong>
+    如果这三件在 2027 年之前没有买家愿意书面承认需要，本件的正确终局是 D 路的公共件，而不是 B 路的商品。</p>
+</section>

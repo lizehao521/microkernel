@@ -1,0 +1,1094 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+漏洞挖掘进化引擎 · M1-M6 多Agent团队编排适配层 v3.7.0
+===============================================
+
+基于 hermes-evolution-team 方法论，把把原来的 M3(流水线串行)/M4(并行汇聚)
+升级为五模式异结构团队编排 + 自适应模式选择 + 进化树谱系追踪 + 单轮meta融合。
+
+五模式目录:
+  M1 并行发散 — N 个 Payload 工程师并行生成 → 汇聚去重 → 统一判定
+  M2 对抗互审 — 两个审判官独立判定 → 交叉审查 → 取共识
+  M3 流水线串行 — 经典 A→B（委托现有 TeamOrchestrator）
+  M4 并行汇聚 — A/B 并行启动 → 汇聚（委托现有 TeamOrchestrator）
+  M5 单轮meta融合 — 压缩 N 轮历史经验为一轮的进化超参 + 策略偏置
+  M6 自主任务执行 — 读取 .task/<slug>/ 文档，分解执行 + 独立验证 + 交付闭环
+
+自适应选择：
+  根据 漏洞类型/置信度/历史成功率/轮次预算 自动选择最优模式：
+    - 高置信度 → M1 并行发散（快速覆盖）
+    - 低置信度/易误报 → M2 对抗互审（去伪存真）
+    - 标准 → M3 流水线
+    - 复杂依赖 → M4 并行汇聚
+    - 历史丰富 → M5 meta融合（利用经验加速）
+    - .task/ 目录存在 → M6 自主任务执行（读取文档驱动执行）
+
+进化树谱系追踪：
+  每条漏洞产出记录其来源编排模式 + 跨模式血统，供 dashboard 可视化。
+
+用法:
+  from team_adapter import TeamAdapter
+  adapter = TeamAdapter()
+  result = adapter.run(target_url, vuln_type="sqli")
+  # 或指定模式
+  result = adapter.run_m5_meta_fusion(round_history, n_compressed=3)
+"""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import os
+import time
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Any, Callable, Dict, List, Optional, Set, Tuple
+
+# ── 轻量引用（避免循环依赖）──
+try:
+    from team_orchestrator import (
+        AttackPlan,
+        ArenaResult,
+        DeliveryRequest,
+        DeliveryResult,
+        JudgeReviewer,
+        Orchestrator,
+        PayloadEngineer,
+        RoundReport,
+        TEAM_DEFINITION,
+        TeamOrchestrator,
+    )
+    _HAS_TEAM_ORCH = True
+except Exception:
+    _HAS_TEAM_ORCH = False
+
+try:
+    from vuln_hunter_kernel import (
+        enumerate_surfaces,
+        payload_seeds,
+        scamper_mutate,
+        judge_response,
+    )
+    _HAS_KERNEL = True
+except Exception:
+    _HAS_KERNEL = False
+
+try:
+    from meta_gene import MetaGeneLibrary
+    _HAS_METAGENE = True
+except Exception:
+    _HAS_METAGENE = False
+
+try:
+    from evolution_enhancer import EvolutionEnhancer, COGNITIVE_STRATEGIES, _TRANSFORM_IDS
+    _HAS_ENHANCER = True
+except Exception:
+    _HAS_ENHANCER = False
+
+try:
+    from task_executor import run_m6_task_execute, TaskExecutor
+    _HAS_TASK_EXECUTOR = True
+except Exception:
+    _HAS_TASK_EXECUTOR = False
+
+
+# ===========================================================================
+# 数据模型
+# ===========================================================================
+
+@dataclass
+class LineageNode:
+    """进化树谱系节点 —— 记录每条漏洞产出来自哪个编排模式、哪些中间步骤"""
+    node_id: str                         # 唯一ID（哈希）
+    pattern: str                         # M1 | M2 | M3 | M4 | M5
+    parent_node_ids: List[str] = field(default_factory=list)
+    vuln_type: str = ""
+    payload: str = ""
+    fitness: float = 0.0
+    strategies_used: List[str] = field(default_factory=list)
+    engine_count: int = 1                # 参与的 Agent 数量
+    round_num: int = 0
+    timestamp: str = ""
+    note: str = ""
+
+
+@dataclass
+class AdapterConfig:
+    """适配器运行时配置"""
+    pattern: str = "auto"                # auto | M1 | M2 | M3 | M4 | M5 | M6
+    n_parallel_engineers: int = 2        # M1 并行工程师数
+    consensus_threshold: float = 0.6     # M2 共识阈值（两个审判官评分相近才通过）
+    meta_compress_rounds: int = 3        # M5 压缩的历史轮数
+    lineage_tracking: bool = True        # 是否追踪谱系
+    evolution_bonus: bool = True         # 是否启用进化增强层
+    task_slug: str = ""                  # M6 任务 slug（为空时自动检测 .task/ 目录）
+
+
+@dataclass
+class AdapterReport:
+    """适配器输出报告"""
+    target_url: str
+    vuln_type: str
+    pattern_used: str
+    top_vulns: List[Dict] = field(default_factory=list)
+    pattern_stats: Dict[str, Any] = field(default_factory=dict)
+    lineage_nodes: List[Dict] = field(default_factory=list)
+    meta_fusion: Optional[Dict] = None   # M5 融合结果
+
+
+# ===========================================================================
+# M5 多Agent团队编排适配器
+# ===========================================================================
+
+class TeamAdapter:
+    """M5 多Agent团队编排适配器 —— 五模式自适应调度 + 谱系追踪
+
+    定位:
+      - 薄适配层，不重写 TeamOrchestrator 的三 Agent 核心逻辑
+      - 通过模式选择 + 参数注入，实现编排层面的自适应
+      - 进化树谱系追踪，把每条漏洞产出链接回编排模式
+      - M5 meta融合，用历史经验压缩搜索空间
+    """
+
+    # 漏洞类型 → 推荐模式 映射
+    _VULN_PATTERN_BIAS: Dict[str, str] = {
+        "sqli": "M1",           # 高信号，并行覆盖快
+        "sql_stacked": "M2",     # 易误报，对抗互审去伪
+        "ssrf": "M1",            # 高信号
+        "cmdi": "M1",
+        "file_upload": "M2",     # 易误报
+        "xss_reflected": "M2",
+        "xss_stored": "M3",
+        "xss_dom": "M4",         # 复杂依赖
+        "idor": "M3",
+        "lfi": "M3",
+        "rfi": "M4",             # 多层依赖
+        "xxe": "M4",
+        "auth_bypass": "M2",
+        "deserialization": "M4",
+        "ssti": "M4",
+        "open_redirect": "M2",
+        "csrf": "M3",
+        "path_traversal": "M3",
+    }
+
+    def __init__(self, config: Optional[Dict] = None):
+        self.config = config or {}
+        self.adapter_config = AdapterConfig()
+        self._orchestrator: Optional[TeamOrchestrator] = None
+        self._meta_gene: Optional[MetaGeneLibrary] = None
+        self._lineage_tree: List[LineageNode] = []
+        self._round_history: List[Dict] = []  # 用于 M5 压缩
+        self._uid_counter = 0
+
+    def _get_orchestrator(self) -> TeamOrchestrator:
+        if self._orchestrator is None and _HAS_TEAM_ORCH:
+            self._orchestrator = TeamOrchestrator(self.config)
+        return self._orchestrator
+
+    def _get_meta_gene(self) -> Optional[MetaGeneLibrary]:
+        if self._meta_gene is None and _HAS_METAGENE:
+            try:
+                self._meta_gene = MetaGeneLibrary().load()
+            except Exception:
+                self._meta_gene = None
+        return self._meta_gene
+
+    # ========================================================================
+    #  自适应模式选择
+    # ========================================================================
+
+    def select_pattern(
+        self,
+        vuln_type: str,
+        confidence: float = 0.5,
+        history_rounds: int = 0,
+        budget_remaining: int = 10,
+        known_false_positives: int = 0,
+    ) -> str:
+        """根据上下文自适应选择最优编排模式
+
+        决策因素:
+          1. 漏洞类型的模式偏好（_VULN_PATTERN_BIAS）
+          2. 置信度（高→M1快速扫描；低→M2对抗互审；中→M3/M4标准）
+          3. 历史轮数（>5轮→M5 meta融合加速）
+          4. 误报率（>30%→M2 提高判定精度）
+          5. 预算剩余（<3→M5 做最后一轮高效压缩）
+
+        Returns:
+            "M1" | "M2" | "M3" | "M4" | "M5" | "M6"
+        """
+        # M6 检测：.task/ 目录存在且有活跃任务
+        task_dir = Path(".task")
+        if task_dir.is_dir():
+            active_slugs = sorted(
+                [d.name for d in task_dir.iterdir() if d.is_dir() and d.name.startswith("M")],
+                reverse=True,
+            )
+            if active_slugs:
+                # 存在活跃任务 → 优先走 M6 自主任务执行
+                found_slug = active_slugs[0]
+                if hasattr(self, "adapter_config") and self.adapter_config:
+                    self.adapter_config.task_slug = found_slug
+                return "M6"
+
+        base = self._VULN_PATTERN_BIAS.get(vuln_type, "M3")
+
+        # 历史丰富 → M5 优先
+        if history_rounds >= 5:
+            return "M5"
+        if history_rounds >= 3 and budget_remaining <= 3:
+            return "M5"
+
+        # 高置信度 → M1
+        if confidence >= 0.85:
+            return "M1"
+
+        # 已知误报高 → M2
+        if known_false_positives >= 3 or (confidence < 0.50):
+            return "M2"
+
+        return base
+
+    # ========================================================================
+    #  M1: 并行发散
+    # ========================================================================
+
+    def run_m1_parallel_divergent(
+        self,
+        target_url: str,
+        vuln_type: str,
+        seeds: Optional[List[str]] = None,
+        n_engineers: int = 2,
+        response_fn: Optional[Callable] = None,
+    ) -> AdapterReport:
+        """M1 并行发散: N 个 Payload 工程师并行生成 → 汇聚去重 → 统一判定
+
+        适用场景: 高置信度漏洞（如 SQLi），需要快速广度覆盖。
+        每个工程师从不同种子/不同认知策略出发独立生成 Payload 种群，
+        汇聚后去重，统一送到 Judge 判定。
+
+        Args:
+            target_url: 目标 URL
+            vuln_type: 漏洞类型
+            seeds: 可选种子列表
+            n_engineers: 并行工程师数量（2~4）
+            response_fn: 可选投递函数
+
+        Returns:
+            AdapterReport
+        """
+        print(f"\n[M1 并行发散] {n_engineers} 个工程师并行探索 :: {target_url} ({vuln_type})")
+        if seeds is None and _HAS_KERNEL:
+            seeds = payload_seeds(vuln_type)
+        if not seeds:
+            seeds = ["1' OR '1'='1' -- "]
+        node_prefix = hashlib.md5(target_url.encode()).hexdigest()[:8]
+
+        # 每个工程师从不同认知策略出发
+        strategy_sets = self._distribute_strategies(n_engineers)
+        all_payloads: Dict[str, List[Tuple[str, str]]] = {}  # {payload: [(strategy, engineer_id)]}
+        engineer_results: List[Dict] = []
+
+        for eng_id in range(n_engineers):
+            strat_set = strategy_sets[eng_id]
+            print(f"  [工程师-{eng_id}] 策略集: {strat_set[:3]}...")
+            eng_seeds = list(seeds)
+            if _HAS_ENHANCER:
+                enh = EvolutionEnhancer(
+                    population_size=12,
+                    meta_gene=self._get_meta_gene(),
+                    vuln_type=vuln_type,
+                )
+                def _mock_eval(payload):
+                    return {"body": f"engineer-{eng_id} mock for {payload[:30]}"}
+                pop = enh.evolve(
+                    eng_seeds[:8], vuln_type, generations=3,
+                    response_fn=response_fn or _mock_eval,
+                )
+                for ind in pop:
+                    strat = ind.strategy_used or "seed"
+                    if ind.payload not in all_payloads:
+                        all_payloads[ind.payload] = []
+                    all_payloads[ind.payload].append((strat, f"eng-{eng_id}"))
+            else:
+                # 退化：直接用 scamper 扩种
+                if _HAS_KERNEL:
+                    variants = [
+                        p for p, _ in scamper_mutate(
+                            eng_seeds[0], vuln_type,
+                            ["substitute", "combine", "adapt", "modify"]
+                        )
+                    ]
+                else:
+                    variants = eng_seeds * 3
+                for p in variants[:12]:
+                    if p not in all_payloads:
+                        all_payloads[p] = []
+                    all_payloads[p].append(("scamper", f"eng-{eng_id}"))
+            engineer_results.append({
+                "engineer_id": eng_id,
+                "strategies": strat_set,
+                "payload_count": len(all_payloads),
+            })
+
+        # 汇聚去重
+        unique_count = len(all_payloads)
+        print(f"  [汇聚] {unique_count} 条去重 Payload（来自 {n_engineers} 个工程师）")
+
+        # 多源判定加权：被多个工程师独立发现的 Payload 获得更高置信度加权
+        multi_source = [(p, len(s), s) for p, s in all_payloads.items() if len(s) >= 2]
+        print(f"  [去重] {len(multi_source)} 条被 ≥2 个工程师独立发现（加权）")
+
+        # 谱系节点
+        lineage = []
+        for payload, sources in sorted(all_payloads.items(),
+                                        key=lambda x: len(x[1]), reverse=True)[:10]:
+            lineage.append(LineageNode(
+                node_id=f"{node_prefix}_M1_{vuln_type}_{len(lineage):03d}",
+                pattern="M1",
+                parent_node_ids=[f"seed_{i}" for i in range(len(seeds))],
+                vuln_type=vuln_type,
+                payload=payload,
+                fitness=min(1.0, 0.5 + 0.05 * len(sources)),
+                strategies_used=[s[0] for s in sources],
+                engine_count=len(sources),
+                timestamp=time.strftime("%Y-%m-%dT%H:%M:%S"),
+                note=f"M1并行发散: {len(sources)}个工程师独立生成",
+            ))
+        self._lineage_tree.extend(lineage)
+
+        # 统一判定（模拟或真实）
+        top_vulns = self._mock_judge_top(
+            [p for p, _ in sorted(all_payloads.items(),
+                                   key=lambda x: len(x[1]), reverse=True)],
+            vuln_type, target_url,
+        )
+
+        return AdapterReport(
+            target_url=target_url,
+            vuln_type=vuln_type,
+            pattern_used="M1",
+            top_vulns=top_vulns[:5],
+            pattern_stats={
+                "engineers": n_engineers,
+                "strategies_used": len(strategy_sets[0]) * n_engineers,
+                "total_generated": unique_count,
+                "multi_source": len(multi_source),
+            },
+            lineage_nodes=[self._lineage_to_dict(n) for n in lineage],
+        )
+
+    def _distribute_strategies(self, n_engineers: int) -> List[List[str]]:
+        """将 26 认知策略分发给 N 个工程师（按顺序交替分配，公平覆盖）"""
+        strat_ids = list(_TRANSFORM_IDS) if _HAS_ENHANCER else [
+            "substitute", "combine", "adapt", "modify", "put", "eliminate", "reverse",
+            "grafting", "enc_tunnel", "polymorphism", "first_principle", "analogy",
+        ]
+        sets = [[] for _ in range(n_engineers)]
+        for i, sid in enumerate(strat_ids):
+            sets[i % n_engineers].append(sid)
+        return sets
+
+    # ========================================================================
+    #  M2: 对抗互审
+    # ========================================================================
+
+    def run_m2_adversarial_review(
+        self,
+        target_url: str,
+        vuln_type: str,
+        delivery_results: Optional[List[Dict]] = None,
+        seeds: Optional[List[str]] = None,
+    ) -> AdapterReport:
+        """M2 对抗互审: 两个审判官独立判定 → 交叉审查 → 取共识
+
+        适用场景: 易误报漏洞（XSS/SSRF/文件上传），需要高判定精度。
+        两个 Judge 独立对同批投递结果做判定：
+          - 均判定为成功 → 共识漏洞（最高置信）
+          - 仅一方判定成功 → 存疑（降级为中危）
+          - 均判定失败 → 丢弃
+
+        Args:
+            target_url: 目标 URL
+            vuln_type: 漏洞类型
+            delivery_results: 可选投递结果列表
+            seeds: 如果无 delivery_results，用种子生成模拟投递
+
+        Returns:
+            AdapterReport
+        """
+        print(f"\n[M2 对抗互审] 双审判官交叉审查 :: {target_url} ({vuln_type})")
+        node_prefix = hashlib.md5(target_url.encode()).hexdigest()[:8]
+
+        if not delivery_results:
+            # 生成模拟投递结果（离线演示）
+            if seeds is None and _HAS_KERNEL:
+                seeds = payload_seeds(vuln_type)
+            if not seeds:
+                seeds = ["1' OR '1'='1' -- "]
+            delivery_results = [
+                {"payload": s, "vuln_type": vuln_type,
+                 "response_body": f"mock response for {s[:20]}",
+                 "response_time_ms": 100}
+                for s in seeds[:10]
+            ]
+
+        # 两个 Judge 实例
+        judge_a = JudgeReviewer() if _HAS_TEAM_ORCH else None
+        judge_b = JudgeReviewer() if _HAS_TEAM_ORCH else None
+
+        judge_a_vulns: List[Dict] = []
+        judge_b_vulns: List[Dict] = []
+
+        for i, dr in enumerate(delivery_results):
+            payload = dr.get("payload", "")
+            response_body = dr.get("response_body", "")
+
+            # Judge A 判定
+            if _HAS_KERNEL:
+                jr = judge_response(response_body, vuln_type)
+                score_a = jr.get("confidence", 0.5) if jr.get("success") else 0.0
+            else:
+                score_a = 0.7 if any(k in payload.lower() for k in
+                    ("select", "union", "or", "sleep", "script")) else 0.3
+
+            # Judge B 判定（独立副本，实际可用不同参数/阈值区分）
+            if _HAS_KERNEL:
+                jr_b = judge_response(response_body, vuln_type)
+                score_b = jr_b.get("confidence", 0.5) if jr_b.get("success") else 0.0
+            else:
+                score_b = 0.65 if any(k in payload.lower() for k in
+                    ("or", "select", "sleep", "alert", "onerror")) else 0.25
+
+            judge_a_vulns.append({"payload": payload, "score": score_a})
+            judge_b_vulns.append({"payload": payload, "score": score_b})
+
+        # 交叉审查：共识评分
+        consensus_threshold = self.adapter_config.consensus_threshold
+        consensus: List[Dict] = []
+        disputed: List[Dict] = []
+        rejected: List[Dict] = []
+
+        for a, b in zip(judge_a_vulns, judge_b_vulns):
+            payload = a["payload"]
+            avg = (a["score"] + b["score"]) / 2
+            gap = abs(a["score"] - b["score"])
+
+            if a["score"] >= consensus_threshold and b["score"] >= consensus_threshold:
+                consensus.append({"payload": payload, "score_a": a["score"],
+                                  "score_b": b["score"], "avg": avg, "gap": gap,
+                                  "verdict": "共识通过"})
+            elif a["score"] >= consensus_threshold or b["score"] >= consensus_threshold:
+                disputed.append({"payload": payload, "score_a": a["score"],
+                                 "score_b": b["score"], "avg": avg, "gap": gap,
+                                 "verdict": "存疑"})
+            else:
+                rejected.append({"payload": payload, "score_a": a["score"],
+                                 "score_b": b["score"], "avg": avg, "gap": gap,
+                                 "verdict": "驳回"})
+
+        print(f"  [共识] {len(consensus)} 条共识通过")
+        print(f"  [存疑] {len(disputed)} 条存疑（降级）")
+        print(f"  [驳回] {len(rejected)} 条驳回")
+
+        # 谱系节点
+        lineage = []
+        for group, tag in [(consensus, "consensus"), (disputed, "disputed")]:
+            for v in group[:10]:
+                lineage.append(LineageNode(
+                    node_id=f"{node_prefix}_M2_{tag}_{len(lineage):03d}",
+                    pattern="M2",
+                    vuln_type=vuln_type,
+                    payload=v["payload"],
+                    fitness=v.get("avg", 0.5),
+                    strategies_used=["dual_judge"],
+                    engine_count=2,
+                    note=f"M2对抗互审: {v.get('verdict','')} (A={v['score_a']:.2f},B={v['score_b']:.2f})",
+                ))
+        self._lineage_tree.extend(lineage)
+
+        # 组装 Top 漏洞
+        top = consensus[:5]
+        # 共识不足时补充存疑项（降为中危）
+        if len(top) < 5:
+            top.extend(disputed[:5 - len(top)])
+
+        top_vulns = [
+            {
+                "payload": v["payload"],
+                "fitness": v.get("avg", 0.5),
+                "severity": "高危" if v.get("verdict") == "共识通过" else "中危",
+                "verdict": v.get("verdict", ""),
+                "judge_a_score": v.get("score_a", 0),
+                "judge_b_score": v.get("score_b", 0),
+            }
+            for v in top
+        ]
+
+        return AdapterReport(
+            target_url=target_url,
+            vuln_type=vuln_type,
+            pattern_used="M2",
+            top_vulns=top_vulns,
+            pattern_stats={
+                "consensus": len(consensus),
+                "disputed": len(disputed),
+                "rejected": len(rejected),
+                "total": len(delivery_results),
+                "consensus_rate": round(len(consensus) / max(1, len(delivery_results)), 3),
+            },
+            lineage_nodes=[self._lineage_to_dict(n) for n in lineage],
+        )
+
+    # ========================================================================
+    #  M3: 流水线串行 & M4: 并行汇聚（委托现有）
+    # ========================================================================
+
+    def run_m3_pipeline(self, target_url: str, vuln_type: str) -> AdapterReport:
+        """M3 流水线串行: 委托现有 TeamOrchestrator.run_single_target"""
+        print(f"\n[M3 流水线串行] A→B 标准流水线 :: {target_url}")
+        orch = self._get_orchestrator()
+        if orch is None:
+            return self._fallback_report(target_url, vuln_type, "M3")
+        try:
+            report = orch.run_single_target(target_url)
+            vulns = report.get("vulnerabilities", [])[:5]
+            top_vulns = [
+                {"payload": v.get("payload", ""), "fitness": v.get("fitness_score", 0.0),
+                 "severity": v.get("severity", ""), "vuln_type": v.get("type", "")}
+                for v in vulns
+            ]
+            return AdapterReport(
+                target_url=target_url, vuln_type=vuln_type, pattern_used="M3",
+                top_vulns=top_vulns,
+                pattern_stats={"rounds": report.get("total_rounds", 0),
+                               "total_vulns": report.get("total_vulns", 0)}
+            )
+        except Exception as e:
+            print(f"  [M3] 流水线执行失败: {e}")
+            return self._fallback_report(target_url, vuln_type, "M3")
+
+    def run_m4_parallel_converge(self, target_url: str) -> AdapterReport:
+        """M4 并行汇聚: A/B 并行启动 → 汇聚"""
+        print(f"\n[M4 并行汇聚] A/B 并行启动 :: {target_url}")
+        orch = self._get_orchestrator()
+        if orch is None:
+            return self._fallback_report(target_url, "sqli", "M4")
+        try:
+            report = orch.run_single_target(target_url)
+            vulns = report.get("vulnerabilities", [])[:5]
+            top_vulns = [
+                {"payload": v.get("payload", ""), "fitness": v.get("fitness_score", 0.0),
+                 "severity": v.get("severity", ""), "vuln_type": v.get("type", "")}
+                for v in vulns
+            ]
+            return AdapterReport(
+                target_url=target_url, vuln_type="mixed", pattern_used="M4",
+                top_vulns=top_vulns,
+                pattern_stats={"mode": "parallel_converge",
+                               "total_vulns": report.get("total_vulns", 0)}
+            )
+        except Exception as e:
+            print(f"  [M4] 汇聚执行失败: {e}")
+            return self._fallback_report(target_url, "sqli", "M4")
+
+    # ========================================================================
+    #  M5: 单轮meta融合
+    # ========================================================================
+
+    def run_m5_meta_fusion(
+        self,
+        round_history: List[Dict],
+        target_url: str = "",
+        vuln_type: str = "sqli",
+        n_compressed: int = 3,
+    ) -> AdapterReport:
+        """M5 单轮meta融合: 压缩 N 轮历史经验为一轮的进化超参 + 策略偏置
+
+        适用场景:
+          - 已对同类型目标挖过 ≥3 轮，历史数据丰富
+          - 预算快到红线（<3 轮剩余），需要高效利用最后一轮
+          - 想用「前辈的经验」加速「新目标的探索」
+
+        压缩内容:
+          1. 最佳认知策略 Top-K（按历史成功率聚合）
+          2. 最优 mutation_rate/tournament_k（按历史产出回归）
+          3. 最佳 Payload 片段模板（提取高适应度个体的公共子结构）
+          4. 最有可能的漏洞类型排序（按历史发现密度）
+
+        Returns:
+            AdapterReport 含 meta_fusion 压缩结果
+        """
+        print(f"\n[M5 单轮meta融合] 压缩 {min(n_compressed, len(round_history))} 轮经验 :: {target_url} ({vuln_type})")
+
+        if not round_history:
+            return self._fallback_report(target_url, vuln_type, "M5")
+
+        recent = round_history[-n_compressed:] if len(round_history) >= n_compressed else round_history
+        node_prefix = hashlib.md5(target_url.encode()).hexdigest()[:8]
+
+        # ── 1) 聚合认知策略排名 ──
+        strategy_freq: Dict[str, int] = {}
+        strategy_fitness: Dict[str, List[float]] = {}
+        all_vulns: List[Dict] = []
+
+        for rnd in recent:
+            candidates = rnd.get("candidates", rnd.get("top_vulns", rnd.get("vulnerabilities", [])))
+            for c in candidates:
+                all_vulns.append(c)
+                lineage = c.get("lineage", [])
+                strategy = c.get("strategy_used", c.get("strategy", ""))
+                fitness = c.get("fitness", c.get("fitness_score", 0.0))
+                for s in lineage:
+                    strategy_freq[s] = strategy_freq.get(s, 0) + 1
+                    strategy_fitness.setdefault(s, []).append(float(fitness))
+
+        ranked_strategies = sorted(
+            strategy_freq.items(), key=lambda x: x[1], reverse=True
+        )[:10]
+
+        best_strategies = []
+        for sid, count in ranked_strategies:
+            f_list = strategy_fitness.get(sid, [])
+            avg_fit = round(sum(f_list) / len(f_list), 3) if f_list else 0.0
+            best_strategies.append({
+                "strategy_id": sid,
+                "usage_count": count,
+                "avg_fitness": avg_fit,
+                "weight": round(count / max(1, max(strategy_freq.values())), 3),
+            })
+
+        # ── 2) 最优超参回归 ──
+        fitnesses = [c.get("fitness", c.get("fitness_score", 0)) for c in all_vulns]
+        avg_fitness = round(sum(fitnesses) / len(fitnesses), 3) if fitnesses else 0.0
+        max_fitness = round(max(fitnesses), 3) if fitnesses else 0.0
+
+        # 按产出密度调 mutation_rate
+        vulns_per_round = sum(
+            len(r.get("candidates", r.get("top_vulns", r.get("vulnerabilities", []))))
+            for r in recent
+        ) / max(1, len(recent))
+
+        if vulns_per_round >= 5:
+            optimal_mutation = 0.15  # 高产 → 降低变异，精进当前线
+        elif vulns_per_round >= 3:
+            optimal_mutation = 0.25
+        else:
+            optimal_mutation = 0.35  # 低产 → 加大变异，扩大搜索
+
+        optimal_tournament = 3 if avg_fitness >= 0.6 else 5
+
+        # ── 3) Payload 子结构模板 ──
+        top_payloads = sorted(all_vulns, key=lambda c:
+            c.get("fitness", c.get("fitness_score", 0)), reverse=True)[:10]
+        templates = self._extract_templates([p.get("payload", "") for p in top_payloads])
+
+        # ── 4) 漏洞类型密度排序 ──
+        vuln_density: Dict[str, int] = {}
+        for c in all_vulns:
+            vt = c.get("vuln_type", c.get("type", ""))
+            vuln_density[vt] = vuln_density.get(vt, 0) + 1
+        ranked_types = sorted(vuln_density.items(), key=lambda x: x[1], reverse=True)
+
+        # 谱系节点
+        fusion_node = LineageNode(
+            node_id=f"{node_prefix}_M5_fusion",
+            pattern="M5",
+            vuln_type=vuln_type,
+            payload="[meta压缩产物]",
+            fitness=max_fitness,
+            strategies_used=[s["strategy_id"] for s in best_strategies[:5]],
+            engine_count=len(recent),
+            note=f"M5压缩 {len(recent)} 轮 → {len(best_strategies)} 策略, 最优变异率={optimal_mutation}",
+        )
+        self._lineage_tree.append(fusion_node)
+
+        print(f"  [压缩结果] {len(best_strategies)} 策略, 最优变异率={optimal_mutation}, "
+              f"锦标赛k={optimal_tournament}")
+        print(f"  [模板] {len(templates)} 个公共子结构片断")
+
+        # 注入 meta_gene L4 认知策略基因
+        mgl = self._get_meta_gene()
+        if mgl and best_strategies:
+            ts = time.strftime("%Y-%m-%dT%H:%M:%S")
+            for s in best_strategies[:5]:
+                try:
+                    mgl.record_cognitive_strategy(
+                        vuln_type, s["strategy_id"],
+                        success=(s["avg_fitness"] >= 0.6),
+                        fitness_gain=max(0.0, s["avg_fitness"] - 0.4),
+                        timestamp=ts,
+                    )
+                except Exception:
+                    pass
+            try:
+                mgl.save()
+            except Exception:
+                pass
+
+        return AdapterReport(
+            target_url=target_url,
+            vuln_type=vuln_type,
+            pattern_used="M5",
+            top_vulns=[{"payload": p.get("payload", ""),
+                        "fitness": p.get("fitness", p.get("fitness_score", 0.0))}
+                       for p in top_payloads[:5]],
+            pattern_stats={
+                "rounds_compressed": len(recent),
+                "strategies_extracted": len(best_strategies),
+                "templates_found": len(templates),
+                "optimal_mutation_rate": optimal_mutation,
+                "optimal_tournament_k": optimal_tournament,
+                "avg_fitness": avg_fitness,
+            },
+            lineage_nodes=[self._lineage_to_dict(fusion_node)],
+            meta_fusion={
+                "best_strategies": best_strategies,
+                "optimal_mutation_rate": optimal_mutation,
+                "optimal_tournament_k": optimal_tournament,
+                "payload_templates": templates,
+                "vuln_type_density": [
+                    {"type": vt, "count": c, "density": round(c / max(1, len(all_vulns)), 3)}
+                    for vt, c in ranked_types
+                ],
+            },
+        )
+
+    def _extract_templates(self, payloads: List[str]) -> List[str]:
+        """从 Payload 列表中提取公共子结构模板（简化：取最长公共前缀/后缀）"""
+        if not payloads:
+            return []
+        templates = set()
+        # 提取 SQL 注释符、闭合符等常见模式
+        common_tokens = ["'", "\"", " -- ", "/*", "*/", "#", " OR ", " AND ",
+                         "UNION", "SELECT", "SLEEP(", "BENCHMARK(", "<script>",
+                         "</script>", "onerror", "alert(", "javascript:", "../",
+                         "file://", "php://", "gopher://"]
+        for token in common_tokens:
+            if any(token.lower() in p.lower() for p in payloads[:5]):
+                templates.add(token)
+        return list(templates)[:8]
+
+    # ═══════════════════════════════════════════════════════════════════
+    #  v3.7.0 M6 自主任务执行路由
+    # ═══════════════════════════════════════════════════════════════════
+
+    def _run_m6(
+        self,
+        task_slug: str = "",
+        target_url: str = "",
+        vuln_type: str = "sqli",
+    ) -> AdapterReport:
+        """M6 自主任务执行路由
+
+        从 _.task/<slug>/_ 读取任务文档，执行 TaskExecutor 闭环，
+        将结果转换成 AdapterReport 格式以保持统一接口。
+
+        Args:
+            task_slug: 任务 slug（为空时自动检测 .task/ 目录）
+            target_url: 目标 URL
+            vuln_type: 漏洞类型
+
+        Returns:
+            AdapterReport
+        """
+        if not _HAS_TASK_EXECUTOR:
+            return AdapterReport(
+                target_url=target_url,
+                vuln_type=vuln_type,
+                pattern_used="M6",
+                note="[M6] task_executor 不可用，请检查依赖",
+                top_vulns=[],
+                pattern_stats={},
+            )
+
+        # 自动检测 slug
+        task_dir = Path(".task")
+        if not task_slug and task_dir.is_dir():
+            active_slugs = sorted(
+                [d.name for d in task_dir.iterdir() if d.is_dir()],
+                reverse=True,
+            )
+            task_slug = active_slugs[0] if active_slugs else ""
+            print(f"  [M6] 自动检测到任务: {task_slug}")
+
+        if not task_slug:
+            return AdapterReport(
+                target_url=target_url,
+                vuln_type=vuln_type,
+                pattern_used="M6",
+                note="[M6] 未找到 .task/ 目录或任务 slug",
+                top_vulns=[],
+                pattern_stats={},
+            )
+
+        try:
+            report = run_m6_task_execute(
+                slug=task_slug,
+                workspace_dir=str(Path.cwd()),
+                task_dir=".task",
+            )
+            print(f"  [M6] 任务 [{task_slug}] 完成: {len(report.top_vulns)} 个漏洞")
+
+            # 注入进化谱系
+            m6_node = LineageNode(
+                node_id=f"M6_{task_slug}_{int(time.time())}",
+                pattern="M6",
+                vuln_type=vuln_type,
+                payload=report.top_vulns[0]["payload"] if report.top_vulns else "",
+                fitness=report.top_vulns[0].get("fitness", 0.0) if report.top_vulns else 0.0,
+                strategies_used=[],
+                engine_count=1,
+                note=f"M6 自主执行: {task_slug}",
+            )
+            self._lineage_tree.append(m6_node)
+
+            report.lineage_nodes = [self._lineage_to_dict(m6_node)]
+            return report
+
+        except Exception as e:
+            print(f"  [M6] 任务 [{task_slug}] 执行出错: {e}")
+            return AdapterReport(
+                target_url=target_url,
+                vuln_type=vuln_type,
+                pattern_used="M6",
+                note=f"[M6] 执行异常: {e}",
+                top_vulns=[],
+                pattern_stats={},
+            )
+
+    # ========================================================================
+    #  统一入口: run()
+    # ========================================================================
+
+    def run(
+        self,
+        target_url: str,
+        vuln_type: str = "sqli",
+        pattern: str = "auto",
+        confidence: float = 0.5,
+        history_rounds: int = 0,
+        budget_remaining: int = 10,
+        seeds: Optional[List[str]] = None,
+        delivery_results: Optional[List[Dict]] = None,
+        round_history: Optional[List[Dict]] = None,
+        task_slug: str = "",
+    ) -> AdapterReport:
+        """统一入口: 自适应选择 + 执行编排模式
+
+        Args:
+            target_url: 目标 URL
+            vuln_type: 漏洞类型
+            pattern: "auto" | "M1" | "M2" | "M3" | "M4" | "M5" | "M6"
+            confidence: 置信度（auto 模式用）
+            history_rounds: 历史轮数（auto 模式用）
+            budget_remaining: 剩余预算轮数（auto 模式用）
+            seeds: 可选种子（M1 用）
+            delivery_results: 可选投递结果（M2 用）
+            round_history: 可选历史记录（M5 用）
+            task_slug: 可选 M6 任务 slug（为空时自动检测 .task/ 目录）
+
+        Returns:
+            AdapterReport
+        """
+        # 保存历史（供后续 M5 使用）
+        if round_history:
+            self._round_history.extend(round_history)
+
+        # 自动选择模式
+        selected = pattern
+        if pattern == "auto":
+            selected = self.select_pattern(
+                vuln_type, confidence, history_rounds, budget_remaining,
+            )
+            print(f"[自适应] 选中模式: {selected} (vuln={vuln_type}, conf={confidence}, "
+                  f"history={history_rounds}, budget={budget_remaining})")
+
+        # 执行
+        if selected == "M1":
+            result = self.run_m1_parallel_divergent(target_url, vuln_type, seeds=seeds)
+        elif selected == "M2":
+            result = self.run_m2_adversarial_review(
+                target_url, vuln_type, delivery_results=delivery_results, seeds=seeds,
+            )
+        elif selected == "M3":
+            result = self.run_m3_pipeline(target_url, vuln_type)
+        elif selected == "M4":
+            result = self.run_m4_parallel_converge(target_url)
+        elif selected == "M5":
+            history = round_history or self._round_history
+            result = self.run_m5_meta_fusion(history, target_url, vuln_type)
+        elif selected == "M6":
+            slug = task_slug or getattr(self.adapter_config, "task_slug", "")
+            result = self._run_m6(slug, target_url, vuln_type)
+        else:
+            result = self._fallback_report(target_url, vuln_type, selected)
+
+        # 保存本轮结果到历史
+        self._round_history.append({
+            "pattern": selected,
+            "vuln_type": vuln_type,
+            "candidates": result.top_vulns,
+            "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S"),
+        })
+
+        return result
+
+    # ========================================================================
+    #  谱系查询 & 辅助
+    # ========================================================================
+
+    def lineage_report(self) -> Dict:
+        """进化树谱系总览"""
+        by_pattern: Dict[str, int] = {}
+        total_fitness = 0.0
+        for n in self._lineage_tree:
+            by_pattern[n.pattern] = by_pattern.get(n.pattern, 0) + 1
+            total_fitness += n.fitness
+        return {
+            "total_nodes": len(self._lineage_tree),
+            "by_pattern": by_pattern,
+            "avg_fitness": round(total_fitness / max(1, len(self._lineage_tree)), 3),
+            "nodes": [self._lineage_to_dict(n) for n in self._lineage_tree[-20:]],
+        }
+
+    def _lineage_to_dict(self, node: LineageNode) -> Dict:
+        return {
+            "node_id": node.node_id,
+            "pattern": node.pattern,
+            "vuln_type": node.vuln_type,
+            "payload": node.payload[:60] if node.payload else "",
+            "fitness": node.fitness,
+            "strategies_used": node.strategies_used,
+            "engine_count": node.engine_count,
+            "note": node.note,
+        }
+
+    def _fallback_report(self, target_url: str, vuln_type: str,
+                         pattern: str) -> AdapterReport:
+        """离线降级报告（当 kernel/orchestrator 不可用时）"""
+        demo_payloads = ["1' OR '1'='1' -- ", "1 UNION SELECT 1,2 -- ",
+                         "1' AND SLEEP(5) -- "]
+        return AdapterReport(
+            target_url=target_url, vuln_type=vuln_type, pattern_used=pattern,
+            top_vulns=[
+                {"payload": p, "fitness": 0.6 + i * 0.1,
+                 "severity": "中危", "vuln_type": vuln_type}
+                for i, p in enumerate(demo_payloads[:3])
+            ],
+            pattern_stats={"fallback": True, "note": "kernel/orchestrator not available"},
+        )
+
+    def _mock_judge_top(self, payloads: List[str], vuln_type: str,
+                        target_url: str) -> List[Dict]:
+        """离线判定模拟（M1 汇聚后）"""
+        results = []
+        for i, p in enumerate(payloads[:10]):
+            suspicious = any(k in p.lower() for k in (
+                "or '1'='1", "union select", "sleep(", "benchmark(",
+                "<script", "onerror", "alert(", "../", "file://",
+            ))
+            results.append({
+                "payload": p,
+                "fitness": round(0.55 + 0.05 * (10 - i) / 10, 3) if suspicious else 0.3,
+                "severity": "高危" if suspicious else "中危",
+                "vuln_type": vuln_type,
+                "url": target_url,
+            })
+        results.sort(key=lambda r: r["fitness"], reverse=True)
+        return results
+
+
+# ===========================================================================
+#  CLI 演示
+# ===========================================================================
+
+def main():
+    """M5 多Agent适配层演示"""
+    import sys
+
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
+    adapter = TeamAdapter()
+
+    print("=" * 60)
+    print("🧬 M5 多Agent团队编排适配层 v3.6 演示")
+    print("=" * 60)
+
+    # ── M1 并行发散 ──
+    print("\n" + "─" * 40)
+    print("M1 并行发散: 2 个工程师并行探索 SQLi")
+    r1 = adapter.run("http://example.com/login?id=1", "sqli", pattern="M1")
+    print(f"  产出: {len(r1.top_vulns)} 条漏洞, 模式={r1.pattern_used}")
+    print(f"  谱系节点: {len(r1.lineage_nodes)}")
+
+    # ── M2 对抗互审 ──
+    print("\n" + "─" * 40)
+    print("M2 对抗互审: 双审判官交叉审查 XSS")
+    r2 = adapter.run("http://example.com/search?q=test", "xss_reflected", pattern="M2")
+    print(f"  产出: {len(r2.top_vulns)} 条漏洞, 模式={r2.pattern_used}")
+    stats = r2.pattern_stats
+    print(f"  共识={stats['consensus']}, 存疑={stats['disputed']}, 驳回={stats['rejected']}")
+
+    # ── M5 meta融合 ──
+    print("\n" + "─" * 40)
+    print("M5 meta融合: 压缩 3 轮经验")
+    mock_history = [
+        {"candidates": [
+            {"payload": "1' OR 1=1--", "fitness": 0.85, "lineage": ["grafting", "s_combine"]},
+            {"payload": "' UNION SELECT--", "fitness": 0.72, "lineage": ["s_substitute"]},
+        ]},
+        {"candidates": [
+            {"payload": "1' AND SLEEP(5)--", "fitness": 0.91, "lineage": ["polymorphism", "s_combine"]},
+            {"payload": "admin'--", "fitness": 0.68, "lineage": ["grafting"]},
+        ]},
+        {"candidates": [
+            {"payload": "' OR '1'='1", "fitness": 0.79, "lineage": ["first_principle", "s_adapt"]},
+        ]},
+    ]
+    r5 = adapter.run(
+        "http://example.com/search", "sqli", pattern="M5",
+        round_history=mock_history,
+    )
+    print(f"  产出: {len(r5.top_vulns)} 条漏洞, 模式={r5.pattern_used}")
+    fusion = r5.meta_fusion
+    if fusion:
+        print(f"  最佳策略: {[s['strategy_id'] for s in fusion['best_strategies'][:3]]}")
+        print(f"  最优变异率: {fusion['optimal_mutation_rate']}")
+        print(f"  模板: {fusion['payload_templates']}")
+
+    # ── 自适应选择 ──
+    print("\n" + "─" * 40)
+    print("自适应模式选择:")
+    for vt in ["sqli", "xss_reflected", "ssrf", "open_redirect"]:
+        pat = adapter.select_pattern(vt, confidence=0.6, history_rounds=0)
+        print(f"  {vt:20s} → {pat}")
+
+    print("  高置信度 ssrf →",
+          adapter.select_pattern("ssrf", confidence=0.90, history_rounds=0))
+    print("  丰富历史 sqli →",
+          adapter.select_pattern("sqli", confidence=0.7, history_rounds=6))
+    print("  低置信度 xss →",
+          adapter.select_pattern("xss_reflected", confidence=0.30, history_rounds=1))
+
+    # ── 谱系总览 ──
+    print("\n" + "─" * 40)
+    lineage = adapter.lineage_report()
+    print(f"进化树谱系: {lineage['total_nodes']} 节点, "
+          f"avg_fitness={lineage['avg_fitness']}")
+    print(f"按模式分布: {lineage['by_pattern']}")
+
+    print("\n" + "=" * 60)
+    print("M5 多Agent适配层演示完成")
+    print("=" * 60)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

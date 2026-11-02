@@ -1,0 +1,211 @@
+{
+ "surface": "agenthub",
+ "set": "business-13",
+ "task_set": "C:\\Users\\Admin\\Desktop\\微内核\\PDF-1022\\真端点-1023\\业务任务-13.jsonl",
+ "task_set_sha256": "709cd76d2cbd86efcdc3b473140bc2c775b3ac52605ebbf877697393a8daa7d4",
+ "oracle": "business-13-v3: stats(path) substitutes a read only where requires.stats names the same path; stats accepts read(path)+stats(any); B12 any_groups 不一致/缺少",
+ "shape": "13 tasks x 1 passes, fresh session per task",
+ "fixture": "PDF-1022/真端点-1023/业务现场",
+ "fixture_files": 21,
+ "endpoint": "http://121.36.29.96:8787/v1/chat/completions",
+ "model": "MiniMax-M2.5",
+ "key_masked": "sk-rel...IbWA",
+ "port": 51265,
+ "passes_declared": 1,
+ "only": [
+  "B09"
+ ],
+ "tasks_run": [
+  "B09"
+ ],
+ "started": "2026-10-24T17:55:53+08:00",
+ "health": {
+  "allow_exec": false,
+  "allow_write": false,
+  "memory": 0,
+  "model_endpoint": "http://121.36.29.96:8787/v1/chat/completions",
+  "next_turn": 1,
+  "ok": true,
+  "tools": 12
+ },
+ "exe": {
+  "sha256": "8ad1abadd5305db43ed550c5de8656065ddb2b1fc80016eb3a009277cee5aca6",
+  "bytes": 12070912
+ },
+ "runs": [
+  {
+   "id": "B09",
+   "name": "投诉最大金额",
+   "pass": 1,
+   "ok": false,
+   "model_ok": false,
+   "steps_ok": true,
+   "answer_ok": false,
+   "answer_echo": true,
+   "answer_tier": "measured",
+   "answer_why": "模型收口没写 answer（或这一发不是模型收的）⇒ 这一格是本机按工具读数抄的，不是模型的话",
+   "misses": [
+    "answer_tier:measured"
+   ],
+   "step_misses": [],
+   "answer_misses": [
+    "answer_tier:measured"
+   ],
+   "stop": "跑完",
+   "stop_why": "话里点到的目标都已有成功读数 ⇒ 可以收口",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "estimated"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 1,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-g69gznaw\\fixture/客户/投诉.csv",
+     "provenance": "estimated",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-g69gznaw\\fixture\\客户\\投诉.csv ｜ 读到 190 字节（UTF-8 码元 112 个）",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 99.7,
+   "err": null,
+   "at": "2026-10-24T17:55:54+08:00",
+   "hub_alive_before_session": true
+  }
+ ],
+ "summary": {
+  "runs": 1,
+  "tasks": 1,
+  "oracle_ok": 0,
+  "model_ok": 0,
+  "steps_ok": 1,
+  "answer_ok": 0,
+  "answer_echo": 1,
+  "answer_tiers": {
+   "measured": 1
+  },
+  "tasks_both_passes": 0,
+  "tasks_any_pass": 0,
+  "by_task": {
+   "B09": {
+    "ok": 0,
+    "model_ok": 0,
+    "runs": 1,
+    "misses": [
+     {
+      "pass": 1,
+      "misses": [
+       "answer_tier:measured"
+      ]
+     }
+    ]
+   }
+  },
+  "stops": {
+   "跑完": 1
+  },
+  "sane": 1,
+  "estimated_steps": 1,
+  "ms_p50": 99.7,
+  "ms_p95": 99.7,
+  "ms_max": 99.7,
+  "failures": [
+   {
+    "id": "B09",
+    "pass": 1,
+    "misses": [
+     "answer_tier:measured"
+    ],
+    "stop": "跑完",
+    "tools": [
+     "fs.read"
+    ],
+    "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-g69gznaw\\fixture\\客户\\投诉.csv ｜ 读到 190 字节（UTF-8 码元 112 个）",
+    "err": null
+   }
+  ]
+ },
+ "landing_ok": null,
+ "arms": [
+  {
+   "name": "B04 stats(path) 算读",
+   "want_red": false,
+   "red": false,
+   "misses": [],
+   "ok": true
+  },
+  {
+   "name": "B04 read(path)+stats(text) 算统计",
+   "want_red": false,
+   "red": false,
+   "misses": [],
+   "ok": true
+  },
+  {
+   "name": "B04 零工具必须红",
+   "want_red": true,
+   "red": true,
+   "misses": [
+    "read:运维/app.log",
+    "stats:运维/app.log"
+   ],
+   "ok": true
+  },
+  {
+   "name": "B04 数字错必须红",
+   "want_red": true,
+   "red": true,
+   "misses": [
+    "number:12"
+   ],
+   "ok": true
+  },
+  {
+   "name": "B12 缺少=不一致",
+   "want_red": false,
+   "red": false,
+   "misses": [],
+   "ok": true
+  },
+  {
+   "name": "B12 不一致仍认",
+   "want_red": false,
+   "red": false,
+   "misses": [],
+   "ok": true
+  },
+  {
+   "name": "B12 一致必须红",
+   "want_red": true,
+   "red": true,
+   "misses": [
+    "any:不一致|缺少"
+   ],
+   "ok": true
+  },
+  {
+   "name": "B01 stats 不能替代读内容",
+   "want_red": true,
+   "red": true,
+   "misses": [
+    "read:财务/发票-2026-031.txt"
+   ],
+   "ok": true
+  }
+ ],
+ "arms_ok": true,
+ "finished": "2026-10-24T17:55:54+08:00"
+}

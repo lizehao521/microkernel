@@ -1,0 +1,192 @@
+# agentkernel 对外契约（待接件 · v0）
+
+**这份文档是给「下一个要接它的人」看的，不是给读源码的人看的。**
+目的只有一个：让接的时候**不必重读 2400 行源码去猜口径**。
+
+| 项 | 值 |
+|---|---|
+| 状态 | **待接件**：截至本文件写入时，全仓无任何生产调用方（`import agentkernel` 命中 0） |
+| 包的版本 | `module agentkernel` / `go 1.27`（`go.mod`） |
+| 格位表来源 | 键名与字段路径由 `Cells()` **机械导出**，不是手抄（生成器：`celltable.go`，见文末「怎么重新生成」） |
+| 本文件写入前的回滚点 | `git-snapshot` 点 `mp-mujmoqkh-25f`（manifest 后端，覆盖 25 个文件） |
+| 一句话 | 内核只管**账**：每格带「谁算的」、缺席要说得出理由、缺依据进不了门；它不调度、不联网、不写盘 |
+
+---
+
+## 0. 一发
+
+一次模型调用 = 一发，发号 `Call` 从 1 起。两侧账：
+
+- `InputMeta` —— 请求**装配完之后**：我们发了什么
+- `OutputMeta` —— 响应**回来之后**：我们收到了什么
+
+**记账单位是「格」，不是「键名」**：`Cells()` 交出 **47 格**，其中唯一键名 **46 个**——
+`call` 在两侧各有一格（同一个量、两条记录）。任何统计必须说清自己数的是格还是键；
+把两者混着说，就是这个包最恨的「一个名字住两个量」。
+
+---
+
+## 1. 四条不变量
+
+1. **每格带出处**：`Basis` 的零值是 `unset`（=0），门口直接拒。不存在「默认按实测算」。
+2. **缺席 ≠ 0 ≠ 忘了填**：三态分离。缺席必须带理由，且**缺席不可拿去做判定**。
+3. **一格一量**：撞名判据靠**字段路径**——两侧都有 `call`（同为 `Call`）不算撞；
+   两个字节量共用一个键名（字段路径不同）当场撞出来。`bytes_out` 这个名字被**单独点名禁掉**。
+4. **一个定义只有一个 owner，且 owner 要被复核**：例如预算公式的唯一出口是 `DeriveBudget`，
+   `InputMeta.Check()` 会把公式**重算一遍**再比对；手搭一份 `ContentCeiling=999999` 的预算进不了门。
+
+---
+
+## 2. 序列化契约（**接线的人必须按这一节对表**）
+
+### 2.1 Basis —— 落盘是**整数**，渲染是字符串
+
+`Basis` **没有自定义 JSON 序列化**（全包无 `MarshalJSON`/`UnmarshalJSON`），所以默认按 `int` 落：
+
+| 常量 | 落盘 | `String()` / `Claim` 里的字 |
+|---|---|---|
+| `BasisUnset` | 0 | `unset` |
+| `BasisMeasured` | 1 | `measured` |
+| `BasisRelayed` | 2 | `relayed` |
+| `BasisEstimated` | 3 | `estimated` |
+| `BasisModelSays` | 4 | `model_says` |
+| `BasisAbsent` | 5 | `absent` |
+
+> **口径陷阱（照原样记下，别改）**：`Cells()` 交出来的格子上 **`Basis` 永远不是 5**。
+> 缺席在键名表这一层表现为 `Basis = 0`（`measureCell` 在 `m.Absent` 时把出处置零），
+> 由 `basisOf()` 在**落账时**翻译成 `BasisAbsent`(5)。
+> 所以：**读 `Cells()` 的人不能把 0 读成「忘了填」**——0 在这一层是「要么没填、要么这一格缺席」，
+> 只有账本上那一条（`basis=5`）才是「这一发结构上没有这个数」。
+> 两处若对不上，`basisOf` 会拒收（错误句点名是哪一格）。
+
+### 2.2 账本条目的命名与指纹
+
+| 项 | 值 |
+|---|---|
+| `KindModelInput` / `KindModelOutput` | `"model_input"` / `"model_output"` |
+| 账本条目名 | `<kind>:<key>`，例如 `model_input:content_bytes`（逐格一条） |
+| `Claim` | 人话版本，短；**永不为空**（空值落成常量 `emptyClaim`，另有「空表说自己的名字」的零话） |
+| `Payload` | `json.Marshal(值)` 的字节；**全**，给第三方重算 |
+| `PayloadH` | `Payload` 的 SHA-256 十六进制（64 位） |
+| `Hash`（seal） | sha256(`Seq\nSession\nActor\nStep\nKind\nClaim\nBasis.String()\nSource\nAt(RFC3339Nano,UTC)\nPayloadH\nPrevHash`)，两段之间用 `\n` |
+| `Entry.Payload` | tag 是 `json:"-"` ⇒ **不随 Entry 序列化**。落盘方要自己决定带不带原像；不带就只剩指纹，第三方**重算不出原值** |
+
+### 2.3 值域（枚举）
+
+| 类型 | 取值 | 备注 |
+|---|---|---|
+| `PartKind` | `system` `skill` `memory` `history` `toolspec` `observation` `user` `truncation-notice` | `MayFold` = observation/history；`MayShrink` = observation/history（**「整段没进」只许用在可分片的类段上**） |
+| `Role` | `system` `user` `assistant` `tool` | 裁剪记录必须带 |
+| `Squeeze` | `""`(没被挤) `folded` `tail-dropped` `dropped-whole` `budget-exhausted` | 账上的三档键名是 `folded`/`clipped`/`dropped`；`clipped` 对应 `tail-dropped` |
+| `FailKind` | `""`(正常) `transport` `config` `http` `protocol` `malformed_action` `budget` | 只有 `http` 那一类能带 `Status`；`RetrySame()` = transport/http |
+| `SentState` | `没数到` / `数到了，是 0` / `数到了，非 0` | `sent` 那一格就是这个三态的字符串 |
+| `SHA256` 字段 | 必须 **64 位十六进制**，唯一的判据函数是 `checkFingerprint` | **裁剪记录（含「整段没进」）也必须有指纹**——空串会被拒 |
+
+---
+
+## 3. 格位表（46 键 / 47 格）
+
+`basis_on_empty_sample` 一列是**空样本**上 `Cells()` 报的出处，不是「必须长这样」；
+`owner` / `presence_policy` 两列是接线时由**接入方**确认的，不是内核声明（内核不认识框架）。
+
+| key | sides | field | basis_on_empty_sample | owner（待接入方确认） | presence_policy |
+|---|---|---|---|---|---|
+| `call` | both | `Call` | measured | 框架·发号 | required |
+| `parts` | input | `Order` | measured | 框架·装配器 | required |
+| `part_totals` | input | `Parts` | measured | 框架·装配器 | required |
+| `content_bytes` | input | `ContentBytes` | measured | 框架·装配器 | required |
+| `tokens` | input | `Tokens` | unset | 框架·分词/转述 | required_or_absent_with_reason |
+| `call_bytes_ceiling` | input | `Budget.CallBytesCeiling` | measured | 人·配置 | required |
+| `transport_slack_pct` | input | `Budget.TransportSlackPct` | measured | 人·配置 | required |
+| `content_ceiling` | input | `Budget.ContentCeiling` | measured | 内核·公式 | required |
+| `effective_ceiling` | input | `Budget.EffectiveCeiling` | measured | 框架·回夹 | required |
+| `clamp_rounds` | input | `Budget.ClampRounds` | measured | 框架·回夹 | required |
+| `leftover_pct` | input | `Budget.LeftoverPct` | measured | 内核·公式 | required |
+| `fixed_overhead` | input | `Budget.FixedOverhead` | estimated | 框架·骨架统计 | required_or_absent_with_reason |
+| `shares` | input | `Budget.Shares` | measured | 人·配置 | required |
+| `notice_sent` | input | `Notice.Sent` | measured | 框架·裁剪器 | required |
+| `notice_trimmed` | input | `Notice.Trimmed` | measured | 框架·裁剪器 | required |
+| `notice_why` | input | `Notice.Why` | measured | 框架·裁剪器 | required |
+| `notice_text` | input | `Notice.Text` | measured | 框架·裁剪器 | required |
+| `folded` | input | `Cuts#folded` | measured | 框架·裁剪器 | required |
+| `clipped` | input | `Cuts#clipped` | measured | 框架·裁剪器 | required |
+| `dropped` | input | `Cuts#dropped` | measured | 框架·裁剪器 | required |
+| `streaming` | output | `Streaming` | measured | 框架·调用器 | required |
+| `finish` | output | `Finish.Reason` | relayed | 对端·响应 | required_or_absent_with_reason |
+| `finish_said` | output | `Finish.Said` | measured | 框架·调用器 | required |
+| `endpoint_model` | output | `Model` | model_says | 对端·自报 | required_or_absent_with_reason |
+| `endpoint_model_said` | output | `ModelSaid` | measured | 框架·调用器 | required |
+| `model_says_bytes` | output | `Says.Bytes` | measured | 框架·响应体 | required |
+| `model_says_kept` | output | `Says.Kept` | measured | 框架·响应体 | required |
+| `model_says_clipped` | output | `Says.Clipped()` | measured | 框架·响应体 | required |
+| `model_says_sha256` | output | `Says.SHA256` | measured | 框架·响应体 | required |
+| `usage_in` | output | `UsageIn` | unset | 对端·自报 | required_or_absent_with_reason |
+| `usage_out` | output | `UsageOut` | unset | 对端·自报 | required_or_absent_with_reason |
+| `wire_bytes_out` | output | `WireBytesOut` | unset | 传输层·计数 | required |
+| `wire_bytes_in` | output | `WireBytesIn` | unset | 传输层·计数 | required |
+| `chunks` | output | `Chunks` | unset | 传输层·流式回调 | absent_with_reason_when_nonstream |
+| `first_byte_ms` | output | `FirstByteMs` | unset | 传输层·流式回调 | absent_with_reason_when_nonstream |
+| `max_gap_ms` | output | `MaxGapMs` | unset | 传输层·流式回调 | absent_with_reason_when_nonstream |
+| `tool_calls` | output | `ToolCalls` | measured | 框架·响应解析 | required |
+| `malformed_actions` | output | `Malformed` | measured | 框架·响应解析 | required |
+| `malformed_streak` | output | `MalformedStreak` | measured | 框架·响应解析 | required |
+| `fail_kind` | output | `Failure.Kind` | measured | 框架·调用器 | required |
+| `fail_detail` | output | `Failure.Detail` | measured | 对端/框架·说法 | required_when_failed |
+| `fail_status` | output | `Failure.Status` | measured | 对端·HTTP | required_when_failed |
+| `retry_after_ms` | output | `Failure.RetryAfterMs` | unset | 对端·响应头 | optional_absent_with_reason |
+| `downgrade` | output | `Failure.Downgrade` | measured | 框架·策略 | required |
+| `sent` | output | `Sent()` | measured | 框架·调用器 | required |
+| `cost_countable` | output | `CostCountable()` | measured | 内核·派生 | required |
+
+**presence_policy 的取值含义**：`required`＝每发都得有；`required_or_absent_with_reason`＝要么有值、要么记 `absent` 且带理由；
+`absent_with_reason_when_nonstream`＝非流式那一发必须记 `absent+理由`（写 0 直接拒）；
+`required_when_failed`＝只在报故障那一发要求；`optional_absent_with_reason`＝没这一格就记 `absent+理由`。
+
+---
+
+## 4. 已知空洞（**别当已实现**）
+
+实测一轮真实调用后，**10 格从未被填过**：`fixed_overhead` `tokens` `chunks` `first_byte_ms`
+`max_gap_ms` `retry_after_ms` `usage_in` `usage_out` `wire_bytes_in` `wire_bytes_out`。
+
+原因不是疏忽，是**采集点不存在**：`usage_*` 的 owner 是「对端·自报」、`wire_bytes_*` 是「传输层·计数」、
+三格流式是「传输层·流式回调」——这三条通路在接入方一侧还没建。接的时候要么建通路，要么按
+`absent+理由` 记（**不是记 0**）。
+
+其他三条按 README 第 8 节照搬，不许被写成已验证：
+
+1. **读者声明表是空的**：内核能机械核的是写侧（每个字段都有格替它落账）；
+   「落了账但没人读」那一半要接入方声明，内核自己核不到。
+2. **隔离闸看不见三条路**：`plugin.Open`、`os/exec` 起一个框架进程、把框架结构体塞进 `Cell.Value` 那个 `any`。
+3. **`Failure.Detail` 的脱敏是契约、不是被核过的不变量**（擦码器在框架那一侧，内核 import 不到）。
+
+---
+
+## 5. 接的时候按这个顺序（不含任何改动到别处）
+
+1. **先读，不写**：拿一段真实调用，把两侧账构造出来，只调 `InputMeta.Check()` / `OutputMeta.Check()`，看它报什么。
+2. **只落账、不落盘**：`Ledger.RecordCall` → `Ledger.Verify()`，确认链自洽、拒收有数。
+3. **再谈落盘**：决定 `Entry.Payload` 带不带原像（不带 = 第三方重算不出原值）。
+4. **最后谈并发**：`Ledger` **没有锁**，且去重闸 `alreadyRecorded` 每次落账**全账本线扫**（O(N²)）。
+   多 goroutine 共用一本账不在承诺之内——要么调用方串行化，要么各用各的账本。
+
+---
+
+## 6. 怎么重新生成格位表（防它漂）
+
+```
+# 在 %TEMP%\kernel-attach 下的 cellcount 子模块里
+go run celltable.go            # 从 Cells() 导出键名/字段路径，并补 owner / presence_policy 两列
+# 它最后会自查「有没有哪个键没有 owner」，输出必须是 []
+```
+
+**判据**：`go test ./...`（89 条）与 `go run ./cmd/kcheck` 全绿时，这份表才可信；
+表与代码不一致时，**以代码为准，改这份文件**。
+
+---
+
+## 7. 这份文件自己没做的事
+
+- 没改内核任何一行（写入前回滚点 `mp-mujmoqkh-25f`，写入后可 `git-snapshot diff` 核出只多了这一个文件）。
+- `owner` / `presence_policy` 两列是**接线视角的提案**，不是内核声明，也没被任何判据守着。
+- 没有接入方签名，没有真端点数据——它只是一张表，不是已验证的契约。

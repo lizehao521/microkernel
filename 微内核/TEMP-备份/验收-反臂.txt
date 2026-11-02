@@ -1,0 +1,19 @@
+验收复跑 · 全部数字现算（工具/验收.py）
+生成时刻（本机钟）：2026-10-21 02:31:57
+闸 1 go test：退出码=0 ｜ Test 函数（^func Test 现数）=27 ｜ 输出尾行：ok  	pgagent	0.544s
+闸 2 selfcheck：退出码=0 ｜ [OK ]=31 ｜ [RED]=0 ｜ 自印失败项=0 ｜ 两读一致
+闸 2b 闸门会红：退出码=0 ｜ 臂数=8 ｜ 咬住=7/8 ｜ 空臂=0 ｜ 对照退出码=0 还原后=0 ｜ 不达标=0
+  （咬住=注入做坏后确实红、且红的正是该点名那条；这八臂的实物在那支自己的输出里逐臂列着）
+闸 3 端到端（127.0.0.1:58943，随机空闲端口）：SSE 帧=15 ｜ 用时=64ms ｜ 亮出的步=13
+  九步语义步：齐
+  五档恒等：True ｜ 五档={"measured": 4, "estimated": 2, "model_says": 1, "relayed": 0, "absent": 2, "total": 9}
+  KPI（账本真改写了结果的格数）=4
+反臂（同一份件，只把 -read-back 关掉）：KPI=0（必须 0）
+截图读数：本件**给不了像素**。要复现我拿到的那三张，两条路：
+  A) 把 Qoder 的 in-app Browser 面板开到前台，再让 agent 跑 take_screenshot（这台机隐藏态会报 visible=false）
+  B) msedge --headless=new --disable-gpu --window-size=1440,900 --user-data-dir=%TEMP%\pgagent-shot --virtual-time-budget=40000 --screenshot=出图.png "http://127.0.0.1:<端口>/?run=1"
+     窄屏别用 B 当读数：这台机 Edge 把窗口宽度夹在 ~528，390/320 的 PNG 内容按 528 排（见 运行记录 W9）
+
+结论：有闸没过 —— 别看这份当绿：闸 2b：判据集没能红（咬住 7 ≠ 臂数 8）或有空臂
+
+写了 C:\Users\Admin\Desktop\微内核\编程Agent-1020\报告-验收.txt（残留 TEMP-验收：False）

@@ -1,0 +1,1 @@
+{"jsonrpc":"2.0","id":300,"method":"tools/call","params":{"name":"kernel.readers_report","arguments":{}}}

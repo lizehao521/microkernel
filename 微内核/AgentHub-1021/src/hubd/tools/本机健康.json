@@ -1,0 +1,29 @@
+{
+  "name": "本机健康",
+  "summary": "取这台 hubd 自己的 /api/health（用来验证清单挂载真的能跑，也用来回答「你现在认识了几个工具」）",
+  "risk": "net_local",
+  "timeout_ms": 2000,
+  "retry": {
+    "attempts": 2,
+    "backoff_ms": 40,
+    "backoff_max_ms": 200
+  },
+  "params": [
+    {
+      "name": "url",
+      "type": "string",
+      "desc": "要取的本机地址（默认取自己的 health）",
+      "required": false,
+      "example": "http://127.0.0.1:8790/api/health"
+    }
+  ],
+  "invoke": {
+    "kind": "http_get",
+    "url": "http://127.0.0.1:8790/api/health"
+  },
+  "triggers": [
+    "本机健康",
+    "取自己的健康",
+    "看看这台服还在不在"
+  ]
+}

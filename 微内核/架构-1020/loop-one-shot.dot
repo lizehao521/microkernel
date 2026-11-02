@@ -1,0 +1,36 @@
+digraph agent_one_shot {
+  rankdir=TB;
+  graph [fontname="Segoe UI", labelloc=t, fontsize=15,
+         label="一发（one shot）里的循环：每步向内核要什么、内核答什么\n回答的问题：账本到底有没有真的决定过下一步"];
+  node [fontname="Segoe UI", fontsize=10];
+  edge [fontname="Segoe UI", fontsize=9];
+
+  s0 [shape=ellipse, label="S0 think\n模型给：要调哪个工具 + 这一发的两侧草稿"];
+  s1 [shape=box, label="S1 组装\n按 contract.md §2.5 写侧 wire 形状填格\n（Basis 是整数、PartCount 是行字段）"];
+  s2 [shape=box, style=bold, label="S2 kernel.check_call 预检\n在**当前账的副本**上真跑一遍 RecordCall\n一条都不写回这本账"];
+  s2r [shape=box, color=red, label="S2r 预检被拒\nisError=true + 点名哪条判据\n这一路不落账，但进「预检被内核判据拒 N 发」计数"];
+  s3 [shape=box, style=bold, label="S3 kernel.record_call 落账\n两侧一起进哈希链\n任一侧不自洽 ⇒ 整发拒收、两侧都不写、拒收有数"];
+  s4 [shape=box, label="S4 kernel.read_back\nsession + 发号 + 侧 三轴定身份\n读回：键名 / 人话 / 出处 basis / 指纹"];
+  s5 [shape=diamond, style=bold, color=dodgerblue4,
+      label="S5 由账决定下一步\nPOLICY 查 fail_kind：\ntransport→原样重发 · http→等一等再发\nconfig→停 · protocol→停\nmalformed_action→换个说法再问\nbudget→挤历史再发"];
+  s5l [shape=note, style=bold, color=dodgerblue4,
+       label="KPI 加 1：账本触发过几次决定\n每次走 S5 都记 (第几发, 依据哪一格, 读到的值, 动作, 为什么)\n收口时报这个数；0 ⇒ 这条边虚接"];
+  s6 [shape=ellipse, label="S6 收口\n目标达成 / 步数上限 / 判据连续红\n三种都要能说出是哪一种"];
+  s7 [shape=box, style=rounded, label="S7 checkpoint（收口或每 N 发）\nencode_journal 取字节（payload 必须显式说 included/omitted）\n→ 调用方写盘 → kaudit -journal 能载入"];
+
+  s0 -> s1 -> s2;
+  s2 -> s2r [label="拒", color=red];
+  s2r -> s1 [label="按点名改这一格", style=dashed];
+  s2 -> s3 [label="过"];
+  s3 -> s4 [label="落进去了"];
+  s3 -> s2r [label="整发拒收（同一份判据）", color=red, style=dashed];
+  s4 -> s5;
+  s5 -> s5l [label="这一动的依据写在账上"];
+  s5 -> s0 [label="还要再发一轮", style=bold];
+  s5 -> s6 [label="停 / 够了"];
+  s6 -> s7;
+
+  anti [shape=note, style=dashed, fontsize=9,
+        label="反臂（这条循环必须先能红）：\n① 把 S4 摘掉，只留 S0/S3 —— 循环照样跑完，KPI 报 0；\n② 把 POLICY 改成随机动作 —— KPI 非 0，但「依据」列指不到格子；\n③ 篡改 checkpoint 文件 —— S7 载入必须拒、rc=1（今天 kaudit 已实测过）。\n三种红法都有针，循环的绿才算数。"];
+  s5l -> anti [style=dashed];
+}

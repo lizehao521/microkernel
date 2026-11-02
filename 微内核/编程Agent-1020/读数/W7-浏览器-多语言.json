@@ -1,0 +1,88 @@
+{
+  "js_auto": {
+    "cards": 7,
+    "langSel": "auto",
+    "measured_cards": 0,
+    "mix": "measured 0 / estimated 7 / model_says 0 / relayed 0 / absent 11 = 18　加总核对：对得上",
+    "rules": [
+      "var-left:estimated",
+      "loose-equality:estimated",
+      "eval-or-new-function:estimated",
+      "empty-catch:estimated",
+      "debugger-left:estimated",
+      "console-log:estimated",
+      "replace-print-with-logger:estimated"
+    ],
+    "select_step": "3select-analyzersmeasuredjs:text(loose-equality,empty-catch,eval-or-new-function,debugger-left,console-log,var-left,unused-import(maybe)) +通用(todo,hardcoded-secret(maybe))（没给报错/栈 ⇒ debug 不武装） + optimi",
+    "shape_step": "2shapemeasured判为 javascript（嗅探推断（不是解析出来的））；真解析没过；函数 0 个、import 0 条｜凭什么：得分 4；命中 \\bconsole\\.\\w+\\(、^\\s*(?:export\\s+)?(?:const|let)\\s+\\w+\\s*=、\\brequire\\(['\"]、\\bvar\\s+\\w+×1｜注意：语言这一格是**推断**，函数/import 两个数是文本",
+    "unknowns": [
+      "javascript 的 AST 级",
+      "运行时行为（这段实际会返回什么、慢在",
+      "报错/栈 → 行号absent为什么",
+      "账上那一格「usage_in」（ou",
+      "账上那一格「usage_out」（o",
+      "账上那一格「wire_bytes_i",
+      "账上那一格「wire_bytes_o",
+      "账上那一格「chunks」（outp",
+      "账上那一格「first_byte_m",
+      "账上那一格「max_gap_ms」（",
+      "模型给的额外解释与优化建议absen"
+    ],
+    "waited_ms": 980
+  },
+  "js_forced_python": {
+    "cards": 0,
+    "langSel": "python",
+    "measured_cards": 0,
+    "mix": "measured 0 / estimated 0 / model_says 0 / relayed 0 / absent 12 = 12　加总核对：对得上",
+    "rules": [],
+    "select_step": "3select-analyzersmeasuredpython:text(bare-except,except-pass,mutable-default-arg,none-compare,long-def,print-as-log,unused-import(maybe)) +通用(todo,hardcoded-secret(maybe))（没给报错/栈 ⇒ debug 不武装） + optimi",
+    "shape_step": "2shapemeasured判为 python（用户显式选定）；真解析没过；函数 0 个、import 0 条｜凭什么：没嗅探（界面上选了语言，判定就不靠猜）",
+    "unknowns": [
+      "python 的 AST 级判据（作",
+      "运行时行为（这段实际会返回什么、慢在",
+      "报错/栈 → 行号absent为什么",
+      "优化建议absent为什么没量到：这",
+      "账上那一格「usage_in」（ou",
+      "账上那一格「usage_out」（o",
+      "账上那一格「wire_bytes_i",
+      "账上那一格「wire_bytes_o",
+      "账上那一格「chunks」（outp",
+      "账上那一格「first_byte_m",
+      "账上那一格「max_gap_ms」（",
+      "模型给的额外解释与优化建议absen"
+    ],
+    "waited_ms": 968
+  },
+  "py_auto": {
+    "cards": 7,
+    "langSel": "auto",
+    "measured_cards": 0,
+    "mix": "measured 0 / estimated 7 / model_says 0 / relayed 0 / absent 11 = 18　加总核对：对得上",
+    "rules": [
+      "mutable-default-arg:estimated",
+      "bare-except:estimated",
+      "except-pass:estimated",
+      "none-compare:estimated",
+      "print-as-log:estimated",
+      "unused-import(maybe):estimated",
+      "replace-print-with-logger:estimated"
+    ],
+    "select_step": "3select-analyzersmeasuredpython:text(bare-except,except-pass,mutable-default-arg,none-compare,long-def,print-as-log,unused-import(maybe)) +通用(todo,hardcoded-secret(maybe))（没给报错/栈 ⇒ debug 不武装） + optimi",
+    "shape_step": "2shapemeasured判为 python（嗅探推断（不是解析出来的））；真解析没过；函数 1 个、import 1 条｜凭什么：得分 2；命中 ^\\s*(?:from\\s+[\\w.]+\\s+)?import\\s+\\w+、\\bprint\\(×1｜注意：语言这一格是**推断**，函数/import 两个数是文本匹配数出来的",
+    "unknowns": [
+      "python 的 AST 级判据（作",
+      "运行时行为（这段实际会返回什么、慢在",
+      "报错/栈 → 行号absent为什么",
+      "账上那一格「usage_in」（ou",
+      "账上那一格「usage_out」（o",
+      "账上那一格「wire_bytes_i",
+      "账上那一格「wire_bytes_o",
+      "账上那一格「chunks」（outp",
+      "账上那一格「first_byte_m",
+      "账上那一格「max_gap_ms」（",
+      "模型给的额外解释与优化建议absen"
+    ],
+    "waited_ms": 1166
+  }
+}

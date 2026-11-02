@@ -1,0 +1,33 @@
+{"arm": "arm1_bucket_precedence", "got": {"transport": 1, "pass": 1, "fake_close": 1, "echo_close": 1, "step_cap": 1}, "want": {"transport": 1, "pass": 1, "fake_close": 1, "echo_close": 1, "step_cap": 1}, "ok": true}
+{"arm": "arm2_model_denominator", "got": 4, "want": 4, "ok": true}
+{"arm": "arm2_transport_excluded_from_steps", "got": 2, "want": 2, "ok": true}
+{"arm": "arm3_flag_rates", "got": ["0/2", "2/2"], "want": ["0/2", "2/2"], "ok": true}
+{"arm": "arm3_p_equals_direct_call", "got": 0.3333, "want": 0.3333, "ok": true}
+{"arm": "arm3_n2_vs_n2_floor_is_one_third", "got": 0.3333, "want": 0.3333, "ok": true}
+{"arm": "arm3b_rates", "got": ["0/12", "6/6"], "want": ["0/12", "6/6"], "ok": true}
+{"arm": "arm3b_equals_direct_call", "got": 0.0001, "want": 0.0001, "ok": true}
+{"arm": "arm3b_significant", "got": true, "want": true, "ok": true}
+{"arm": "arm4_no_difference_gives_p1", "got": 1.0, "want": 1.0, "ok": true}
+{"arm": "arm5_perm_reproducible", "got": [0.01996, -5.0], "want": [0.01996, -5.0], "ok": true}
+{"arm": "arm5_perm_shows_seed", "got": [1234, 500], "want": [1234, 500], "ok": true}
+{"arm": "arm5_zero_step_counted_not_none", "got": 1, "want": 1, "ok": true}
+{"arm": "arm5_zero_step_median", "got": 0, "want": 0.0, "ok": true}
+{"arm": "arm6_transport_absent_separate", "got": [1, 1], "want": [1, 1], "ok": true}
+{"arm": "arm7_pool_eats_nothing", "got": [3, 3], "want": [3, 3], "ok": true}
+{"arm": "arm7_per_source_buckets", "got": {"a.json": {"pass": 1, "fake_close": 1}, "b.json": {"transport": 1}, "c.json": {}}, "want": {"a.json": {"pass": 1, "fake_close": 1}, "b.json": {"transport": 1}, "c.json": {}}, "ok": true}
+{"arm": "arm7b_pooled_counts_from_rows_not_strings", "got": [0, 1, 1, 1], "want": [0, 1, 1, 1], "ok": true}
+{"arm": "arm8_early_flag_counts", "got": [0, 4, 3, 3], "want": [0, 4, 3, 3], "ok": true}
+{"arm": "arm8_early_flag_equals_direct", "got": 0.0286, "want": 0.0286, "ok": true}
+{"arm": "arm8_flag_list_has_four", "got": 4, "want": 4, "ok": true}
+{"arm": "arm9_unmatched_scope", "got": [3, 6], "want": [3, 6], "ok": true}
+{"arm": "arm9_matched_scope_drops_other_tasks", "got": [0, 3, 3], "want": [0, 3, 3], "ok": true}
+{"arm": "arm9_matched_denominator_smaller", "got": true, "want": true, "ok": true}
+{"arm": "arm9_by_task_table_keys", "got": ["B04"], "want": ["B04"], "ok": true}
+{"arm": "arm10_hand_1_over_3", "got": true, "want": true, "ok": true}
+{"arm": "arm10_hand_1_over_35", "got": true, "want": true, "ok": true}
+{"arm": "arm10_matches_rounded_sibling", "got": true, "want": true, "ok": true}
+{"arm": "arm10_tiny_table_not_zero", "got": [true, 0.0], "want": [true, 0.0], "ok": true}
+{"arm": "arm10_degenerate_stays_none", "got": null, "want": null, "ok": true}
+{"arm": "arm11_allow_stratum", "got": {"tasks_with_fake": [], "fake_rows": 0, "fake_one_step": 0, "pass_rows": 3, "pass_one_step": 3}, "want": {"tasks_with_fake": [], "fake_rows": 0, "fake_one_step": 0, "pass_rows": 3, "pass_one_step": 3}, "ok": true}
+{"arm": "arm11_deny_stratum", "got": {"tasks_with_fake": ["B04"], "fake_rows": 2, "fake_one_step": 2, "pass_rows": 3, "pass_one_step": 0}, "want": {"tasks_with_fake": ["B04"], "fake_rows": 2, "fake_one_step": 2, "pass_rows": 3, "pass_one_step": 0}, "ok": true}
+{"selftest_fails": 0}

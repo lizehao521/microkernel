@@ -1,0 +1,227 @@
+model_input:call	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=10 b5=0 emptyStr=0 emptyP=0 nullP=0
+model_input:parts	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=10 b5=0 emptyStr=0 emptyP=0 nullP=0
+model_input:part_totals	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=10 b5=0 emptyStr=0 emptyP=0 nullP=0
+model_input:content_bytes	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=10 b5=0 emptyStr=0 emptyP=0 nullP=0
+model_input:tokens	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=0 b5=10 emptyStr=0 emptyP=0 nullP=0
+model_input:call_bytes_ceiling	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=10 b5=0 emptyStr=0 emptyP=0 nullP=0
+model_input:transport_slack_pct	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=10 b5=0 emptyStr=0 emptyP=0 nullP=0
+model_input:content_ceiling	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=10 b5=0 emptyStr=0 emptyP=0 nullP=0
+model_input:effective_ceiling	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=10 b5=0 emptyStr=0 emptyP=0 nullP=0
+model_input:clamp_rounds	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=10 b5=0 emptyStr=0 emptyP=0 nullP=0
+model_input:leftover_pct	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=10 b5=0 emptyStr=0 emptyP=0 nullP=0
+model_input:fixed_overhead	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=0 b5=10 emptyStr=0 emptyP=0 nullP=0
+model_input:shares	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=10 b5=0 emptyStr=0 emptyP=0 nullP=0
+model_input:notice_sent	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=10 b5=0 emptyStr=0 emptyP=0 nullP=0
+model_input:notice_trimmed	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=10 b5=0 emptyStr=0 emptyP=0 nullP=0
+model_input:notice_why	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=10 b5=0 emptyStr=0 emptyP=0 nullP=0
+model_input:notice_text	n=60 filled=6 b5=0 emptyStr=54 emptyP=0 nullP=0 | n=10 filled=6 b5=0 emptyStr=4 emptyP=0 nullP=0
+model_input:folded	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=10 b5=0 emptyStr=0 emptyP=0 nullP=0
+model_input:clipped	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=10 b5=0 emptyStr=0 emptyP=0 nullP=0
+model_input:dropped	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=10 b5=0 emptyStr=0 emptyP=0 nullP=0
+model_output:call	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=10 b5=0 emptyStr=0 emptyP=0 nullP=0
+model_output:streaming	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=10 b5=0 emptyStr=0 emptyP=0 nullP=0
+model_output:finish	n=60 filled=34 b5=0 emptyStr=26 emptyP=0 nullP=0 | n=10 filled=0 b5=0 emptyStr=10 emptyP=0 nullP=0
+model_output:finish_said	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=10 b5=0 emptyStr=0 emptyP=0 nullP=0
+model_output:endpoint_model	n=60 filled=23 b5=0 emptyStr=37 emptyP=0 nullP=0 | n=10 filled=0 b5=0 emptyStr=10 emptyP=0 nullP=0
+model_output:endpoint_model_said	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=10 b5=0 emptyStr=0 emptyP=0 nullP=0
+model_output:wire_format	n=60 filled=34 b5=0 emptyStr=26 emptyP=0 nullP=0 | n=10 filled=0 b5=0 emptyStr=10 emptyP=0 nullP=0
+model_output:wire_format_said	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=10 b5=0 emptyStr=0 emptyP=0 nullP=0
+model_output:model_says_bytes	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=10 b5=0 emptyStr=0 emptyP=0 nullP=0
+model_output:model_says_kept	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=10 b5=0 emptyStr=0 emptyP=0 nullP=0
+model_output:model_says_clipped	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=10 b5=0 emptyStr=0 emptyP=0 nullP=0
+model_output:model_says_sha256	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=10 b5=0 emptyStr=0 emptyP=0 nullP=0
+model_output:usage_in	n=60 filled=34 b5=26 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=0 b5=10 emptyStr=0 emptyP=0 nullP=0
+model_output:usage_out	n=60 filled=34 b5=26 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=0 b5=10 emptyStr=0 emptyP=0 nullP=0
+model_output:wire_bytes_out	n=60 filled=36 b5=24 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=0 b5=10 emptyStr=0 emptyP=0 nullP=0
+model_output:wire_bytes_in	n=60 filled=36 b5=24 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=0 b5=10 emptyStr=0 emptyP=0 nullP=0
+model_output:chunks	n=60 filled=15 b5=45 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=0 b5=10 emptyStr=0 emptyP=0 nullP=0
+model_output:first_byte_ms	n=60 filled=15 b5=45 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=0 b5=10 emptyStr=0 emptyP=0 nullP=0
+model_output:max_gap_ms	n=60 filled=15 b5=45 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=0 b5=10 emptyStr=0 emptyP=0 nullP=0
+model_output:tool_calls	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=10 b5=0 emptyStr=0 emptyP=0 nullP=0
+model_output:malformed_actions	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=10 b5=0 emptyStr=0 emptyP=0 nullP=0
+model_output:malformed_streak	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=10 b5=0 emptyStr=0 emptyP=0 nullP=0
+model_output:fail_kind	n=60 filled=0 b5=0 emptyStr=60 emptyP=0 nullP=0 | n=10 filled=1 b5=0 emptyStr=9 emptyP=0 nullP=0
+model_output:fail_detail	n=60 filled=0 b5=0 emptyStr=60 emptyP=0 nullP=0 | n=10 filled=1 b5=0 emptyStr=9 emptyP=0 nullP=0
+model_output:fail_status	n=60 filled=0 b5=60 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=0 b5=10 emptyStr=0 emptyP=0 nullP=0
+model_output:retry_after_ms	n=60 filled=0 b5=60 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=0 b5=10 emptyStr=0 emptyP=0 nullP=0
+model_output:downgrade	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=10 b5=0 emptyStr=0 emptyP=0 nullP=0
+model_output:sent	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=10 b5=0 emptyStr=0 emptyP=0 nullP=0
+model_output:cost_countable	n=60 filled=60 b5=0 emptyStr=0 emptyP=0 nullP=0 | n=10 filled=10 b5=0 emptyStr=0 emptyP=0 nullP=0
+=== detail for never-filled or partially-empty cells ===
+--- model_input:tokens
+   账本-全量-1018.jsonl n=60 filled=60 basis={"3":60} emptyStr=0
+     FILLED: {"seq":5,"basis":3,"claim":"≈42（这是估算，不是测量）：估的是挂载验收用的合成演示值，不是真实测量","payload":"{\"N\":42,\"Basis\":3,\"Source\":\"挂载验收用的合成演示值，不是真实测量\",\"Absent\":false,\"Refused\":false,\""}
+     FILLED: {"seq":54,"basis":3,"claim":"≈42（这是估算，不是测量）：估的是挂载验收用的合成演示值，不是真实测量","payload":"{\"N\":42,\"Basis\":3,\"Source\":\"挂载验收用的合成演示值，不是真实测量\",\"Absent\":false,\"Refused\":false,\""}
+   账本-8799-第二次快照-included.jsonl n=10 filled=0 basis={"5":10} emptyStr=0
+     EMPTY/ABSENT: {"seq":5,"basis":5,"claim":"—（没量到，不是 0）：分词器在对端；且这一侧连 content_bytes 都没量到，估一个数没有依据","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"分词器在对端；且这一侧连 c"}
+     EMPTY/ABSENT: {"seq":54,"basis":5,"claim":"—（没量到，不是 0）：分词器在对端；且这一侧连 content_bytes 都没量到，估一个数没有依据","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"分词器在对端；且这一侧连 c"}
+     EMPTY/ABSENT: {"seq":103,"basis":5,"claim":"—（没量到，不是 0）：分词器在对端；且这一侧连 content_bytes 都没量到，估一个数没有依据","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"分词器在对端；且这一侧连 c"}
+--- model_input:fixed_overhead
+   账本-全量-1018.jsonl n=60 filled=60 basis={"3":60} emptyStr=0
+     FILLED: {"seq":12,"basis":3,"claim":"≈37（这是估算，不是测量）：估的是挂载验收用的合成演示值，不是真实测量","payload":"{\"N\":37,\"Basis\":3,\"Source\":\"挂载验收用的合成演示值，不是真实测量\",\"Absent\":false,\"Refused\":false,\""}
+     FILLED: {"seq":61,"basis":3,"claim":"≈37（这是估算，不是测量）：估的是挂载验收用的合成演示值，不是真实测量","payload":"{\"N\":37,\"Basis\":3,\"Source\":\"挂载验收用的合成演示值，不是真实测量\",\"Absent\":false,\"Refused\":false,\""}
+   账本-8799-第二次快照-included.jsonl n=10 filled=0 basis={"5":10} emptyStr=0
+     EMPTY/ABSENT: {"seq":12,"basis":5,"claim":"—（没量到，不是 0）：骨架字节要装配器数，模型这一侧数不到","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"骨架字节要装配器数，模型这一"}
+     EMPTY/ABSENT: {"seq":61,"basis":5,"claim":"—（没量到，不是 0）：骨架字节要装配器数，模型这一侧数不到","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"骨架字节要装配器数，模型这一"}
+     EMPTY/ABSENT: {"seq":110,"basis":5,"claim":"—（没量到，不是 0）：骨架字节要装配器数，模型这一侧数不到","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"骨架字节要装配器数，模型这一"}
+--- model_input:notice_text
+   账本-全量-1018.jsonl n=60 filled=6 basis={"1":60} emptyStr=54
+     FILLED: {"seq":409,"basis":1,"claim":"（历史 2 轮已折叠，折叠表见 cuts）","payload":"\"（历史 2 轮已折叠，折叠表见 cuts）\""}
+     FILLED: {"seq":458,"basis":1,"claim":"（历史 3 轮已折叠，折叠表见 cuts）","payload":"\"（历史 3 轮已折叠，折叠表见 cuts）\""}
+     EMPTY/ABSENT: {"seq":17,"basis":1,"claim":"（这一格是空的）","payload":"\"\""}
+     EMPTY/ABSENT: {"seq":66,"basis":1,"claim":"（这一格是空的）","payload":"\"\""}
+     EMPTY/ABSENT: {"seq":115,"basis":1,"claim":"（这一格是空的）","payload":"\"\""}
+   账本-8799-第二次快照-included.jsonl n=10 filled=6 basis={"1":10} emptyStr=4
+     FILLED: {"seq":213,"basis":1,"claim":"整圈合并发：本发把主页生产+渲染验收+内核探型合为一条，未按轮拆分。输入侧 content_bytes / part_t","payload":"\"整圈合并发：本发把主页生产+渲染验收+内核探型合为一条，未按轮拆分。输入侧 content_bytes / part_totals / budget 六格是裸"}
+     FILLED: {"seq":262,"basis":1,"claim":"形状更正知情：第 1 发把 malformed_actions / malformed_streak 落成 measur","payload":"\"形状更正知情：第 1 发把 malformed_actions / malformed_streak 落成 measured 0——因为我没把这两格整块给，默"}
+     EMPTY/ABSENT: {"seq":17,"basis":1,"claim":"（这一格是空的）","payload":"\"\""}
+     EMPTY/ABSENT: {"seq":66,"basis":1,"claim":"（这一格是空的）","payload":"\"\""}
+     EMPTY/ABSENT: {"seq":115,"basis":1,"claim":"（这一格是空的）","payload":"\"\""}
+--- model_output:finish
+   账本-全量-1018.jsonl n=60 filled=34 basis={"2":60} emptyStr=26
+     FILLED: {"seq":121,"basis":2,"claim":"stop","payload":"\"stop\""}
+     FILLED: {"seq":170,"basis":2,"claim":"stop","payload":"\"stop\""}
+     EMPTY/ABSENT: {"seq":23,"basis":2,"claim":"（这一格是空的）","payload":"\"\""}
+     EMPTY/ABSENT: {"seq":72,"basis":2,"claim":"（这一格是空的）","payload":"\"\""}
+     EMPTY/ABSENT: {"seq":1787,"basis":2,"claim":"（这一格是空的）","payload":"\"\""}
+   账本-8799-第二次快照-included.jsonl n=10 filled=0 basis={"2":10} emptyStr=10
+     EMPTY/ABSENT: {"seq":23,"basis":2,"claim":"（这一格是空的）","payload":"\"\""}
+     EMPTY/ABSENT: {"seq":72,"basis":2,"claim":"（这一格是空的）","payload":"\"\""}
+     EMPTY/ABSENT: {"seq":121,"basis":2,"claim":"（这一格是空的）","payload":"\"\""}
+--- model_output:endpoint_model
+   账本-全量-1018.jsonl n=60 filled=23 basis={"4":60} emptyStr=37
+     FILLED: {"seq":123,"basis":4,"claim":"cs-flash","payload":"\"cs-flash\""}
+     FILLED: {"seq":172,"basis":4,"claim":"cs-flash","payload":"\"cs-flash\""}
+     EMPTY/ABSENT: {"seq":25,"basis":4,"claim":"（这一格是空的）","payload":"\"\""}
+     EMPTY/ABSENT: {"seq":74,"basis":4,"claim":"（这一格是空的）","payload":"\"\""}
+     EMPTY/ABSENT: {"seq":613,"basis":4,"claim":"（这一格是空的）","payload":"\"\""}
+   账本-8799-第二次快照-included.jsonl n=10 filled=0 basis={"4":10} emptyStr=10
+     EMPTY/ABSENT: {"seq":25,"basis":4,"claim":"（这一格是空的）","payload":"\"\""}
+     EMPTY/ABSENT: {"seq":74,"basis":4,"claim":"（这一格是空的）","payload":"\"\""}
+     EMPTY/ABSENT: {"seq":123,"basis":4,"claim":"（这一格是空的）","payload":"\"\""}
+--- model_output:wire_format
+   账本-全量-1018.jsonl n=60 filled=34 basis={"2":60} emptyStr=26
+     FILLED: {"seq":125,"basis":2,"claim":"chat.completion","payload":"\"chat.completion\""}
+     FILLED: {"seq":174,"basis":2,"claim":"chat.completion.chunk","payload":"\"chat.completion.chunk\""}
+     EMPTY/ABSENT: {"seq":27,"basis":2,"claim":"（这一格是空的）","payload":"\"\""}
+     EMPTY/ABSENT: {"seq":76,"basis":2,"claim":"（这一格是空的）","payload":"\"\""}
+     EMPTY/ABSENT: {"seq":1791,"basis":2,"claim":"（这一格是空的）","payload":"\"\""}
+   账本-8799-第二次快照-included.jsonl n=10 filled=0 basis={"2":10} emptyStr=10
+     EMPTY/ABSENT: {"seq":27,"basis":2,"claim":"（这一格是空的）","payload":"\"\""}
+     EMPTY/ABSENT: {"seq":76,"basis":2,"claim":"（这一格是空的）","payload":"\"\""}
+     EMPTY/ABSENT: {"seq":125,"basis":2,"claim":"（这一格是空的）","payload":"\"\""}
+--- model_output:usage_in
+   账本-全量-1018.jsonl n=60 filled=34 basis={"2":34,"5":26} emptyStr=0
+     FILLED: {"seq":131,"basis":2,"claim":"393（转述自 对端 usage.prompt_tokens（cs-flash 自报））","payload":"{\"N\":393,\"Basis\":2,\"Source\":\"对端 usage.prompt_tokens（cs-flash 自报）\",\"Absent\":false"}
+     FILLED: {"seq":180,"basis":2,"claim":"0（转述自 对端 usage.prompt_tokens（cs-flash 自报））","payload":"{\"N\":0,\"Basis\":2,\"Source\":\"对端 usage.prompt_tokens（cs-flash 自报）\",\"Absent\":false,\""}
+     EMPTY/ABSENT: {"seq":33,"basis":5,"claim":"—（没量到，不是 0）：合成演示：没有端点，没人报 usage","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"合成演示：没有端点，没人报 "}
+     EMPTY/ABSENT: {"seq":82,"basis":5,"claim":"—（没量到，不是 0）：合成演示：没有端点，没人报 usage","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"合成演示：没有端点，没人报 "}
+     EMPTY/ABSENT: {"seq":1797,"basis":5,"claim":"—（没量到，不是 0）：我是答题方，没有对端分词可转述","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"我是答题方，没有对端分词可转"}
+   账本-8799-第二次快照-included.jsonl n=10 filled=0 basis={"5":10} emptyStr=0
+     EMPTY/ABSENT: {"seq":33,"basis":5,"claim":"—（没量到，不是 0）：分词器在对端，这一趟外壳没把 usage 递到我这一侧","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"分词器在对端，这一趟外壳没把"}
+     EMPTY/ABSENT: {"seq":82,"basis":5,"claim":"—（没量到，不是 0）：分词器在对端，这一趟外壳没把 usage 递到我这一侧","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"分词器在对端，这一趟外壳没把"}
+     EMPTY/ABSENT: {"seq":131,"basis":5,"claim":"—（没量到，不是 0）：分词器在对端，这一趟外壳没把 usage 递到我这一侧","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"分词器在对端，这一趟外壳没把"}
+--- model_output:usage_out
+   账本-全量-1018.jsonl n=60 filled=34 basis={"2":34,"5":26} emptyStr=0
+     FILLED: {"seq":132,"basis":2,"claim":"35（转述自 对端 usage.completion_tokens（cs-flash 自报））","payload":"{\"N\":35,\"Basis\":2,\"Source\":\"对端 usage.completion_tokens（cs-flash 自报）\",\"Absent\":fa"}
+     FILLED: {"seq":181,"basis":2,"claim":"0（转述自 对端 usage.completion_tokens（cs-flash 自报））","payload":"{\"N\":0,\"Basis\":2,\"Source\":\"对端 usage.completion_tokens（cs-flash 自报）\",\"Absent\":fal"}
+     EMPTY/ABSENT: {"seq":34,"basis":5,"claim":"—（没量到，不是 0）：合成演示：没有端点，没人报 usage","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"合成演示：没有端点，没人报 "}
+     EMPTY/ABSENT: {"seq":83,"basis":5,"claim":"—（没量到，不是 0）：合成演示：没有端点，没人报 usage","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"合成演示：没有端点，没人报 "}
+     EMPTY/ABSENT: {"seq":1798,"basis":5,"claim":"—（没量到，不是 0）：我是答题方，没有对端分词可转述","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"我是答题方，没有对端分词可转"}
+   账本-8799-第二次快照-included.jsonl n=10 filled=0 basis={"5":10} emptyStr=0
+     EMPTY/ABSENT: {"seq":34,"basis":5,"claim":"—（没量到，不是 0）：分词器在对端，这一趟外壳没把 usage 递到我这一侧","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"分词器在对端，这一趟外壳没把"}
+     EMPTY/ABSENT: {"seq":83,"basis":5,"claim":"—（没量到，不是 0）：分词器在对端，这一趟外壳没把 usage 递到我这一侧","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"分词器在对端，这一趟外壳没把"}
+     EMPTY/ABSENT: {"seq":132,"basis":5,"claim":"—（没量到，不是 0）：分词器在对端，这一趟外壳没把 usage 递到我这一侧","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"分词器在对端，这一趟外壳没把"}
+--- model_output:wire_bytes_out
+   账本-全量-1018.jsonl n=60 filled=36 basis={"1":34,"3":2,"5":24} emptyStr=0
+     FILLED: {"seq":35,"basis":3,"claim":"≈210（这是估算，不是测量）：估的是挂载验收用的合成演示值，不是真实测量","payload":"{\"N\":210,\"Basis\":3,\"Source\":\"挂载验收用的合成演示值，不是真实测量\",\"Absent\":false,\"Refused\":false,"}
+     FILLED: {"seq":84,"basis":3,"claim":"≈210（这是估算，不是测量）：估的是挂载验收用的合成演示值，不是真实测量","payload":"{\"N\":210,\"Basis\":3,\"Source\":\"挂载验收用的合成演示值，不是真实测量\",\"Absent\":false,\"Refused\":false,"}
+     EMPTY/ABSENT: {"seq":1799,"basis":5,"claim":"—（没量到，不是 0）：这一发没有过网络的请求体：我是答题方，不是调用方","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"这一发没有过网络的请求体：我"}
+     EMPTY/ABSENT: {"seq":1848,"basis":5,"claim":"—（没量到，不是 0）：这一发没有过网络的请求体：我是答题方，不是调用方","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"这一发没有过网络的请求体：我"}
+     EMPTY/ABSENT: {"seq":1897,"basis":5,"claim":"—（没量到，不是 0）：这一发没有过网络的请求体：我是答题方，不是调用方","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"这一发没有过网络的请求体：我"}
+   账本-8799-第二次快照-included.jsonl n=10 filled=0 basis={"5":10} emptyStr=0
+     EMPTY/ABSENT: {"seq":35,"basis":5,"claim":"—（没量到，不是 0）：请求体字节是编码后数的，不在这次调用的可见面上","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"请求体字节是编码后数的，不在"}
+     EMPTY/ABSENT: {"seq":84,"basis":5,"claim":"—（没量到，不是 0）：请求体字节是编码后数的，不在这次调用的可见面上","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"请求体字节是编码后数的，不在"}
+     EMPTY/ABSENT: {"seq":133,"basis":5,"claim":"—（没量到，不是 0）：请求体字节是编码后数的，不在这次调用的可见面上","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"请求体字节是编码后数的，不在"}
+--- model_output:wire_bytes_in
+   账本-全量-1018.jsonl n=60 filled=36 basis={"1":34,"3":2,"5":24} emptyStr=0
+     FILLED: {"seq":36,"basis":3,"claim":"≈640（这是估算，不是测量）：估的是挂载验收用的合成演示值，不是真实测量","payload":"{\"N\":640,\"Basis\":3,\"Source\":\"挂载验收用的合成演示值，不是真实测量\",\"Absent\":false,\"Refused\":false,"}
+     FILLED: {"seq":85,"basis":3,"claim":"≈640（这是估算，不是测量）：估的是挂载验收用的合成演示值，不是真实测量","payload":"{\"N\":640,\"Basis\":3,\"Source\":\"挂载验收用的合成演示值，不是真实测量\",\"Absent\":false,\"Refused\":false,"}
+     EMPTY/ABSENT: {"seq":1800,"basis":5,"claim":"—（没量到，不是 0）：这一发没有从通道上数字节：题面就在本地文件里，没走网络","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"这一发没有从通道上数字节：题"}
+     EMPTY/ABSENT: {"seq":1849,"basis":5,"claim":"—（没量到，不是 0）：这一发没有从通道上数字节：题面就在本地文件里，没走网络","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"这一发没有从通道上数字节：题"}
+     EMPTY/ABSENT: {"seq":1898,"basis":5,"claim":"—（没量到，不是 0）：这一发没有从通道上数字节：题面就在本地文件里，没走网络","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"这一发没有从通道上数字节：题"}
+   账本-8799-第二次快照-included.jsonl n=10 filled=0 basis={"5":10} emptyStr=0
+     EMPTY/ABSENT: {"seq":36,"basis":5,"claim":"—（没量到，不是 0）：通道字节是传输层数的，不在这次调用的可见面上","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"通道字节是传输层数的，不在这"}
+     EMPTY/ABSENT: {"seq":85,"basis":5,"claim":"—（没量到，不是 0）：通道字节是传输层数的，不在这次调用的可见面上","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"通道字节是传输层数的，不在这"}
+     EMPTY/ABSENT: {"seq":134,"basis":5,"claim":"—（没量到，不是 0）：通道字节是传输层数的，不在这次调用的可见面上","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"通道字节是传输层数的，不在这"}
+--- model_output:chunks
+   账本-全量-1018.jsonl n=60 filled=15 basis={"1":15,"5":45} emptyStr=0
+     FILLED: {"seq":184,"basis":1,"claim":"12","payload":"{\"N\":12,\"Basis\":1,\"Source\":\"\",\"Absent\":false,\"Refused\":false,\"Why\":\"\"}"}
+     FILLED: {"seq":282,"basis":1,"claim":"11","payload":"{\"N\":11,\"Basis\":1,\"Source\":\"\",\"Absent\":false,\"Refused\":false,\"Why\":\"\"}"}
+     EMPTY/ABSENT: {"seq":37,"basis":5,"claim":"—（没量到，不是 0）：合成演示：Streaming=false，结构上没有分帧可数","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"合成演示：Streaming"}
+     EMPTY/ABSENT: {"seq":86,"basis":5,"claim":"—（没量到，不是 0）：合成演示：Streaming=false，结构上没有分帧可数","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"合成演示：Streaming"}
+     EMPTY/ABSENT: {"seq":135,"basis":5,"claim":"—（没量到，不是 0）：这一发不是流式的，结构上没有分帧","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"这一发不是流式的，结构上没有"}
+   账本-8799-第二次快照-included.jsonl n=10 filled=0 basis={"5":10} emptyStr=0
+     EMPTY/ABSENT: {"seq":37,"basis":5,"claim":"—（没量到，不是 0）：按非流式记，结构上没有分帧数","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"按非流式记，结构上没有分帧数"}
+     EMPTY/ABSENT: {"seq":86,"basis":5,"claim":"—（没量到，不是 0）：按非流式记，结构上没有分帧数","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"按非流式记，结构上没有分帧数"}
+     EMPTY/ABSENT: {"seq":135,"basis":5,"claim":"—（没量到，不是 0）：按非流式记，结构上没有分帧数","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"按非流式记，结构上没有分帧数"}
+--- model_output:first_byte_ms
+   账本-全量-1018.jsonl n=60 filled=15 basis={"1":15,"5":45} emptyStr=0
+     FILLED: {"seq":185,"basis":1,"claim":"205","payload":"{\"N\":205,\"Basis\":1,\"Source\":\"\",\"Absent\":false,\"Refused\":false,\"Why\":\"\"}"}
+     FILLED: {"seq":283,"basis":1,"claim":"205","payload":"{\"N\":205,\"Basis\":1,\"Source\":\"\",\"Absent\":false,\"Refused\":false,\"Why\":\"\"}"}
+     EMPTY/ABSENT: {"seq":38,"basis":5,"claim":"—（没量到，不是 0）：合成演示：非流式，没有首字节时刻","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"合成演示：非流式，没有首字节"}
+     EMPTY/ABSENT: {"seq":87,"basis":5,"claim":"—（没量到，不是 0）：合成演示：非流式，没有首字节时刻","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"合成演示：非流式，没有首字节"}
+     EMPTY/ABSENT: {"seq":136,"basis":5,"claim":"—（没量到，不是 0）：这一发不是流式的，没有首帧这件事","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"这一发不是流式的，没有首帧这"}
+   账本-8799-第二次快照-included.jsonl n=10 filled=0 basis={"5":10} emptyStr=0
+     EMPTY/ABSENT: {"seq":38,"basis":5,"claim":"—（没量到，不是 0）：按非流式记，结构上没有首帧等待","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"按非流式记，结构上没有首帧等"}
+     EMPTY/ABSENT: {"seq":87,"basis":5,"claim":"—（没量到，不是 0）：按非流式记，结构上没有首帧等待","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"按非流式记，结构上没有首帧等"}
+     EMPTY/ABSENT: {"seq":136,"basis":5,"claim":"—（没量到，不是 0）：按非流式记，结构上没有首帧等待","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"按非流式记，结构上没有首帧等"}
+--- model_output:max_gap_ms
+   账本-全量-1018.jsonl n=60 filled=15 basis={"1":15,"5":45} emptyStr=0
+     FILLED: {"seq":186,"basis":1,"claim":"0","payload":"{\"N\":0,\"Basis\":1,\"Source\":\"\",\"Absent\":false,\"Refused\":false,\"Why\":\"\"}"}
+     FILLED: {"seq":284,"basis":1,"claim":"0","payload":"{\"N\":0,\"Basis\":1,\"Source\":\"\",\"Absent\":false,\"Refused\":false,\"Why\":\"\"}"}
+     EMPTY/ABSENT: {"seq":39,"basis":5,"claim":"—（没量到，不是 0）：合成演示：非流式，没有帧间间隙","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"合成演示：非流式，没有帧间间"}
+     EMPTY/ABSENT: {"seq":88,"basis":5,"claim":"—（没量到，不是 0）：合成演示：非流式，没有帧间间隙","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"合成演示：非流式，没有帧间间"}
+     EMPTY/ABSENT: {"seq":137,"basis":5,"claim":"—（没量到，不是 0）：这一发不是流式的，没有帧间","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"这一发不是流式的，没有帧间\""}
+   账本-8799-第二次快照-included.jsonl n=10 filled=0 basis={"5":10} emptyStr=0
+     EMPTY/ABSENT: {"seq":39,"basis":5,"claim":"—（没量到，不是 0）：按非流式记，结构上没有帧间静默","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"按非流式记，结构上没有帧间静"}
+     EMPTY/ABSENT: {"seq":88,"basis":5,"claim":"—（没量到，不是 0）：按非流式记，结构上没有帧间静默","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"按非流式记，结构上没有帧间静"}
+     EMPTY/ABSENT: {"seq":137,"basis":5,"claim":"—（没量到，不是 0）：按非流式记，结构上没有帧间静默","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"按非流式记，结构上没有帧间静"}
+--- model_output:fail_kind
+   账本-全量-1018.jsonl n=60 filled=0 basis={"1":60} emptyStr=60
+     EMPTY/ABSENT: {"seq":43,"basis":1,"claim":"（这一格是空的）","payload":"\"\""}
+     EMPTY/ABSENT: {"seq":92,"basis":1,"claim":"（这一格是空的）","payload":"\"\""}
+     EMPTY/ABSENT: {"seq":141,"basis":1,"claim":"（这一格是空的）","payload":"\"\""}
+   账本-8799-第二次快照-included.jsonl n=10 filled=1 basis={"1":10} emptyStr=9
+     FILLED: {"seq":239,"basis":1,"claim":"transport","payload":"\"transport\""}
+     EMPTY/ABSENT: {"seq":43,"basis":1,"claim":"（这一格是空的）","payload":"\"\""}
+     EMPTY/ABSENT: {"seq":92,"basis":1,"claim":"（这一格是空的）","payload":"\"\""}
+     EMPTY/ABSENT: {"seq":141,"basis":1,"claim":"（这一格是空的）","payload":"\"\""}
+--- model_output:fail_detail
+   账本-全量-1018.jsonl n=60 filled=0 basis={"1":60} emptyStr=60
+     EMPTY/ABSENT: {"seq":44,"basis":1,"claim":"（这一格是空的）","payload":"\"\""}
+     EMPTY/ABSENT: {"seq":93,"basis":1,"claim":"（这一格是空的）","payload":"\"\""}
+     EMPTY/ABSENT: {"seq":142,"basis":1,"claim":"（这一格是空的）","payload":"\"\""}
+   账本-8799-第二次快照-included.jsonl n=10 filled=1 basis={"1":10} emptyStr=9
+     FILLED: {"seq":240,"basis":1,"claim":"browser-use take_screenshot 返回 NATIVE_BROWSER_VIEWPORT_UNAVA","payload":"\"browser-use take_screenshot 返回 NATIVE_BROWSER_VIEWPORT_UNAVAILABLE：应用内浏览器 surfa"}
+     EMPTY/ABSENT: {"seq":44,"basis":1,"claim":"（这一格是空的）","payload":"\"\""}
+     EMPTY/ABSENT: {"seq":93,"basis":1,"claim":"（这一格是空的）","payload":"\"\""}
+     EMPTY/ABSENT: {"seq":142,"basis":1,"claim":"（这一格是空的）","payload":"\"\""}
+--- model_output:fail_status
+   账本-全量-1018.jsonl n=60 filled=0 basis={"5":60} emptyStr=0
+     EMPTY/ABSENT: {"seq":45,"basis":5,"claim":"—（没量到，不是 0）：合成演示：没有对端，没收到 HTTP 响应","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"合成演示：没有对端，没收到 "}
+     EMPTY/ABSENT: {"seq":94,"basis":5,"claim":"—（没量到，不是 0）：合成演示：没有对端，没收到 HTTP 响应","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"合成演示：没有对端，没收到 "}
+     EMPTY/ABSENT: {"seq":143,"basis":5,"claim":"—（没量到，不是 0）：这一发没故障，也就没有要记的状态码","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"这一发没故障，也就没有要记的"}
+   账本-8799-第二次快照-included.jsonl n=10 filled=0 basis={"5":10} emptyStr=0
+     EMPTY/ABSENT: {"seq":45,"basis":5,"claim":"—（没量到，不是 0）：没故障，也没有对端响应可抄状态码","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"没故障，也没有对端响应可抄状"}
+     EMPTY/ABSENT: {"seq":94,"basis":5,"claim":"—（没量到，不是 0）：没故障，也没有对端响应可抄状态码","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"没故障，也没有对端响应可抄状"}
+     EMPTY/ABSENT: {"seq":143,"basis":5,"claim":"—（没量到，不是 0）：没故障，也没有对端响应可抄状态码","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"没故障，也没有对端响应可抄状"}
+--- model_output:retry_after_ms
+   账本-全量-1018.jsonl n=60 filled=0 basis={"5":60} emptyStr=0
+     EMPTY/ABSENT: {"seq":46,"basis":5,"claim":"—（没量到，不是 0）：合成演示：没故障，没有重试等待","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"合成演示：没故障，没有重试等"}
+     EMPTY/ABSENT: {"seq":95,"basis":5,"claim":"—（没量到，不是 0）：合成演示：没故障，没有重试等待","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"合成演示：没故障，没有重试等"}
+     EMPTY/ABSENT: {"seq":144,"basis":5,"claim":"—（没量到，不是 0）：这一发没断，也就没有要等多久","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"这一发没断，也就没有要等多久"}
+   账本-8799-第二次快照-included.jsonl n=10 filled=0 basis={"5":10} emptyStr=0
+     EMPTY/ABSENT: {"seq":46,"basis":5,"claim":"—（没量到，不是 0）：没故障，对端也没说要等多久","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"没故障，对端也没说要等多久\""}
+     EMPTY/ABSENT: {"seq":95,"basis":5,"claim":"—（没量到，不是 0）：没故障，对端也没说要等多久","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"没故障，对端也没说要等多久\""}
+     EMPTY/ABSENT: {"seq":144,"basis":5,"claim":"—（没量到，不是 0）：没故障，对端也没说要等多久","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"没故障，对端也没说要等多久\""}

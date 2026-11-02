@@ -1,0 +1,20 @@
+{
+  "analyze_step": "3select-analyzersmeasuredpython:text(bare-except,except-pass,mutable-default-arg,none-compare,long-def,print-as-log,unused-import(maybe)) +通用(todo,hardcoded-secret(maybe))（没给报错/栈 ⇒",
+  "band": "第 1 发跑完： 命中 7 条，其中 critical 2 条；每条带出处档与自己数出来的分母 · 真跑了 12/13 步 · 账本触发过 9 次决定（读回 12 格，只有真改写了结果的才计入）· KPI = 账上读回来的值/出处档真的改写了结果的那几格（9 格，读回共 12 格）；反臂：不 read_back ⇒ 0 格 · 代码执行=否 · 结束=跑完：九步走完：到这里已亮 13 步（真跑了 ",
+  "cards": 7,
+  "decisions_n": 12,
+  "mix": "measured 0 / estimated 7 / model_says 0 / relayed 0 / absent 11 = 18　加总核对：对得上",
+  "rules": [
+    "mutable-default-arg:estimated",
+    "bare-except:estimated",
+    "except-pass:estimated",
+    "none-compare:estimated",
+    "print-as-log:estimated",
+    "unused-import(maybe):estimated",
+    "replace-print-with-logger:estimated"
+  ],
+  "select_step": "3select-analyzersmeasuredpython:text(bare-except,except-pass,mutable-default-arg,none-compare,long-def,print-as-log,unused-import(maybe)) +通用(todo,hardcoded-secret(maybe))（没给报错/栈 ⇒",
+  "shape_step": "2shapemeasured判为 python（嗅探推断（不是解析出来的））；真解析没过；函数 2 个、import 2 条（其中 1 条疑似没用到）｜凭什么：得分 2；命中 ^\\s*(?:from\\s+[\\w.]+\\s+)?import\\s+\\w+、\\bprint\\(×1｜注意：语言这一格是**推断**，函数/import 两个数是文本匹配数出来的",
+  "unknowns_n": 11,
+  "waited_ms": 409
+}

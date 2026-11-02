@@ -1,0 +1,439 @@
+<!-- ================= CHAPTER 6 ================= -->
+<section class="chapter" id="ch6">
+  <div class="chap-kicker">Chapter 06 · Product &amp; Evidence Status</div>
+  <h1><span class="num">06</span>产品与证据现状</h1>
+
+  <div class="chap-q">
+    <b>本章回答：</b>今天到底能对外说什么、不能说什么？哪些是硬证，哪些只是单源，哪些还是洞？
+  </div>
+
+  <p class="lede">
+    市场进入的第一原则是“先对齐证据，再对齐叙事”。
+    这颗内核有一组很硬的证据（49 格契约、10-19 那一趟 80 根慢闸、外部 6 发、4 次拒收），也有一组很硬的缺口（真人外部验收、拒收归因 5/8、缺席表达 G1、交付凭据错位）。
+    把缺口藏起来，硬证也会被怀疑；把缺口标出来，反而能建立信任。
+  </p>
+
+  <h2 id="s6-1">6.1 能说的：A / B 级证据</h2>
+
+  <table class="tbl">
+    <caption><b>表 9 · 能说的</b>：每条主张都配“能读成 / 不能读成”，防止过度引用</caption>
+    <thead><tr><th style="width:20%">主张</th><th style="width:30%">证据</th><th style="width:8%">等级</th><th style="width:21%">能读成</th><th>不能读成</th></tr></thead>
+    <tbody>
+      <tr><td>49 格契约稳定、可机核</td><td><span class="mono">status=OK keys=48 cells=49 rows=48 drift=0</span>；四项逐格对得上</td><td><span class="tag tag-a">A</span></td><td>契约机械一致，判据表冻结</td><td>“49 格全都接进了判据”</td></tr>
+      <tr><td>慢闸能跑、能分类、对照会红</td><td>10-19 那一趟整轮 80 根；空针/坏针 0；独立复算 80/80；CTRL <span class="mono">green=False</span>；早期 76/78 轮保留</td><td><span class="tag tag-a">A</span></td><td>闸门能跑、能分类、对照臂有效</td><td>“80 根覆盖了所有故障”</td></tr>
+      <tr><td>原子拒收 / append-only / 链自洽</td><td>外部 6 发 = 294 条；整本账 490 条；无半发；逐发指纹对上；未回改旧发</td><td><span class="tag tag-a">A</span></td><td>坏数据一条都不写；链未被改</td><td>“记录里的语义内容是真的”</td></tr>
+      <tr><td>能指名格位地拒收</td><td>一次 session 当面拒 4 次：空响应记正常收尾、类别谎报去留状态码、对端自报数标成自己量的、宣称通知发了而段里没有</td><td><span class="tag tag-a">A</span> / <span class="tag tag-b">B</span></td><td>至少这 4 次能读出“被拒 N 次”并指名格位</td><td>“每一次拒收都能机核格位”（见 6.2）</td></tr>
+      <tr><td>一次收口可以很省调用</td><td>“干活不记账、收口只落 1 发”只用 6 次调用；对比一圈 130 次里约 110 次花在记账/探型</td><td><span class="tag tag-b">B</span></td><td>存在一种低调用收口方式</td><td>“独立复算过 6 次”或“所有人都能 6 次”</td></tr>
+      <tr><td>链只能证明未被改，不能证明为真</td><td>链逐条比对原像；但无签名/密钥，理论上可整体重写</td><td><span class="tag tag-a">A</span></td><td>tamper-evident（篡改可发现）</td><td>“不可伪造 / 不可抵赖”</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    表 9 里最容易被销售拿去做标题的是“10-19 那一趟 80 根慢闸”和“6 发外部实测”。
+    这两条都硬，但它们证明的是“闸门能工作”，不是“买方会买”。
+    市场材料可以引用它们做技术可信度，但不能用它们替代外部干净臂和付费证据。
+  </p>
+
+  <h2 id="s6-2">6.2 不能说的：X 级缺口</h2>
+
+  <table class="tbl">
+    <caption><b>表 10 · 不能说的</b>：这些缺口必须在销售前补，不能用话术绕</caption>
+    <thead><tr><th style="width:22%">不能说</th><th style="width:38%">现状</th><th style="width:8%">等级</th><th>对市场动作的影响</th></tr></thead>
+    <tbody>
+      <tr><td>“让 Agent 更准 / 更可信”</td><td>8 题盲测：纯模型 8/8、带内核 6/8；唯一一次工具调用是只读侦察</td><td><span class="tag tag-x">X</span></td><td>不能做能力增强卖点；只能做报账/拦编数</td></tr>
+      <tr><td>“任何一格都能表达没量到”</td><td>G1：字符串格与一批裸整数格没有缺席写法；#66 只把 <span class="mono">Cuts</span> 这一族修成两句不同的话</td><td><span class="tag tag-x">X</span></td><td>“没量到却写成 0”仍是结构性风险；对外要限定范围</td></tr>
+      <tr><td>“每次拒收都能机核是哪一格”</td><td>#48：撞得上 5 / 8，撞不上 3</td><td><span class="tag tag-x">X</span></td><td>买方问“哪一格拦的”时，三次里有一次答不出</td></tr>
+      <tr><td>“30 分钟真人接上”</td><td>外部调用方是 AI，不是“没参与过项目的人”；真人外部验收 NOT_RUN</td><td><span class="tag tag-x">X</span></td><td>接入成本是验收项，不是已证事实</td></tr>
+      <tr><td>“唯一 KPI 已完全兑现”</td><td>计数半边 10-18 修了；点名半边未修；<span class="mono">kaudit</span> 对文件账本仍可能印 <span class="mono">rejected_writes=0</span></td><td><span class="tag tag-x">X</span></td><td>唯一 KPI 只能报一半；不能拿它做增长叙事</td></tr>
+      <tr><td>“交付包里的凭据描述包里的二进制”</td><td>凭据时间 10-18 23:35，exe 是 10-19 字节；zip 哈希绿 ≠ 交付可信</td><td><span class="tag tag-x">X</span></td><td>安全审查第一关会问“二进制对应哪份源码”</td></tr>
+      <tr><td>“真人外部验收已过”</td><td>唯一验收严格 FAIL：<span class="mono">declare_reader</span> 拒收六桶全 0</td><td><span class="tag tag-x">X</span></td><td>不能启动付费销售；只能做设计伙伴</td></tr>
+      <tr><td>“能挡提示注入 / 可作合规认证”</td><td>A1：<span class="mono">SYSTEM OVERRIDE</span> 塞进 <span class="mono">Notice.Why</span>，整发照落、<span class="mono">read_back</span> 原样交回、链自洽</td><td><span class="tag tag-x">X</span></td><td>必须在第一屏说明“审计层不是防线、不是合规认证”</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout danger">
+    <div class="t">为什么“严格 FAIL”比“弱 PASS”更重要</div>
+    <p>双臂验收脚本给出的是“弱 PASS / 严格 FAIL”：<span class="mono">declare_reader</span> 那一发坏声明当场 <span class="mono">isError=true</span> —— 拒是拒了，但那笔拒收没进六个计数桶里的任何一个（读数 <span class="mono">报告/双臂验收-实测-1019-221650.txt</span>：“B2 三个声明前后六桶差值”全 0）。所以严格 FAIL 说的不是“该拒的没拒”，而是“拒了、账上却看不见”：只读计数桶的人看到的那一栏是“什么都没发生”。这不是参数没调好，是验收线还没被真正走过。把它读成“基本可用”，就是拿最贵的一次错误做营销。</p>
+  </div>
+
+  <h2>6.3 证据阶梯：一眼看清哪些能说</h2>
+
+  <figure>
+    <div class="pad">
+      <svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="证据阶梯图">
+        <rect x="0" y="0" width="700" height="420" fill="#ffffff"/>
+        <g font-family="Microsoft YaHei, Noto Sans SC, sans-serif" font-size="8.4">
+          <text x="20" y="22" font-size="9" font-weight="700" fill="#0b1f33">证据项</text>
+          <text x="300" y="22" text-anchor="middle" font-size="8" fill="#15803d">已硬证</text>
+          <text x="400" y="22" text-anchor="middle" font-size="8" fill="#1d4ed8">单源</text>
+          <text x="500" y="22" text-anchor="middle" font-size="8" fill="#b45309">未成立</text>
+          <text x="600" y="22" text-anchor="middle" font-size="8" fill="#64748b">不可核</text>
+        </g>
+        <g font-family="Microsoft YaHei, Noto Sans SC, sans-serif" font-size="8.6">
+          <!-- rows -->
+          <text x="20" y="54">49 格契约</text>
+          <rect x="270" y="42" width="60" height="16" rx="2" fill="#dcfce7"/><circle cx="300" cy="50" r="5" fill="#15803d"/>
+          <text x="340" y="55" fill="#166534" font-size="7.6">A · drift=0</text>
+
+          <text x="20" y="82">慢闸分类 / 对照</text>
+          <rect x="270" y="70" width="60" height="16" rx="2" fill="#dcfce7"/><circle cx="300" cy="78" r="5" fill="#15803d"/>
+          <text x="340" y="83" fill="#166534" font-size="7.6">A · 80/80</text>
+
+          <text x="20" y="110">原子拒收</text>
+          <rect x="270" y="98" width="60" height="16" rx="2" fill="#dcfce7"/><circle cx="300" cy="106" r="5" fill="#15803d"/>
+          <text x="340" y="111" fill="#166534" font-size="7.6">A · 6 发/294 条</text>
+
+          <text x="20" y="138">链完整性</text>
+          <rect x="270" y="126" width="60" height="16" rx="2" fill="#dcfce7"/><circle cx="300" cy="134" r="5" fill="#15803d"/>
+          <text x="340" y="139" fill="#166534" font-size="7.6">A · 指纹对上</text>
+
+          <text x="20" y="166">外部调用方</text>
+          <rect x="370" y="154" width="60" height="16" rx="2" fill="#dbeafe"/><circle cx="400" cy="162" r="5" fill="#1d4ed8"/>
+          <text x="440" y="167" fill="#1e40af" font-size="7.6">B · 一次</text>
+
+          <text x="20" y="194">6 次调用收口</text>
+          <rect x="370" y="182" width="60" height="16" rx="2" fill="#dbeafe"/><circle cx="400" cy="190" r="5" fill="#1d4ed8"/>
+          <text x="440" y="195" fill="#1e40af" font-size="7.6">B · 单源</text>
+
+          <text x="20" y="222">计数 KPI</text>
+          <rect x="470" y="210" width="60" height="16" rx="2" fill="#fef3c7"/><circle cx="500" cy="218" r="5" fill="#b45309"/>
+          <text x="540" y="223" fill="#92400e" font-size="7.6">X · 半边</text>
+
+          <text x="20" y="250">拒收归因</text>
+          <rect x="470" y="238" width="60" height="16" rx="2" fill="#fee2e2"/><circle cx="500" cy="246" r="5" fill="#b91c1c"/>
+          <text x="540" y="251" fill="#991b1b" font-size="7.6">X · 5/8</text>
+
+          <text x="20" y="278">缺席表达（G1）</text>
+          <rect x="470" y="266" width="60" height="16" rx="2" fill="#fee2e2"/><circle cx="500" cy="274" r="5" fill="#b91c1c"/>
+          <text x="540" y="279" fill="#991b1b" font-size="7.6">X · 结构缺口</text>
+
+          <text x="20" y="306">真人外部验收</text>
+          <rect x="570" y="294" width="60" height="16" rx="2" fill="#e2e8f0"/><circle cx="600" cy="302" r="5" fill="#64748b"/>
+          <text x="640" y="307" fill="#475569" font-size="7.6">X</text>
+
+          <text x="20" y="334">交付凭据</text>
+          <rect x="470" y="322" width="60" height="16" rx="2" fill="#fee2e2"/><circle cx="500" cy="330" r="5" fill="#b91c1c"/>
+          <text x="540" y="335" fill="#991b1b" font-size="7.6">X · 错位</text>
+
+          <text x="20" y="362">合规/防线能力</text>
+          <rect x="570" y="350" width="60" height="16" rx="2" fill="#e2e8f0"/><circle cx="600" cy="358" r="5" fill="#64748b"/>
+          <text x="640" y="363" fill="#475569" font-size="7.6">X</text>
+        </g>
+        <text x="20" y="398" font-family="Microsoft YaHei, Noto Sans SC, sans-serif" font-size="7.6" fill="#64748b">状态为作者依据 6.1/6.2 分级的 C 级判断；不是测量值。位置越靠右，越不能拿去做对外承诺。</text>
+      </svg>
+    </div>
+    <figcaption><b>图 6 · 证据阶梯：能说的与不能说的</b>。左侧四项可直接用于技术可信度；中间两项只能单源引用；右侧六项在补齐前不能做销售承诺。<span class="figsrc">来源：第 6.1/6.2 节；分级标准见附录 A。</span></figcaption>
+  </figure>
+
+  <h2>6.4 对市场进入的四条含义</h2>
+  <ul>
+    <li><b>叙事必须是“收口件”，不是“信任层”。</b>“更可信”会被 8/8 vs 6/8 打掉；“可复核的交代”不会。</li>
+    <li><b>销售动作必须是试点，不是平台。</b>外部干净臂没过之前，任何平台承诺都是空头支票。</li>
+    <li><b>第一屏必须写边界。</b>“审计层不是防线、不是合规认证、不是能力增强”；这三句话会筛掉错误买方，也会让正确买方更信任你。</li>
+    <li><b>最强的演示是拒收，不是顺利跑通。</b>让买方故意做一发坏数据，看内核整发拒收并指名格位；这比 10 张架构图更有说服力。</li>
+  </ul>
+
+  <div class="endnote">
+    本章内部证据为 A/B 级，缺口为 X 级；具体原始件见附录 C 与项目 `报告/` 目录。不要把“80 根”“6 发”读成“外部验收已过”。
+  </div>
+</section>
+
+<!-- ================= CHAPTER 7 ================= -->
+<section class="chapter" id="ch7">
+  <div class="chap-kicker">Chapter 07 · Go-to-Market Options</div>
+  <h1><span class="num">07</span>市场进入方式：五个选项</h1>
+
+  <div class="chap-q">
+    <b>本章回答：</b>面对市场，具体有哪五种方式？每一种承诺什么、卖给谁、要什么证据、今天该不该走？
+  </div>
+
+  <p class="lede">
+    五个选项不是“五个都试试”，而是“五种不同的承诺”。
+    开源承诺“可接入”，私有化承诺“可交付”，托管承诺“可运营”，研究承诺“可复现”，竞赛承诺“可展示”。
+    这颗内核今天能兑现的是“可接入 + 可复现”，还不能兑现“可交付 + 可运营”；所以顺序必须是 D + A → B，而不是反过来。
+  </p>
+
+  <h2 id="s7-1">7.1 选项 A：开源 / 开放核心</h2>
+  <p>
+    <b>承诺：</b>任何人可以在 30 分钟内把闸门接进自己的 Agent 框架，免费看到“哪一格被拒、为什么”。
+    核心闸门与账本开源（建议 Apache-2.0 或同等宽松许可）；付费部分放在“签名构建、合规证据包、私有化支持、SSO/HA、审计导出”，而不是把判据表藏起来。
+  </p>
+  <p><b>为什么现在走：</b>这是唯一不需要销售组织的分发渠道；也是唯一能在触发点上让工程团队立刻验证的方式。开源还能把“49 格判据”变成公共语言，降低教育成本。</p>
+  <p><b>需要什么证据：</b>3 分钟 README、10 分钟演示、外部干净臂、可复现构建、SBOM、明确的“不做什么”。没有这些，开源只会带来 issue，不会带来信任。</p>
+  <p><b>收入模型：</b>无直接收入；后续靠私有化许可、支持合同、OEM、合规包。不要把开源当“免费试用”，要当“分发与证据机器”。</p>
+  <p><b>风险：</b>维护成本、被大厂吸收、被克隆、支持负担、没有收入。缓解：范围冻结、只维护一个版本、把支持写进付费合同。</p>
+  <p><b>结论：</b><span class="tag tag-a">现在走</span>。</p>
+
+  <h2 id="s7-2">7.2 选项 B：企业私有化许可</h2>
+  <p>
+    <b>承诺：</b>把闸门部署进客户 VPC，按年授权 + 支持；提供签名二进制、SBOM、合规证据包、部署手册、回滚方案。
+    建议价格 1.2–3 万美元/年；试点 3–5 千美元/6 周，可抵扣年费。
+  </p>
+  <p><b>为什么有条件：</b>它匹配“窄市场、高单价、低销量”的形状，也能避开按 seat 比价。但它要求客户信任一个单作者项目，要求安全审查、责任边界、支持 SLA；这些今天都还没有。</p>
+  <p><b>需要什么证据：</b>外部干净臂、2 家设计伙伴 LOI、1 次安全审查通过、可复现构建、DPA/责任条款、至少一次真实付费试点。缺一件，都不要报价。</p>
+  <p><b>风险：</b>销售周期 2–4 个月（受监管 4–9 个月）、单作者交付、支持挤占开发、责任上限、采购门槛。缓解：只做私有化、不做托管；只签有限支持；把“不挡攻击/不认证”写进合同。</p>
+  <p><b>结论：</b><span class="tag tag-c">条件触发</span>：Gate 2 通过后再走。</p>
+
+  <h2 id="s7-3">7.3 选项 C：托管按次证据服务</h2>
+  <p>
+    <b>承诺：</b>客户把调用发到托管服务，按次收费，出具证据包；无需部署。
+    价格可能是 0.05–0.5 美元/次收口，或 99–999 美元/月套餐。
+  </p>
+  <p><b>为什么不走：</b>它要求托管、可用性、数据驻留、隐私、事件响应、保险；这些运营负担与“单作者、运行时不联网”的现状冲突。
+    更致命的是价格锚：按次计价会被拿去和 span/request 比价，而内核的价值是“一次收口”，不是“一次请求”。
+  </p>
+  <p><b>需要什么证据：</b>托管基础设施、SLA、数据驻留、隐私影响评估、保险、7×24 响应；这些今天都没有，也不应该为了市场报告去补。</p>
+  <p><b>结论：</b><span class="tag tag-x">不做</span>。如果未来有 OEM/云厂商愿意托管，可以作为他们的服务，不是我们的。</p>
+
+  <h2 id="s7-4">7.4 选项 D：研究出版 / 标准</h2>
+  <p>
+    <b>承诺：</b>公开方法、契约、证据与失败案例；把“可验证记账”变成一个可讨论、可复现、可引用的概念。
+    输出包括本报告、白皮书、OWASP MCP08 映射、EU AI Act 第 12 条技术附件说明、可复现实验。
+  </p>
+  <p><b>为什么现在走：</b>零现金成本；能在触发点上被搜到；能建立“这个人不是来卖焦虑的”信任；能把判据表变成公共语言，降低后续销售教育成本。</p>
+  <p><b>需要什么证据：</b>报告、可复现实验、原始件、明确的边界与缺口。研究出版最忌“只讲成功”，要把 8/8 vs 6/8、严格 FAIL、G1 一起写进去。</p>
+  <p><b>风险：</b>影响力慢、被抄、没有直接收入。缓解：公开判据、保留证据 corpus、用开源做分发。</p>
+  <p><b>结论：</b><span class="tag tag-a">现在走</span>，与 A 并行。</p>
+
+  <h2 id="s7-5">7.5 选项 E：竞赛 / 生态</h2>
+  <p>
+    <b>承诺：</b>用可运行作品、演示视频、文档参加竞赛/生态活动，换取曝光、奖金、合作伙伴。
+    MatrixNEXT 2026 的公开信息是：截止 2026-11-11、活动 11-14、奖池 30 万人民币，要求可运行作品 + 演示视频 + 文档，评审看创新、完整度、技术深度、UX。
+  </p>
+  <p><b>为什么可选：</b>23 天截止，当前 UI/演示弱，准备演示会挤占 Gate 1 的证据工作；获奖不确定，且奖金不能替代产品验证。</p>
+  <p><b>什么情况下走：</b>如果 10 天内能做出 5 分钟演示且不碰内核判据，可以低成本参加；否则不参加。不要把竞赛当市场验证。</p>
+  <p><b>结论：</b><span class="tag tag-gray">可选，不优先</span>。</p>
+
+  <h2>7.6 五个选项放在一张表里</h2>
+
+  <table class="tbl">
+    <caption><b>表 11 · 进入方式对比</b>：评分 1–5 为作者判断（C），不是统计量</caption>
+    <thead><tr><th style="width:15%">选项</th><th style="width:22%">承诺</th><th style="width:9%">直接收入</th><th style="width:10%">证据就绪</th><th style="width:9%">现金成本</th><th style="width:20%">主要风险</th><th>结论</th></tr></thead>
+    <tbody>
+      <tr class="em-row"><td>A 开源</td><td>30 分钟接入（目标）</td><td class="num">1</td><td class="num">5</td><td class="num">2</td><td>克隆 / 支持负担 / 无收入</td><td class="ok">现在走</td></tr>
+      <tr><td>B 私有化</td><td>VPC 内部署 + 支持</td><td class="num">4</td><td class="num">3</td><td class="num">3</td><td>销售周期 / 单作者 / 责任</td><td class="mid">条件触发</td></tr>
+      <tr><td>C 托管按次</td><td>不用部署，按次出证据</td><td class="num">3</td><td class="num">1</td><td class="num">5</td><td>隐私 / 可用性 / 价格锚</td><td class="no">不做</td></tr>
+      <tr class="em-row"><td>D 研究出版</td><td>方法可复现、可引用</td><td class="num">1</td><td class="num">5</td><td class="num">1</td><td>慢 / 被抄 / 无直接收入</td><td class="ok">现在走</td></tr>
+      <tr><td>E 竞赛生态</td><td>可运行作品 + 曝光</td><td class="num">2</td><td class="num">2</td><td class="num">4</td><td>23 天 / UI 弱 / 机会成本</td><td class="mid">可选</td></tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <div class="pad">
+      <svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="进入方式矩阵">
+        <rect x="0" y="0" width="700" height="380" fill="#ffffff"/>
+        <line x1="80" y1="320" x2="650" y2="320" stroke="#94a3b8" stroke-width="1.2"/>
+        <line x1="80" y1="320" x2="80" y2="40" stroke="#94a3b8" stroke-width="1.2"/>
+        <line x1="365" y1="40" x2="365" y2="320" stroke="#e2e8f0"/>
+        <line x1="80" y1="180" x2="650" y2="180" stroke="#e2e8f0"/>
+        <g font-family="Microsoft YaHei, Noto Sans SC, sans-serif" font-size="9" fill="#64748b">
+          <text x="365" y="344" text-anchor="middle">证据就绪度 →</text>
+          <text x="90" y="32">收入潜力高</text>
+          <text x="90" y="366">收入潜力低</text>
+          <text x="635" y="366" text-anchor="end" fill="#0f766e">证据就绪高</text>
+        </g>
+        <g font-family="Microsoft YaHei, Noto Sans SC, sans-serif" font-size="9">
+          <circle cx="560" cy="268" r="30" fill="#0f766e" opacity="0.28"/><text x="560" y="265" text-anchor="middle" fill="#0f5f58" font-weight="700">D 研究</text><text x="560" y="279" text-anchor="middle" fill="#0f5f58" font-size="7.5">零成本 / 慢</text>
+          <circle cx="600" cy="230" r="34" fill="#0f766e" opacity="0.30"/><text x="600" y="227" text-anchor="middle" fill="#0f5f58" font-weight="700">A 开源</text><text x="600" y="241" text-anchor="middle" fill="#0f5f58" font-size="7.5">分发 / 无收入</text>
+          <circle cx="330" cy="105" r="38" fill="#b45309" opacity="0.24"/><text x="330" y="102" text-anchor="middle" fill="#92400e" font-weight="700">B 私有化</text><text x="330" y="116" text-anchor="middle" fill="#92400e" font-size="7.5">高单价 / 慢</text>
+          <circle cx="150" cy="150" r="34" fill="#b91c1c" opacity="0.18"/><text x="150" y="147" text-anchor="middle" fill="#991b1b" font-weight="700">C 托管</text><text x="150" y="161" text-anchor="middle" fill="#991b1b" font-size="7.5">价格锚 / 运营</text>
+          <circle cx="245" cy="245" r="30" fill="#64748b" opacity="0.20"/><text x="245" y="242" text-anchor="middle" fill="#334155" font-weight="700">E 竞赛</text><text x="245" y="256" text-anchor="middle" fill="#334155" font-size="7.5">曝光 / 23 天</text>
+          <text x="104" y="196" fill="#94a3b8" font-size="8">现在不做</text>
+          <text x="104" y="304" fill="#94a3b8" font-size="8">可选</text>
+          <text x="620" y="188" text-anchor="end" fill="#94a3b8" font-size="8">现在就走</text>
+        </g>
+        <text x="365" y="372" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans SC, sans-serif" font-size="7.5" fill="#64748b">气泡位置为作者判断（C）；不是市场份额或增长率</text>
+      </svg>
+    </div>
+    <figcaption><b>图 7 · 进入方式矩阵</b>。A/D 在右下（证据就绪高、收入潜力低），B 在左上（收入潜力高、证据就绪中），C 在左下（收入潜力中、证据就绪低），E 居中偏下。<span class="figsrc">来源：表 11，作者评分 C 级。</span></figcaption>
+  </figure>
+
+  <h2>7.7 结论：不是五选一，而是排序</h2>
+  <div class="callout">
+    <div class="t">D + A → B</div>
+    <p><b>现在：</b>D（研究出版）+ A（开源闸门）并行，零现金成本，目标是把外部证据跑出来。<br>
+    <b>条件触发：</b>B（企业私有化），只有 Gate 1–3 都过才启动。<br>
+    <b>不做：</b>C（托管按次），运营与价格锚都不利。<br>
+    <b>可选：</b>E（竞赛/生态），只在不挤占 Gate 1 的前提下做。</p>
+  </div>
+  <p>
+    这个排序的关键不是“哪个收入高”，而是“哪个能先换来外部证据”。
+    B 的收入潜力最高，但它需要证据；A/D 没有直接收入，但它们能生产证据。
+    先做能生产证据的事，再用证据换收入；反过来会把顺序做成“先承诺、后补证据”，那是本项目最不该犯的错。
+  </p>
+
+  <div class="endnote">
+    本章价格为作者建议（C），竞品价格为 D 级公开页；MatrixNEXT 信息为赛事公开页转引（D），截止与奖池以官方最新公告为准。
+  </div>
+</section>
+
+<!-- ================= CHAPTER 8 ================= -->
+<section class="chapter" id="ch8">
+  <div class="chap-kicker">Chapter 08 · Recommended Route &amp; Gates</div>
+  <h1><span class="num">08</span>推荐路线与四道闸</h1>
+
+  <div class="chap-q">
+    <b>本章回答：</b>如果只做一件事，做什么？六个月怎么排？什么条件下继续、什么条件下冻结？
+  </div>
+
+  <p class="lede">
+    推荐路线是“<b>6 个月、3 个阶段、4 道闸</b>”：前 4 周用研究与开源换外部注意，第 5–8 周用设计伙伴与证据修复换第一道硬证，
+    第 9–12 周用付费试点换第一笔收入，第 13–26 周决定规模化还是冻结。
+    所有动作零现金、零新增依赖；任何一道闸不过，就停在下一位，不往前堆承诺。
+  </p>
+
+  <h2>8.1 四条原则</h2>
+  <ol>
+    <li><b>先证据，后收入。</b>外部干净臂没过，不报价；拒收归因没到 8/8，不承诺“每次都能指名”。</li>
+    <li><b>先窄后宽。</b>只打“多代理平台 + 合规暴露”的交集，不做通用可观测性，不做承诺记账。</li>
+    <li><b>先开源后私有化。</b>开源换分发与证据；私有化换单价；顺序不能反。</li>
+    <li><b>先停后扩。</b>每道闸都有停止条件；停止不是失败，是把资源从错误叙事里撤出来。</li>
+  </ol>
+
+  <h2 id="s8-2">8.2 三个阶段与交付物</h2>
+
+  <table class="tbl">
+    <thead><tr><th style="width:13%">阶段</th><th style="width:30%">动作</th><th style="width:27%">交付物</th><th style="width:18%">成功判据</th><th>失败就停</th></tr></thead>
+    <tbody>
+      <tr><td><b>Phase 0</b><br>第 1–4 周</td><td>发布报告/白皮书；建开源仓；10 分钟演示；写外部干净臂协议；10 次访谈</td><td>本报告、README、演示脚本、访谈记录、干净臂协议</td><td>10 次访谈；≥3 个真实触发；≥1 个 POC 志愿者</td><td>不足 3 个触发 → 换细分，不换产品</td></tr>
+      <tr><td><b>Phase 1</b><br>第 5–8 周</td><td>2–3 家设计伙伴；LOI；合规映射；修计数行、#48、G1 范围、构建可复现</td><td>LOI、合规映射表、修复补丁、复现构建、外部干净臂报告</td><td>1 个非作者干净臂通过；2 封 LOI；拒收归因 8/8</td><td>无干净臂 → 不卖</td></tr>
+      <tr><td><b>Phase 2</b><br>第 9–12 周</td><td>付费试点合同；私有化包；安全文档；报价测试</td><td>试点合同、部署包、SBOM、DPA、报价单</td><td>1 个付费试点 ≥3k；1 次安全审查通过</td><td>无付费试点 → 冻结</td></tr>
+      <tr><td><b>Phase 3</b><br>第 13–26 周</td><td>3–5 个付费试点；续费/转正；决定规模化或冻结</td><td>试点报告、证据摘要、续费合同、规模化计划或冻结复盘</td><td>≥3 家付费 ≥10k，或 ≥5 家付费试点</td><td>未达标 → 冻结 C</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    三个阶段不是瀑布：Phase 0 的访谈会修正 Phase 1 的设计伙伴名单；Phase 1 的干净臂会暴露 Phase 2 的安全文档缺口。
+    但<b>闸门是日历的</b>，不是“做完了就过”。到第 60 天没有干净臂，就不卖；到第 90 天没有 LOI，就不投销售；到第 180 天没有付费，就冻结。
+  </p>
+
+  <h2 id="s8-3">8.3 四道闸：Go / No-Go</h2>
+
+  <table class="tbl">
+    <caption><b>表 12 · 四道闸</b>：每道闸都有可观察判据与停止动作</caption>
+    <thead><tr><th style="width:12%">闸</th><th style="width:12%">时间</th><th style="width:38%">通过判据</th><th style="width:19%">不过怎么办</th><th>为什么是这条</th></tr></thead>
+    <tbody>
+      <tr><td><b>Gate 0</b></td><td>第 30 天</td><td>10 次访谈；≥3 个最近 6 个月的触发；≥1 个 POC 志愿者；≥1 个能说出预算科目</td><td>换细分（受监管 / 平台 / OEM），不换产品</td><td>先确认“有人在触发点上找”</td></tr>
+      <tr class="em-row"><td><b>Gate 1</b></td><td>第 60 天</td><td><b>1 个非作者真人</b>在 ≤30 分钟接入；账上 ≥1 次拒收且指名格位；链自洽；<span class="mono">sk-</span> 0 次；调用方模型代码 0 改动</td><td>不卖；继续补证据</td><td>这是唯一验收的核心，不能用 AI 调用方替代</td></tr>
+      <tr><td><b>Gate 2</b></td><td>第 90 天</td><td>2 封设计伙伴 LOI；1 次安全审查通过；SBOM/DPA/责任边界齐</td><td>不投销售；只做开源</td><td>没有设计伙伴，说明价值未被真实预算确认</td></tr>
+      <tr class="em-row"><td><b>Gate 3</b></td><td>第 180 天</td><td>≥3 家付费 ≥10k，或 ≥5 家付费试点（≥3k）；至少 1 家愿意续费/转正</td><td>冻结为研究资产 C</td><td>六个月还换不到收入，说明市场对象或切口错了</td></tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <div class="pad">
+      <svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="决策树：什么时候冻结">
+        <rect x="0" y="0" width="700" height="340" fill="#ffffff"/>
+        <g font-family="Microsoft YaHei, Noto Sans SC, sans-serif" font-size="8.6">
+          <rect x="20" y="140" width="90" height="52" rx="4" fill="#0b1f33"/>
+          <text x="65" y="162" text-anchor="middle" fill="#fff" font-size="9" font-weight="700">开始</text>
+          <text x="65" y="178" text-anchor="middle" fill="#cbd5e1" font-size="7.5">D + A</text>
+
+          <rect x="145" y="132" width="110" height="68" rx="4" fill="#f0fdfa" stroke="#5eead4"/>
+          <text x="200" y="152" text-anchor="middle" fill="#0f5f58" font-weight="700">Gate 0 · 30 天</text>
+          <text x="200" y="168" text-anchor="middle" fill="#115e59" font-size="7.5">10 访谈 / 3 触发</text>
+          <text x="200" y="182" text-anchor="middle" fill="#115e59" font-size="7.5">1 POC 志愿者</text>
+
+          <rect x="290" y="132" width="110" height="68" rx="4" fill="#eff6ff" stroke="#93c5fd"/>
+          <text x="345" y="152" text-anchor="middle" fill="#1e40af" font-weight="700">Gate 1 · 60 天</text>
+          <text x="345" y="168" text-anchor="middle" fill="#1e3a8a" font-size="7.5">真人干净臂</text>
+          <text x="345" y="182" text-anchor="middle" fill="#1e3a8a" font-size="7.5">1 次指名拒收</text>
+
+          <rect x="435" y="132" width="110" height="68" rx="4" fill="#fff7ed" stroke="#fdba74"/>
+          <text x="490" y="152" text-anchor="middle" fill="#9a3412" font-weight="700">Gate 2 · 90 天</text>
+          <text x="490" y="168" text-anchor="middle" fill="#7c2d12" font-size="7.5">2 LOI + 安全审查</text>
+          <text x="490" y="182" text-anchor="middle" fill="#7c2d12" font-size="7.5">SBOM / DPA</text>
+
+          <rect x="580" y="132" width="100" height="68" rx="4" fill="#fef2f2" stroke="#fca5a5"/>
+          <text x="630" y="152" text-anchor="middle" fill="#991b1b" font-weight="700">Gate 3 · 180 天</text>
+          <text x="630" y="168" text-anchor="middle" fill="#7f1d1d" font-size="7.5">3 付费 ≥10k</text>
+          <text x="630" y="182" text-anchor="middle" fill="#7f1d1d" font-size="7.5">或 5 试点</text>
+
+          <line x1="110" y1="166" x2="140" y2="166" stroke="#64748b" stroke-width="1.2" marker-end="url(#ar2)"/>
+          <line x1="255" y1="166" x2="285" y2="166" stroke="#64748b" stroke-width="1.2" marker-end="url(#ar2)"/>
+          <line x1="400" y1="166" x2="430" y2="166" stroke="#64748b" stroke-width="1.2" marker-end="url(#ar2)"/>
+          <line x1="545" y1="166" x2="575" y2="166" stroke="#64748b" stroke-width="1.2" marker-end="url(#ar2)"/>
+
+          <path d="M200 200 L200 255" stroke="#b91c1c" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#ar2)"/>
+          <path d="M345 200 L345 255" stroke="#b91c1c" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#ar2)"/>
+          <path d="M490 200 L490 255" stroke="#b91c1c" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#ar2)"/>
+          <path d="M630 200 L630 255" stroke="#15803d" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#ar2)"/>
+
+          <rect x="120" y="260" width="380" height="42" rx="4" fill="#fef2f2" stroke="#fca5a5"/>
+          <text x="310" y="278" text-anchor="middle" fill="#991b1b" font-weight="700">任一闸不过：停在下一位，不往前堆承诺</text>
+          <text x="310" y="294" text-anchor="middle" fill="#7f1d1d" font-size="7.5">Gate 3 不过 → 冻结为研究资产 C，保留开源</text>
+
+          <rect x="560" y="260" width="120" height="42" rx="4" fill="#f0fdf4" stroke="#86efac"/>
+          <text x="620" y="278" text-anchor="middle" fill="#166534" font-weight="700">规模化</text>
+          <text x="620" y="294" text-anchor="middle" fill="#14532d" font-size="7.5">私有化 + 支持 + OEM</text>
+        </g>
+        <defs><marker id="ar2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="#64748b"/></marker></defs>
+      </svg>
+    </div>
+    <figcaption><b>图 8 · 决策树：什么时候冻结</b>。四道闸按日历推进；任一闸不过就停在下一位，Gate 3 不过则冻结为研究资产。<span class="figsrc">来源：表 12，作者设计 C 级。</span></figcaption>
+  </figure>
+
+  <h2>8.4 停止条件与退出</h2>
+  <table class="tbl">
+    <thead><tr><th style="width:30%">触发</th><th style="width:30%">停止动作</th><th>保留什么</th></tr></thead>
+    <tbody>
+      <tr><td>第 60 天无外部干净臂</td><td>停止一切销售动作；只做开源与证据修复</td><td>开源仓、报告、慢闸</td></tr>
+      <tr><td>第 90 天无设计伙伴 LOI</td><td>不投销售、不做私有化包；重做 10 次访谈</td><td>访谈记录、判据表</td></tr>
+      <tr><td>第 120 天无付费试点</td><td>冻结为研究资产 C；不再追买家</td><td>报告、论文、开源、证据 corpus</td></tr>
+      <tr><td>第 180 天付费 &lt;3 家</td><td>冻结 C；把试点复盘公开</td><td>全部原始件与失败记录</td></tr>
+      <tr><td>买方只接受托管 SaaS</td><td>不做 C；转介给愿意托管的合作伙伴</td><td>开源 + 私有化</td></tr>
+      <tr><td>买方要求“保证合规/挡攻击”</td><td>拒绝；不接这个单</td><td>边界声明</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    冻结不是“项目失败”，而是把产品叙事停下来，把研究资产保住。
+    这个项目最有价值的资产不是代码，是 49 格判据、10-19 那一趟 80 根慢闸、4 次拒收和一套“不塌三态”的方法；
+    这些在任何情况下都应该被出版、被引用、被复用。反过来，如果为了收入去承诺“更可信/能合规/能挡攻击”，
+    这些资产会被一次尽调整体贬值。
+  </p>
+
+  <h2>8.5 资源与成本</h2>
+  <ul>
+    <li><b>现金：</b>每年 &lt;5,000 美元（域名、代码签名、法务模板、CI 分钟）；不投广告、不参展、不买数据、不招人。</li>
+    <li><b>时间：</b>60% 证据与产品，30% 访谈与设计伙伴，10% 出版；不接定制开发，不做托管。</li>
+    <li><b>依赖：</b>不新增运行时依赖；保持纯 stdlib；构建期自检不变。</li>
+    <li><b>用户成本：</b>不要求用户充值、开账号、装软件、做实测；访谈与 POC 都由作者侧准备环境。</li>
+  </ul>
+
+  <h2>8.6 指标：只看能证伪的</h2>
+  <table class="tbl">
+    <thead><tr><th style="width:18%">类别</th><th style="width:42%">指标</th><th>口径 / 分母</th></tr></thead>
+    <tbody>
+      <tr><td>唯一 KPI</td><td>外部调用方账上“被拒的写入”次数，且每次能指名格位</td><td>分母 = 外部调用方的发数；没有计数行 = 不可知，不是 0</td></tr>
+      <tr><td>证据</td><td>非作者干净臂 1 次；拒收归因 8/8；G1 范围声明；构建哈希一致</td><td>每项都有原始件；不接受口述</td></tr>
+      <tr><td>市场</td><td>10 次访谈；3 个真实触发；2 封 LOI；1 个付费试点；3 家付费</td><td>按人头/合同计数，不按“意向”计数</td></tr>
+      <tr><td>分发</td><td>10 个外部部署；3 个 inbound；1 次公开演讲/发表</td><td>部署 = 真的发过一发账，不是 clone</td></tr>
+      <tr><td class="no">不看</td><td>GitHub stars、下载量、关注者、媒体报道</td><td>这些不能证明“有人愿意为收口付钱”</td></tr>
+    </tbody>
+  </table>
+
+  <h2>8.7 未来 7 天做什么</h2>
+  <ol class="checklist">
+    <li>发布本报告（去敏版）与一页白皮书；不投放、不买流量。</li>
+    <li>建开源仓：README 3 分钟、10 分钟演示、49 格表、边界声明。</li>
+    <li>写一页“外部干净臂协议”：环境、步骤、成功判据、失败记录。</li>
+    <li>约 10 次访谈；不问“你会买吗”，只问最近一次事故与预算科目。</li>
+    <li>工程侧修三件：计数行、#48 归因、G1 范围声明；配 Go 测试 + kprobe 针 + celltable_audit。</li>
+    <li>做可复现构建 + SBOM；把“凭据 ↔ 二进制”对齐。</li>
+    <li>不动判据表；不加第 50 格；不为市场改内核。</li>
+  </ol>
+
+  <h2>8.8 前六个月不要做</h2>
+  <ul>
+    <li>不做 SaaS、不做免费托管、不做按次计费。</li>
+    <li>不投广告、不参展、不招销售、不写“更可信的 Agent”。</li>
+    <li>不承诺合规认证、不承诺挡攻击、不承诺能力增益。</li>
+    <li>不做承诺记账（B 路线）、不做训练数据、不做跨发一致性。</li>
+    <li>不为“看起来完整”而加格、加功能、加依赖。</li>
+  </ul>
+
+  <div class="endnote">
+    本章路线、闸门与成本为作者设计（C）；执行时以实际访谈、合同与安全审查结果为准。任何闸门判据都可以被更严格的标准替换，但不能被“感觉差不多了”替换。
+  </div>
+</section>

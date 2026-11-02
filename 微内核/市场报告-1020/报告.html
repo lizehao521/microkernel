@@ -1,0 +1,1950 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agentkernel 市场进入重评 · 2026-10-20</title>
+<style>
+:root{
+  --navy:#0b1f33; --navy2:#12314f; --teal:#0f766e; --teal2:#14b8a6;
+  --amber:#b45309; --red:#b91c1c; --green:#15803d; --ink:#172033;
+  --muted:#5b6b7f; --line:#d9e2ec; --bg:#f6f8fb; --soft:#eef4f8;
+}
+@page{ size:A4; margin:19mm 15mm 18mm 15mm; }
+html{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+body{
+  margin:0; color:var(--ink);
+  font-family:"Microsoft YaHei","Noto Sans SC","Segoe UI",sans-serif;
+  font-size:10.3pt; line-height:1.78;
+}
+p{ margin:0 0 7pt; text-align:justify; text-justify:inter-ideograph; }
+a{ color:var(--teal); text-decoration:none; }
+b,strong{ color:#0b1f33; }
+em{ font-style:normal; color:var(--amber); }
+.small{ font-size:8.8pt; line-height:1.6; color:var(--muted); }
+.tiny{ font-size:8pt; line-height:1.55; color:var(--muted); }
+.center{ text-align:center; }
+.right{ text-align:right; }
+.nowrap{ white-space:nowrap; }
+.mono{ font-family:"Cascadia Mono","Consolas","Segoe UI",monospace; font-size:8.6pt; }
+.muted{ color:var(--muted); }
+.teal{ color:var(--teal); }
+.red{ color:var(--red); }
+.amber{ color:var(--amber); }
+.green{ color:var(--green); }
+.rule{ height:1px; background:var(--line); margin:14pt 0; }
+.pagebreak{ page-break-before:always; }
+.avoid{ break-inside:avoid; page-break-inside:avoid; }
+
+/* ---------- cover ---------- */
+.cover{
+  height:259mm; box-sizing:border-box; margin:0; padding:26mm 20mm 16mm;
+  background:linear-gradient(145deg,#081827 0%,#0b1f33 52%,#12314f 100%);
+  color:#fff; position:relative; overflow:hidden; page-break-after:always;
+}
+.cover .grid{
+  position:absolute; inset:0; opacity:.16;
+  background-image:
+    linear-gradient(rgba(255,255,255,.14) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.14) 1px,transparent 1px);
+  background-size:11mm 11mm;
+}
+.cover .glow{
+  position:absolute; width:120mm; height:120mm; right:-38mm; top:-30mm;
+  background:radial-gradient(circle,rgba(20,184,166,.38),rgba(20,184,166,0) 68%);
+}
+.cover .glow2{
+  position:absolute; width:90mm; height:90mm; left:-30mm; bottom:-28mm;
+  background:radial-gradient(circle,rgba(180,83,9,.24),rgba(180,83,9,0) 70%);
+}
+.cover .inner{ position:relative; z-index:2; }
+.cover .kicker{
+  font-size:8.6pt; letter-spacing:.22em; color:#8fd8cf; text-transform:uppercase;
+  margin-bottom:10mm;
+}
+.cover h1{
+  font-size:31pt; line-height:1.28; margin:0 0 6mm; font-weight:700; letter-spacing:.01em;
+  border:0; padding:0; color:#fff;
+}
+.cover h1 .thin{ font-weight:300; color:#b9d7e8; }
+.cover .sub{
+  font-size:12.6pt; line-height:1.8; color:#d4e4ef; max-width:158mm; margin-bottom:9mm;
+}
+.cover .object{
+  display:inline-block; border:1px solid rgba(143,216,207,.45); border-radius:2px;
+  padding:3mm 5mm; font-size:9.2pt; color:#d9f3ee; margin-bottom:10mm;
+}
+.cover .verdict{
+  border-left:3px solid var(--teal2); background:rgba(255,255,255,.07);
+  padding:5mm 6mm; max-width:165mm; margin-bottom:8mm;
+}
+.cover .verdict .lab{ font-size:8pt; letter-spacing:.16em; color:#8fd8cf; margin-bottom:2mm; }
+.cover .verdict .txt{ font-size:13.2pt; line-height:1.7; color:#fff; }
+.cover .stats{ width:100%; border-collapse:collapse; margin-top:4mm; }
+.cover .stats td{ border-top:1px solid rgba(255,255,255,.18); padding:4mm 3mm 0 0; vertical-align:top; }
+.cover .stats .v{ font-size:17pt; color:#8fd8cf; font-weight:700; line-height:1.2; }
+.cover .stats .l{ font-size:7.8pt; color:#a9c4d6; line-height:1.5; margin-top:1mm; }
+.cover .foot{
+  position:absolute; left:20mm; right:20mm; bottom:13mm; z-index:2;
+  border-top:1px solid rgba(255,255,255,.18); padding-top:3mm;
+  font-size:8pt; color:#9fb9cc; line-height:1.6;
+}
+
+/* ---------- headings ---------- */
+.chapter{ page-break-before:always; }
+h1{
+  font-size:21pt; line-height:1.35; color:var(--navy); margin:0 0 4mm;
+  padding-bottom:3mm; border-bottom:2px solid var(--navy); font-weight:700;
+  break-after:avoid;
+}
+h1 .num{
+  display:inline-block; min-width:13mm; color:var(--teal); font-size:12pt;
+  letter-spacing:.08em; vertical-align:3pt; margin-right:2mm;
+}
+h2{
+  font-size:13.6pt; line-height:1.45; color:var(--navy2); margin:9mm 0 3mm;
+  padding-left:3mm; border-left:3px solid var(--teal); font-weight:700;
+  break-after:avoid;
+}
+h3{
+  font-size:10.9pt; color:#0f3a5c; margin:6mm 0 2mm; font-weight:700; break-after:avoid;
+}
+h4{ font-size:10.2pt; color:var(--ink); margin:4mm 0 1.5mm; font-weight:700; break-after:avoid; }
+.lede{ font-size:11.4pt; line-height:1.85; color:#24384d; margin-bottom:6mm; }
+.chap-kicker{ font-size:8pt; letter-spacing:.18em; color:var(--teal); margin:0 0 2mm; text-transform:uppercase; }
+.chap-q{
+  background:var(--soft); border:1px solid var(--line); border-left:4px solid var(--teal);
+  padding:3.5mm 5mm; margin:0 0 7mm; font-size:10.4pt; color:#24384d;
+}
+.chap-q b{ color:var(--navy); }
+
+/* ---------- callouts ---------- */
+.callout{
+  border:1px solid var(--line); border-left:4px solid var(--teal);
+  background:#f3faf8; padding:3.5mm 5mm; margin:4mm 0 6mm;
+  break-inside:avoid; page-break-inside:avoid;
+}
+.callout.warn{ border-left-color:var(--amber); background:#fff8ed; }
+.callout.danger{ border-left-color:var(--red); background:#fdf2f2; }
+.callout.neutral{ border-left-color:#64748b; background:#f8fafc; }
+.callout .t{ font-weight:700; color:var(--navy); margin-bottom:1.5mm; font-size:10pt; }
+.callout p:last-child{ margin-bottom:0; }
+.quote{
+  margin:5mm 0; padding:3mm 0 3mm 6mm; border-left:2px solid #94a3b8;
+  color:#334155; font-size:10.6pt; line-height:1.8;
+}
+.quote .who{ display:block; margin-top:2mm; font-size:8.4pt; color:var(--muted); }
+
+/* ---------- badges ---------- */
+.tag{
+  display:inline-block; font-size:7.6pt; line-height:1.5; padding:0 3.2pt;
+  border-radius:2px; margin:0 2pt 0 0; vertical-align:1pt; font-weight:700;
+  letter-spacing:.02em;
+}
+.tag-a{ background:#dcfce7; color:#166534; border:1px solid #86efac; }
+.tag-b{ background:#dbeafe; color:#1e40af; border:1px solid #93c5fd; }
+.tag-c{ background:#fef3c7; color:#92400e; border:1px solid #fcd34d; }
+.tag-d{ background:#ede9fe; color:#5b21b6; border:1px solid #c4b5fd; }
+.tag-x{ background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; }
+.tag-gray{ background:#e2e8f0; color:#334155; border:1px solid #cbd5e1; }
+
+/* ---------- metrics ---------- */
+.metrics{ width:100%; border-collapse:collapse; margin:4mm 0 6mm; }
+.metrics td{
+  width:25%; vertical-align:top; padding:3.5mm 3mm;
+  border-top:2px solid var(--navy); background:#f8fafc;
+}
+.metrics .v{ font-size:16pt; font-weight:700; color:var(--navy); line-height:1.25; }
+.metrics .l{ font-size:8pt; color:var(--muted); line-height:1.55; margin-top:1.5mm; }
+
+/* ---------- tables ---------- */
+table.tbl{
+  width:100%; border-collapse:collapse; margin:3mm 0 5mm;
+  font-size:8.7pt; line-height:1.55;
+}
+table.tbl caption{
+  caption-side:top; text-align:left; font-size:8.4pt; color:var(--muted);
+  padding:0 0 2mm; font-weight:400;
+}
+table.tbl caption b{ color:var(--navy); }
+table.tbl th{
+  background:var(--navy); color:#fff; font-weight:700; text-align:left;
+  padding:2.2mm 2.2mm; border:1px solid var(--navy); vertical-align:bottom;
+}
+table.tbl td{
+  padding:2mm 2.2mm; border:1px solid var(--line); vertical-align:top;
+}
+table.tbl tr:nth-child(even) td{ background:#f8fafc; }
+table.tbl tr{ break-inside:avoid; page-break-inside:avoid; }
+table.tbl td.num, table.tbl th.num{ text-align:right; white-space:nowrap; }
+table.tbl .em-row td{ background:#f0fdfa !important; font-weight:700; }
+table.tbl .warn-row td{ background:#fff7ed !important; }
+table.tbl .danger-row td{ background:#fef2f2 !important; }
+table.tbl .ok{ color:var(--green); font-weight:700; }
+table.tbl .no{ color:var(--red); font-weight:700; }
+table.tbl .mid{ color:var(--amber); font-weight:700; }
+
+/* ---------- figures ---------- */
+figure{
+  margin:4mm 0 6mm; padding:0; break-inside:avoid; page-break-inside:avoid;
+  border:1px solid var(--line); background:#fff;
+}
+figure .pad{ padding:4mm 4mm 2mm; }
+figure svg{ display:block; width:100%; height:auto; }
+figcaption{
+  font-size:8.3pt; line-height:1.6; color:var(--muted);
+  padding:2.5mm 4mm 3mm; border-top:1px solid #eef2f7;
+}
+figcaption b{ color:var(--navy); }
+.figsrc{ font-size:7.6pt; color:#7c8b9d; }
+
+/* ---------- toc ---------- */
+.toc-page{ page-break-before:always; }
+.toc-title{ font-size:19pt; color:var(--navy); margin:0 0 2mm; border:0; padding:0; }
+table.toc{ width:100%; border-collapse:collapse; font-size:9.2pt; line-height:1.35; margin-top:2mm; }
+table.toc td{ padding:1.5pt 0; border-bottom:1px dotted #c7d3df; vertical-align:bottom; }
+table.toc td.pg{ width:12mm; text-align:right; color:var(--muted); font-size:8.8pt; }
+table.toc tr.l1 td{ font-weight:700; color:var(--navy); padding-top:3pt; }
+table.toc tr.l2 td:first-child{ padding-left:8mm; font-weight:400; color:#334155; font-size:8.6pt; }
+table.toc tr.l2 td.pg{ font-size:8.4pt; }
+table.toc .tn{ display:inline-block; min-width:9mm; color:var(--teal); font-size:8.4pt; }
+
+/* ---------- lists ---------- */
+ul,ol{ margin:0 0 6pt 0; padding-left:16pt; }
+li{ margin:0 0 2.2pt; text-align:justify; }
+ul.tight li, ol.tight li{ margin-bottom:1pt; }
+.checklist{ list-style:none; padding-left:0; }
+.checklist li{ padding-left:12pt; text-indent:-12pt; }
+.checklist li:before{ content:"□"; color:var(--teal); font-weight:700; margin-right:4pt; }
+.kv{ width:100%; border-collapse:collapse; font-size:9pt; }
+.kv td{ padding:1.6mm 0; border-bottom:1px solid #eef2f7; vertical-align:top; }
+.kv td:first-child{ width:32mm; color:var(--muted); }
+.grid2{ width:100%; border-collapse:separate; border-spacing:5mm 0; margin-left:-5mm; margin-right:-5mm; }
+.grid2 td{ width:50%; vertical-align:top; }
+.grid3{ width:100%; border-collapse:separate; border-spacing:3mm 0; margin-left:-3mm; margin-right:-3mm; }
+.grid3 td{ width:33.3%; vertical-align:top; }
+.card{ border:1px solid var(--line); background:#fff; padding:3.5mm 4mm; height:100%; }
+.card .h{ font-weight:700; color:var(--navy); font-size:9.6pt; margin-bottom:1.5mm; }
+.card p{ font-size:8.8pt; line-height:1.65; margin-bottom:2mm; }
+.card .foot{ font-size:8pt; color:var(--muted); }
+.two-col{ column-count:2; column-gap:8mm; }
+.two-col p{ break-inside:avoid; }
+.endnote{ font-size:8pt; color:var(--muted); border-top:1px solid var(--line); padding-top:2mm; margin-top:6mm; }
+.appendix h1{ font-size:18pt; }
+.ref{ font-size:8.4pt; line-height:1.65; margin-bottom:2.4mm; padding-left:9mm; text-indent:-9mm; }
+.ref .n{ color:var(--teal); font-weight:700; }
+.sig{ font-size:8.4pt; color:var(--muted); margin-top:8mm; }
+.v2badge{
+  display:inline-block; font-size:7.8pt; letter-spacing:.14em; color:#0f766e;
+  border:1px solid #99f6e4; background:#f0fdfa; padding:1mm 3mm; margin-bottom:3mm;
+}
+.diff-table td.old{ color:#7c2d12; background:#fff7ed; }
+.diff-table td.new{ color:#14532d; background:#f0fdf4; }
+.flow{
+  border:1px solid var(--line); background:#f8fafc; padding:3.5mm 4mm; margin:4mm 0 6mm;
+  font-size:9pt; line-height:1.9; break-inside:avoid; page-break-inside:avoid;
+}
+.flow b{ color:var(--navy); }
+.flow .arrow{ color:var(--teal); font-weight:700; padding:0 2mm; }
+</style>
+</head>
+<body>
+<!-- ================= COVER ================= -->
+<section class="cover">
+  <div class="grid"></div>
+  <div class="glow"></div>
+  <div class="glow2"></div>
+  <div class="inner">
+    <div class="kicker">Agentkernel · Market Entry Review · V2</div>
+    <h1>可验证记账内核<br><span class="thin">怎样面对市场</span></h1>
+    <div class="sub">
+      从“卖账本”改为“卖可复核的二次修改证据”。<br>
+      先研究出版，再开源证据适配层；企业私有化条件触发；托管按次不做。
+    </div>
+    <div class="object">
+      研究对象：agentkernel v1（48 键 / 49 格，判据表冻结） · 重评日期 2026-10-20
+    </div>
+    <div class="verdict">
+      <div class="lab">重评结论</div>
+      <div class="txt">D + A 先行；B 等 Gate 1.5 与 Gate 2；C 不做；E 可选。<br>不过 Gate 1.5，就冻结为研究资产，不进入商业交付。</div>
+    </div>
+    <table class="stats">
+      <tr>
+        <td><div class="v">5</div><div class="l">道 Go / No-Go 闸<br>新增 R/N 双臂闸</div></td>
+        <td><div class="v">1.0–2.0 亿</div><div class="l">美元 SAM<br>较 v1 下调（C 级假设）</div></td>
+        <td><div class="v">0.5–4.0 百万</div><div class="l">美元三年 SOM<br>按 1.5–3 万美元 ARPU</div></td>
+        <td><div class="v">NOT_RUN</div><div class="l">R/N 双臂<br>不能写成“闭环已通”</div></td>
+      </tr>
+    </table>
+  </div>
+  <div class="foot">
+    这是一份重评，不是 v1 的复述。市场数据沿用 v1，结论、门槛、定价与财务基准已重算。<br>
+    证据分级 A/B/C/D/X；X 不塌成 0；未找到付款证据，不写成“0 个买家”。
+  </div>
+</section>
+
+<!-- ================= READING GUIDE ================= -->
+<section class="chapter">
+  <div class="chap-kicker">Reading Guide</div>
+  <h1>这份重评怎么读</h1>
+
+  <p class="lede">
+    v1 回答的是“五条路先走哪条”。v2 回答的是“在上一轮研究证明账本本身不构成闭环之后，这条路还成不成立、要不要改”。
+  </p>
+
+  <h2>一句话结论</h2>
+  <div class="callout">
+    <div class="t">D + A 先行，但 A 的交付物变了</div>
+    <p>
+      研究出版（D）仍然第一，因为“执行记录能否支撑二次修改”这个类别还没有被外部复核过。
+      开源（A）仍然第二，但开源的不是“又一个账本”，而是<strong>证据适配层</strong>：把账本、产物原像、行为/判据版本与外部验证器装进一个可复核的证据包。
+      企业私有化（B）只在 Gate 1.5（R/N 双臂）与 Gate 2（LOI + 安全审查）都通过后触发；托管按次（C）不做；竞赛/生态（E）可选。
+    </p>
+  </div>
+
+  <h2>三条边界，先写在前面</h2>
+  <table class="tbl">
+    <thead><tr><th style="width:24%">边界</th><th>含义</th><th style="width:30%">不允许的读法</th></tr></thead>
+    <tbody>
+      <tr><td><b>审计层不是防线</b></td><td>agentkernel 记录、读回、验链；不拦截、不调度、不联网、不执行工具。</td><td>“上了内核就挡住了提示注入 / 工具滥用。”</td></tr>
+      <tr><td><b>记录完整 ≠ 内容为真</b></td><td>哈希链证明账未改；不证明账里的内容可信、出处可靠。</td><td>“verify 通过，所以结论可信。”</td></tr>
+      <tr><td><b>闭环尚未实证</b></td><td>R/N 双臂与两条反臂都未跑；严格双臂判据仍是 FAIL。</td><td>“看记录再改已经证明有效 / 闭环已通。”</td></tr>
+    </tbody>
+  </table>
+
+  <h2>证据分级：五种状态，不许塌成一种</h2>
+  <table class="tbl">
+    <thead><tr><th style="width:10%">等级</th><th style="width:36%">定义</th><th>本报告怎么用</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag tag-a">A</span></td><td>工具自印 + 独立复算，或双源逐字对上</td><td>可直接支撑技术可信度与验收判断</td></tr>
+      <tr><td><span class="tag tag-b">B</span></td><td>单一来源自印，未被本报告独立复算</td><td>作为线索，标注“单源”</td></tr>
+      <tr><td><span class="tag tag-c">C</span></td><td>作者复算 / 规划假设，无原始件</td><td>用于数量级、情景与设计，不读成调查结论</td></tr>
+      <tr><td><span class="tag tag-d">D</span></td><td>外部公开资料，注明访问日</td><td>用于背景、法规、竞品与价格锚</td></tr>
+      <tr><td><span class="tag tag-x">X</span></td><td>不可核 / 未验证</td><td>写“不知道 / 未跑”，不塌成 0</td></tr>
+    </tbody>
+  </table>
+
+  <h2>与 v1 的关系</h2>
+  <p>
+    v1 的市场规模、竞品价格锚、法规背景仍然可用；v2 不重复铺陈，只改三件事：
+    <b>产品叙事</b>（从账本改为证据包）、<b>进入门槛</b>（新增 Gate 1.5）、<b>规模与财务</b>（因“功能而非平台”下调）。
+    如果你只读一页，读第 0 章的“变了什么”表。
+  </p>
+</section>
+
+<!-- ================= TOC ================= -->
+<section class="toc-page">
+  <h1 class="toc-title">目录</h1>
+  <table class="toc">
+    <tr class="l1"><td><span class="tn">00</span>重评摘要与建议</td><td class="pg" data-key="exec">6</td></tr>
+    <tr class="l1"><td><span class="tn">01</span>为什么要重评</td><td class="pg" data-key="ch1">9</td></tr>
+    <tr class="l2"><td>1.1 v1 的结论与它的前提</td><td class="pg" data-key="s1-1">9</td></tr>
+    <tr class="l2"><td>1.2 变了什么：从账本到证据包</td><td class="pg" data-key="s1-2">9</td></tr>
+    <tr class="l2"><td>1.3 重评问题与判据</td><td class="pg" data-key="s1-3">9</td></tr>
+    <tr class="l1"><td><span class="tn">02</span>市场与定位</td><td class="pg" data-key="ch2">11</td></tr>
+    <tr class="l2"><td>2.1 市场边界：记账层不是可观测性</td><td class="pg" data-key="s2-1">11</td></tr>
+    <tr class="l2"><td>2.2 规模重算：为什么下调 SAM</td><td class="pg" data-key="s2-2">11</td></tr>
+    <tr class="l2"><td>2.3 买家与预算科目</td><td class="pg" data-key="s2-3">12</td></tr>
+    <tr class="l1"><td><span class="tn">03</span>需求与反需求</td><td class="pg" data-key="ch3">14</td></tr>
+    <tr class="l1"><td><span class="tn">04</span>竞争格局：功能，还是平台</td><td class="pg" data-key="ch4">16</td></tr>
+    <tr class="l1"><td><span class="tn">05</span>产品证据现状</td><td class="pg" data-key="ch5">19</td></tr>
+    <tr class="l1"><td><span class="tn">06</span>五条进入方式重评</td><td class="pg" data-key="ch6">21</td></tr>
+    <tr class="l2"><td>选项 A：开源证据适配层</td><td class="pg" data-key="s6-a">21</td></tr>
+    <tr class="l2"><td>选项 B：企业私有化</td><td class="pg" data-key="s6-b">21</td></tr>
+    <tr class="l2"><td>选项 C：托管按次</td><td class="pg" data-key="s6-c">21</td></tr>
+    <tr class="l2"><td>选项 D：研究出版 / 标准</td><td class="pg" data-key="s6-d">21</td></tr>
+    <tr class="l2"><td>选项 E：竞赛 / 生态</td><td class="pg" data-key="s6-e">21</td></tr>
+    <tr class="l1"><td><span class="tn">07</span>推荐路线与五道闸</td><td class="pg" data-key="ch7">23</td></tr>
+    <tr class="l2"><td>7.3 五道闸：Go / No-Go</td><td class="pg" data-key="s7-2">23</td></tr>
+    <tr class="l1"><td><span class="tn">08</span>定价与单位经济</td><td class="pg" data-key="ch8">26</td></tr>
+    <tr class="l1"><td><span class="tn">09</span>风险登记与红队</td><td class="pg" data-key="ch9">28</td></tr>
+    <tr class="l1"><td><span class="tn">10</span>实施路线图（26 周）</td><td class="pg" data-key="ch10">31</td></tr>
+    <tr class="l1"><td><span class="tn">11</span>财务情景</td><td class="pg" data-key="ch11">34</td></tr>
+    <tr class="l1"><td><span class="tn">12</span>结论</td><td class="pg" data-key="ch12">37</td></tr>
+    <tr class="l1"><td><span class="tn">A</span>方法与证据分级</td><td class="pg" data-key="appA">39</td></tr>
+    <tr class="l1"><td><span class="tn">B</span>数据表</td><td class="pg" data-key="appB">41</td></tr>
+    <tr class="l1"><td><span class="tn">C</span>参考文献</td><td class="pg" data-key="appC">44</td></tr>
+    <tr class="l1"><td><span class="tn">D</span>术语与对外材料草稿</td><td class="pg" data-key="appD">47</td></tr>
+  </table>
+
+  <h2 style="margin-top:8mm">图表索引</h2>
+  <table class="toc">
+    <tr class="l2"><td>图 1 修订后的市场层级</td><td class="pg" data-key="fig1">12</td></tr>
+    <tr class="l2"><td>图 2 证据层的价值链位置</td><td class="pg" data-key="fig2">13</td></tr>
+    <tr class="l2"><td>图 3 竞争定位：追踪深度 × 证据强度</td><td class="pg" data-key="fig3">17</td></tr>
+    <tr class="l2"><td>图 4 证据阶梯</td><td class="pg" data-key="fig4">20</td></tr>
+    <tr class="l2"><td>图 5 五条进入方式矩阵</td><td class="pg" data-key="fig5">22</td></tr>
+    <tr class="l2"><td>图 6 决策树：D → A → 1.5 → B</td><td class="pg" data-key="fig6">24</td></tr>
+    <tr class="l2"><td>图 7 风险热图</td><td class="pg" data-key="fig7">29</td></tr>
+    <tr class="l2"><td>图 8 26 周路线</td><td class="pg" data-key="fig8">31</td></tr>
+    <tr class="l2"><td>图 9 三情景收入</td><td class="pg" data-key="fig9">35</td></tr>
+    <tr class="l2"><td>表 1 v1 与 v2 的差异</td><td class="pg" data-key="tab1">6</td></tr>
+    <tr class="l2"><td>表 2 市场边界</td><td class="pg" data-key="tab2">11</td></tr>
+    <tr class="l2"><td>表 3 规模三路交叉</td><td class="pg" data-key="tab3">12</td></tr>
+    <tr class="l2"><td>表 4 买家与预算</td><td class="pg" data-key="tab4">12</td></tr>
+    <tr class="l2"><td>表 5 五类玩家</td><td class="pg" data-key="tab5">16</td></tr>
+    <tr class="l2"><td>表 6 能说 / 不能说</td><td class="pg" data-key="tab6">19</td></tr>
+    <tr class="l2"><td>表 7 五条进入方式对比</td><td class="pg" data-key="tab7">22</td></tr>
+    <tr class="l2"><td>表 8 五道闸</td><td class="pg" data-key="tab8">23</td></tr>
+    <tr class="l2"><td>表 9 定价梯子</td><td class="pg" data-key="tab9">26</td></tr>
+    <tr class="l2"><td>表 10 风险登记</td><td class="pg" data-key="tab10">28</td></tr>
+    <tr class="l2"><td>表 11 财务情景</td><td class="pg" data-key="tab11">34</td></tr>
+  </table>
+
+  <div class="callout neutral" style="margin-top:6mm">
+    <div class="t">图表读法</div>
+    <p class="small">
+      图先看轴与范围，再看点位；表先看口径与分母，再看数字。所有 C 级数字都是规划假设，不是调查结论；
+      所有 X 级缺口写“未跑 / 不知道”，不写成 0。图 7 的风险等级用于排序，不是概率估计。
+    </p>
+  </div>
+</section>
+<!-- ================= EXECUTIVE SUMMARY ================= -->
+<section class="chapter" id="exec">
+  <div class="chap-kicker">00 · Executive Summary</div>
+  <h1><span class="num">00</span>重评摘要与建议</h1>
+
+  <p class="lede">
+    v1 的排序仍然成立：研究出版与开源先行，企业私有化条件触发，托管按次不做，竞赛/生态可选。
+    但 v1 把一个尚未证明的东西当成了产品核心——“账本能让第二次修改更好”。上一轮研究证明：账本只能证明记录未被改，不能单独支撑归因；二次修改要成立，必须有外部验证器、产物原像与版本三元组。
+    所以 v2 改的是<strong>卖什么、凭什么卖、什么时候能卖</strong>，不是把五条路重新排一遍。
+  </p>
+
+  <h2>三个结论</h2>
+
+  <div class="callout">
+    <div class="t">结论一：这是一个“功能市场”，不是“平台市场”</div>
+    <p>
+      买家的预算挂在 LLM 可观测性、Agent 评测或 AI 治理科目下，而不是“可验证记账”这个独立科目 [8][9][10]。
+      这意味着：产品最合理的形态是<strong>证据适配层</strong>，挂在现有 trace / eval 平台旁边；独立平台的空间窄，销售周期长，替代成本高。
+      v1 的 SAM 1.6–3.0 亿美元按“相邻市场 × 占比”估算；v2 把占比下调到 3–6%，SAM 改为 1.0–2.0 亿美元。这是 C 级规划假设，不是市场调查结论。
+    </p>
+  </div>
+
+  <div class="callout">
+    <div class="t">结论二：可防守的差异是“证据包”，不是“账本”或“链”</div>
+    <p>
+      账本、哈希链、49 格本身很容易被复制；真正难的是把<strong>产物原像、行为/判据版本、拒收计数、外部验证结果</strong>装进一个可复核、可回滚、可对外披露的证据包。
+      这也解释了为什么“开源内核”不够：客户拿到的如果只是一个记账 API，他还要自己补原像、版本、拒收与验证器，价值没有闭环。
+      开源应交付“适配层 + 证据包规范 + 参考实现”，而不是再发一个账本。
+    </p>
+  </div>
+
+  <div class="callout">
+    <div class="t">结论三：顺序不变，门槛变严</div>
+    <p>
+      D（研究出版）第一，因为类别需要外部复核；A（开源证据适配层）第二，用来换真实使用与反例；B（企业私有化）只在
+      <b>Gate 1.5（R/N 双臂）</b>与 <b>Gate 2（2 封 LOI + 安全审查）</b>都通过后触发；C（托管按次）不做；E（竞赛/生态）可选。
+      如果 Gate 1.5 显示“看记录再改”相对“不看记录直接改”没有增量，就停止商业化，冻结为研究资产。
+    </p>
+  </div>
+
+  <h2>变了什么：v1 与 v2 的差异</h2>
+  <table class="tbl diff-table">
+    <caption><b>表 1</b> v1 与 v2 的差异（只列改变项，未列项沿用 v1）</caption>
+    <thead><tr><th style="width:18%">维度</th><th style="width:38%">v1（2026-10-19）</th><th>v2（2026-10-20）</th></tr></thead>
+    <tbody>
+      <tr><td><b>产品叙事</b></td><td class="old">可验证记账内核：记录、读回、验链、计数</td><td class="new">可复核的二次修改证据：账本 + 原像 + 版本 + 外部验证器</td></tr>
+      <tr><td><b>首选路径</b></td><td class="old">D + A 先行；B 条件触发；C 不做；E 可选</td><td class="new">顺序不变；A 的交付物从“内核”改为“证据适配层”</td></tr>
+      <tr><td><b>开源门槛</b></td><td class="old">非作者真人在 ≤30 分钟接入干净臂</td><td class="new">非作者真人在 ≤60 分钟产出 1 个证据包并完成 1 次可复核修改</td></tr>
+      <tr><td><b>新增闸</b></td><td class="old">Gate 0 / 1 / 2 / 3</td><td class="new">新增 Gate 1.5：10 例 R/N 双臂 + 反臂 A/B</td></tr>
+      <tr><td><b>SAM</b></td><td class="old">1.6–3.0 亿美元（相邻市场 × 8–12% / 5–8%）</td><td class="new">1.0–2.0 亿美元（相邻市场 × 3–6%）</td></tr>
+      <tr><td><b>SOM（三年）</b></td><td class="old">0.8–6.0 百万美元</td><td class="new">0.5–4.0 百万美元</td></tr>
+      <tr><td><b>定价</b></td><td class="old">1.2–3.0 万美元 / 年；试点 3–5 千 / 6 周</td><td class="new">1.5–3.0 万美元 / 年；试点 3–5 千 / 6 周；证据包版 4–8 万美元 / 年</td></tr>
+      <tr><td><b>财务基准</b></td><td class="old">Y3 81 万美元收入；三年累计 105 万美元</td><td class="new">Y3 50 万美元收入；三年累计 66 万美元（基准情景）</td></tr>
+      <tr><td><b>对外措辞</b></td><td class="old">“可验证记账层”</td><td class="new">“条件可复核的修改证据”；不宣称“闭环已通”</td></tr>
+    </tbody>
+  </table>
+
+  <h2>如果只记五句话</h2>
+  <ol>
+    <li><b>先卖“可复核”，不卖“更可信的 Agent”。</b>前者是证据，后者是能力承诺；后者会被 8/8 vs 6/8 这类读数打穿。</li>
+    <li><b>先卖给已经有 trace 的团队。</b>没有 OTel / LangSmith / Langfuse 的团队，先要补可观测性，轮不到证据层。</li>
+    <li><b>先做适配层，不做另一个平台。</b>平台已经被占住；适配层的替换成本低，反而更容易被试用。</li>
+    <li><b>先把拒收、版本、原像记全，再谈自动修改。</b>三样缺一样，R/N 双臂就不可归因。</li>
+    <li><b>先让外部复现一次，再让客户付费。</b>Gate 1.5 不过，B 不启动；这是本报告最硬的一条。</li>
+  </ol>
+
+  <h2>本报告可能错在哪里</h2>
+  <ul>
+    <li><b>SAM 下调可能过度悲观。</b>如果“AI 审计”在 2027 年成为独立预算科目，SAM 会回升；本报告按“功能预算”估算，偏保守。</li>
+    <li><b>“功能而非平台”可能低估合规买家的付费意愿。</b>受监管行业可能愿意为“可复核”单独付钱，即使它只是功能。</li>
+    <li><b>Gate 1.5 的 10 例 smoke 统计力不足。</b>它只能证伪“有明显增量”，不能证明“普遍有效”；报告不把它写成显著性检验。</li>
+    <li><b>财务基准仍可能乐观。</b>Y1 假设 1 个付费客户；如果 Gate 1.5 拖到 Q2，Y1 收入应为 0。</li>
+    <li><b>适配层依赖平台开放性。</b>如果 OTel / LangSmith / Langfuse 收紧导出或改变 semconv，适配层要跟着改；这是持续成本。</li>
+  </ul>
+
+  <h2>六个危险动作</h2>
+  <table class="tbl">
+    <thead><tr><th style="width:34%">动作</th><th>为什么危险</th></tr></thead>
+    <tbody>
+      <tr><td>把账本当防线卖</td><td>内核不拦截、不执行；客户会拿“没挡住”来退货。</td></tr>
+      <tr><td>把 verify 通过当内容可信</td><td>A1 注入实测已经证明：链通过、内容仍可以是不可信的 [30]。</td></tr>
+      <tr><td>把“记录里有”当“行为已改”</td><td>记录里有规则，不等于检索、执行、权限都改了；必须回放新旧行为。</td></tr>
+      <tr><td>在 R/N 未跑前承诺闭环</td><td>严格双臂仍 FAIL、拒收六桶全 0；承诺会被一条读数打穿 [27]。</td></tr>
+      <tr><td>按 seat / span / token 定价</td><td>计价单位与“证据包”价值不一致；客户会拿 trace 量压价。</td></tr>
+      <tr><td>做托管按次，接客户 prompt / 工具输出</td><td>隐私、留存、跨境与运维成本同时上升；与“不执行工具”的定位冲突。</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn">
+    <div class="t">一句话</div>
+    <p>
+      这不是“换一条更赚钱的路”，而是“把原来那条路的前置条件补上”。D + A 仍然先行，但 A 必须交付证据包；
+      B 必须等 Gate 1.5；C 不做。做不到这三条，就不如把项目冻结为研究资产。
+    </p>
+  </div>
+</section>
+<!-- ================= CH 1 ================= -->
+<section class="chapter" id="ch1">
+  <div class="chap-kicker">Chapter 01</div>
+  <h1><span class="num">01</span>为什么要重评</h1>
+
+  <div class="chap-q">
+    <b>问题：</b>v1 已经给出“D + A 先行、B 条件触发、C 不做、E 可选”。上一轮研究又证明“账本本身不构成闭环”。这两件事放在一起，原来的进入方式还成立吗？
+  </div>
+
+  <h2 id="s1-1">1.1 v1 的结论与它的前提</h2>
+  <p>
+    v1 的排序建立在三个前提上：第一，市场存在一个“可验证记账”的空位；第二，账本能把“谁做了什么”记清；第三，记录足以支撑一次二次修改。
+    前两个前提有本地读数支撑：账本 2,940 条、链 2,940/2,940 重算通过、49 格形状稳定 [27][30]。第三个前提在 v1 里是<strong>假设</strong>，不是实测。
+  </p>
+  <p>
+    v1 的严格双臂验收已经 FAIL：`declare_reader` 拒收六桶全 0，真人干净臂 NOT_RUN [27]。当时这被解释为“验收工具还没准备好”；现在看，问题更深一层：
+    即使验收工具准备好，账本也缺少产物原像、行为/判据版本与拒收计数，二次修改无法归因。v1 把“记录完整”当成了“记录足以支持修改”，这是 v2 要修正的核心。
+  </p>
+
+  <h2 id="s1-2">1.2 变了什么：从账本到证据包</h2>
+  <p>
+    上一轮研究（《Agent 执行 → 项目记录 → 二次修改》）给出的结论是：没有外部反馈时，LLM 的内在自省在推理任务上可能使表现下降 [34]；
+    可靠的自我纠正几乎都依赖测试、工具或人类反馈 [35]。从轨迹学习也一样：Agent Lightning 需要奖励或可验证结果 [38]，
+    ExpeL 依赖任务成败标签 [39]，AWM 的在线模式只从评估器判为正确的轨迹归纳 [41]，Voyager 只把环境验证过的技能入库 [42]。
+    共同点是：<strong>先有外部结果信号，再谈从记录学习</strong>。
+  </p>
+  <p>
+    本地记录面又恰好缺三样：产物原像、版本三元组、拒收计数。账本里没有产物内容，只有 60/60 个 `model_says_sha256` [30]；
+    没有行为/配置版本、判据版本、审阅者字段；`declare_reader` 只在内存里生效，声明被拒不会进账 [26]。
+    `read_back` 的描述承诺返回指纹，实现没有打印 [26]。`load_journal` 可以整本替换账本，`APPEND_ONLY` 默认关闭 [26]。
+    这意味着：账本可以证明“记录未被改”，但不能单独证明“这次修改有依据”。
+  </p>
+  <div class="callout">
+    <div class="t">因此，产品叙事必须换</div>
+    <p>
+      从“可验证记账内核”换成“<strong>可复核的二次修改证据</strong>”：账本只是证据包的一件，另外三件是产物原像、版本清单、外部验证器。
+      这不是加功能，而是加交付物；内核仍然不调度、不联网、不执行工具。
+    </p>
+  </div>
+
+  <h2 id="s1-3">1.3 重评问题与判据</h2>
+  <p>
+    重评问题不变：<b>以哪种方式面对市场</b>。但判据从“哪条路收入大”改成四条更硬的：
+  </p>
+  <ol>
+    <li><b>证据判据：</b>这条路能不能产出外部可复核的证据，而不只是内部读数？</li>
+    <li><b>预算判据：</b>买方有没有现成预算科目，还是要新开一个“AI 审计”科目？</li>
+    <li><b>交付判据：</b>能不能在不做托管、不接客户 prompt / 工具输出的前提下交付？</li>
+    <li><b>防守判据：</b>被平台复制时，还剩下什么是难复制的？</li>
+  </ol>
+  <p>
+    这四条判据会把五条路重新排一次。排序结果与 v1 相同，但理由和门槛不同：D 第一，是因为它先解决“证据判据”；A 第二，是因为它解决“交付判据”；
+    B 必须等“预算判据”和“证据判据”都过；C 违反“交付判据”；E 只解决传播，不解决前三条。
+  </p>
+</section>
+
+<!-- ================= CH 2 ================= -->
+<section class="chapter" id="ch2">
+  <div class="chap-kicker">Chapter 02</div>
+  <h1><span class="num">02</span>市场与定位</h1>
+
+  <div class="chap-q">
+    <b>问题：</b>“可验证记账”到底是独立市场，还是可观测性 / 评测 / 治理三个市场之间的一个功能？
+  </div>
+
+  <h2 id="s2-1">2.1 市场边界：记账层不是可观测性</h2>
+  <p>
+    可观测性回答“发生了什么”，评测回答“好不好”，治理回答“合不合规”。记账层回答的是另一个问题：
+    <b>这次修改凭什么发生、改的是哪一版、能不能回滚、能不能对外披露</b>。它需要可观测性的 trace 作为输入，但不是 trace 的替代品；
+    它需要评测的结果作为外部信号，但不是评测平台本身。
+  </p>
+  <table class="tbl">
+    <caption><b>表 2</b> 市场边界：计入什么、排除什么</caption>
+    <thead><tr><th style="width:22%">层级</th><th style="width:40%">计入本报告</th><th>排除</th></tr></thead>
+    <tbody>
+      <tr><td><b>Agent 执行记录</b></td><td>调用、工具、结果、缺席、依据、链完整性</td><td>模型内部推理、隐藏思维链</td></tr>
+      <tr><td><b>证据包</b></td><td>产物原像、行为/判据版本、拒收计数、外部验证结果</td><td>通用日志平台、SIEM 全量替代</td></tr>
+      <tr><td><b>审计/复核</b></td><td>二次修改的归因、回滚、对外披露</td><td>合规认证、法律意见、渗透测试</td></tr>
+      <tr><td><b>防线</b></td><td>不纳入</td><td>提示注入拦截、工具权限、运行时防护</td></tr>
+    </tbody>
+  </table>
+  <p>
+    这张边界表决定了一个关键判断：<b>agentkernel 不卖“安全”，卖“可复核”</b>。安全预算归 CISO，可复核预算归 AI 平台 / 安全工程 / 合规；
+    后者的金额更小，但采购链条更短，试用门槛更低。v1 把“审计层不是防线”写在边界里，v2 把它变成市场定位：不去抢防线预算，去抢证据预算。
+  </p>
+
+  <h2 id="s2-2">2.2 规模重算：为什么下调 SAM</h2>
+  <p>
+    TAM 仍按相邻口径估算：LLM 可观测性约 26.9 亿美元、AI TRiSM 约 30.9 亿美元，两者相邻但不相加，形成 27–31 亿美元的区间 [8][9]。
+    v1 假设 SAM 占 LLM 可观测性 8–12%、AI TRiSM 5–8%，得到 1.6–3.0 亿美元。v2 把占比下调到 3–6%，理由是：
+    记账/证据不是可观测性的主预算，而是主预算里的一个附加项；买方不会为“证据包”单独开一个和可观测性同量级的科目。
+  </p>
+  <p>
+    这样 SAM 约为 1.0–2.0 亿美元：LLM 可观测性 26.9 亿 × 3–6% = 0.8–1.6 亿；AI TRiSM 30.9 亿 × 3–6% = 0.9–1.9 亿；
+    取相邻区间 1.0–2.0 亿。SOM 按 SAM 的 0.5–2% 估算，三年为 0.5–4.0 百万美元；按 1.5–3.0 万美元 ARPU，对应约 17–267 个账户。
+    这些占比是 <span class="tag tag-c">C</span> 级规划假设，不是市场调查结论；v1 的 8–12% / 5–8% 同样是 C 级，v2 只是把假设调得更保守。
+  </p>
+
+  <figure>
+    <div class="pad">
+      <svg viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="修订后的市场层级">
+        <rect x="0" y="0" width="760" height="360" fill="#ffffff"/>
+        <text x="24" y="30" font-size="16" font-weight="700" fill="#0b1f33">修订后的市场层级（非等比示意）</text>
+        <rect x="24" y="52" width="712" height="270" rx="14" fill="#eef4f8" stroke="#b9c9d8"/>
+        <text x="44" y="80" font-size="13" font-weight="700" fill="#12314f">TAM 27–31 亿美元</text>
+        <text x="44" y="100" font-size="11" fill="#5b6b7f">LLM 可观测性 26.9 + AI TRiSM 30.9（相邻口径，非相加）</text>
+        <rect x="130" y="120" width="500" height="170" rx="12" fill="#dff3ef" stroke="#14b8a6"/>
+        <text x="150" y="148" font-size="13" font-weight="700" fill="#0f766e">SAM 1.0–2.0 亿美元</text>
+        <text x="150" y="168" font-size="11" fill="#3f5b6b">相邻市场 × 3–6%（v1 为 8–12% / 5–8%）</text>
+        <rect x="250" y="190" width="260" height="70" rx="10" fill="#fef3c7" stroke="#d97706"/>
+        <text x="270" y="218" font-size="13" font-weight="700" fill="#92400e">SOM 0.5–4.0 百万美元</text>
+        <text x="270" y="238" font-size="11" fill="#7c5a2a">三年，SAM × 0.5–2%</text>
+        <text x="736" y="330" font-size="10" fill="#7c8b9d" text-anchor="end">占比为 C 级规划假设；图形非等比，仅表达层级关系。</text>
+      </svg>
+    </div>
+    <figcaption><b>图 1</b> 修订后的市场层级。TAM 沿用 v1 的相邻口径；SAM 与 SOM 因“功能而非平台”的判断下调。<span class="figsrc">来源：v1 市场数据 [8][9]；v2 占比为 C 级假设。</span></figcaption>
+  </figure>
+
+  <table class="tbl">
+    <caption><b>表 3</b> 规模三路交叉（v2 口径）</caption>
+    <thead><tr><th>路径</th><th class="num">基数</th><th class="num">占比</th><th class="num">结果</th><th>用途</th></tr></thead>
+    <tbody>
+      <tr><td>LLM 可观测性</td><td class="num">26.9 亿美元</td><td class="num">3–6%</td><td class="num">0.8–1.6 亿美元</td><td>SAM 上界来源之一 [8]</td></tr>
+      <tr><td>AI TRiSM</td><td class="num">30.9 亿美元</td><td class="num">3–6%</td><td class="num">0.9–1.9 亿美元</td><td>SAM 下界来源之一 [9]</td></tr>
+      <tr><td>AI 治理</td><td class="num">—</td><td class="num">25–35%</td><td class="num">下界校验</td><td>防止 SAM 估高 [10]</td></tr>
+      <tr class="em-row"><td><b>SAM 取相邻区间</b></td><td class="num">—</td><td class="num">—</td><td class="num"><b>1.0–2.0 亿美元</b></td><td>本报告使用</td></tr>
+      <tr><td>SOM（三年）</td><td class="num">SAM</td><td class="num">0.5–2%</td><td class="num">0.5–4.0 百万美元</td><td>按 1.5–3 万美元 ARPU</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="s2-3">2.3 买家与预算科目</h2>
+  <p>
+    买家不是“AI 伦理委员会”，也不是“要买防线的 CISO”。最可能的买家是三类：
+    <b>AI 平台负责人</b>（要回答“这次行为变更为什么发生”）、<b>安全工程负责人</b>（要做事后取证与复盘）、<b>合规/风险负责人</b>（要留可审计的证据，但不负责认证）。
+    三者的共同点是：已经有 trace / eval 工具，缺的是“修改证据”，不是“再多一条日志”。
+  </p>
+  <table class="tbl">
+    <caption><b>表 4</b> 买家、触发与预算科目</caption>
+    <thead><tr><th style="width:18%">买家</th><th style="width:28%">触发</th><th style="width:24%">预算科目</th><th>不买的理由</th></tr></thead>
+    <tbody>
+      <tr><td><b>AI 平台负责人</b></td><td>Agent 行为变更后回归、无法归因</td><td>可观测性 / 评测</td><td>现有 trace 已够用；不想再加一个供应商</td></tr>
+      <tr><td><b>安全工程</b></td><td>事故复盘、内部审计、对外说明</td><td>安全工具 / 事件响应</td><td>认为“审计层不是防线”，不愿单独付费</td></tr>
+      <tr><td><b>合规 / 风险</b></td><td>EU AI Act 第 12 条、客户尽调、内部留痕</td><td>AI 治理 / 合规</td><td>要认证，不要工具；或已买治理平台</td></tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <div class="pad">
+      <svg viewBox="0 0 760 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="证据层在价值链中的位置">
+        <rect x="0" y="0" width="760" height="260" fill="#ffffff"/>
+        <g font-size="12" font-weight="700" text-anchor="middle">
+          <rect x="18" y="70" width="120" height="70" rx="8" fill="#e2e8f0" stroke="#94a3b8"/>
+          <text x="78" y="100" fill="#334155">Agent 运行时</text>
+          <text x="78" y="120" font-size="10" font-weight="400" fill="#64748b">调用 / 工具 / 产物</text>
+          <rect x="168" y="70" width="120" height="70" rx="8" fill="#dbeafe" stroke="#60a5fa"/>
+          <text x="228" y="100" fill="#1e40af">Trace / 可观测</text>
+          <text x="228" y="120" font-size="10" font-weight="400" fill="#3b5b8a">span / 日志 / 回放</text>
+          <rect x="318" y="70" width="120" height="70" rx="8" fill="#ede9fe" stroke="#a78bfa"/>
+          <text x="378" y="100" fill="#5b21b6">Eval / 实验</text>
+          <text x="378" y="120" font-size="10" font-weight="400" fill="#6d5a9c">数据集 / 基线</text>
+          <rect x="468" y="60" width="130" height="90" rx="8" fill="#f0fdfa" stroke="#0f766e" stroke-width="2.5"/>
+          <text x="533" y="92" fill="#0f766e">证据包</text>
+          <text x="533" y="112" font-size="10" font-weight="400" fill="#3f6b66">账本 + 原像</text>
+          <text x="533" y="128" font-size="10" font-weight="400" fill="#3f6b66">+ 版本 + 验证器</text>
+          <rect x="628" y="70" width="114" height="70" rx="8" fill="#fef3c7" stroke="#d97706"/>
+          <text x="685" y="100" fill="#92400e">审计 / 披露</text>
+          <text x="685" y="120" font-size="10" font-weight="400" fill="#8a6420">复盘 / 对外说明</text>
+        </g>
+        <g stroke="#0f766e" stroke-width="2" fill="none" marker-end="url(#ar)">
+          <line x1="138" y1="105" x2="162" y2="105"/>
+          <line x1="288" y1="105" x2="312" y2="105"/>
+          <line x1="438" y1="105" x2="462" y2="105"/>
+          <line x1="598" y1="105" x2="622" y2="105"/>
+        </g>
+        <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#0f766e"/></marker></defs>
+        <text x="533" y="178" font-size="10" text-anchor="middle" fill="#0f766e" font-weight="700">agentkernel 的位置：证据层，不是运行时，也不是防线</text>
+        <text x="380" y="225" font-size="10" text-anchor="middle" fill="#7c8b9d">输入来自 trace 与 eval；输出给审计、客户尽调与内部复盘。</text>
+      </svg>
+    </div>
+    <figcaption><b>图 2</b> 证据层在价值链中的位置。它消费 trace 与 eval 的输出，不替代两者；也不进入运行时拦截路径。</figcaption>
+  </figure>
+</section>
+
+<!-- ================= CH 3 ================= -->
+<section class="chapter" id="ch3">
+  <div class="chap-kicker">Chapter 03</div>
+  <h1><span class="num">03</span>需求与反需求</h1>
+
+  <div class="chap-q">
+    <b>问题：</b>什么事件会让买家真正需要“可复核的修改证据”？什么条件下需求会消失？
+  </div>
+
+  <h2>3.1 三个真实触发</h2>
+  <p>
+    <b>触发一：事故复盘。</b>Agent 执行了一次错误操作，团队要回答“它当时看到了什么、用了哪一版策略、谁批准了修改”。现有 trace 能回答“看到了什么”，不一定能回答“哪一版、谁批准、改了什么”。
+    A1 注入测试已经证明：链通过、内容仍可以是不可信的 [30]；复盘需要的不是更多 span，而是可追溯的修改证据。
+  </p>
+  <p>
+    <b>触发二：受监管审计。</b>EU AI Act 第 12 条要求高风险系统在全生命周期内技术上支持自动记录事件；第 26(6) 条要求部署方在其控制范围内保存日志，保存期与预期用途相称，至少六个月 [2][48]。
+    这类需求真实存在，但买家要的是“能交差的记录”，不是“又一个日志平台”；合规预算通常已经有主，证据层只能做附加项。
+  </p>
+  <p>
+    <b>触发三：行为变更与回归。</b>团队改了 prompt、路由或阈值，想知道“新版是不是真的更好”。这需要旧版与新版在同一留出集上的对比，以及“为什么改”的证据。
+    如果没有记录，第二次修改只能靠感觉；有了记录但没有外部验证器，第二次修改会退化成“照着记录再写一遍” [34][35]。
+  </p>
+
+  <h2>3.2 技术驱动：MCP 采用了，遥测没跟上</h2>
+  <p>
+    MCP 已成为 Agent 工具接入的常见协议 [14]；但遥测侧仍在演化：OpenTelemetry 的 GenAI 语义约定截至 2026-08 的公开资料仍标为 Development，
+    `gen_ai.system` 已在 semconv v1.37.0 起标记弃用、由 `gen_ai.provider.name` 取代 [15][50]。Microsoft Agent Framework 的敏感数据采集默认关闭，
+    prompt、响应、工具入参出参都要显式开启 [45]。这意味着：默认 trace 只是骨架，证据层必须自己补内容、补版本、补拒收。
+  </p>
+  <p>
+    这既是机会也是成本。机会是：平台还没把“证据包”做成标准；成本是：字段还在变，适配层要固定 semconv 版本并加映射。
+    v2 因此把 A 的交付物定为“适配层 + 证据包规范”，而不是“又一个 trace 后端”。
+  </p>
+
+  <h2>3.3 反需求：五件会让需求消失的事</h2>
+  <table class="tbl">
+    <thead><tr><th style="width:28%">反需求</th><th>为什么会让需求消失</th><th style="width:28%">应对</th></tr></thead>
+    <tbody>
+      <tr><td><b>失败率很低</b></td><td>没有二次修改，就没有证据需求</td><td>只盯高变更、高监管、高事故成本场景</td></tr>
+      <tr><td><b>现有日志“够用”</b></td><td>买家分不清 trace 与证据包，认为再加一层是浪费</td><td>用一次真实复盘演示“缺哪三样”</td></tr>
+      <tr><td><b>隐私与留存顾虑</b></td><td>不愿把 prompt / 工具输出交给第三方</td><td>只做私有化 / 本地证据包，不做托管</td></tr>
+      <tr><td><b>不想再加供应商</b></td><td>采购流程长，平台已绑定</td><td>做平台插件 / 适配层，不做替代</td></tr>
+      <tr><td><b>平台捆绑</b></td><td>LangSmith / Langfuse / Datadog 把证据功能打包进主产品</td><td>守住“可验证 + 可回滚 + 可披露”的深水区</td></tr>
+    </tbody>
+  </table>
+
+  <h2>3.4 需求结论</h2>
+  <p>
+    需求是真的，但窄：它依附于“事故复盘 / 受监管审计 / 行为变更”三个触发，不是一个独立的大科目。正确的进入方式不是教育市场“你需要一个记账内核”，
+    而是等买家已经在做复盘或审计时，告诉他“你缺的是这三样证据”。这也决定了销售动作：先做复盘工作坊，再卖证据包；先接入现有 trace，再谈替换。
+  </p>
+</section>
+<!-- ================= CH 4 ================= -->
+<section class="chapter" id="ch4">
+  <div class="chap-kicker">Chapter 04</div>
+  <h1><span class="num">04</span>竞争格局：功能，还是平台</h1>
+
+  <div class="chap-q">
+    <b>问题：</b>如果可观测性、评测、治理平台都能往上加一层“证据”，agentkernel 的位置还剩多少？
+  </div>
+
+  <h2>4.1 五类玩家</h2>
+  <table class="tbl">
+    <caption><b>表 5</b> 五类玩家与它们的缺口</caption>
+    <thead><tr><th style="width:18%">类型</th><th style="width:30%">代表</th><th style="width:26%">已经有的</th><th>缺口</th></tr></thead>
+    <tbody>
+      <tr><td><b>可观测性</b></td><td>LangSmith、Langfuse、Arize、AgentOps、Datadog</td><td>trace、span、会话回放、成本</td><td>产物原像、判据版本、拒收计数、可回滚的证据包</td></tr>
+      <tr><td><b>评测 / 实验</b></td><td>LangSmith、Braintrust</td><td>dataset、experiment、并排比较</td><td>“为什么改”的归因与版本绑定</td></tr>
+      <tr><td><b>治理 / 合规</b></td><td>Credo AI、Holistic AI 等</td><td>政策、风险登记、合规映射</td><td>技术级执行证据、链上完整性</td></tr>
+      <tr><td><b>云账本</b></td><td>AWS CloudTrail 校验、Azure Confidential Ledger</td><td>不可抵赖日志、完整性校验</td><td>Agent 语义、49 格、拒收与修改版本</td></tr>
+      <tr><td><b>自建</b></td><td>团队自己写日志 + 脚本</td><td>完全可控、零采购</td><td>证据包规范、跨工具适配、外部复核</td></tr>
+    </tbody>
+  </table>
+  <p>
+    这张表说明：<b>每一类都有一部分，但没有一类把“二次修改证据”做全</b>。可观测性有 trace，缺原像与版本；评测有 experiment，缺拒收与回滚；
+    治理有政策，缺技术读数；云账本有完整性，缺 Agent 语义；自建可控，缺规范与外部复核。空白存在，但它是“跨类的缝”，不是“独立的大市场”。
+  </p>
+
+  <h2>4.2 价格锚：为什么不能按 seat / span / token 卖</h2>
+  <p>
+    可观测性平台按 seat、span 或数据量计价 [16][17][19][20]；评测平台按 experiment / 样本量计价 [18]；治理平台按年度合同计价。
+    这些锚都不适合“证据包”：证据包的价值不在“记录了多少”，而在“能不能支撑一次修改、能不能回滚、能不能对外披露”。
+    按 span 卖，会把证据层拉进可观测性的价格战；按 seat 卖，会把价值锚在“人头”而不是“风险”。
+  </p>
+  <p>
+    合理的锚是“每次可复核修改”或“每年证据包订阅”：试点 3–5 千美元 / 6 周，年度 1.5–3.0 万美元；需要私有化与安全审查的版本 4–8 万美元 / 年。
+    这个价格带低于企业治理平台，高于纯工具订阅；它对应的是“事故成本”而不是“日志成本”。
+  </p>
+
+  <h2>4.3 竞争定位：追踪深度 × 证据强度</h2>
+  <figure>
+    <div class="pad">
+      <svg viewBox="0 0 760 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="竞争定位矩阵">
+        <rect x="0" y="0" width="760" height="420" fill="#ffffff"/>
+        <line x1="90" y1="350" x2="720" y2="350" stroke="#94a3b8" stroke-width="1.5"/>
+        <line x1="90" y1="350" x2="90" y2="50" stroke="#94a3b8" stroke-width="1.5"/>
+        <text x="405" y="390" font-size="12" text-anchor="middle" fill="#475569">追踪深度（trace / 回放 / 成本）→</text>
+        <text x="28" y="205" font-size="12" text-anchor="middle" fill="#475569" transform="rotate(-90 28 205)">证据强度（原像 / 版本 / 拒收 / 回滚）→</text>
+        <line x1="405" y1="50" x2="405" y2="350" stroke="#e2e8f0" stroke-dasharray="4 4"/>
+        <line x1="90" y1="200" x2="720" y2="200" stroke="#e2e8f0" stroke-dasharray="4 4"/>
+        <g font-size="11">
+          <circle cx="560" cy="290" r="30" fill="#dbeafe" stroke="#3b82f6"/>
+          <text x="560" y="294" text-anchor="middle" fill="#1e40af">可观测性</text>
+          <circle cx="520" cy="235" r="26" fill="#ede9fe" stroke="#8b5cf6"/>
+          <text x="520" y="239" text-anchor="middle" fill="#5b21b6">评测</text>
+          <circle cx="250" cy="120" r="30" fill="#fef3c7" stroke="#d97706"/>
+          <text x="250" y="124" text-anchor="middle" fill="#92400e">治理平台</text>
+          <circle cx="170" cy="270" r="28" fill="#e2e8f0" stroke="#64748b"/>
+          <text x="170" y="274" text-anchor="middle" fill="#334155">云账本</text>
+          <circle cx="300" cy="280" r="24" fill="#f1f5f9" stroke="#94a3b8"/>
+          <text x="300" y="284" text-anchor="middle" fill="#475569">自建</text>
+          <circle cx="330" cy="115" r="36" fill="#ccfbf1" stroke="#0f766e" stroke-width="2.5"/>
+          <text x="330" y="112" text-anchor="middle" fill="#0f766e" font-weight="700">证据层</text>
+          <text x="330" y="128" text-anchor="middle" fill="#0f766e" font-size="10">agentkernel</text>
+        </g>
+        <text x="720" y="76" font-size="10" text-anchor="end" fill="#94a3b8">高证据 / 低追踪</text>
+        <text x="720" y="338" font-size="10" text-anchor="end" fill="#94a3b8">高追踪 / 低证据</text>
+        <text x="105" y="338" font-size="10" fill="#94a3b8">低追踪 / 低证据</text>
+      </svg>
+    </div>
+    <figcaption><b>图 3</b> 竞争定位。agentkernel 不试图在“追踪深度”上竞争；它的位置是“低追踪、高证据”，通过适配层消费别人的 trace。</figcaption>
+  </figure>
+
+  <h2>4.4 五力：横向 SaaS 不具吸引力</h2>
+  <table class="tbl">
+    <thead><tr><th style="width:18%">力量</th><th style="width:12%">强度</th><th>理由</th></tr></thead>
+    <tbody>
+      <tr><td>现有竞争</td><td class="no">高</td><td>可观测性 / 评测平台密集，功能重叠，价格透明</td></tr>
+      <tr><td>新进入者</td><td class="no">高</td><td>哈希链 + 49 格可复制；开源方案多</td></tr>
+      <tr><td>买方议价</td><td class="no">高</td><td>预算挂在既有科目，买家可自建或等平台打包</td></tr>
+      <tr><td>供应商议价</td><td class="mid">中</td><td>依赖 OTel / MCP / 云日志；标准开放但字段演化</td></tr>
+      <tr><td>替代品</td><td class="no">高</td><td>现有 trace + 脚本 + 人工复盘，能覆盖 60–70% 需求</td></tr>
+    </tbody>
+  </table>
+  <p>
+    五力结论很直接：<b>作为一个横向 SaaS，这不是一个有吸引力的市场</b>。但如果把它做成“嵌在现有平台里的证据层”，竞争强度会下降：
+    替换成本低、采购链条短、不需要教育买家“再买一个平台”。这也是 v2 把 A 的形态定为适配层，而不是独立 SaaS 的原因。
+  </p>
+
+  <h2>4.5 竞争会从哪里打死它</h2>
+  <ol>
+    <li><b>平台打包：</b>LangSmith / Langfuse / Datadog 把“证据包”做成高级功能，免费或低价捆绑。</li>
+    <li><b>云账本下沉：</b>AWS / Azure 把不可抵赖日志与 Agent 语义结合，直接覆盖“完整性”需求 [24][25]。</li>
+    <li><b>治理平台上探：</b>治理平台加技术读数，把“政策 + 证据”一起卖。</li>
+    <li><b>开源克隆：</b>哈希链 + 49 格 + 读回接口没有专利壁垒，复制成本低。</li>
+    <li><b>买家自建：</b>平台团队用现有 trace + 脚本拼一个“够用”的证据包，不采购。</li>
+  </ol>
+  <p>
+    这五条里，最致命的是第一条和第五条。平台打包会压缩价格，买家自建会压缩需求。能对抗这两条的，不是“链更安全”，而是
+    <b>证据包规范 + 拒收计数 + 版本三元组 + R/N 协议</b>这四样“跨工具、跨团队、可对外”的东西；它们比哈希链更难复制，也更容易被外部复核。
+  </p>
+
+  <h2>4.6 合作而非替代：做签收层，不做追踪层</h2>
+  <p>
+    正确的合作姿态是：trace 从 OTel / LangSmith / Langfuse 来，评测结果从 LangSmith / Braintrust 来，存储从云账本来，agentkernel 只做“签收”：
+    把产物原像、行为/判据版本、拒收计数、外部验证结果装成一个可复核的包，签发给审计、客户或内部复盘。
+    这样既不与平台争入口，也不与云账本争存储；它争的是“最后一公里”的签收权。
+  </p>
+
+  <h2>4.7 壁垒：什么能守，什么不能守</h2>
+  <table class="tbl">
+    <thead><tr><th style="width:30%">能守</th><th style="width:30%">不能守</th><th>原因</th></tr></thead>
+    <tbody>
+      <tr><td>证据包规范与适配器</td><td>哈希链 / 49 格本身</td><td>后者可复制；前者需要跨工具、跨团队磨合</td></tr>
+      <tr><td>拒收计数与判据版本</td><td>“可验证”这个词</td><td>词会被平台拿去用；计数与版本需要真实流程</td></tr>
+      <tr><td>R/N 协议与外部复核记录</td><td>单次 demo</td><td>协议与负结果需要时间积累；demo 可复制</td></tr>
+      <tr><td>受监管客户的部署经验</td><td>通用日志功能</td><td>经验带信任；功能会被打包</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ================= CH 5 ================= -->
+<section class="chapter" id="ch5">
+  <div class="chap-kicker">Chapter 05</div>
+  <h1><span class="num">05</span>产品证据现状</h1>
+
+  <div class="chap-q">
+    <b>问题：</b>面对市场时，哪些话现在能说，哪些话必须等到 Gate 1.5 之后？
+  </div>
+
+  <h2>5.1 能说的：A / B 级证据</h2>
+  <ul>
+    <li><b>账本形状稳定：</b>2,940 条记录 = 60 次调用 × 49 格；12 个会话；4 个自报 actor；basis 分布 measured 2,213 / absent 355 / relayed 188 / estimated 124 / model_says 60 / unset 0 [30]。</li>
+    <li><b>链完整：</b>`seq/prev/payload/seal` 2,940/2,940 重算通过；无签名、无密钥 [30]。</li>
+    <li><b>封板轮可复跑：</b>78 根针 / 整轮跑；退出码 0；空针 / 坏针 0；对照成立 [28]。</li>
+    <li><b>外部评估可对账：</b>外部 6 发 / 294 条；整本 490 条；逐发指纹对上 [29]。</li>
+    <li><b>缺席带理由：</b>355 条 absent 均带理由；这是“没量到”与“没发生”分开的基础 [30]。</li>
+  </ul>
+
+  <h2>5.2 不能说的：X 级缺口</h2>
+  <table class="tbl">
+    <caption><b>表 6</b> 能说 / 不能说（对外材料的第一屏）</caption>
+    <thead><tr><th style="width:30%">不能说</th><th style="width:30%">现状</th><th>要等到什么</th></tr></thead>
+    <tbody>
+      <tr><td>“30 分钟接入”</td><td>非作者真人未跑；v1 是目标值</td><td>Gate 1：≤60 分钟证据包 + 1 次修改</td></tr>
+      <tr><td>“闭环已通”</td><td>R/N 双臂 NOT_RUN；严格双臂 FAIL</td><td>Gate 1.5：10 例 R/N + 反臂 A/B</td></tr>
+      <tr><td>“记录驱动改进”</td><td>没有增量读数</td><td>Gate 1.5 通过</td></tr>
+      <tr><td>“审计层是防线”</td><td>不拦截、不调度、不执行</td><td>永远不说；定位不是防线</td></tr>
+      <tr><td>“内容可信”</td><td>verify 只证链未改；A1 注入通过</td><td>外部验证器 + 出处核验</td></tr>
+      <tr><td>“符合 EU AI Act”</td><td>第 12 条是记录义务，不是认证</td><td>不做合规认证声明</td></tr>
+    </tbody>
+  </table>
+
+  <h2>5.3 证据阶梯</h2>
+  <figure>
+    <div class="pad">
+      <svg viewBox="0 0 760 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="证据阶梯">
+        <rect x="0" y="0" width="760" height="330" fill="#ffffff"/>
+        <g font-size="11">
+          <rect x="30" y="40" width="120" height="46" fill="#dcfce7" stroke="#16a34a"/>
+          <text x="90" y="60" text-anchor="middle" fill="#166534" font-weight="700">A 工具自印 + 复算</text>
+          <text x="90" y="78" text-anchor="middle" fill="#166534">2,940 条 / 链全通过</text>
+          <rect x="170" y="40" width="120" height="46" fill="#dbeafe" stroke="#2563eb"/>
+          <text x="230" y="60" text-anchor="middle" fill="#1e40af" font-weight="700">B 单源自印</text>
+          <text x="230" y="78" text-anchor="middle" fill="#1e40af">外部 6 发 / 490 条</text>
+          <rect x="310" y="40" width="120" height="46" fill="#fef3c7" stroke="#d97706"/>
+          <text x="370" y="60" text-anchor="middle" fill="#92400e" font-weight="700">C 规划假设</text>
+          <text x="370" y="78" text-anchor="middle" fill="#92400e">SAM 3–6% / 财务情景</text>
+          <rect x="450" y="40" width="120" height="46" fill="#ede9fe" stroke="#7c3aed"/>
+          <text x="510" y="60" text-anchor="middle" fill="#5b21b6" font-weight="700">D 外部公开</text>
+          <text x="510" y="78" text-anchor="middle" fill="#5b21b6">法规 / 价格锚 / 竞品</text>
+          <rect x="590" y="40" width="140" height="46" fill="#fee2e2" stroke="#dc2626"/>
+          <text x="660" y="60" text-anchor="middle" fill="#991b1b" font-weight="700">X 未验证</text>
+          <text x="660" y="78" text-anchor="middle" fill="#991b1b">R/N / 真人 / 原像 / 版本</text>
+        </g>
+        <line x1="30" y1="120" x2="730" y2="120" stroke="#cbd5e1"/>
+        <text x="30" y="150" font-size="11" fill="#475569">对外材料只能引用左侧四类；右侧 X 级必须写“未跑 / 未找到”，不能塌成 0。</text>
+        <g font-size="10.5" fill="#475569">
+          <text x="30" y="185">能直接支撑技术可信度：A</text>
+          <text x="30" y="207">能作为线索、需标注：B</text>
+          <text x="30" y="229">能用于数量级与设计、不能当调查：C</text>
+          <text x="30" y="251">能用于背景、法规、竞品：D</text>
+          <text x="30" y="273">只能写“不知道 / 未跑”：X</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>图 4</b> 证据阶梯。R/N 双臂、真人计时、产物原像、版本字段都在 X 级；它们不是“0”，是“未验证”。<span class="figsrc">来源：v1 与 v2 本地读数 [27][28][29][30]。</span></figcaption>
+  </figure>
+
+  <h2>5.4 对市场进入的四条含义</h2>
+  <ol>
+    <li><b>不能以“闭环”为卖点。</b>至少到 Gate 1.5 通过之前，只能卖“可复核的记录与证据包”。</li>
+    <li><b>不能以“30 分钟”为卖点。</b>改为“一个证据包 + 一次修改”的 60 分钟目标，并让非作者真人跑。</li>
+    <li><b>不能以“合规认证”为卖点。</b>可以说“为第 12 条记录义务提供技术证据”，不能说“符合 AI Act”。</li>
+    <li><b>可以卖“可回滚 + 可披露”。</b>这是现有平台没有做全、且买家能感知的价值。</li>
+  </ol>
+
+  <div class="callout neutral">
+    <div class="t">先补哪三个 X</div>
+    <p>
+      顺序是：<b>产物原像</b>（改的是哪个文件 / 配置 / 提示词）→ <b>版本三元组</b>（产物、行为、判据各是哪一版）→ <b>拒收计数</b>（被验证器拒了多少、为什么）。
+      这三样都不需要改 v1 账本，放在链外证据包里；先补它们，再谈自动修改。缺任何一样，R/N 双臂的结果都不可归因，Gate 1.5 也无法开始。
+    </p>
+  </div>
+</section>
+
+<!-- ================= CH 6 ================= -->
+<section class="chapter" id="ch6">
+  <div class="chap-kicker">Chapter 06</div>
+  <h1><span class="num">06</span>五条进入方式重评</h1>
+
+  <div class="chap-q">
+    <b>问题：</b>在“功能而非平台”的判断下，五条路各自还剩下什么？哪条先走，哪条不做？
+  </div>
+
+  <h2 id="s6-a">选项 A：开源证据适配层</h2>
+  <p>
+    <b>交付物：</b>证据包规范 + OTel / LangSmith / Langfuse 适配器 + 参考实现 + 一个 10 例的失败样本包。
+    <b>不交付：</b>又一个 trace 后端、又一个 dashboard、又一个托管服务。
+    <b>目标：</b>非作者真人在 60 分钟内，把一个失败运行变成“账本 + 原像 + 版本 + 外部验证结果”的证据包，并完成一次可复核修改。
+  </p>
+  <p>
+    <b>商业模式：</b>开放核心。适配器与规范免费；企业版收“私有化部署 + 安全审查 + 支持”。<b>为什么先走：</b>它直接解决“交付判据”，且替换成本低，
+    买家可以在现有 trace 上试用，不需要换平台。<b>风险：</b>平台把适配器吸进主产品；对策是把“拒收计数 + 版本三元组 + R/N 协议”做成规范，而不是单个连接器。
+  </p>
+
+  <h2 id="s6-b">选项 B：企业私有化</h2>
+  <p>
+    <b>交付物：</b>VPC / 本地部署的证据包服务 + SBOM + DPA + 责任边界 + 安全审查材料。
+    <b>价格：</b>基础版 1.5–3.0 万美元 / 年；证据包版 4–8 万美元 / 年；试点 3–5 千美元 / 6 周。
+    <b>为什么条件触发：</b>它解决“预算判据”，但销售周期长、支持成本高；在 Gate 1.5 证明增量之前，不应把资源压到 B。
+    <b>触发条件：</b>Gate 2 的 2 封 LOI + 1 次安全审查 + SBOM/DPA/责任边界都过；且 Gate 1.5 已通过。
+  </p>
+
+  <h2 id="s6-c">选项 C：托管按次</h2>
+  <p>
+    <b>为什么不做：</b>托管意味着接客户的 prompt、工具输出与产物；隐私、留存、跨境、运维成本同时上升，且与“不执行工具”的定位冲突。
+    按次计价还会把价值锚在“调用量”，而不是“证据包”。如果未来一定要做托管，只做“元数据 + 哈希”的签收服务，不接内容；但这仍然不是当前优先项。
+  </p>
+
+  <h2 id="s6-d">选项 D：研究出版 / 标准</h2>
+  <p>
+    <b>交付物：</b>《Agent 执行 → 项目记录 → 二次修改》研究报告、R/N 双臂协议、负结果（严格双臂 FAIL、拒收六桶全 0）、证据包规范草案。
+    <b>为什么第一：</b>它解决“证据判据”。这个类别还没有被外部复核过；先发布“什么能证明、什么不能证明”，比先卖产品更能建立信任。
+    <b>不是收入线：</b>D 的直接收入接近 0；它的产出是外部复现、批评、引用与第一个 POC 志愿者。
+  </p>
+
+  <h2 id="s6-e">选项 E：竞赛 / 生态</h2>
+  <p>
+    <b>形态：</b>“二次修改证据”基准赛：给 10 个失败运行，要求参赛者产出可复核的证据包并完成修改；评分看留出集通过率、假修复率、证据完整性。
+    <b>为什么可选：</b>它能带来传播与外部样本，但不解决预算与交付；只有在 A 的适配层可用之后才有意义，否则会变成一次性活动。
+  </p>
+
+  <h2>五条路放在一张表里</h2>
+  <table class="tbl">
+    <caption><b>表 7</b> 五条进入方式对比（v2）</caption>
+    <thead><tr><th style="width:8%">选项</th><th style="width:24%">交付物</th><th style="width:14%">解决哪条判据</th><th style="width:12%">收入</th><th style="width:12%">成本</th><th>结论</th></tr></thead>
+    <tbody>
+      <tr class="em-row"><td><b>D</b></td><td>研究报告 + 协议 + 负结果</td><td>证据判据</td><td>≈0</td><td>低</td><td><b>第一</b>：先换外部复核</td></tr>
+      <tr class="em-row"><td><b>A</b></td><td>证据包规范 + 适配器 + 参考实现</td><td>交付判据</td><td>低 / 中</td><td>中</td><td><b>第二</b>：先换真实使用</td></tr>
+      <tr><td><b>B</b></td><td>私有化证据包 + 安全材料</td><td>预算判据</td><td>高</td><td>高</td><td><b>条件触发</b>：Gate 1.5 + 2</td></tr>
+      <tr class="danger-row"><td><b>C</b></td><td>托管按次证据服务</td><td>违反交付判据</td><td>中</td><td>高</td><td><b>不做</b></td></tr>
+      <tr><td><b>E</b></td><td>基准赛 / 生态</td><td>传播</td><td>低</td><td>中</td><td><b>可选</b>：A 之后</td></tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <div class="pad">
+      <svg viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="五条进入方式矩阵">
+        <rect x="0" y="0" width="760" height="360" fill="#ffffff"/>
+        <line x1="80" y1="310" x2="720" y2="310" stroke="#94a3b8"/>
+        <line x1="80" y1="310" x2="80" y2="50" stroke="#94a3b8"/>
+        <text x="400" y="345" font-size="12" text-anchor="middle" fill="#475569">到可复核证据的时间（短 → 长）</text>
+        <text x="26" y="190" font-size="12" text-anchor="middle" fill="#475569" transform="rotate(-90 26 190)">可防守性（低 → 高）</text>
+        <g font-size="11">
+          <circle cx="180" cy="105" r="34" fill="#ccfbf1" stroke="#0f766e" stroke-width="2"/>
+          <text x="180" y="102" text-anchor="middle" fill="#0f766e" font-weight="700">D</text>
+          <text x="180" y="118" text-anchor="middle" fill="#0f766e" font-size="9">研究</text>
+          <circle cx="340" cy="150" r="42" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+          <text x="340" y="146" text-anchor="middle" fill="#1e40af" font-weight="700">A</text>
+          <text x="340" y="162" text-anchor="middle" fill="#1e40af" font-size="9">适配层</text>
+          <circle cx="560" cy="120" r="48" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+          <text x="560" y="116" text-anchor="middle" fill="#92400e" font-weight="700">B</text>
+          <text x="560" y="132" text-anchor="middle" fill="#92400e" font-size="9">私有化</text>
+          <circle cx="390" cy="260" r="34" fill="#fee2e2" stroke="#dc2626"/>
+          <text x="390" y="256" text-anchor="middle" fill="#991b1b" font-weight="700">C</text>
+          <text x="390" y="272" text-anchor="middle" fill="#991b1b" font-size="9">托管</text>
+          <circle cx="600" cy="245" r="30" fill="#f1f5f9" stroke="#94a3b8"/>
+          <text x="600" y="241" text-anchor="middle" fill="#475569" font-weight="700">E</text>
+          <text x="600" y="257" text-anchor="middle" fill="#475569" font-size="9">竞赛</text>
+        </g>
+        <text x="95" y="80" font-size="10" fill="#94a3b8">证据强 / 时间短</text>
+        <text x="700" y="300" font-size="10" text-anchor="end" fill="#94a3b8">证据弱 / 时间长</text>
+      </svg>
+    </div>
+    <figcaption><b>图 5</b> 五条进入方式矩阵。D 先解决“证据”，A 再解决“交付”，B 等两者都过；C 在证据与时间上都不占优；E 只解决传播。</figcaption>
+  </figure>
+
+  <div class="callout">
+    <div class="t">排序结论</div>
+    <p>
+      D → A → Gate 1.5 → B；C 不做；E 可选。不是五选一，而是“先证明，再交付，最后才卖私有化”。
+    </p>
+  </div>
+</section>
+<!-- ================= CH 7 ================= -->
+<section class="chapter" id="ch7">
+  <div class="chap-kicker">Chapter 07</div>
+  <h1><span class="num">07</span>推荐路线与五道闸</h1>
+
+  <div class="chap-q">
+    <b>问题：</b>D + A 先行走多远？什么读数出现时必须停？B 到底要等到哪一步？
+  </div>
+
+  <h2>7.1 四条原则</h2>
+  <ol>
+    <li><b>先证据，后收入。</b>没有外部复核的证据包，不进入销售。</li>
+    <li><b>先附着，后替代。</b>接入现有 trace / eval，不做另一个平台。</li>
+    <li><b>先私有，后托管。</b>当前只做本地 / VPC 证据包；托管按次不做。</li>
+    <li><b>先证伪，后承诺。</b>每个阶段都写“什么读数出现就停”，不写“预计会成功”。</li>
+  </ol>
+
+  <h2>7.2 三个阶段与交付物</h2>
+  <p>
+    <b>阶段 D（第 1–6 周）：研究出版。</b>发布《Agent 执行 → 项目记录 → 二次修改》报告、R/N 协议、负结果与证据包规范草案。
+    目标不是流量，是 3 个外部评审意见、1 个愿意做 POC 的团队、1 个真实触发（事故复盘 / 审计 / 行为变更）。
+  </p>
+  <p>
+    <b>阶段 A（第 7–14 周）：开源证据适配层。</b>发布 OTel / LangSmith / Langfuse 适配器、证据包模板、10 例失败样本。
+    目标是 3 个非作者团队各自产出 1 个证据包，并完成 1 次可复核修改；不是 star 数，也不是下载量。
+  </p>
+  <p>
+    <b>阶段 B（第 19–26 周）：企业私有化。</b>只在 Gate 1.5 与 Gate 2 都通过后启动。交付 VPC / 本地部署、SBOM、DPA、责任边界与安全审查材料；
+    目标是 2 封 LOI + 1 次安全审查 + 1 个付费试点。阶段 B 不追求“多客户”，追求“第一个能续费的客户”。
+  </p>
+
+  <h2 id="s7-2">7.3 五道闸：Go / No-Go</h2>
+  <table class="tbl">
+    <caption><b>表 8</b> 五道闸：通过条件、失败动作与读数来源</caption>
+    <thead><tr><th style="width:12%">闸</th><th style="width:10%">时间</th><th style="width:40%">通过条件</th><th>失败动作</th></tr></thead>
+    <tbody>
+      <tr><td><b>G0</b> 需求</td><td>第 30 天</td><td>10 次访谈；≥3 个真实触发；≥1 个 POC 志愿者；≥1 个预算科目</td><td>补访谈；不写销售材料</td></tr>
+      <tr><td><b>G1</b> 交付</td><td>第 60 天</td><td>非作者真人 ≤60 分钟产出 1 个证据包并完成 1 次修改；拒收被计数；链自洽；`sk-` 0 次；调用方模型代码 0 改动</td><td>修适配层；不开放下载</td></tr>
+      <tr class="em-row"><td><b>G1.5</b> 增量</td><td>第 90 天</td><td>10 例 R/N 双臂：R 臂留出集通过率 ≥ N 臂 + 20 个百分点；假修复率不高于 N 臂；反臂 A/B 按预期失败或拒绝</td><td><b>冻结为研究资产</b>，不进入 B</td></tr>
+      <tr><td><b>G2</b> 采购</td><td>第 120 天</td><td>2 封 LOI；1 次安全审查通过；SBOM / DPA / 责任边界齐备</td><td>降级为咨询 / 研究合作</td></tr>
+      <tr><td><b>G3</b> 续费</td><td>第 180 天</td><td>≥3 家付费 ≥1 万美元，或 ≥5 家付费试点；至少 1 家续费 / 转正</td><td>停止扩张；保留 1–2 个深度客户</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn">
+    <div class="t">G1.5 是本报告最硬的一条</div>
+    <p>
+      它不测“客户喜不喜欢”，只测“看记录再改”是否比“不看记录直接改”更好。如果 R 臂没有增量，说明价值来自外部验证器，不是记录；
+      此时应把产品收窄为“验证器 + 轻量记录”，而不是继续卖“记录驱动改进”。G1.5 失败一次可以修协议再跑一次；连续两次失败就冻结。
+    </p>
+  </div>
+
+  <figure>
+    <div class="pad">
+      <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="进入决策树">
+        <rect x="0" y="0" width="760" height="400" fill="#ffffff"/>
+        <defs><marker id="a2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#64748b"/></marker></defs>
+        <g font-size="11" text-anchor="middle">
+          <rect x="40" y="45" width="120" height="52" rx="8" fill="#ccfbf1" stroke="#0f766e" stroke-width="2"/>
+          <text x="100" y="68" fill="#0f766e" font-weight="700">D 研究出版</text>
+          <text x="100" y="86" fill="#0f766e">3 评审 / 1 POC</text>
+          <rect x="200" y="45" width="120" height="52" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+          <text x="260" y="68" fill="#1e40af" font-weight="700">A 开源适配层</text>
+          <text x="260" y="86" fill="#1e40af">3 团队证据包</text>
+          <rect x="360" y="45" width="120" height="52" rx="8" fill="#f8fafc" stroke="#64748b"/>
+          <text x="420" y="68" fill="#334155" font-weight="700">G1 交付</text>
+          <text x="420" y="86" fill="#334155">60 分钟 / 1 修改</text>
+          <rect x="520" y="45" width="120" height="52" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+          <text x="580" y="68" fill="#92400e" font-weight="700">G1.5 增量</text>
+          <text x="580" y="86" fill="#92400e">10 例 R/N</text>
+          <rect x="520" y="170" width="120" height="52" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+          <text x="580" y="193" fill="#166534" font-weight="700">B 私有化</text>
+          <text x="580" y="211" fill="#166534">G2 LOI + 安全</text>
+          <rect x="520" y="295" width="120" height="52" rx="8" fill="#dcfce7" stroke="#16a34a"/>
+          <text x="580" y="318" fill="#166534" font-weight="700">G3 续费</text>
+          <text x="580" y="336" fill="#166534">≥1 家续费</text>
+          <rect x="300" y="295" width="140" height="52" rx="8" fill="#fee2e2" stroke="#dc2626"/>
+          <text x="370" y="318" fill="#991b1b" font-weight="700">冻结 / 收窄</text>
+          <text x="370" y="336" fill="#991b1b">研究资产 C</text>
+        </g>
+        <g stroke="#64748b" stroke-width="1.6" fill="none" marker-end="url(#a2)">
+          <line x1="160" y1="71" x2="195" y2="71"/>
+          <line x1="320" y1="71" x2="355" y2="71"/>
+          <line x1="480" y1="71" x2="515" y2="71"/>
+          <line x1="580" y1="97" x2="580" y2="165"/>
+          <line x1="580" y1="222" x2="580" y2="290"/>
+          <line x1="520" y1="196" x2="445" y2="310"/>
+        </g>
+        <text x="480" y="150" font-size="10" fill="#64748b">G1.5 过</text>
+        <text x="455" y="255" font-size="10" fill="#64748b">G1.5 不过</text>
+        <text x="580" y="268" font-size="10" fill="#64748b">G2 过</text>
+      </svg>
+    </div>
+    <figcaption><b>图 6</b> 决策树：D → A → G1 → G1.5 → B → G2 → G3。G1.5 不过，直接冻结或收窄，不进入私有化。</figcaption>
+  </figure>
+
+  <h2>7.4 停止条件与退出</h2>
+  <ul>
+    <li><b>G1 连续两次不过：</b>停止开源推广，回到适配层与样本质量；不做销售。</li>
+    <li><b>G1.5 连续两次不过：</b>冻结为研究资产 C；保留报告与规范，不保留商业承诺。</li>
+    <li><b>G2 没有 LOI：</b>降级为咨询 / 研究合作；不做私有化产线。</li>
+    <li><b>G3 没有续费：</b>停止扩张；保留 1–2 个深度客户，转做定制证据包。</li>
+  </ul>
+
+  <h2>7.5 未来 7 天做什么</h2>
+  <ul class="checklist">
+    <li>发布研究报告与 R/N 协议草案；邀请 3 个外部评审，不买流量。</li>
+    <li>建 `evidence/` 模板：账本、原像、版本、拒收日志、外部验证结果。</li>
+    <li>从现有报告挑 10 个失败样本 + 10 个留出样本，冻结清单。</li>
+    <li>写 G1.5 的预注册判据：主指标、假修复率、盲评方式、反臂 A/B。</li>
+    <li>做一次内部 dry run：非作者同事 60 分钟产出证据包；记录卡点。</li>
+    <li>准备 3 个复盘工作坊问题，不做产品演示。</li>
+    <li>把“闭环 / 30 分钟 / 防线 / 合规认证”四个词从对外材料里删掉。</li>
+  </ul>
+
+  <h2>7.6 前六个月不要做</h2>
+  <table class="tbl">
+    <thead><tr><th style="width:34%">不要做</th><th>原因</th></tr></thead>
+    <tbody>
+      <tr><td>托管按次服务</td><td>隐私、留存、运维成本高；与定位冲突</td></tr>
+      <tr><td>合规认证声明</td><td>第 12 条是记录义务，不是认证；说错会失去信任</td></tr>
+      <tr><td>“闭环已通”叙事</td><td>R/N 未跑；严格双臂 FAIL</td></tr>
+      <tr><td>“30 分钟接入”承诺</td><td>非作者真人未验证；改为 60 分钟证据包目标</td></tr>
+      <tr><td>给 v1 加字段</td><td>v1 冻结；版本/拒收放链外，避免破坏判据表</td></tr>
+      <tr><td>投放 / 买流量</td><td>类别未验证；先换外部复核与真实使用</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ================= CH 8 ================= -->
+<section class="chapter" id="ch8">
+  <div class="chap-kicker">Chapter 08</div>
+  <h1><span class="num">08</span>定价与单位经济</h1>
+
+  <div class="chap-q">
+    <b>问题：</b>证据包按什么计价？为什么不能按 seat / span / token？单位经济在什么条件下成立？
+  </div>
+
+  <h2>8.1 计价单位：证据包，不是调用量</h2>
+  <p>
+    可观测性平台按 seat、span 或数据量计价 [16][17][19][20]；评测平台按 experiment / 样本量计价 [18]。
+    证据包的价值不在“记录了多少”，而在“能不能支撑一次修改、能不能回滚、能不能对外披露”。因此计价单位应是
+    <b>“每年证据包订阅”</b>或<b>“每次可复核修改”</b>，而不是 seat / span / token。按调用量卖，会把证据层拉进可观测性的价格战；
+    按人头卖，会把价值锚在“人头”而不是“风险”。
+  </p>
+
+  <h2>8.2 价格梯子</h2>
+  <table class="tbl">
+    <caption><b>表 9</b> 价格梯子（C 级规划值，不是报价单）</caption>
+    <thead><tr><th style="width:18%">层级</th><th style="width:22%">价格</th><th style="width:30%">包含</th><th>适用</th></tr></thead>
+    <tbody>
+      <tr><td><b>社区版</b></td><td>免费</td><td>适配器 + 证据包模板 + 单机账本</td><td>个人 / 开源项目 / 评估</td></tr>
+      <tr><td><b>团队版</b></td><td>1.5–3.0 万美元 / 年</td><td>3–5 个证据包 / 月；邮件支持；升级</td><td>已有 trace 的 AI 平台团队</td></tr>
+      <tr><td><b>证据包版</b></td><td>4–8 万美元 / 年</td><td>私有化部署；SBOM / DPA；安全审查；季度复盘</td><td>受监管 / 高事故成本</td></tr>
+      <tr><td><b>试点</b></td><td>3–5 千美元 / 6 周</td><td>1 个场景；1 个证据包；1 次修改复盘</td><td>G2 前的付费验证</td></tr>
+      <tr><td><b>支持加购</b></td><td>1–2 万美元 / 年</td><td>专属支持；审计陪同；每季演练</td><td>证据包版客户</td></tr>
+    </tbody>
+  </table>
+
+  <h2>8.3 单位经济：支持天数是生死线</h2>
+  <p>
+    证据包不是纯软件：私有化部署、安全审查、审计陪同都要人力。按团队版 ARPU 1.8 万美元、年支持 3 天、每天成本 800 美元估算，
+    COGS 约 2,400 美元，毛利率约 87%；证据包版 ARPU 6 万美元、年支持 10 天、每天 800 美元，COGS 约 8,000 美元，毛利率约 87%。
+    如果支持天数翻倍，毛利率会掉到 75% 以下；如果客户要求 7×24 响应，单位经济不成立。
+  </p>
+  <table class="tbl">
+    <thead><tr><th>指标</th><th class="num">团队版</th><th class="num">证据包版</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>ARPU / 年</td><td class="num">18,000</td><td class="num">60,000</td><td>C 级假设</td></tr>
+      <tr><td>支持天数 / 年</td><td class="num">3</td><td class="num">10</td><td>部署 + 审计陪同</td></tr>
+      <tr><td>COGS / 年</td><td class="num">2,400</td><td class="num">8,000</td><td>800 / 天</td></tr>
+      <tr><td>毛利率</td><td class="num">87%</td><td class="num">87%</td><td>不含 CAC</td></tr>
+      <tr><td>CAC</td><td class="num">9,000</td><td class="num">20,000</td><td>内容 + 工作坊 + 试点</td></tr>
+      <tr><td>回本周期</td><td class="num">≈7 个月</td><td class="num">≈5 个月</td><td>按毛利计</td></tr>
+      <tr><td>年流失</td><td class="num">15%</td><td class="num">10%</td><td>私有化粘性更高</td></tr>
+      <tr><td>LTV（毛利 / 流失）</td><td class="num">≈104,000</td><td class="num">≈522,000</td><td>不含支持扩容</td></tr>
+    </tbody>
+  </table>
+
+  <h2>8.4 定价风险与规则</h2>
+  <ul>
+    <li><b>平台捆绑：</b>可观测性平台把证据功能打包，价格被压到“功能价”；对策是卖“跨平台 + 可披露 + 可回滚”，不卖单点功能。</li>
+    <li><b>买家拿日志存储比价：</b>证据包不是存储；报价时把“一次事故复盘的成本”作为锚，不用 GB 单价。</li>
+    <li><b>采购上限：</b>团队版落在 2 万美元以内，绕过部分审批；证据包版走安全预算。</li>
+    <li><b>折扣纪律：</b>试点可以打折，年度不送私有化；不做终身买断。</li>
+  </ul>
+
+  <h2>8.5 定价结论</h2>
+  <p>
+    价格锚在“证据”，不在“量”。团队版 1.5–3.0 万美元 / 年负责获客；证据包版 4–8 万美元 / 年负责收入；试点 3–5 千美元 / 6 周负责验证。
+    如果客户只愿意按 span 付费，说明他买的是可观测性，不是证据包；这类客户应转给平台，不进入销售漏斗。
+  </p>
+</section>
+<!-- ================= CH 9 ================= -->
+<section class="chapter" id="ch9">
+  <div class="chap-kicker">Chapter 09</div>
+  <h1><span class="num">09</span>风险登记与红队</h1>
+
+  <div class="chap-q">
+    <b>问题：</b>这条路会怎么死？哪些风险是“发生了就停”，哪些只是“发生了就贵”？红队最可能从哪两个点打穿叙事？
+  </div>
+
+  <h2>9.1 风险登记</h2>
+  <p>
+    下表只登记会改变进入决策的风险，不登记一般经营风险。概率与影响是 C 级判断，依据是 v1 的竞品与预算研究、上一轮记录面审计，以及本轮对 R/N 证据缺口的复核；
+    它不是统计估计，不能读成“发生概率 40%”这样的精确值。等级 = 概率 × 影响，用于排序，不用于精算。
+  </p>
+  <table class="tbl">
+    <caption><b>表 10</b> 风险登记：触发信号、等级与早期动作</caption>
+    <thead><tr><th style="width:7%">ID</th><th style="width:27%">风险</th><th style="width:26%">触发信号</th><th style="width:8%">概率</th><th style="width:8%">影响</th><th>早期动作</th></tr></thead>
+    <tbody>
+      <tr class="danger-row"><td><b>R1</b></td><td>可观测性 / 评测平台把“证据包”打包进现有产品</td><td>头部平台发布 trace + 修改审计的同屏功能；报价单出现“证据”条目</td><td>高</td><td>高</td><td>转做跨平台签收层；不与之比追踪深度</td></tr>
+      <tr class="danger-row"><td><b>R2</b></td><td>R/N 双臂量不出增量，价值来自验证器而非记录</td><td>G1.5 的 R 臂通过率未超过 N 臂 +20 个百分点</td><td>中</td><td>高</td><td>冻结商业承诺；收窄为“验证器 + 轻量记录”</td></tr>
+      <tr class="danger-row"><td><b>R3</b></td><td>证据缺口：无产物原像、无版本三元组、拒收不计数</td><td>外部复现时无法回答“改的是哪个产物、哪版判据”</td><td>高</td><td>高</td><td>先补链外证据包；不在 v1 账本里加字段</td></tr>
+      <tr><td><b>R4</b></td><td>买家自建：平台团队用现有 trace + Git 拼一个够用的版本</td><td>POC 会上客户说“这些字段我们已有，只差一个报告模板”</td><td>中</td><td>高</td><td>卖规范与复核，不卖“唯一实现”；降低部署门槛</td></tr>
+      <tr><td><b>R5</b></td><td>隐私与留存：证据包含 prompt / 工具输出，触发数据合规审查</td><td>安全审查要求删除原始内容或只留哈希</td><td>中</td><td>高</td><td>默认最小化留存；原像加密与脱敏；提供“仅哈希”档</td></tr>
+      <tr><td><b>R6</b></td><td>账本可被整本替换：load_journal 默认可换账，read_back 不返回指纹</td><td>演示中被问“怎么证明你给我看的是原来那本”</td><td>中</td><td>中</td><td>证据包内置链头指纹与外部时间戳；不宣称防内部人</td></tr>
+      <tr><td><b>R7</b></td><td>法律过度承诺：把“记录义务”说成“合规认证”</td><td>客户法务要求出具“符合 EU AI Act 第 12 条”的证明</td><td>中</td><td>高</td><td>统一措辞：支持记录义务，不构成合规认证</td></tr>
+      <tr><td><b>R8</b></td><td>创始人依赖：协议、实现、写作、销售都在一个人身上</td><td>关键路径上任何一周无人接手</td><td>高</td><td>中</td><td>先写规范与 10 例样本；找 1 个外部维护者</td></tr>
+      <tr><td><b>R9</b></td><td>功能商品化：证据包被压成“报告模板”，价格战</td><td>竞品按“每份报告”报价，低至几百美元</td><td>高</td><td>中</td><td>锚定事故成本与审计陪同；不按报告份数卖</td></tr>
+      <tr><td><b>R10</b></td><td>适配层依赖平台开放性：semconv / 导出格式变化</td><td>OTel GenAI 字段再次改名；平台收紧导出</td><td>中</td><td>中</td><td>双写字段；适配器做版本矩阵；保留文件导入后备</td></tr>
+      <tr><td><b>R11</b></td><td>试点转付费失败：客户认可证据，但预算科目不存在</td><td>试点结束 60 天无采购流程启动</td><td>中</td><td>高</td><td>G0 就要求预算科目；否则只做研究合作</td></tr>
+      <tr><td><b>R12</b></td><td>声誉风险：对外说“闭环已通”，被外部复现打穿</td><td>外部团队按公开材料复现失败并公开</td><td>低</td><td>高</td><td>所有对外材料标注 NOT_RUN；先发布负结果</td></tr>
+    </tbody>
+  </table>
+
+  <h2>9.2 风险热图</h2>
+  <figure>
+    <div class="pad">
+      <svg viewBox="0 0 760 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="风险热图">
+        <rect x="0" y="0" width="760" height="470" fill="#ffffff"/>
+        <g font-size="10" fill="#475569">
+          <text x="360" y="22" text-anchor="middle" font-size="11" font-weight="700" fill="#0b1f33">影响 →</text>
+          <text x="22" y="230" text-anchor="middle" font-size="11" font-weight="700" fill="#0b1f33" transform="rotate(-90 22 230)">概率</text>
+        </g>
+        <!-- 5x5 grid: x0=120, y0=40, cell 96x72 -->
+        <g stroke="#ffffff" stroke-width="2">
+          <!-- row p=5 -->
+          <rect x="120" y="40" width="96" height="72" fill="#fef9c3"/><rect x="216" y="40" width="96" height="72" fill="#fed7aa"/><rect x="312" y="40" width="96" height="72" fill="#fecaca"/><rect x="408" y="40" width="96" height="72" fill="#fca5a5"/><rect x="504" y="40" width="96" height="72" fill="#f87171"/>
+          <!-- row p=4 -->
+          <rect x="120" y="112" width="96" height="72" fill="#f0fdf4"/><rect x="216" y="112" width="96" height="72" fill="#fef9c3"/><rect x="312" y="112" width="96" height="72" fill="#fed7aa"/><rect x="408" y="112" width="96" height="72" fill="#fecaca"/><rect x="504" y="112" width="96" height="72" fill="#fca5a5"/>
+          <!-- row p=3 -->
+          <rect x="120" y="184" width="96" height="72" fill="#f0fdf4"/><rect x="216" y="184" width="96" height="72" fill="#f0fdf4"/><rect x="312" y="184" width="96" height="72" fill="#fef9c3"/><rect x="408" y="184" width="96" height="72" fill="#fed7aa"/><rect x="504" y="184" width="96" height="72" fill="#fecaca"/>
+          <!-- row p=2 -->
+          <rect x="120" y="256" width="96" height="72" fill="#f0fdf4"/><rect x="216" y="256" width="96" height="72" fill="#f0fdf4"/><rect x="312" y="256" width="96" height="72" fill="#f0fdf4"/><rect x="408" y="256" width="96" height="72" fill="#fef9c3"/><rect x="504" y="256" width="96" height="72" fill="#fed7aa"/>
+          <!-- row p=1 -->
+          <rect x="120" y="328" width="96" height="72" fill="#f0fdf4"/><rect x="216" y="328" width="96" height="72" fill="#f0fdf4"/><rect x="312" y="328" width="96" height="72" fill="#f0fdf4"/><rect x="408" y="328" width="96" height="72" fill="#f0fdf4"/><rect x="504" y="328" width="96" height="72" fill="#fef9c3"/>
+        </g>
+        <g font-size="9" fill="#64748b" text-anchor="middle">
+          <text x="168" y="418">很低</text><text x="264" y="418">低</text><text x="360" y="418">中</text><text x="456" y="418">高</text><text x="552" y="418">很高</text>
+        </g>
+        <g font-size="9" fill="#64748b" text-anchor="end">
+          <text x="110" y="368">很低</text><text x="110" y="296">低</text><text x="110" y="224">中</text><text x="110" y="152">高</text><text x="110" y="80">很高</text>
+        </g>
+        <!-- points: jittered inside their rated cells -->
+        <g font-size="9" font-weight="700">
+          <circle cx="450" cy="154" r="10" fill="#991b1b"/><text x="450" y="157" text-anchor="middle" fill="#ffffff">R1</text>
+          <circle cx="480" cy="128" r="10" fill="#991b1b"/><text x="480" y="131" text-anchor="middle" fill="#ffffff">R3</text>
+          <circle cx="440" cy="200" r="10" fill="#b45309"/><text x="440" y="203" text-anchor="middle" fill="#ffffff">R2</text>
+          <circle cx="472" cy="212" r="10" fill="#b45309"/><text x="472" y="215" text-anchor="middle" fill="#ffffff">R4</text>
+          <circle cx="460" cy="240" r="10" fill="#b45309"/><text x="460" y="243" text-anchor="middle" fill="#ffffff">R5</text>
+          <circle cx="428" cy="240" r="10" fill="#b45309"/><text x="428" y="243" text-anchor="middle" fill="#ffffff">R11</text>
+          <circle cx="490" cy="230" r="10" fill="#b45309"/><text x="490" y="233" text-anchor="middle" fill="#ffffff">R7</text>
+          <circle cx="344" cy="228" r="10" fill="#15803d"/><text x="344" y="231" text-anchor="middle" fill="#ffffff">R6</text>
+          <circle cx="344" cy="136" r="10" fill="#15803d"/><text x="344" y="139" text-anchor="middle" fill="#ffffff">R8</text>
+          <circle cx="376" cy="160" r="10" fill="#b45309"/><text x="376" y="163" text-anchor="middle" fill="#ffffff">R9</text>
+          <circle cx="376" cy="212" r="10" fill="#15803d"/><text x="376" y="215" text-anchor="middle" fill="#ffffff">R10</text>
+          <circle cx="456" cy="292" r="10" fill="#b45309"/><text x="456" y="295" text-anchor="middle" fill="#ffffff">R12</text>
+        </g>
+        <g font-size="9" fill="#475569">
+          <text x="120" y="450">红：先处理；橙：设触发条件；绿：监控即可。R1 / R3 在“高影响 × 高概率”，R9 是高概率 × 中影响。</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>图 7</b> 风险热图（C 级判断，不是统计估计）。R1、R3 为最高优先，R9 次之；R2 决定是否继续商业化；R6 是演示中最容易被问倒的一点。</figcaption>
+  </figure>
+
+  <h2>9.3 三条红线</h2>
+  <div class="callout danger">
+    <div class="t">红线一：不把审计层说成防线</div>
+    <p>
+      agentkernel 不拦截、不调度、不联网、不执行工具。它能证明“记录未被改”，不能证明“攻击被挡住”。
+      对外材料必须把“审计”“验链”“读回”和“防护”分开写；否则第一次真实事故就会暴露预期错位。
+    </p>
+  </div>
+  <div class="callout danger">
+    <div class="t">红线二：不把“记录完整”说成“内容为真”</div>
+    <p>
+      A1 注入实测已经证明：链可以全通过，内容仍然不可信 [30]。证据包必须携带“谁生成、什么版本、有没有外部验证器、拒收了多少”，
+      否则客户会把“账本通过 verify”误读成“结论可信”。
+    </p>
+  </div>
+  <div class="callout danger">
+    <div class="t">红线三：不在 R/N 未跑前说“闭环已通”</div>
+    <p>
+      严格双臂仍是 FAIL，`declare_reader` 拒收六桶全 0，真人臂 NOT_RUN。Gate 1.5 之前，所有对外表述只能是
+      “条件可复核的修改证据”，不能是“记录驱动的自动改进”。
+    </p>
+  </div>
+
+  <h2>9.4 红队：最可能被打穿的两条</h2>
+  <p>
+    <b>第一条：买家自建。</b>红队会说：“我有 OTel、有 Git、有 CI，为什么还要买你？”如果回答是“我的链更完整”，
+    这条防线很薄；如果回答是“我能把产物原像、行为/判据版本、拒收计数和外部验证结果装成一个可披露、可回滚的证据包，
+    并且换一个平台也能复核”，才有得谈。也就是说，卖点必须是<strong>跨平台的证据规范与复核流程</strong>，不是单点记账。
+  </p>
+  <p>
+    <b>第二条：平台打包。</b>红队会说：“LangSmith / Langfuse 加一个‘修改审计’标签页就做完了。”这在追踪深度上确实成立。
+    本报告的应对不是否认，而是换战场：平台记录“发生了什么”，证据包回答“这次修改凭什么算数、失败样本有没有被挑掉、换个人能不能复核”。
+    这两件事相关，但不是同一件；如果平台把这件也做了，本路线应退回到研究/标准，不硬拼产品。
+  </p>
+
+  <h2>9.5 风险结论</h2>
+  <p>
+    最危险的不是“没有需求”，而是<b>需求被满足到 60% 时，客户认为剩下的 40% 不值得单独付费</b>。R1 与 R4 都指向这一点。
+    因此本报告把商业化的前置条件放在“外部复核 + 跨平台可复核 + 事故成本可量化”三件事上，而不是放在功能清单上。
+    R3 是唯一必须在写第一行销售材料之前解决的技术风险：没有原像、版本与拒收计数，证据包就退化成日志导出。
+  </p>
+</section>
+
+<!-- ================= CH 10 ================= -->
+<section class="chapter" id="ch10">
+  <div class="chap-kicker">Chapter 10</div>
+  <h1><span class="num">10</span>实施路线图（26 周）</h1>
+
+  <div class="chap-q">
+    <b>问题：</b>26 周里每周做什么？哪些里程碑是硬约束？哪些工作必须等闸门通过才启动？
+  </div>
+
+  <h2>10.1 路线总览</h2>
+  <p>
+    路线按“研究 → 适配层 → 双臂 → 私有化”四段推进，闸门嵌在段与段之间。D 与 A 可以部分并行（报告写作与适配器原型），
+    但 A 的公开发布必须等 D 的 R/N 协议定稿；G1.5 在样本冻结后启动（第 10 周），与 A 的文档收尾并行；B 的准备（非销售动作）在第 15–18 周进行，
+    签约动作等 G2 通过。全部时间以“作者全职 + 一名兼职设计/法务支持”为前提；
+    如果只有作者一人且每周不足 30 小时，26 周应拉长到 36–40 周，闸门日期按周顺延，不压缩验证。
+  </p>
+
+  <figure>
+    <div class="pad">
+      <svg viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="26 周路线图">
+        <rect x="0" y="0" width="760" height="360" fill="#ffffff"/>
+        <g font-size="9" fill="#64748b">
+          <line x1="120" y1="290" x2="720" y2="290" stroke="#94a3b8"/>
+          <g stroke="#e2e8f0">
+            <line x1="120" y1="60" x2="120" y2="290"/><line x1="212" y1="60" x2="212" y2="290"/><line x1="304" y1="60" x2="304" y2="290"/><line x1="396" y1="60" x2="396" y2="290"/><line x1="488" y1="60" x2="488" y2="290"/><line x1="580" y1="60" x2="580" y2="290"/><line x1="672" y1="60" x2="672" y2="290"/><line x1="720" y1="60" x2="720" y2="290"/>
+          </g>
+          <text x="120" y="308" text-anchor="middle">W0</text><text x="212" y="308" text-anchor="middle">W4</text><text x="304" y="308" text-anchor="middle">W8</text><text x="396" y="308" text-anchor="middle">W12</text><text x="488" y="308" text-anchor="middle">W16</text><text x="580" y="308" text-anchor="middle">W20</text><text x="672" y="308" text-anchor="middle">W24</text><text x="720" y="308" text-anchor="middle">W26</text>
+        </g>
+        <!-- bars: week width = 23.08 px (600/26) -->
+        <g font-size="10" font-weight="700">
+          <text x="112" y="88" text-anchor="end" fill="#0f766e">D 研究出版</text>
+          <rect x="120" y="72" width="138" height="24" rx="4" fill="#ccfbf1" stroke="#0f766e"/>
+          <text x="189" y="88" text-anchor="middle" fill="#0f766e">1–6 周</text>
+
+          <text x="112" y="128" text-anchor="end" fill="#1e40af">A 证据适配层</text>
+          <rect x="258" y="112" width="185" height="24" rx="4" fill="#dbeafe" stroke="#2563eb"/>
+          <text x="350" y="128" text-anchor="middle" fill="#1e40af">7–14 周</text>
+
+          <text x="112" y="168" text-anchor="end" fill="#92400e">G1.5 R/N 双臂</text>
+          <rect x="328" y="152" width="69" height="24" rx="4" fill="#fef3c7" stroke="#d97706"/>
+          <text x="362" y="168" text-anchor="middle" fill="#92400e">10–13 周</text>
+
+          <text x="112" y="208" text-anchor="end" fill="#166534">B 私有化（准备 + 交付）</text>
+          <rect x="443" y="192" width="92" height="24" rx="4" fill="#dcfce7" stroke="#16a34a" opacity="0.55"/>
+          <text x="489" y="208" text-anchor="middle" font-size="10" fill="#166534">15–18 周</text>
+          <rect x="535" y="192" width="185" height="24" rx="4" fill="#dcfce7" stroke="#16a34a"/>
+          <text x="627" y="208" text-anchor="middle" font-size="10" fill="#166534">19–26 周（交付）</text>
+
+          <text x="112" y="248" text-anchor="end" fill="#64748b">G3 续费观察</text>
+          <rect x="672" y="232" width="48" height="24" rx="4" fill="#e2e8f0" stroke="#64748b"/>
+        </g>
+        <!-- milestones -->
+        <g>
+          <polygon points="212,44 220,52 212,60 204,52" fill="#0f766e"/>
+          <text x="212" y="36" text-anchor="middle" font-size="9" fill="#0f766e">G0 D30</text>
+          <polygon points="318,44 326,52 318,60 310,52" fill="#2563eb"/>
+          <text x="330" y="36" text-anchor="middle" font-size="9" fill="#2563eb">G1 D60</text>
+          <polygon points="417,44 425,52 417,60 409,52" fill="#d97706"/>
+          <text x="430" y="36" text-anchor="middle" font-size="9" fill="#92400e">G1.5 D90</text>
+          <polygon points="515,44 523,52 515,60 507,52" fill="#16a34a"/>
+          <text x="528" y="36" text-anchor="middle" font-size="9" fill="#166534">G2 D120</text>
+          <polygon points="713,44 721,52 713,60 705,52" fill="#64748b"/>
+          <text x="713" y="36" text-anchor="middle" font-size="9" fill="#475569">G3 D180</text>
+        </g>
+        <g font-size="9" fill="#475569">
+          <text x="120" y="338">硬约束：A 未过 G1，不开放下载；G1.5 未过，不启动 B；G2 未过，不做私有化产线。</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>图 8</b> 26 周路线：D（1–6 周）→ A（7–14 周）；G1.5 在样本冻结后启动（10–13 周，第 90 天判定）；B 准备 15–18 周，交付 19–26 周。G3 在第 180 天观察续费，不延长路线。</figcaption>
+  </figure>
+
+  <h2>10.2 分阶段交付物</h2>
+  <h3>阶段 D（第 1–6 周）：研究出版</h3>
+  <ul>
+    <li><b>第 1 周：</b>冻结 R/N 协议 v0.1（分组、留出集、主指标、假修复率、反臂 A/B、盲评方式）；冻结 20 例样本清单（10 例修改 + 10 例留出）。</li>
+    <li><b>第 2–3 周：</b>写研究稿：负结果、记录面审计、证据包规范草案；把“闭环 / 30 分钟 / 防线 / 合规认证”四个词从旧材料中清除。</li>
+    <li><b>第 4 周：</b>G0：10 次访谈；至少 3 个真实触发（事故复盘 / 审计 / 行为变更）；至少 1 个 POC 志愿者；至少 1 个预算科目。</li>
+    <li><b>第 5 周：</b>3 个外部评审；根据意见修订协议；发布负结果与规范草案；不做产品演示。</li>
+    <li><b>第 6 周：</b>复盘 G0；如果触发不足，延长研究期，不进入 A 的公开推广。</li>
+  </ul>
+
+  <h3>阶段 A（第 7–14 周）：开源证据适配层</h3>
+  <ul>
+    <li><b>第 7–8 周：</b>OTel / LangSmith / Langfuse 三个适配器；统一证据包目录：`ledger/`、`artifacts/`、`versions/`、`refusals/`、`verifier/`、`manifest.json`。</li>
+    <li><b>第 8 周：</b>G1：非作者真人 ≤60 分钟产出 1 个证据包并完成 1 次修改；拒收被计数；链自洽；`sk-` 0 次；调用方模型代码 0 改动。</li>
+    <li><b>第 9–12 周：</b>10 例失败样本 + 10 例留出样本；参考实现；证据包校验器；文档与 3 个工作坊脚本。</li>
+    <li><b>第 13–14 周：</b>3 个非作者团队各自产出 1 个证据包；收集卡点；不追 star / 下载量。</li>
+  </ul>
+
+  <h3>阶段 G1.5（第 10–13 周，第 90 天判定）：R/N 双臂</h3>
+  <ul>
+    <li><b>第 10 周：</b>预注册判据上链外存证；锁定样本与评分脚本；确认反臂 A/B 是叶子任务。</li>
+    <li><b>第 11–12 周：</b>跑 10 例 R 臂 + 10 例 N 臂；记录通过率、假修复率、拒收数；盲评。</li>
+    <li><b>第 13 周：</b>G1.5 判定：R 臂留出集通过率 ≥ N 臂 + 20 个百分点；假修复率不高于 N 臂；反臂按预期失败或拒绝。不过则冻结或收窄。</li>
+  </ul>
+
+  <h3>阶段 B（第 15–18 周准备，第 19–26 周交付）：企业私有化</h3>
+  <ul>
+    <li><b>第 15–16 周：</b>VPC / 本地部署包；SBOM；DPA 模板；责任边界；安全审查问答。此阶段不做销售签约。</li>
+    <li><b>第 17–18 周：</b>G2：2 封 LOI；1 次安全审查通过；材料齐备。未过则降级为咨询 / 研究合作。</li>
+    <li><b>第 19–22 周：</b>2 个付费试点（3–5 千美元 / 6 周）；只做 1 个场景、1 个证据包、1 次修改复盘。</li>
+    <li><b>第 23–26 周：</b>私有化交付与第一个续费路径；G3 在第 180 天观察，不把“签了 LOI”当收入。</li>
+  </ul>
+
+  <h2>10.3 资源与依赖</h2>
+  <table class="tbl">
+    <thead><tr><th style="width:24%">资源</th><th>假设</th><th style="width:30%">缺口与对策</th></tr></thead>
+    <tbody>
+      <tr><td><b>作者时间</b></td><td>全职 26 周；每周 ≥30 小时用于协议、实现、写作</td><td>销售与支持会挤占实现；第 19 周前不接定制</td></tr>
+      <tr><td><b>设计 / 文档</b></td><td>兼职 4 小时 / 周；负责证据包模板与对外材料</td><td>没有则用现有 HTML/CSS 模板，不买设计工具</td></tr>
+      <tr><td><b>法务</b></td><td>按次咨询；DPA / 责任边界 / 合规措辞</td><td>先用律师模板；不自行出具合规意见</td></tr>
+      <tr><td><b>外部评审</b></td><td>3 人；研究 / 安全 / 平台各 1</td><td>用公开邀请，不付费买背书</td></tr>
+      <tr><td><b>试点客户</b></td><td>2 个；已有 trace；有真实触发</td><td>没有则停在 A / G1.5，不进入 B</td></tr>
+    </tbody>
+  </table>
+
+  <h2>10.4 周节律</h2>
+  <ul>
+    <li><b>周一：</b>写本周唯一可验证目标（一个读数，不是一组任务）。</li>
+    <li><b>周三：</b>外部触点：访谈、评审、工作坊，至少 1 次。</li>
+    <li><b>周五：</b>更新证据包与风险登记；记录“本周被推翻的假设”。</li>
+    <li><b>每四周：</b>对照闸门做一次 Go / No-Go；不把“很忙”当进展。</li>
+  </ul>
+</section>
+
+<!-- ================= CH 11 ================= -->
+<section class="chapter" id="ch11">
+  <div class="chap-kicker">Chapter 11</div>
+  <h1><span class="num">11</span>财务情景</h1>
+
+  <div class="chap-q">
+    <b>问题：</b>在“功能市场 + 条件触发”的前提下，三年收入与现金流是什么量级？什么读数出现时应继续、收窄或冻结？
+  </div>
+
+  <h2>11.1 假设与口径</h2>
+  <p>
+    财务模型只覆盖“证据适配层 + 私有化证据包”，不含托管服务、不含融资、不含作者全职人力成本（单列敏感性）。
+    收入按“付费账户 × ARPU”估算，不按调用量；账户数指同时存续的付费客户，不是累计签约数。成本含云资源、法务、设计、差旅与试点支持，
+    不含作者薪酬。所有数字为 C 级规划假设，不是预测；三年累计收入落在 SOM 0.5–4.0 百万美元区间内，基准情景靠近下沿。
+  </p>
+  <ul>
+    <li><b>保守：</b>G1.5 延迟到第 20 周；Y1 无付费；Y2 只有 6 个团队版；Y3 靠证据包版拉到 20 个账户。</li>
+    <li><b>基准：</b>G1.5 在第 18 周通过；Y1 末 1 个付费试点转团队版；Y2 8 个账户；Y3 25 个账户，其中 8 个证据包版。</li>
+    <li><b>乐观：</b>G1.5 一次通过且外部复现带来线索；Y2 12 个账户；Y3 40 个账户，其中 14 个证据包版。</li>
+  </ul>
+
+  <h2>11.2 三情景财务表</h2>
+  <table class="tbl">
+    <caption><b>表 11</b> 三情景财务（千美元；C 级假设，不含作者人力）</caption>
+    <thead><tr><th style="width:28%">指标</th><th class="num">保守</th><th class="num">基准</th><th class="num">乐观</th></tr></thead>
+    <tbody>
+      <tr class="warn-row"><td colspan="4"><b>Y1（第 1 年）</b></td></tr>
+      <tr><td>付费账户（期末）</td><td class="num">0</td><td class="num">1</td><td class="num">1</td></tr>
+      <tr><td>ARPU / 年</td><td class="num">—</td><td class="num">15</td><td class="num">15</td></tr>
+      <tr><td>收入</td><td class="num">0</td><td class="num">15</td><td class="num">15</td></tr>
+      <tr><td>成本</td><td class="num">15</td><td class="num">15</td><td class="num">15</td></tr>
+      <tr><td>净现金流</td><td class="num">-15</td><td class="num">0</td><td class="num">0</td></tr>
+      <tr class="warn-row"><td colspan="4"><b>Y2（第 2 年）</b></td></tr>
+      <tr><td>付费账户（期末）</td><td class="num">6</td><td class="num">8</td><td class="num">12</td></tr>
+      <tr><td>ARPU / 年</td><td class="num">18</td><td class="num">18</td><td class="num">20</td></tr>
+      <tr><td>收入</td><td class="num">108</td><td class="num">144</td><td class="num">240</td></tr>
+      <tr><td>成本</td><td class="num">32</td><td class="num">35</td><td class="num">40</td></tr>
+      <tr><td>净现金流</td><td class="num">76</td><td class="num">109</td><td class="num">200</td></tr>
+      <tr class="warn-row"><td colspan="4"><b>Y3（第 3 年）</b></td></tr>
+      <tr><td>付费账户（期末）</td><td class="num">20</td><td class="num">25</td><td class="num">40</td></tr>
+      <tr><td>ARPU / 年</td><td class="num">20</td><td class="num">20</td><td class="num">22</td></tr>
+      <tr><td>收入</td><td class="num">400</td><td class="num">500</td><td class="num">880</td></tr>
+      <tr><td>成本</td><td class="num">60</td><td class="num">70</td><td class="num">95</td></tr>
+      <tr><td>净现金流</td><td class="num">340</td><td class="num">430</td><td class="num">785</td></tr>
+      <tr class="em-row"><td>三年累计收入</td><td class="num">508</td><td class="num">659</td><td class="num">1,135</td></tr>
+      <tr class="em-row"><td>三年累计净现金流</td><td class="num">401</td><td class="num">539</td><td class="num">985</td></tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <div class="pad">
+      <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="三情景收入柱状图">
+        <rect x="0" y="0" width="760" height="340" fill="#ffffff"/>
+        <g stroke="#e2e8f0">
+          <line x1="90" y1="270" x2="720" y2="270"/><line x1="90" y1="220" x2="720" y2="220"/><line x1="90" y1="170" x2="720" y2="170"/><line x1="90" y1="120" x2="720" y2="120"/><line x1="90" y1="70" x2="720" y2="70"/>
+        </g>
+        <g font-size="9" fill="#64748b" text-anchor="end">
+          <text x="82" y="274">0</text><text x="82" y="224">200</text><text x="82" y="174">400</text><text x="82" y="124">600</text><text x="82" y="74">800</text>
+        </g>
+        <g font-size="10" fill="#475569" text-anchor="middle">
+          <text x="180" y="292">Y1</text><text x="360" y="292">Y2</text><text x="540" y="292">Y3</text>
+          <text x="660" y="292" font-size="9">千美元</text>
+        </g>
+        <!-- scale: 200k = 50px -->
+        <g>
+          <!-- conservative: 0, 108, 400 -->
+          <rect x="145" y="270" width="20" height="0" fill="#94a3b8"/>
+          <rect x="325" y="243" width="20" height="27" fill="#94a3b8"/>
+          <rect x="505" y="170" width="20" height="100" fill="#94a3b8"/>
+          <!-- base: 15, 144, 500 -->
+          <rect x="170" y="266" width="20" height="4" fill="#0f766e"/>
+          <rect x="350" y="234" width="20" height="36" fill="#0f766e"/>
+          <rect x="530" y="145" width="20" height="125" fill="#0f766e"/>
+          <!-- optimistic: 15, 240, 880 -->
+          <rect x="195" y="266" width="20" height="4" fill="#f59e0b"/>
+          <rect x="375" y="210" width="20" height="60" fill="#f59e0b"/>
+          <rect x="555" y="50" width="20" height="220" fill="#f59e0b"/>
+        </g>
+        <g font-size="9" fill="#334155" text-anchor="middle">
+          <text x="180" y="262">15</text><text x="360" y="228">144</text><text x="540" y="139">500</text>
+          <text x="335" y="237">108</text><text x="515" y="164">400</text>
+          <text x="385" y="204">240</text><text x="565" y="44">880</text>
+        </g>
+        <g font-size="9">
+          <rect x="470" y="312" width="10" height="10" fill="#94a3b8"/><text x="486" y="321" fill="#475569">保守</text>
+          <rect x="540" y="312" width="10" height="10" fill="#0f766e"/><text x="556" y="321" fill="#475569">基准</text>
+          <rect x="610" y="312" width="10" height="10" fill="#f59e0b"/><text x="626" y="321" fill="#475569">乐观</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>图 9</b> 三情景收入（千美元）。保守 Y1 为 0；基准三年累计 65.9 万美元，乐观 113.5 万美元。基准落在 SOM 下沿，不构成高增长预测。</figcaption>
+  </figure>
+
+  <h2>11.3 盈亏平衡与敏感性</h2>
+  <p>
+    不含作者人力时，基准情景在 Y1 打平、Y2 转正；保守情景 Y1 小亏、Y2 转正。若把作者全职成本按 8 万美元 / 年计入，
+    基准三年累计净现金流从 53.9 万美元降到 29.9 万美元，Y2 才接近打平（+2.9 万美元）；保守三年累计约 16.1 万美元，
+    Y2 仍为 -0.4 万美元；乐观三年累计约 74.5 万美元。结论是：<b>这门生意能养活一个小团队，但不能在没有外部收入的情况下长期全职投入。</b>
+  </p>
+  <table class="tbl">
+    <thead><tr><th style="width:30%">敏感性</th><th>变化</th><th>对基准的影响</th></tr></thead>
+    <tbody>
+      <tr><td>账户数</td><td>Y2 / Y3 各少 30%</td><td>三年累计收入从 65.9 万降到约 46 万；Y3 净现金流降到约 28 万</td></tr>
+      <tr><td>ARPU</td><td>整体下调 20%</td><td>三年累计收入降到约 52.7 万；毛利率不变，回本周期拉长约 2 个月</td></tr>
+      <tr><td>支持天数</td><td>证据包版从 10 天增到 20 天</td><td>COGS 从 0.8 万增到 1.6 万；毛利率降到约 73%</td></tr>
+      <tr><td>流失率</td><td>团队版从 15% 升到 25%</td><td>LTV 从约 10.4 万降到约 6.2 万；CAC 回本仍需约 7 个月</td></tr>
+      <tr><td>G1.5 延迟</td><td>推迟 8 周</td><td>Y1 收入归零；基准三年累计收入减少约 1.5 万，B 的启动整体后移</td></tr>
+    </tbody>
+  </table>
+
+  <h2>11.4 继续 / 收窄 / 冻结</h2>
+  <div class="callout">
+    <div class="t">财务判据（与 Gate 分开记）</div>
+    <p>
+      <b>继续：</b>G1.5 通过，且 Y2 至少 4 个付费账户、收入 ≥7 万美元、支持天数中位数 ≤5 天 / 户。
+      <b>收窄：</b>G1.5 通过但付费账户 &lt;4，转为“验证器 + 证据包模板”的小规模交付，停止招揽私有化。
+      <b>冻结：</b>G1.5 连续两次不过，或 Y2 结束时付费账户 ≤1 且无续费；保留研究资产与规范，停止商业承诺。
+    </p>
+  </div>
+  <p>
+    这张表最重要的不是数字，而是口径：收入只算付费账户，不把 LOI、试点意向、star 数折算成收入；成本不含作者人力，避免把“不领工资”误读成“盈利”；
+    三年累计收入低于 70 万美元，说明它不是平台级机会。如果目标是十亿美元级公司，这条路线不该选；如果目标是让“可复核的修改证据”成为一类可复用的做法，
+    并养活 1–3 人的小团队，它在基准情景下成立。
+  </p>
+</section>
+
+<!-- ================= CH 12 ================= -->
+<section class="chapter" id="ch12">
+  <div class="chap-kicker">Chapter 12</div>
+  <h1><span class="num">12</span>结论</h1>
+
+  <p class="lede">
+    以“证据适配层”的方式面对市场，不以“平台”的方式；以“研究 + 开源”换取外部复核，不以“发布即推广”换取流量；
+    以“证据成立后再收费”约束私有化，不以“先卖再做”换取短期收入。
+  </p>
+
+  <h2>12.1 直接回答</h2>
+  <div class="callout">
+    <div class="t">D + A 先行；B 条件触发；C 不做；E 可选</div>
+    <p>
+      <b>D（研究出版）</b>第一，因为“执行记录能否支撑二次修改”还没有被外部复核；先把负结果、R/N 协议与证据包规范公开，换取 3 个评审与 1 个真实触发。
+      <b>A（开源证据适配层）</b>第二，交付的不是又一个账本，而是把账本、产物原像、行为/判据版本、拒收计数与外部验证器装进可复核的证据包。
+      <b>B（企业私有化）</b>只在 Gate 1.5（R/N 双臂）与 Gate 2（LOI + 安全审查）都通过后启动，先卖 3–5 千美元试点，再谈 4–8 万美元证据包版。
+      <b>C（托管按次）</b>不做：隐私、留存、跨境与运维成本同时上升，且与“不执行工具”的定位冲突。<b>E（竞赛/生态）</b>可选，放在 A 之后，不单独立项。
+    </p>
+  </div>
+
+  <h2>12.2 三条不许越过的前提</h2>
+  <ol>
+    <li><b>R/N 没有增量，就不卖“记录驱动改进”。</b>可以卖验证器、证据包模板与复盘服务，但不能把“看记录再改”写成产品能力。</li>
+    <li><b>没有原像、版本与拒收计数，就不叫证据包。</b>只有账本，客户买到的是日志导出；这三样必须在链外补齐，且可被外部复核。</li>
+    <li><b>没有外部复核，就不进入私有化。</b>Gate 1.5 与 Gate 2 是商业化的前置条件，不是“以后再说”的改进项。</li>
+  </ol>
+
+  <h2>12.3 如果只做一件事</h2>
+  <p>
+    未来 7 天只做一件事：<b>把 R/N 协议冻结，并从现有材料里挑出 10 个修改样本 + 10 个留出样本。</b>
+    没有这两组样本，Gate 1.5 无法开始；没有 Gate 1.5，B 的销售材料写了也会被一条读数打穿。
+    协议与样本清单不需要新代码，只需要把已发生过的修改逐条编号、补上产物原像与判据版本；这是当前成本最低、信息量最大的一步。
+  </p>
+
+  <h2>12.4 什么会改变这个结论</h2>
+  <ul>
+    <li><b>G1.5 出现明显增量：</b>R 臂留出集通过率显著高于 N 臂，且假修复率不升；此时可以提高对 B 的投入，甚至考虑 C 的轻量托管。</li>
+    <li><b>买家愿意为“可复核”单独设预算科目：</b>SAM 与 ARPU 应上调；本报告的“功能市场”判断需要修订。</li>
+    <li><b>头部平台把证据包做成标准功能：</b>A 应退回为规范与适配器，B 不做；项目转为研究 / 标准资产。</li>
+    <li><b>外部复现连续失败：</b>停止对外推广；先修证据包，不修叙事。</li>
+  </ul>
+
+  <div class="callout warn">
+    <div class="t">最后一句</div>
+    <p>
+      这个项目的市场价值，不取决于账本有多完整，而取决于<b>一个外部团队能否在 60 分钟内，用你的证据包复核一次真实修改，并得出与你相同的结论</b>。
+      在这一点被证明之前，最诚实的市场姿态是研究出版与开源适配层，而不是平台销售。
+    </p>
+  </div>
+</section>
+<!-- ================= APPENDIX A ================= -->
+<section class="chapter appendix" id="appA">
+  <div class="chap-kicker">Appendix A</div>
+  <h1><span class="num">A</span>方法与证据分级</h1>
+
+  <h2>A.1 研究问题与范围</h2>
+  <p>
+    本报告回答一个决策问题：在“账本完整性已验证、但记录驱动二次修改尚未实证”的前提下，agentkernel 应以哪种方式面对市场。
+    范围限定为：产品叙事、进入方式、进入门槛、定价与三年财务；不重新做 v1 的市场规模调查，不评估内核代码质量，不评价模型能力。
+    市场数据沿用 v1（2026-10-19）；记录面事实来自 2026-10-19 至 10-20 的本机复算；外部文献用于校验“记录 → 修改”的因果链，不用于证明产品有效。
+  </p>
+
+  <h2>A.2 证据分级</h2>
+  <table class="tbl">
+    <thead><tr><th style="width:8%">等级</th><th style="width:38%">判据</th><th>本报告中的典型用法</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag tag-a">A</span></td><td>工具自印 + 独立复算；或两个独立来源逐字对上</td><td>账本 2,940 条、链 2,940/2,940、封板 78 针、外部 6 发对账</td></tr>
+      <tr><td><span class="tag tag-b">B</span></td><td>单一来源自印，未独立复算</td><td>单次运行读数、单一内部文件</td></tr>
+      <tr><td><span class="tag tag-c">C</span></td><td>作者复算 / 规划假设，无原始件</td><td>SAM / SOM、ARPU、成本、三情景财务、闸门天数</td></tr>
+      <tr><td><span class="tag tag-d">D</span></td><td>外部公开资料，注明访问日</td><td>市场规模、竞品价格、法规、OTel semconv</td></tr>
+      <tr><td><span class="tag tag-x">X</span></td><td>不可核 / 未验证</td><td>R/N 双臂、真人臂、30 分钟、闭环、内容可信</td></tr>
+    </tbody>
+  </table>
+  <p class="small">
+    使用规则：X 级不得写成 0；C 级不得写成调查结论；D 级不得写成官方原文已核（除非确已打开原文）；A 级必须能给出复算命令或对账文件。
+    本报告没有把“未找到付款证据”写成“0 个买家”，也没有把“未跑双臂”写成“无效”。
+  </p>
+
+  <h2>A.3 资料与方法</h2>
+  <ul>
+    <li><b>记录面审计：</b>对导出的账本逐行复算 seq / prev / payload / seal；统计调用数、会话数、basis 分布、字段空值；检查 read_back、declare_reader、load_journal 的行为。</li>
+    <li><b>市场数据：</b>沿用 v1 的三路自上而下与自下而上估算；v2 只改“相邻市场占比”，从 8–12% / 5–8% 下调到 3–6%，理由是本产品是功能而非平台。</li>
+    <li><b>外部文献：</b>检索自我修正、轨迹学习、可观测性与合规四组资料；优先 Tier 1（论文、官方文档），Tier 2（律所指南、厂商工程博客），Tier 3 仅作旁证。</li>
+    <li><b>财务：</b>按“付费账户 × ARPU”建模，成本不含作者人力；另做含 8 万美元 / 年作者成本的敏感性。</li>
+    <li><b>红队：</b>用“买家自建”“平台打包”两条攻击路径反推产品边界；未做真人红队演练。</li>
+  </ul>
+
+  <h2>A.4 局限</h2>
+  <ul>
+    <li><b>没有做付费市场调查。</b>10 次访谈是 G0 的动作，不是本报告已完成的工作；SAM / SOM 是规划假设。</li>
+    <li><b>R/N 双臂未跑。</b>报告只能给出协议与闸门，不能给出“记录驱动修改有效”的结论。</li>
+    <li><b>单一作者。</b>记录面审计、市场判断与财务假设都出自同一作者，缺少独立复核；这是本报告最大的方法风险。</li>
+    <li><b>外部资料有时效。</b>价格、法规与 semconv 都会变；引用日期为 2026-10-18 至 10-20。</li>
+    <li><b>财务不含融资与税费。</b>三情景只用于量级判断，不能作为投资决策或报价依据。</li>
+  </ul>
+
+  <h2>A.5 复现与推翻</h2>
+  <p>
+    记录面数字可用本机账本重新复算；财务表可按表 11 的账户数与 ARPU 重算；市场规模可用 v1 的三路数据与 3–6% 占比重算。
+    以下任一读数出现，本报告的核心结论应被推翻或修订：
+  </p>
+  <ul>
+    <li>G1.5 的 R 臂留出集通过率 ≥ N 臂 + 20 个百分点，且假修复率不升——应上调对 B 的投入，并重新评估“功能市场”判断。</li>
+    <li>外部团队在 60 分钟内无法产出可复核证据包——A 的交付物设计失败，应退回研究阶段。</li>
+    <li>买家为“可复核”单独设预算科目——SAM 与 ARPU 应上调，定价梯子需重做。</li>
+    <li>头部平台把证据包做成标准功能——A 退回规范与适配器，B 不做。</li>
+  </ul>
+</section>
+
+<!-- ================= APPENDIX B ================= -->
+<section class="chapter appendix" id="appB">
+  <div class="chap-kicker">Appendix B</div>
+  <h1><span class="num">B</span>数据表</h1>
+
+  <h2>B.1 记录面审计（本机账本，2026-10-19 / 10-20）</h2>
+  <table class="tbl">
+    <caption><b>表 B1</b> 账本结构与字段覆盖（A 级：逐行复算）</caption>
+    <thead><tr><th style="width:38%">项目</th><th class="num" style="width:18%">读数</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>账本总行数</td><td class="num">2,941</td><td>1 行前言 + 2,940 条记录</td></tr>
+      <tr><td>调用数 × 格数</td><td class="num">60 × 49</td><td>60 次调用，每次 49 格</td></tr>
+      <tr><td>会话数</td><td class="num">12</td><td>账本内 session 去重</td></tr>
+      <tr><td>自报 actor 数</td><td class="num">4</td><td>自报，未做身份绑定</td></tr>
+      <tr><td>basis = measured</td><td class="num">2,213</td><td>实测值</td></tr>
+      <tr><td>basis = absent</td><td class="num">355</td><td>带缺席理由</td></tr>
+      <tr><td>basis = relayed</td><td class="num">188</td><td>转述值</td></tr>
+      <tr><td>basis = estimated</td><td class="num">124</td><td>估计值</td></tr>
+      <tr><td>basis = model_says</td><td class="num">60</td><td>模型自述</td></tr>
+      <tr><td>basis = unset</td><td class="num">0</td><td>无未设置项</td></tr>
+      <tr><td>endpoint_model 非空</td><td class="num">23 / 60</td><td>不是每次调用都有模型标识</td></tr>
+      <tr><td>产物内容字段</td><td class="num">0 / 2,940</td><td>账本不保存产物正文</td></tr>
+      <tr><td>model_says_sha256</td><td class="num">60 / 60</td><td>43 个不同值</td></tr>
+      <tr><td>fail_kind 非空</td><td class="num">0 / 60</td><td>没有失败类型</td></tr>
+      <tr><td>fail_status = absent</td><td class="num">60 / 60</td><td>失败状态全部缺席</td></tr>
+      <tr><td>闸门行</td><td class="num">0</td><td>账本无闸门记录</td></tr>
+      <tr><td>链复算通过</td><td class="num">2,940 / 2,940</td><td>seq / prev / payload / seal</td></tr>
+      <tr><td>签名 / 密钥</td><td class="num">无</td><td>未做非对称签名</td></tr>
+      <tr><td>read_back 返回指纹</td><td class="num">否</td><td>读回不返回链头指纹</td></tr>
+      <tr><td>declare_reader 持久化</td><td class="num">否</td><td>仅内存</td></tr>
+      <tr><td>load_journal 可整本替换</td><td class="num">是</td><td>APPEND_ONLY 默认关闭</td></tr>
+    </tbody>
+  </table>
+
+  <h2>B.2 规模、SOM 与账户数</h2>
+  <table class="tbl">
+    <caption><b>表 B2</b> 规模重算（C 级假设，沿用 v1 的相邻市场口径）</caption>
+    <thead><tr><th style="width:34%">项目</th><th class="num">数值</th><th>口径</th></tr></thead>
+    <tbody>
+      <tr><td>TAM（相邻口径）</td><td class="num">27–31 亿美元</td><td>LLM 可观测性 26.9 亿 + AI TRiSM 30.9 亿，相邻不相加</td></tr>
+      <tr><td>相邻市场占比</td><td class="num">3–6%</td><td>v1 为 8–12% / 5–8%；v2 因“功能而非平台”下调</td></tr>
+      <tr><td>SAM</td><td class="num">1.0–2.0 亿美元</td><td>相邻市场 × 3–6%</td></tr>
+      <tr><td>SOM（三年）</td><td class="num">0.5–4.0 百万美元</td><td>SAM × 0.5–2%</td></tr>
+      <tr><td>ARPU</td><td class="num">1.5–3.0 万美元 / 年</td><td>团队版与证据包版的混合区间</td></tr>
+      <tr><td>对应账户数</td><td class="num">约 17–267 个</td><td>SOM ÷ ARPU，三年累计</td></tr>
+    </tbody>
+  </table>
+
+  <h2>B.3 公开价格锚（访问 2026-10-19）</h2>
+  <table class="tbl">
+    <caption><b>表 B3</b> 价格锚：为什么不能按 seat / span / token 定价（D 级，价格随页面变动）</caption>
+    <thead><tr><th style="width:26%">产品</th><th style="width:24%">公开价格锚</th><th style="width:16%">计价单位</th><th>对证据包的含义</th></tr></thead>
+    <tbody>
+      <tr><td>LangSmith</td><td>约 39 美元 / seat / 月</td><td>seat</td><td>按 seat 卖会被压到工具价</td></tr>
+      <tr><td>Langfuse</td><td>Cloud 约 29 美元 / 月起；可自托管</td><td>用量 / seat</td><td>免费替代最强；只能卖拒收语义</td></tr>
+      <tr><td>Braintrust</td><td>Pro 约 249 美元 / 月</td><td>组织 / seat</td><td>评测预算高于追踪，但内核不做评测</td></tr>
+      <tr><td>Datadog LLM Observability</td><td>约 160 美元 / 月起（10 万 spans）</td><td>span</td><td>按 span 比价对证据包不利</td></tr>
+      <tr><td>Helicone</td><td>约 79 美元 / 月</td><td>request</td><td>代理型追踪，价格锚低</td></tr>
+      <tr><td>Portkey</td><td>约 49 美元 / 月</td><td>request / seat</td><td>网关 + 可观测，同向竞争</td></tr>
+      <tr><td>W&amp;B Weave</td><td>约 60 美元 / 月</td><td>用量</td><td>评测 / 追踪，不是证据闸门</td></tr>
+      <tr><td>TrueFoundry</td><td>Pro 约 499 美元 / 月</td><td>平台</td><td>平台可以收更高，但需要平台能力</td></tr>
+      <tr class="em-row"><td>agentkernel 证据包（建议）</td><td>1.5–8 万美元 / 年</td><td>年费 / 证据包</td><td>是入门可观测性的 10–100 倍；必须用事故成本解释</td></tr>
+    </tbody>
+  </table>
+
+  <h2>B.4 三情景财务（明细）</h2>
+  <table class="tbl">
+    <caption><b>表 B4</b> 三情景财务明细（千美元；不含作者人力；C 级）</caption>
+    <thead><tr><th style="width:26%">项目</th><th class="num">保守 Y1</th><th class="num">保守 Y2</th><th class="num">保守 Y3</th><th class="num">基准 Y1</th><th class="num">基准 Y2</th><th class="num">基准 Y3</th><th class="num">乐观 Y1</th><th class="num">乐观 Y2</th><th class="num">乐观 Y3</th></tr></thead>
+    <tbody>
+      <tr><td>付费账户</td><td class="num">0</td><td class="num">6</td><td class="num">20</td><td class="num">1</td><td class="num">8</td><td class="num">25</td><td class="num">1</td><td class="num">12</td><td class="num">40</td></tr>
+      <tr><td>ARPU</td><td class="num">—</td><td class="num">18</td><td class="num">20</td><td class="num">15</td><td class="num">18</td><td class="num">20</td><td class="num">15</td><td class="num">20</td><td class="num">22</td></tr>
+      <tr><td>收入</td><td class="num">0</td><td class="num">108</td><td class="num">400</td><td class="num">15</td><td class="num">144</td><td class="num">500</td><td class="num">15</td><td class="num">240</td><td class="num">880</td></tr>
+      <tr><td>成本</td><td class="num">15</td><td class="num">32</td><td class="num">60</td><td class="num">15</td><td class="num">35</td><td class="num">70</td><td class="num">15</td><td class="num">40</td><td class="num">95</td></tr>
+      <tr><td>净现金流</td><td class="num">-15</td><td class="num">76</td><td class="num">340</td><td class="num">0</td><td class="num">109</td><td class="num">430</td><td class="num">0</td><td class="num">200</td><td class="num">785</td></tr>
+      <tr class="em-row"><td>累计收入</td><td class="num">0</td><td class="num">108</td><td class="num">508</td><td class="num">15</td><td class="num">159</td><td class="num">659</td><td class="num">15</td><td class="num">255</td><td class="num">1,135</td></tr>
+      <tr class="em-row"><td>累计净现金流</td><td class="num">-15</td><td class="num">61</td><td class="num">401</td><td class="num">0</td><td class="num">109</td><td class="num">539</td><td class="num">0</td><td class="num">200</td><td class="num">985</td></tr>
+    </tbody>
+  </table>
+
+  <h2>B.5 五道闸与读数来源</h2>
+  <table class="tbl">
+    <caption><b>表 B5</b> 闸门、读数与失败动作（与正文表 8 对应）</caption>
+    <thead><tr><th style="width:10%">闸</th><th style="width:10%">时间</th><th style="width:36%">主读数</th><th>读数来源 / 备注</th></tr></thead>
+    <tbody>
+      <tr><td>G0</td><td>D30</td><td>10 次访谈；≥3 真实触发；≥1 POC；≥1 预算科目</td><td>访谈记录 + 客户书面确认；不接受“有兴趣”</td></tr>
+      <tr><td>G1</td><td>D60</td><td>非作者真人 ≤60 分钟产出 1 个证据包并完成 1 次修改</td><td>录屏 + 证据包 + 计时；拒收必须计数</td></tr>
+      <tr class="em-row"><td>G1.5</td><td>D90</td><td>R 臂留出集通过率 ≥ N 臂 + 20 个百分点；假修复率不高于 N 臂</td><td>预注册 + 盲评；反臂 A/B 必须是叶子任务</td></tr>
+      <tr><td>G2</td><td>D120</td><td>2 封 LOI；1 次安全审查通过；SBOM / DPA / 责任边界</td><td>LOI 不等于收入；安全审查由客户方出具</td></tr>
+      <tr><td>G3</td><td>D180</td><td>≥3 家付费 ≥1 万美元，或 ≥5 家付费试点；≥1 家续费</td><td>以到账与续费为准，不以意向为准</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ================= APPENDIX C ================= -->
+<section class="chapter appendix" id="appC">
+  <div class="chap-kicker">Appendix C</div>
+  <h1><span class="num">C</span>参考文献</h1>
+
+  <p class="small">
+    [1]–[33] 沿用 v1（2026-10-19）；[34]–[50] 为本轮新增。未在正文直接引用的 v1 条目保留编号，便于对照。外部资料访问日为 2026-10-18 至 10-20。
+  </p>
+
+  <h2>C.1 市场、法规与竞品</h2>
+  <div class="ref"><span class="n">[1]</span> OWASP Foundation. <i>OWASP MCP Top 10</i>, MCP08: Lack of Audit and Telemetry. https://owasp.org/www-project-mcp-top-10/ <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[2]</span> European Union. <i>Regulation (EU) 2024/1689 (AI Act)</i>, Article 12: Record-keeping. https://eur-lex.europa.eu/eli/reg/2024/1689/oj <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[3]</span> Artificial Intelligence Act (tracker). Article 12. https://artificialintelligenceact.eu/article/12/ <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[4]</span> 全国标准信息公共服务平台. GB/T 47746—2026（2026-09-01 实施）. https://openstd.samr.gov.cn/ <span class="tag tag-d">D</span>（标准原文未逐条核，适用范围以原文为准）</div>
+  <div class="ref"><span class="n">[5]</span> 中国人大网. 《中华人民共和国电子商务法》第 48 条. http://www.npc.gov.cn/ <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[6]</span> NIST NVD. CVE-2026-27825 / CVE-2026-27826. https://nvd.nist.gov/vuln/detail/CVE-2026-27825 <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[7]</span> Gartner. “Over 40% of agentic AI projects will be canceled by end of 2027.” Gartner Newsroom. https://www.gartner.com/en/newsroom <span class="tag tag-d">D</span>（官方页访问受限，读数转引二级来源）</div>
+  <div class="ref"><span class="n">[8]</span> Business Research Company. <i>LLM Observability Market</i>（2026 口径，二手转引）. <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[9]</span> MarketsandMarkets. <i>AI TRiSM Market</i>（2026–2031 口径，二手转引）. <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[10]</span> Research and Markets / Mordor Intelligence. <i>AI Governance Market</i>（2025–2030 口径，二手转引）. <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[11]</span> QYResearch. <i>AI Observability Platforms Market</i>（2025–2032 口径，二手转引）. <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[12]</span> Stacklok. MCP adoption survey（公开摘要转引）. <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[13]</span> LangChain. <i>State of AI Agents</i>（公开摘要转引）. <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[14]</span> Model Context Protocol. https://modelcontextprotocol.io/ <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[15]</span> OpenTelemetry. GenAI semantic conventions. https://opentelemetry.io/docs/specs/semconv/gen-ai/ <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[16]</span> LangSmith pricing. https://www.langchain.com/pricing <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[17]</span> Langfuse pricing. https://langfuse.com/pricing <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[18]</span> Braintrust pricing. https://www.braintrust.dev/pricing <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[19]</span> Datadog pricing. https://www.datadoghq.com/pricing/ <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[20]</span> Helicone pricing. https://www.helicone.ai/pricing <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[21]</span> Portkey pricing. https://portkey.ai/pricing <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[22]</span> Weights &amp; Biases pricing. https://wandb.ai/pricing <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[23]</span> TrueFoundry pricing. https://www.truefoundry.com/pricing <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[24]</span> AWS. CloudTrail log file validation. https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-log-file-validation-intro.html <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[25]</span> Microsoft Azure. Confidential Ledger. https://azure.microsoft.com/en-us/products/confidential-ledger <span class="tag tag-d">D</span></div>
+
+  <h2>C.2 内部证据与记录面</h2>
+  <div class="ref"><span class="n">[26]</span> 《产品定位（v1 封板用）》. 内部文件，2026-10-13 起封板；含 48 键 / 49 格、边界三条、唯一验收、15 条缺口. <span class="tag tag-a">A</span> / <span class="tag tag-b">B</span></div>
+  <div class="ref"><span class="n">[27]</span> 《可验证记账层的可行边界——技术可行性、外部叙事与市场位置的合并研究》. 内部报告，2026-10-19. <span class="tag tag-a">A</span> / <span class="tag tag-b">B</span></div>
+  <div class="ref"><span class="n">[28]</span> 《封板轮-整轮-1016-032847.txt》. 78 根针 / 整轮跑；退出码 0；空针 / 坏针 0；对照成立. <span class="tag tag-a">A</span></div>
+  <div class="ref"><span class="n">[29]</span> 《外部评估-主页圈-aec6dd94-对账-1018.md》. 外部 6 发 / 294 条；整本 490 条；逐发指纹对上. <span class="tag tag-a">A</span></div>
+  <div class="ref"><span class="n">[30]</span> 《收尾-现场与未闭合-1018.txt》. 未闭合项、KPI 计数半边、A1 提示注入实测. <span class="tag tag-a">A</span> / <span class="tag tag-b">B</span></div>
+  <div class="ref"><span class="n">[31]</span> 《agent-第二支-续跑臂.md》《挤历史-判生死.md》. 续跑 / 跨发边界；真实故障实例 0 次. <span class="tag tag-b">B</span></div>
+  <div class="ref"><span class="n">[32]</span> <span class="mono">tasks/audit/to_dataset.py</span>. 训练数据对 2/4 实测. <span class="tag tag-a">A</span></div>
+  <div class="ref"><span class="n">[33]</span> 《26 策略引擎闭环》. <span class="mono">../策略引擎闭环-1019/报告.md</span>、<span class="mono">MANIFEST.txt</span>. 26 声明 / 20 分支 / 1 恒等 / 5 元策略；7/7 离线合成；真实靶场 NOT_RUN. <span class="tag tag-a">A</span> / <span class="tag tag-x">X</span></div>
+  <div class="ref"><span class="n">[34]</span> Huang, J., et al. “Large Language Models Cannot Self-Correct Reasoning Yet.” ICLR 2024. https://arxiv.org/abs/2310.01798 <span class="tag tag-d">D</span>（Tier 1）</div>
+  <div class="ref"><span class="n">[35]</span> Kamoi, R., et al. “When Can LLMs Actually Correct Their Own Mistakes? A Critical Survey of Self-Correction of LLMs.” TACL 2024. https://arxiv.org/abs/2406.01297 <span class="tag tag-d">D</span>（Tier 1）</div>
+
+  <h2>C.3 自我修正与轨迹学习</h2>
+  <div class="ref"><span class="n">[36]</span> Madaan, A., et al. “Self-Refine: Iterative Refinement with Self-Feedback.” NeurIPS 2023. https://arxiv.org/abs/2303.17651 <span class="tag tag-d">D</span>（Tier 1）</div>
+  <div class="ref"><span class="n">[37]</span> Shinn, N., et al. “Reflexion: Language Agents with Verbal Reinforcement Learning.” NeurIPS 2023. https://arxiv.org/abs/2303.11366 <span class="tag tag-d">D</span>（Tier 1）</div>
+  <div class="ref"><span class="n">[38]</span> Zhao, A., et al. “ExpeL: LLM Agents Are Experiential Learners.” AAAI 2024. https://arxiv.org/abs/2308.10144 <span class="tag tag-d">D</span>（Tier 1）</div>
+  <div class="ref"><span class="n">[39]</span> Luo, X., et al. “Agent Lightning: Train ANY AI Agents with Reinforcement Learning.” 2025. https://arxiv.org/abs/2508.03680 <span class="tag tag-d">D</span>（Tier 1）</div>
+  <div class="ref"><span class="n">[40]</span> Agrawal, L., et al. “GEPA: Reflective Prompt Evolution Can Outperform Reinforcement Learning.” ICLR 2026. https://arxiv.org/abs/2507.19457 <span class="tag tag-d">D</span>（Tier 1）</div>
+  <div class="ref"><span class="n">[41]</span> Wang, Z., et al. “Agent Workflow Memory.” ICML 2025. https://arxiv.org/abs/2409.07429 <span class="tag tag-d">D</span>（Tier 1）</div>
+  <div class="ref"><span class="n">[42]</span> Wang, G., et al. “Voyager: An Open-Ended Embodied Agent with Large Language Models.” 2023. https://arxiv.org/abs/2305.16291 <span class="tag tag-d">D</span>（Tier 1）</div>
+  <div class="ref"><span class="n">[43]</span> Wang, Z., et al. “RAGEN: Understanding Self-Evolution in LLM Agents via Multi-Turn Reinforcement Learning.” 2025. https://arxiv.org/abs/2504.20073 <span class="tag tag-d">D</span>（Tier 1）</div>
+  <div class="ref"><span class="n">[44]</span> METR. “AI systems could cover up misbehavior.” 2026-10-06. https://metr.org/blog/2026-10-06-ai-systems-could-cover-up-misbehavior/ <span class="tag tag-d">D</span>（Tier 1）</div>
+
+  <h2>C.4 可观测性、治理与合规</h2>
+  <div class="ref"><span class="n">[45]</span> Microsoft Learn. “Observability | Microsoft Agent Framework.” 更新 2026-10-15. https://learn.microsoft.com/en-us/agent-framework/agents/observability <span class="tag tag-d">D</span>（Tier 1）</div>
+  <div class="ref"><span class="n">[46]</span> LangChain Docs. “Evaluation concepts.” https://docs.langchain.com/langsmith/evaluation-concepts <span class="tag tag-d">D</span>（Tier 1）</div>
+  <div class="ref"><span class="n">[47]</span> Cloud Security Alliance Labs. “NIST AI Agent Standards: What It Means for Enterprise.” 2026-08-04. https://labs.cloudsecurityalliance.org/research/csa-research-note-nist-ai-agent-standards-initiative-2026040/ <span class="tag tag-d">D</span>（Tier 2）</div>
+  <div class="ref"><span class="n">[48]</span> Bird &amp; Bird. <i>EU AI Act Guide</i>（中文版）. https://www.twobirds.com/-/media/new-website-content/pdfs/capabilities/artificial-intelligence/eu-ai-act-guide-chinese-version.pdf <span class="tag tag-d">D</span>（Tier 2；律所指南，官方英文本未完整打开）</div>
+  <div class="ref"><span class="n">[49]</span> EUR-Lex. <i>Regulation (EU) 2026/1744</i>. https://eur-lex.europa.eu/eli/reg/2026/1744/oj <span class="tag tag-d">D</span>（Tier 1；仅页头已核，修订条款文号待核）</div>
+  <div class="ref"><span class="n">[50]</span> open-telemetry/opentelemetry-js. Releases（semconv v1.37.0）. https://github.com/open-telemetry/opentelemetry-js/releases <span class="tag tag-d">D</span>（Tier 1；发布说明摘录级）</div>
+
+  <p class="small" style="margin-top:5mm">
+    说明：部分 v1 市场规模条目为二手转引，原始报告页未能完整打开；本报告只把它们用于量级与占比，不用于精确预测。
+    法规条目中，EU AI Act 第 12 条与第 26(6) 条的表述来自律所指南与公开条文摘要，官方英文本未完整逐条核对；
+    Digital Omnibus 只核到 Regulation (EU) 2026/1744 页头，具体修订条款文号待核。凡此均按 D 级使用，不写成“官方原文已核”。
+  </p>
+</section>
+
+<!-- ================= APPENDIX D ================= -->
+<section class="chapter appendix" id="appD">
+  <div class="chap-kicker">Appendix D</div>
+  <h1><span class="num">D</span>术语与对外材料草稿</h1>
+
+  <h2>D.1 术语表</h2>
+  <table class="kv">
+    <tr><td><b>账本 / journal</b></td><td>append-only 的调用记录；v1 为 60 次调用 × 49 格，共 2,940 条。</td></tr>
+    <tr><td><b>49 格</b></td><td>每次调用的固定记录形状；不是“49 个保证”，也不覆盖产物内容。</td></tr>
+    <tr><td><b>seal / 链</b></td><td>seq + prev + payload + seal 的哈希链；证明记录未被改，不证明内容为真。</td></tr>
+    <tr><td><b>basis</b></td><td>记录值的来源状态：measured / absent / relayed / estimated / model_says / unset。</td></tr>
+    <tr><td><b>absent</b></td><td>明确记录“没有这个值 + 理由”；不是 0，也不是空字符串。</td></tr>
+    <tr><td><b>read_back</b></td><td>读回接口；当前不返回链头指纹，不能单独证明“你看到的是原来那本”。</td></tr>
+    <tr><td><b>declare_reader</b></td><td>读者声明；当前仅内存，不持久化；严格双臂中拒收六桶全 0。</td></tr>
+    <tr><td><b>load_journal</b></td><td>装载账本；可整本替换，APPEND_ONLY 默认关闭；证据包需另加链头指纹与外部存证。</td></tr>
+    <tr><td><b>证据包</b></td><td>账本 + 产物原像 + 行为/判据版本 + 拒收计数 + 外部验证结果 + manifest；可复核、可回滚、可披露。</td></tr>
+    <tr><td><b>产物原像</b></td><td>被修改的文件/配置/提示词的原始内容或其可验证哈希；账本本身不保存。</td></tr>
+    <tr><td><b>版本三元组</b></td><td>产物版本 + 行为/配置版本 + 判据版本；缺一项，修改不可归因。</td></tr>
+    <tr><td><b>拒收计数</b></td><td>被验证器拒绝的候选修改数量与原因；不做拒收计数，就会把“挑过的成功”当总体。</td></tr>
+    <tr><td><b>R/N 双臂</b></td><td>R 臂看记录再改，N 臂不看记录直接改；比较留出集通过率与假修复率。</td></tr>
+    <tr><td><b>假修复率</b></td><td>验证器判为修好、但留出集或反臂显示未修好的比例。</td></tr>
+    <tr><td><b>反臂 A/B</b></td><td>预期失败或应被拒绝的叶子任务；用来证明验证器不是“永远通过”。</td></tr>
+    <tr><td><b>Gate 1.5</b></td><td>R/N 增量闸；不过则冻结为研究资产，不进入私有化。</td></tr>
+    <tr><td><b>功能市场 / 平台市场</b></td><td>前者挂在可观测性、评测、治理预算下；后者有独立预算科目与平台采购流程。本报告判断为前者。</td></tr>
+  </table>
+
+  <h2>D.2 对外材料草稿（一）：一句话与一段话</h2>
+  <div class="callout">
+    <div class="t">一句话</div>
+    <p>
+      agentkernel 把一次 Agent 修改的账本、产物原像、行为/判据版本与拒收计数装进一个可复核的证据包，让另一个团队能独立判断这次修改是否算数。
+    </p>
+  </div>
+  <div class="callout neutral">
+    <div class="t">一段话（对外简介）</div>
+    <p>
+      Agent 团队已经不缺 trace，缺的是“这次修改凭什么算数”的可复核证据。agentkernel 是一个证据适配层：它接在现有 trace / eval 旁边，
+      把账本、产物原像、行为与判据版本、拒收计数和外部验证结果装进一个证据包。它不拦截、不调度、不执行工具，也不宣称让 Agent 更可信；
+      它只让一次修改可被另一个人复核、回滚和披露。当前版本是研究资产，R/N 双臂尚未运行；我们优先寻找有真实事故复盘、审计或行为变更触发的团队做 POC。
+    </p>
+  </div>
+
+  <h2>D.3 对外材料草稿（二）：不承诺清单</h2>
+  <ul>
+    <li>不承诺“上了内核就挡住提示注入 / 工具滥用”——审计层不是防线。</li>
+    <li>不承诺“verify 通过 = 内容可信”——链只证明记录未被改。</li>
+    <li>不承诺“记录驱动自动改进已有效”——R/N 双臂 NOT_RUN，严格双臂仍 FAIL。</li>
+    <li>不承诺“30 分钟接入”——当前目标是非作者真人 60 分钟产出 1 个证据包并完成 1 次修改。</li>
+    <li>不承诺“符合 EU AI Act 第 12 条认证”——只支持记录义务，不构成合规认证。</li>
+    <li>不承诺“托管按次 / 多租户”——当前不做 C。</li>
+  </ul>
+
+  <h2>D.4 对外材料草稿（三）：POC 邀请</h2>
+  <div class="quote">
+    如果你们最近做过一次 Agent 行为修改（提示词、工具权限、检索策略或判据），并且能提供修改前后的产物与一次失败复盘，
+    我们愿意用 6 周做一次付费试点：不接你们的模型调用，不改你们的模型代码，只把这次修改做成一个可复核的证据包，
+    并由你们指定的一位非作者同学在 60 分钟内独立复核。试点价 3–5 千美元；如果我们做不出可复核的证据包，不收尾款。
+    <span class="who">草稿，未对外发送；发送前需确认预算、法务措辞与数据留存边界。</span>
+  </div>
+
+  <div class="endnote">
+    本报告为研究 / 规划件，不是报价单、投资建议或合规意见。所有 C 级数字为作者假设；所有 X 级缺口写“未跑 / 不知道”，不写成 0。
+    报告中的公司名与产品名归各自所有者；价格与法规以官方页面为准。
+  </div>
+</section>

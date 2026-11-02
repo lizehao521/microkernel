@@ -1,0 +1,10 @@
+{
+ "reading": "业务任务-13x5-真端点-修判据.json",
+ "checked_at": "2026-10-23T14:21:59+08:00",
+ "reading_exists": true,
+ "reading_bytes": 110116,
+ "reading_sha256": "0bca77b9bf2f5c987a12f5902e8171fcb829d6c6120ab3d9e25518c7a47fa5d3",
+ "log_bytes": 322,
+ "key_in_reading": false,
+ "key_in_log": false
+}

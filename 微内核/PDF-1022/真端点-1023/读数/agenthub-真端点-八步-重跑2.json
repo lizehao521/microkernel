@@ -1,0 +1,774 @@
+{
+ "surface": "agenthub",
+ "shape": "multi-step",
+ "task": "依次算 1+1、2+2、3+3、4+4、5+5、6+6、7+7、8+8。每一步都单独调用一次 calc.eval，不要合并成一个算式；最后把八个结果列出来。",
+ "max_steps": 10,
+ "endpoint": "http://121.36.29.96:8787/v1/chat/completions",
+ "model": "MiniMax-M2.5",
+ "key_masked": "sk-rel...IbWA",
+ "exe_sha256": "8ad1abadd5305db43ed550c5de8656065ddb2b1fc80016eb3a009277cee5aca6",
+ "elapsed_ms": 19567,
+ "health": {
+  "allow_exec": false,
+  "allow_write": false,
+  "memory": 0,
+  "model_endpoint": "http://121.36.29.96:8787/v1/chat/completions",
+  "next_turn": 1,
+  "ok": true,
+  "tools": 12
+ },
+ "events": [
+  {
+   "event": "meta",
+   "data": {
+    "max_steps": 10,
+    "memory_msgs": 1,
+    "plan": "模型端点→本机规则",
+    "tools": 12,
+    "turn": 1
+   }
+  },
+  {
+   "event": "plan",
+   "data": {
+    "ask": "模型端点",
+    "step": 1
+   }
+  },
+  {
+   "event": "tool_status",
+   "data": {
+    "args": {
+     "expr": "1+1"
+    },
+    "args_from": "端点给的参数",
+    "attempts_allowed": 1,
+    "fallback": "",
+    "risk": "compute",
+    "status": "queued",
+    "step": 1,
+    "timeout_ms": 3000,
+    "tool": "calc.eval"
+   }
+  },
+  {
+   "event": "tool_status",
+   "data": {
+    "status": "attempt",
+    "step": 1,
+    "tool": "calc.eval",
+    "第几次": 1
+   }
+  },
+  {
+   "event": "tool_status",
+   "data": {
+    "ms": 0,
+    "status": "ok",
+    "step": 1,
+    "tool": "calc.eval",
+    "第几次": 1
+   }
+  },
+  {
+   "event": "tool_result",
+   "data": {
+    "step": 1,
+    "tool": "calc.eval",
+    "args": {
+     "expr": "1+1"
+    },
+    "args_from": "端点给的参数",
+    "class": "ok",
+    "risk": "compute",
+    "text": "1+1 = 2 ｜ 试了 1 次 ｜ 0ms",
+    "data": {
+     "expr": "1+1",
+     "value": 2
+    },
+    "ms": 2533,
+    "attempts": 1,
+    "why": "端点选的件（端点一帧给了 8 个动作，只取了第一个，其余下一次再问）",
+    "provenance": "model_says",
+    "evidence": "measured",
+    "plan": "模型端点"
+   }
+  },
+  {
+   "event": "plan",
+   "data": {
+    "ask": "模型端点",
+    "step": 2
+   }
+  },
+  {
+   "event": "tool_status",
+   "data": {
+    "args": {
+     "expr": "2+2"
+    },
+    "args_from": "端点给的参数",
+    "attempts_allowed": 1,
+    "fallback": "",
+    "risk": "compute",
+    "status": "queued",
+    "step": 2,
+    "timeout_ms": 3000,
+    "tool": "calc.eval"
+   }
+  },
+  {
+   "event": "tool_status",
+   "data": {
+    "status": "attempt",
+    "step": 2,
+    "tool": "calc.eval",
+    "第几次": 1
+   }
+  },
+  {
+   "event": "tool_status",
+   "data": {
+    "ms": 0,
+    "status": "ok",
+    "step": 2,
+    "tool": "calc.eval",
+    "第几次": 1
+   }
+  },
+  {
+   "event": "tool_result",
+   "data": {
+    "step": 2,
+    "tool": "calc.eval",
+    "args": {
+     "expr": "2+2"
+    },
+    "args_from": "端点给的参数",
+    "class": "ok",
+    "risk": "compute",
+    "text": "2+2 = 4 ｜ 试了 1 次 ｜ 0ms",
+    "data": {
+     "expr": "2+2",
+     "value": 4
+    },
+    "ms": 5253,
+    "attempts": 1,
+    "why": "端点选的件",
+    "provenance": "model_says",
+    "evidence": "measured",
+    "plan": "模型端点"
+   }
+  },
+  {
+   "event": "plan",
+   "data": {
+    "ask": "模型端点",
+    "step": 3
+   }
+  },
+  {
+   "event": "tool_status",
+   "data": {
+    "args": {
+     "expr": "3+3"
+    },
+    "args_from": "端点给的参数",
+    "attempts_allowed": 1,
+    "fallback": "",
+    "risk": "compute",
+    "status": "queued",
+    "step": 3,
+    "timeout_ms": 3000,
+    "tool": "calc.eval"
+   }
+  },
+  {
+   "event": "tool_status",
+   "data": {
+    "status": "attempt",
+    "step": 3,
+    "tool": "calc.eval",
+    "第几次": 1
+   }
+  },
+  {
+   "event": "tool_status",
+   "data": {
+    "ms": 0,
+    "status": "ok",
+    "step": 3,
+    "tool": "calc.eval",
+    "第几次": 1
+   }
+  },
+  {
+   "event": "tool_result",
+   "data": {
+    "step": 3,
+    "tool": "calc.eval",
+    "args": {
+     "expr": "3+3"
+    },
+    "args_from": "端点给的参数",
+    "class": "ok",
+    "risk": "compute",
+    "text": "3+3 = 6 ｜ 试了 1 次 ｜ 0ms",
+    "data": {
+     "expr": "3+3",
+     "value": 6
+    },
+    "ms": 7727,
+    "attempts": 1,
+    "why": "端点选的件",
+    "provenance": "model_says",
+    "evidence": "measured",
+    "plan": "模型端点"
+   }
+  },
+  {
+   "event": "plan",
+   "data": {
+    "ask": "模型端点",
+    "step": 4
+   }
+  },
+  {
+   "event": "tool_status",
+   "data": {
+    "args": {
+     "expr": "4+4"
+    },
+    "args_from": "端点给的参数",
+    "attempts_allowed": 1,
+    "fallback": "",
+    "risk": "compute",
+    "status": "queued",
+    "step": 4,
+    "timeout_ms": 3000,
+    "tool": "calc.eval"
+   }
+  },
+  {
+   "event": "tool_status",
+   "data": {
+    "status": "attempt",
+    "step": 4,
+    "tool": "calc.eval",
+    "第几次": 1
+   }
+  },
+  {
+   "event": "tool_status",
+   "data": {
+    "ms": 0,
+    "status": "ok",
+    "step": 4,
+    "tool": "calc.eval",
+    "第几次": 1
+   }
+  },
+  {
+   "event": "tool_result",
+   "data": {
+    "step": 4,
+    "tool": "calc.eval",
+    "args": {
+     "expr": "4+4"
+    },
+    "args_from": "端点给的参数",
+    "class": "ok",
+    "risk": "compute",
+    "text": "4+4 = 8 ｜ 试了 1 次 ｜ 0ms",
+    "data": {
+     "expr": "4+4",
+     "value": 8
+    },
+    "ms": 9902,
+    "attempts": 1,
+    "why": "端点选的件",
+    "provenance": "model_says",
+    "evidence": "measured",
+    "plan": "模型端点"
+   }
+  },
+  {
+   "event": "plan",
+   "data": {
+    "ask": "模型端点",
+    "step": 5
+   }
+  },
+  {
+   "event": "tool_status",
+   "data": {
+    "args": {
+     "expr": "5+5"
+    },
+    "args_from": "端点给的参数",
+    "attempts_allowed": 1,
+    "fallback": "",
+    "risk": "compute",
+    "status": "queued",
+    "step": 5,
+    "timeout_ms": 3000,
+    "tool": "calc.eval"
+   }
+  },
+  {
+   "event": "tool_status",
+   "data": {
+    "status": "attempt",
+    "step": 5,
+    "tool": "calc.eval",
+    "第几次": 1
+   }
+  },
+  {
+   "event": "tool_status",
+   "data": {
+    "ms": 0,
+    "status": "ok",
+    "step": 5,
+    "tool": "calc.eval",
+    "第几次": 1
+   }
+  },
+  {
+   "event": "tool_result",
+   "data": {
+    "step": 5,
+    "tool": "calc.eval",
+    "args": {
+     "expr": "5+5"
+    },
+    "args_from": "端点给的参数",
+    "class": "ok",
+    "risk": "compute",
+    "text": "5+5 = 10 ｜ 试了 1 次 ｜ 0ms",
+    "data": {
+     "expr": "5+5",
+     "value": 10
+    },
+    "ms": 12933,
+    "attempts": 1,
+    "why": "端点选的件",
+    "provenance": "model_says",
+    "evidence": "measured",
+    "plan": "模型端点"
+   }
+  },
+  {
+   "event": "plan",
+   "data": {
+    "ask": "模型端点",
+    "step": 6
+   }
+  },
+  {
+   "event": "tool_status",
+   "data": {
+    "args": {
+     "expr": "6+6"
+    },
+    "args_from": "端点给的参数",
+    "attempts_allowed": 1,
+    "fallback": "",
+    "risk": "compute",
+    "status": "queued",
+    "step": 6,
+    "timeout_ms": 3000,
+    "tool": "calc.eval"
+   }
+  },
+  {
+   "event": "tool_status",
+   "data": {
+    "status": "attempt",
+    "step": 6,
+    "tool": "calc.eval",
+    "第几次": 1
+   }
+  },
+  {
+   "event": "tool_status",
+   "data": {
+    "ms": 0,
+    "status": "ok",
+    "step": 6,
+    "tool": "calc.eval",
+    "第几次": 1
+   }
+  },
+  {
+   "event": "tool_result",
+   "data": {
+    "step": 6,
+    "tool": "calc.eval",
+    "args": {
+     "expr": "6+6"
+    },
+    "args_from": "端点给的参数",
+    "class": "ok",
+    "risk": "compute",
+    "text": "6+6 = 12 ｜ 试了 1 次 ｜ 0ms",
+    "data": {
+     "expr": "6+6",
+     "value": 12
+    },
+    "ms": 14921,
+    "attempts": 1,
+    "why": "端点选的件",
+    "provenance": "model_says",
+    "evidence": "measured",
+    "plan": "模型端点"
+   }
+  },
+  {
+   "event": "plan",
+   "data": {
+    "ask": "模型端点",
+    "step": 7
+   }
+  },
+  {
+   "event": "tool_status",
+   "data": {
+    "args": {
+     "expr": "7+7"
+    },
+    "args_from": "端点给的参数",
+    "attempts_allowed": 1,
+    "fallback": "",
+    "risk": "compute",
+    "status": "queued",
+    "step": 7,
+    "timeout_ms": 3000,
+    "tool": "calc.eval"
+   }
+  },
+  {
+   "event": "tool_status",
+   "data": {
+    "status": "attempt",
+    "step": 7,
+    "tool": "calc.eval",
+    "第几次": 1
+   }
+  },
+  {
+   "event": "tool_status",
+   "data": {
+    "ms": 0,
+    "status": "ok",
+    "step": 7,
+    "tool": "calc.eval",
+    "第几次": 1
+   }
+  },
+  {
+   "event": "tool_result",
+   "data": {
+    "step": 7,
+    "tool": "calc.eval",
+    "args": {
+     "expr": "7+7"
+    },
+    "args_from": "端点给的参数",
+    "class": "ok",
+    "risk": "compute",
+    "text": "7+7 = 14 ｜ 试了 1 次 ｜ 0ms",
+    "data": {
+     "expr": "7+7",
+     "value": 14
+    },
+    "ms": 16586,
+    "attempts": 1,
+    "why": "端点选的件",
+    "provenance": "model_says",
+    "evidence": "measured",
+    "plan": "模型端点"
+   }
+  },
+  {
+   "event": "plan",
+   "data": {
+    "ask": "模型端点",
+    "step": 8
+   }
+  },
+  {
+   "event": "plan",
+   "data": {
+    "kind": "done",
+    "plan": "模型端点",
+    "step": 8,
+    "why": "端点用自然语言收口（不是 JSON 动作）"
+   }
+  },
+  {
+   "event": "answer_delta",
+   "data": {
+    "text": "[TOOL_CALL]\n{tool => \"ca",
+    "turn": 1
+   }
+  },
+  {
+   "event": "answer_delta",
+   "data": {
+    "text": "lc.eval\", args => {\n  --",
+    "turn": 1
+   }
+  },
+  {
+   "event": "answer_delta",
+   "data": {
+    "text": "expr \"8+8\"\n}}\n[/TOOL_CAL",
+    "turn": 1
+   }
+  },
+  {
+   "event": "answer_delta",
+   "data": {
+    "text": "L]",
+    "turn": 1
+   }
+  },
+  {
+   "event": "done",
+   "data": {
+    "events": 39,
+    "turn": 1
+   }
+  }
+ ],
+ "result": {
+  "turn": 1,
+  "answer": "[TOOL_CALL]\n{tool => \"calc.eval\", args => {\n  --expr \"8+8\"\n}}\n[/TOOL_CALL]",
+  "answer_tier": "model_says",
+  "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+  "findings": [
+   {
+    "text": "这一发第 1 轮：走 7 步（成功 7、失败 0、门口挡 0），重试多花了 0 次尝试、等 0 ms，降级 0 次",
+    "tier": "measured",
+    "step": 8
+   },
+   {
+    "text": "calc.eval ｜ 步 1 ｜ 谁选的：模型端点 ｜ 参数：{\"expr\":\"1+1\"}（端点给的参数）｜ 1+1 = 2 ｜ 试了 1 次 ｜ 0ms",
+    "tier": "model_says",
+    "step": 1
+   },
+   {
+    "text": "calc.eval ｜ 步 2 ｜ 谁选的：模型端点 ｜ 参数：{\"expr\":\"2+2\"}（端点给的参数）｜ 2+2 = 4 ｜ 试了 1 次 ｜ 0ms",
+    "tier": "model_says",
+    "step": 2
+   },
+   {
+    "text": "calc.eval ｜ 步 3 ｜ 谁选的：模型端点 ｜ 参数：{\"expr\":\"3+3\"}（端点给的参数）｜ 3+3 = 6 ｜ 试了 1 次 ｜ 0ms",
+    "tier": "model_says",
+    "step": 3
+   },
+   {
+    "text": "calc.eval ｜ 步 4 ｜ 谁选的：模型端点 ｜ 参数：{\"expr\":\"4+4\"}（端点给的参数）｜ 4+4 = 8 ｜ 试了 1 次 ｜ 0ms",
+    "tier": "model_says",
+    "step": 4
+   },
+   {
+    "text": "calc.eval ｜ 步 5 ｜ 谁选的：模型端点 ｜ 参数：{\"expr\":\"5+5\"}（端点给的参数）｜ 5+5 = 10 ｜ 试了 1 次 ｜ 0ms",
+    "tier": "model_says",
+    "step": 5
+   },
+   {
+    "text": "calc.eval ｜ 步 6 ｜ 谁选的：模型端点 ｜ 参数：{\"expr\":\"6+6\"}（端点给的参数）｜ 6+6 = 12 ｜ 试了 1 次 ｜ 0ms",
+    "tier": "model_says",
+    "step": 6
+   },
+   {
+    "text": "calc.eval ｜ 步 7 ｜ 谁选的：模型端点 ｜ 参数：{\"expr\":\"7+7\"}（端点给的参数）｜ 7+7 = 14 ｜ 试了 1 次 ｜ 0ms",
+    "tier": "model_says",
+    "step": 7
+   },
+   {
+    "text": "这轮会话共 8 条记忆；工具调用统计：calc.eval×7；最后一句用户话：依次算 1+1、2+2、3+3、4+4、5+5、6+6、7+7、8+8。每一步都单独调用一次 calc.eval，不要合…；窗口外挤掉 0 条（本机摘要，不是模型写的）",
+    "tier": "estimated",
+    "why": "本机摘要规则写的，不是模型写的"
+   },
+   {
+    "text": "上下文：这轮一共 8 条记忆，喂进去 8 条 / 235 码元，窗口外挤掉 0 条",
+    "tier": "measured"
+   },
+   {
+    "text": "模型端点写的收口话（原样收下、不核事实）：[TOOL_CALL]\n{tool => \"calc.eval\", args => {\n  --expr \"8+8\"\n}}\n[/TOOL_CALL]",
+    "tier": "model_says"
+   }
+  ],
+  "steps": [
+   {
+    "step": 1,
+    "tool": "calc.eval",
+    "args": {
+     "expr": "1+1"
+    },
+    "args_from": "端点给的参数",
+    "class": "ok",
+    "risk": "compute",
+    "text": "1+1 = 2 ｜ 试了 1 次 ｜ 0ms",
+    "data": {
+     "expr": "1+1",
+     "value": 2
+    },
+    "ms": 2533,
+    "attempts": 1,
+    "why": "端点选的件（端点一帧给了 8 个动作，只取了第一个，其余下一次再问）",
+    "provenance": "model_says",
+    "evidence": "measured",
+    "plan": "模型端点"
+   },
+   {
+    "step": 2,
+    "tool": "calc.eval",
+    "args": {
+     "expr": "2+2"
+    },
+    "args_from": "端点给的参数",
+    "class": "ok",
+    "risk": "compute",
+    "text": "2+2 = 4 ｜ 试了 1 次 ｜ 0ms",
+    "data": {
+     "expr": "2+2",
+     "value": 4
+    },
+    "ms": 5253,
+    "attempts": 1,
+    "why": "端点选的件",
+    "provenance": "model_says",
+    "evidence": "measured",
+    "plan": "模型端点"
+   },
+   {
+    "step": 3,
+    "tool": "calc.eval",
+    "args": {
+     "expr": "3+3"
+    },
+    "args_from": "端点给的参数",
+    "class": "ok",
+    "risk": "compute",
+    "text": "3+3 = 6 ｜ 试了 1 次 ｜ 0ms",
+    "data": {
+     "expr": "3+3",
+     "value": 6
+    },
+    "ms": 7727,
+    "attempts": 1,
+    "why": "端点选的件",
+    "provenance": "model_says",
+    "evidence": "measured",
+    "plan": "模型端点"
+   },
+   {
+    "step": 4,
+    "tool": "calc.eval",
+    "args": {
+     "expr": "4+4"
+    },
+    "args_from": "端点给的参数",
+    "class": "ok",
+    "risk": "compute",
+    "text": "4+4 = 8 ｜ 试了 1 次 ｜ 0ms",
+    "data": {
+     "expr": "4+4",
+     "value": 8
+    },
+    "ms": 9902,
+    "attempts": 1,
+    "why": "端点选的件",
+    "provenance": "model_says",
+    "evidence": "measured",
+    "plan": "模型端点"
+   },
+   {
+    "step": 5,
+    "tool": "calc.eval",
+    "args": {
+     "expr": "5+5"
+    },
+    "args_from": "端点给的参数",
+    "class": "ok",
+    "risk": "compute",
+    "text": "5+5 = 10 ｜ 试了 1 次 ｜ 0ms",
+    "data": {
+     "expr": "5+5",
+     "value": 10
+    },
+    "ms": 12933,
+    "attempts": 1,
+    "why": "端点选的件",
+    "provenance": "model_says",
+    "evidence": "measured",
+    "plan": "模型端点"
+   },
+   {
+    "step": 6,
+    "tool": "calc.eval",
+    "args": {
+     "expr": "6+6"
+    },
+    "args_from": "端点给的参数",
+    "class": "ok",
+    "risk": "compute",
+    "text": "6+6 = 12 ｜ 试了 1 次 ｜ 0ms",
+    "data": {
+     "expr": "6+6",
+     "value": 12
+    },
+    "ms": 14921,
+    "attempts": 1,
+    "why": "端点选的件",
+    "provenance": "model_says",
+    "evidence": "measured",
+    "plan": "模型端点"
+   },
+   {
+    "step": 7,
+    "tool": "calc.eval",
+    "args": {
+     "expr": "7+7"
+    },
+    "args_from": "端点给的参数",
+    "class": "ok",
+    "risk": "compute",
+    "text": "7+7 = 14 ｜ 试了 1 次 ｜ 0ms",
+    "data": {
+     "expr": "7+7",
+     "value": 14
+    },
+    "ms": 16586,
+    "attempts": 1,
+    "why": "端点选的件",
+    "provenance": "model_says",
+    "evidence": "measured",
+    "plan": "模型端点"
+   }
+  ],
+  "stop": "跑完",
+  "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+  "plan": "模型端点",
+  "retries": 0,
+  "waited_ms": 0,
+  "degrades": 0,
+  "mix": {
+   "estimated": 1,
+   "measured": 2,
+   "model_says": 8,
+   "total": 11
+  },
+  "mix_ok": true,
+  "sane": true,
+  "sane_why": "整列 7 步 / 11 条结论自洽（判据 13 条全过）",
+  "ms": 19563,
+  "memory_msgs": 8,
+  "dropped_from_window": 0,
+  "context_chars_used": 235
+ }
+}

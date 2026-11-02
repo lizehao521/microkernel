@@ -1,0 +1,253 @@
+<!-- ================= CH 7 WINNER PRODUCT DESIGN ================= -->
+<section class="chapter">
+  <div class="chap-kicker">Chapter 7 · Product Design For The Computed Winner</div>
+  <h1 id="ch7" data-key="ch7"><span class="num">7</span>甲方 AI 项目验收：把「做成」拆回能回盘核的格子</h1>
+
+  <div class="callout warn">
+    <div class="t">7.0 前置声明（这一章的位置不是作者选的）</div>
+    <p><span class="st st-ok" data-state="有据">有据</span><span class="chip chip-disk" data-chip="disk">盘上</span>
+    本章写哪一个垂类，由 <code>数据/评分表.json</code> 过 <code>工具/模型.py</code> 重算的<strong>赢家</strong>决定；
+    核对道 K11 会检查本章章名含不含那个赢家的名称——<strong>赢家一变，这一章必须重写，而不是加一节。</strong>
+    同时要记住第 4 章那条资格线：原始分第一那一行<strong>不在本章</strong>，因为它只有 3/5 维有依据。</p>
+    <p data-scan="not_run">本章的每一小节都以「<strong>什么读数会把它推翻</strong>」收尾，而那些读数这一发大多<strong>没有</strong>
+    （第 2 章 N1–N9、N11 全是「动作没发生」那一类）。
+    所以它是<strong>规格与证伪条件</strong>，不是排期表。</p>
+  </div>
+
+  <h2 id="s7-1" data-key="s7-1">7.1 交付对象：不是包，是一张挂尾款的裁决</h2>
+  <p><span class="st st-ok" data-state="有据">有据</span><span class="chip chip-disk" data-chip="disk">盘上</span>
+  已关闭方向 C9 禁止把「证据包」本身当商品。所以 V1 的交付对象必须换成一个动作加一个裁决：
+  <strong>一次收口验收结束时，这份回执回答「这一笔该不该付」</strong>，买方为这个裁决付钱，不为拿到一份文件付钱。
+  接口是现成的：验收清单 A1–A5 每行的「未达成处置」都写着<strong>尾款不付</strong>
+  （<code data-src="市场报告-1020/决策卡-1020/试点函.md:109">试点函.md:109</code>），A6 不挂钩尾款但必须披露
+  （<code data-src="市场报告-1020/决策卡-1020/试点函.md:114">:114</code>）。</p>
+  <p>承诺收窄成一句可守的话：<strong>本产品只把「做成」的定义逐条钉回盘上可复算的东西；它不判「业务上是否真的做成」。</strong>
+  后一句是买方的语义真值，归 7.4；把它含糊地算进本产品，就是 C2/C4 那类「审计层冒充防线」的老错。</p>
+  <table class="tbl avoid">
+    <tr><th>这一格</th><th>产品做的</th><th>产品明确不做的</th></tr>
+    <tr class="em-row"><td>裁决</td><td>把声明逐条对到盘上证据，出三态 + 退出码</td>
+      <td class="no">不判业务价值、不判模型输出对不对、不出具「合格」意见</td></tr>
+    <tr><td>接口</td><td>挂到既有验收清单的 A1–A5 上，作为「这一项达成与否」的机械依据</td>
+      <td class="no">不替代 A4（非作者真人复核）；A4 本身就是没量过的那一格</td></tr>
+    <tr><td>文件</td><td>回执是裁决的<strong>凭证</strong>，随裁决一起生成</td>
+      <td class="no">不单独报价、不按份卖、不做成可囤的存货</td></tr>
+  </table>
+
+  <h2 id="s7-2" data-key="s7-2">7.2 声明词表：13 种现有类型覆盖什么、缺哪八种</h2>
+  <p><span class="st st-ok" data-state="有据">有据</span><span class="chip chip-disk" data-chip="disk">盘上</span>
+  底盘现有 13 种核对类型（<code data-src="交付对账-1026/README.md:29">交付对账-1026/README.md 的 kind 表</code>）。
+  先把它们在这个垂类里<strong>覆盖什么、不覆盖什么</strong>逐类说清——这是产品边界最容易吹大的地方。</p>
+  <table class="tbl avoid">
+    <tr><th>类型</th><th>在甲方验收现场覆盖的那一件事</th><th>它明确覆盖不了的</th></tr>
+    <tr><td><code>file_exists / file_absent</code></td><td>约定的产物在不在、约定不该留的东西没留</td><td>在不在 ≠ 对不对</td></tr>
+    <tr><td><code>file_sha256</code></td><td>交付物指纹与封存的样本 / 基线一致</td><td>不证明这一版是「按要求做的那版」</td></tr>
+    <tr><td><code>file_bytes / file_lines</code></td><td>尺寸与行数下限（防「空文件交差」）</td><td class="no">不许用它冒充内容量（字节数取盘上真实尺寸，不是字符数）</td></tr>
+    <tr><td><code>file_contains</code></td><td>指定行 / 任意行含约定句（如合同条款、阈值声明）</td><td>子串在场 ≠ 语义正确</td></tr>
+    <tr><td><code>log_exit</code></td><td>末条非空行是 <code>exit_code=N</code>：跑过且结果如何</td><td>不证明那次跑用的是交付的那份代码</td></tr>
+    <tr><td><code>log_contains</code></td><td>日志里有约定的那一步（逐字匹配）</td><td>日志可伪造，故只作 self 档时封顶</td></tr>
+    <tr class="em-row"><td><code>json_value / number / bool / string / len</code></td><td>评测结果件里某一格的值、类型、数组长度：分子分母、阈值、样本数</td>
+      <td>值与类型可对，<strong>「这一格是不是那次真评测的读数」不能对</strong>——那是 7.4 的语义真值</td></tr>
+  </table>
+
+  <h3>本垂类需要、但本轮不实现的八种类型（只给规格）</h3>
+  <table class="tbl avoid">
+    <tr><th>待新增类型</th><th>它要钉住的那句话</th><th>为什么现有 13 种装不下</th></tr>
+    <tr><td><code>heldout_sealed</code></td><td>留出样本在某时刻已封存且此后未变</td><td>需要外部时点锚，不是文件内容比对</td></tr>
+    <tr><td><code>ratio_ownership</code></td><td>某个比率的分子分母各自属于谁</td><td>现有 json 类型只读一格的值，不知道分母是谁给的</td></tr>
+    <tr><td><code>threshold_provenance</code></td><td>达标阈值出自哪份合同条款 / 谁签的</td><td>需要跨件引用（条款 → 结果件），单文件判据做不到</td></tr>
+    <tr><td><code>arbiter_present</code></td><td>分歧仲裁人具名且非作者</td><td>「在场」是组织事实，不在盘上任何一格里</td></tr>
+    <tr><td><code>regression_nonempty</code></td><td>回归集非空且带版本三元组</td><td>要同时核集合、版本与一致性，现有类型一次只核一件</td></tr>
+    <tr><td><code>exception_paths_count</code></td><td>异常路径被走过几条（不是「跑通了」）</td><td>需要执行轨迹语义，且「没这回事」与「没测」要分开</td></tr>
+    <tr><td><code>owner_named_post_release</code></td><td>上线后负责人具名可追</td><td>人事事实，本件不联网取</td></tr>
+    <tr><td><code>signature_freshness</code></td><td>签字在复核完成后、且未早于回执生成</td><td>要比较两个独立时间源，时钟刻度即抖动源</td></tr>
+  </table>
+  <div class="callout">
+    <div class="t">「先写声明、后补判据」在这套底盘上是安全路径，不是漏洞</div>
+    <p><span class="st st-ok" data-state="有据">有据</span><span class="chip chip-disk" data-chip="disk">盘上</span>
+    今天若把上面任何一种写进声明交进来，底盘<strong>不会静默通过</strong>：不认识的类型直接判 ABSENT 并写明「本件不认识这个核对类型」
+    （<code data-src="交付对账-1026/工具/对账单.py:249">对账单.py:249</code>），整单落「核不了」档（退出码 3）。
+    <span data-scan="not_run">所以规格可以先于实现存在——<strong>而这份报告没有实现它们</strong>（内核 48 键 / 49 格与「停止新增」的边界未动，
+    <code data-src="微内核/微内核/README.md:631">微内核/微内核/README.md:631</code>）。</span></p>
+  </div>
+
+  <h2 id="s7-3" data-key="s7-3">7.3 证据源：沿用三源，另给第四源一个规格</h2>
+  <table class="tbl avoid">
+    <tr><th>证据源</th><th>它核什么</th><th>在甲方验收里的角色</th></tr>
+    <tr><td>Agent 轨迹</td><td>步数、每步是否真跑、依据档、末步是否终态、五档恒等、行号能否回盘</td>
+      <td>证明「这句话是哪一步说出来的」</td></tr>
+    <tr><td>宿主事件</td><td>调用与事件的形状、进度、断线语义</td><td>证明「这一步被谁接住了」</td></tr>
+    <tr><td>账本</td><td>逐条记录的链自洽</td><td>证明「记录没被改过」，不证明「记录的内容为真」</td></tr>
+    <tr class="warn-row"><td><code>contract</code>（规格，未实现）</td>
+      <td>条款件 ↔ 判据 ↔ 结果件三者的引用是否闭合：阈值出自哪一条、该条谁签、结果件由谁提供</td>
+      <td>这是 V1 与通用日志车道的真正分界；<strong>本件不联网取平台数据、不执行客户代码</strong></td></tr>
+  </table>
+  <p class="small"><span data-scan="not_run">第四源在本轮只有规格，没有一行实现，也没有一次真跑</span>；
+  它进不了任何计数，也不许在第 5 章的格子里换成别的依据。</p>
+
+  <h2 id="s7-4" data-key="s7-4">7.4 语义真值由谁供：这是 V1 最难的一格，也是它唯一的护城河</h2>
+  <p data-scan="term"><span class="st st-ok" data-state="有据">有据</span><span class="chip chip-public" data-chip="public">公开件</span>
+  裁决类产品没有真值供方就是表演。V1 的真值不来自本件，来自<strong>买方自己的三样东西</strong>：
+  甲方自写的验收标准、封存下来的评测样本、具名仲裁人。
+  本轮唯一一条买方自写的证据（一份 2026-10-19 的政采结果公告）恰好落在这三样的第一样上——
+  各阶段验收须形成书面记录并由双方签字确认（<span data-cite="S01">S01</span>）；
+  而第二、第三样的形状在供给侧文章里被写得很具体：评测集至少 200 条真实场景样本、达标阈值、谁提供评测集、分歧怎么仲裁
+  （<span data-cite="S02">S02</span>）。</p>
+  <figure data-key="fig5">
+    <div class="pad">
+      <svg viewBox="0 0 660 214" role="img" aria-label="语义真值来源链：三类真值由甲方提供，分别落到回执的哪个位置，落不到的那条路径会被自报封顶">
+        <g font-family="system-ui,Microsoft YaHei" font-size="9.4" fill="#0b1f33">
+          <rect x="8" y="26" width="150" height="40" fill="#eef4f8" stroke="#c7d3df"/>
+          <text x="16" y="43" font-weight="700">真值 ① 验收标准</text><text x="16" y="56" fill="#475569">甲方合同 / 技术附件自写</text>
+          <rect x="8" y="74" width="150" height="40" fill="#eef4f8" stroke="#c7d3df"/>
+          <text x="16" y="91" font-weight="700">真值 ② 封存样本</text><text x="16" y="104" fill="#475569">评测集 + 哈希 + 提供人</text>
+          <rect x="8" y="122" width="150" height="40" fill="#eef4f8" stroke="#c7d3df"/>
+          <text x="16" y="139" font-weight="700">真值 ③ 具名仲裁人</text><text x="16" y="152" fill="#475569" data-scan="term">分歧时谁判、判过没有</text>
+          <rect x="212" y="26" width="150" height="40" fill="#f0fdfa" stroke="#99f6e4"/>
+          <text x="220" y="43" font-weight="700">disk 格：阈值出处</text><text x="220" y="56" fill="#475569">file_contains / json_value</text>
+          <rect x="212" y="74" width="150" height="40" fill="#f0fdfa" stroke="#99f6e4"/>
+          <text x="220" y="91" font-weight="700">disk 格：分子分母</text><text x="220" y="104" fill="#475569">json_len + sha256</text>
+          <rect x="212" y="122" width="150" height="40" fill="#fff8ed" stroke="#fcd34d"/>
+          <text x="220" y="139" font-weight="700">落不进任何格</text><text x="220" y="152" fill="#475569">需要 arbiter_present（未实现）</text>
+          <rect x="416" y="46" width="150" height="44" fill="#0b1f33"/>
+          <text x="424" y="64" font-weight="700" fill="#8fd8cf">回执：可出示的裁决</text>
+          <text x="424" y="78" fill="#dceaff">盘上格逐名对上</text>
+          <text x="424" y="88" fill="#dceaff">量不到的带理由，不写 0</text>
+          <rect x="416" y="112" width="150" height="34" fill="#f1f5f9" stroke="#cbd5e1"/>
+          <text x="424" y="128" font-weight="700" fill="#334155">封顶：只要有 self</text>
+          <text x="424" y="140" fill="#475569">整单最多「未核实」</text>
+          <g stroke="#0f766e" stroke-width="1.4" fill="none">
+            <path d="M158 46 H212"/><path d="M158 94 H212"/><path d="M158 142 H212"/>
+            <path d="M362 46 H416 V68"/><path d="M362 94 H404 V72 H416"/>
+          </g>
+          <g stroke="#b45309" stroke-width="1.4" fill="none"><path d="M362 142 H416"/></g>
+          <text x="8" y="182" font-size="9" fill="#7f1d1d" data-scan="census">第 2 章 N10 那一格（产物原像 0 / 2,940，可枚举集合内）是<tspan font-weight="700">受理硬门</tspan>：样本不可回盘时，本件只能出「未核实」，不出「接受」。</text>
+          <text x="8" y="200" font-size="8.8" fill="#5b6b7f">读法：真值只能从甲方流入，不能由本件制造；本件制造的那一格（图右下）按规矩封顶。</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>图 5 · 语义真值来源链</b>。三条真值里两条能落盘上格、一条落不进（它需要的类型本轮不实现）。
+      <span data-scan="census">落不进不等于不存在，也不等于已解决。</span></figcaption>
+  </figure>
+
+  <h2 id="s7-5" data-key="s7-5">7.5 回执件的合同与法务用法</h2>
+  <p><span class="st st-ok" data-state="有据">有据</span><span class="chip chip-disk" data-chip="disk">盘上</span>
+  这一节说的是「这张纸在合同里站在哪」。三条现成接口：<strong>A1–A5 挂尾款</strong>、<strong>A6 不挂但必须披露</strong>、
+  <strong>R5「未测写成 0」本身就是拒收码</strong>（<code data-src="市场报告-1020/决策卡-1020/试点函.md:141">试点函.md:141</code>）。
+  最后一条对本产品是决定性的：拒收码里已经有一条<strong>专门惩罚「把没量到写成 0」</strong>——
+  那正是底盘的三态设计要做的事。换句话说，<strong>本产品与自家拒收码同向，不靠自己造话术</strong>。</p>
+  <table class="tbl avoid">
+    <tr><th>条款</th><th>回执承担的角色</th><th>限制（必须写进合同，否则产品会被误用）</th></tr>
+    <tr><td>A1 链自洽</td><td>退出码与逐条三态即「达成 / 未达成」的机械依据</td><td>断点可定位是本件给的，不是买方给的</td></tr>
+    <tr><td>A2 产物原像</td><td>指纹核对结果</td><td class="no" data-scan="census"><strong>N10 = 0 / 2,940</strong>：这一项今天过不了，必须写成受理硬门</td></tr>
+    <tr><td>A3 版本三元组</td><td>产物 / 行为 / 判据三件齐不齐</td><td>判据版本变动需重跑，不能只改文档</td></tr>
+    <tr><td>A4 外部复核</td><td class="no">回执<strong>不能</strong>替代它——它要的是非作者真人</td><td data-scan="not_run">0 / 1 未量；把它写成「已由回执覆盖」即越界</td></tr>
+    <tr><td>A5 拒收计数</td><td>每发记录通过 / 拒收 / 超时及原因码</td><td>不以 0 代替未测（与本件三态规矩同一条）</td></tr>
+    <tr><td>A6 R/N 双臂</td><td>不挂钩尾款，但<strong>必须披露</strong> <code>NOT_RUN</code></td><td>披露是义务，不是可选项；写成 0 触发 R5</td></tr>
+  </table>
+  <p class="small">回执内容里<strong>不含模型转述</strong>：底盘只印自己量到的与量不到的，不印第三方对它的解释（这也是它和「日志 + 一段 AI 总结」那类车的区别）。</p>
+
+  <h2 id="s7-6" data-key="s7-6">7.6 三条定价假设，各带证伪阈值</h2>
+  <p><span class="st st-ok" data-state="有据">有据</span><span class="chip chip-estimate" data-chip="estimate">假设</span>
+  本节<strong>不产规模数</strong>（口径件 §八）。给的是三条能被读数推翻的假设，形状照底盘的 estimate 凭据规矩：
+  每条都要有假设与证伪条件。</p>
+  <table class="tbl avoid">
+    <tr><th>#</th><th>假设</th><th>证伪阈值（读数一出现就推翻）</th><th>怎么观测</th></tr>
+    <tr><td>H1</td><td>一个甲方团队的<strong>收口验收次数</strong>足够密，使「按次核一份声明」成立
+      <span data-scan="targeted">（本轮无读数；桌面端设计稿已把「队列频率 &lt; 每周 3 次」列为降级条件）</span></td>
+      <td><strong>若</strong> G1 那 10 例里非作者自发的收口验收次数中位数 &lt; 1 / 周 ⇒ H1 废</td>
+      <td>回执生成次数 / 周（同一 team 的去重后计数），非作者发起才算</td></tr>
+    <tr><td>H2</td><td>买方愿付的形态是<strong>「尾款该不该付」的裁决</strong>，而不是「一份可交付文件」</td>
+      <td><strong>若</strong>试点里出现要求「只买一份包、不挂尾款」的具名买方 ⇒ H2 废，同时 C9 复开</td>
+      <td>合同条款里付款条件是否引用退出码；出现「按份采购」字样即记一发</td></tr>
+    <tr><td>H3</td><td>单价锚点<strong>只做形状对照，不做报价依据</strong>：公开价盘里「审计日志挂在最高档」这一形状存在</td>
+      <td><strong>若</strong>任一具名价盘把审计留痕放进最低档或免费档 ⇒ 本形状对照作废，需重找锚</td>
+      <td>核级价盘件（<span data-cite="S16">S16</span>）逐档读；<span data-scan="targeted">片级价盘不许进本节</span></td></tr>
+  </table>
+  <div class="callout danger">
+    <div class="t">本节不许出现的三样东西</div>
+    <p>规模数；三年三情景；任何来自片级件的数字。<strong>理由不是谨慎，是上一族已经为此付过一次</strong>：
+    给「待复核」标注的快照数字仍进了正文，一个判 UNSUPPORTED、一个一手根本取不到。</p>
+  </div>
+
+  <h2 id="s7-7" data-key="s7-7">7.7 闸门时序：哪一格红，整门就停</h2>
+  <p data-scan="term"><span class="st st-no" data-state="取不到">取不到</span><span class="chip chip-disk" data-chip="disk">盘上</span>
+  闸门不是本报告发明的，是盘上件里已有的那五道（G0 / G1 / G1.5 / G2 / G3，
+  <code data-src="市场报告-1020/试点-1020/长期目标与推进.md:32">长期目标与推进.md:32</code>）。
+  <strong>本报告全部五道都记未发生或未达</strong>：90 天检查点 G1.5 是「产品是否成立」的分水岭，
+  过不了就不再用「还没到时候」解释。</p>
+  <figure data-key="fig6">
+    <div class="pad">
+      <svg viewBox="0 0 660 224" role="img" aria-label="五道闸门时序：G0 到 G3 的时点、通过条件与 2026-10-26 的当前读数，五道全部未达或未跑">
+        <g font-family="system-ui,Microsoft YaHei" font-size="9.2" fill="#0b1f33">
+          <line x1="60" y1="46" x2="640" y2="46" stroke="#94a3b8" stroke-width="1.4"/>
+          <g>
+            <rect x="56" y="24" width="12" height="12" fill="#b91c1c"/><text x="74" y="34">未跑（动作没发生）</text>
+            <rect x="200" y="24" width="12" height="12" fill="#b45309"/><text x="218" y="34">未达（部分量到）</text>
+            <rect x="344" y="24" width="12" height="12" fill="#15803d"/><text x="362" y="34">已过</text>
+          </g>
+          <g>
+            <circle cx="118" cy="46" r="7" fill="#b91c1c"/>
+            <circle cx="272" cy="46" r="7" fill="#b45309"/>
+            <circle cx="426" cy="46" r="7" fill="#b91c1c"/>
+            <circle cx="556" cy="46" r="7" fill="#b91c1c"/>
+          </g>
+          <g fill="#0b1f33">
+            <text x="118" y="66" text-anchor="middle" font-weight="700">G0 · 30 天</text>
+            <text x="272" y="66" text-anchor="middle" font-weight="700">G1 · 60 天</text>
+            <text x="426" y="66" text-anchor="middle" font-weight="700">G1.5 · 90 天</text>
+            <text x="556" y="66" text-anchor="middle" font-weight="700">G2 · 120 天 / G3 · 180 天</text>
+          </g>
+          <g fill="#334155" font-size="8.6">
+            <text x="118" y="80" text-anchor="middle">10 次访谈 / ≥3 真实触发</text>
+            <text x="118" y="92" text-anchor="middle">≥1 POC / ≥1 预算科目</text>
+            <text x="272" y="80" text-anchor="middle">真人 ≤60 分钟组包</text>
+            <text x="272" y="92" text-anchor="middle">+1 次修改 / 拒收计数</text>
+            <text x="426" y="80" text-anchor="middle">10 例 R/N 双臂</text>
+            <text x="426" y="92" text-anchor="middle">R ≥ N +20pp</text>
+            <text x="556" y="80" text-anchor="middle">2 封 LOI / 安全审查 / DPA</text>
+            <text x="556" y="92" text-anchor="middle">→ ≥3 家付费 / ≥1 续费</text>
+          </g>
+          <g font-size="8.6" fill="#7f1d1d">
+            <text x="118" y="112" text-anchor="middle" font-weight="700" data-scan="not_run">0 / 10</text>
+            <text x="272" y="112" text-anchor="middle" font-weight="700" data-scan="not_run">真人 0 / 1</text>
+            <text x="426" y="112" text-anchor="middle" font-weight="700" data-scan="not_run">0 / 10</text>
+            <text x="556" y="112" text-anchor="middle" font-weight="700" data-scan="not_run">LOI 0 / 2 · 审查 0 / 1 · DPA 0 / 1 · 付费 0</text>
+          </g>
+          <text x="60" y="134" font-size="8.6" fill="#5b6b7f">时点按盘上件原样排（2026-11-19 / 12-19 / 2027-01-18 / 02-17 / 04-18）；当前读数即第 2 章 N2 / N1 / N4 / N6 / N7 / N5 各格。</text>
+          <rect x="60" y="146" width="580" height="1" fill="#d9e2ec"/>
+          <text x="60" y="164" font-size="9.2" font-weight="700" fill="#7f1d1d">本产品设计里唯一硬加的一道门（不在原五道里）：</text>
+          <text x="60" y="178" font-size="9">按剧本走出来的试点<tspan font-weight="700">不计入信号</tspan>——只有发起方不是作者、判据不是作者中途改过的发次，才允许进入 H1 / H2 的观测。</text>
+          <text x="60" y="196" font-size="9" fill="#334155">为什么加这一道：底盘今天所有的绿都是作者自己写的样例与自己的机器跑出来的（第 3 章）；不加这道门，G1 那格会被「又跑了一次 demo」填满。</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>图 6 · 闸门时序与当前读数</b>。五道全红不是坏消息，是这份报告的起点：它把「产品是否成立」的分水岭画在 G1.5，
+      并规定<strong>演示件不进分母</strong>。<span data-scan="not_run">图上每一个 0 都是「动作没发生」那一类。</span></figcaption>
+  </figure>
+  <table class="tbl" id="fig6data">
+    <caption>图 6 的数据层：五道闸门的通过条件与 2026-10-26 的当前读数（逐格指回一手件）。</caption>
+    <tr><th>闸</th><th>通过条件</th><th>当前</th><th>一手件</th></tr>
+    <tr data-scan="not_run"><td>G0</td><td>10 次访谈、≥3 真实触发、≥1 POC、≥1 预算科目</td><td class="no" data-src="市场报告-1020/试点-1020/长期目标与推进.md:32">0 / 10</td>
+      <td data-src="市场报告-1020/试点-1020/G0-候选人筛选表.md:188">闸门表 :32 ｜ G0 筛选表 :188（三项读数全 0，全 NOT_RUN）</td></tr>
+    <tr data-scan="not_run"><td>G1</td><td>非作者真人 ≤60 分钟组包 + 1 次修改；拒收计数；链自洽</td><td class="mid" data-src="市场报告-1020/试点-1020/长期目标与推进.md:33">真人 0 / 1 ｜ 状态「未达」</td>
+      <td data-src="市场报告-1020/试点-1020/非作者试读-判定表.md:5">闸门表 :33（全链 2,940 / 2,940 已量到，其余未跑）｜ 非作者试读-判定表.md:5</td></tr>
+    <tr data-scan="not_run"><td>G1.5</td><td>10 例 R/N；R ≥ N +20pp；假修复率 ≤ N</td><td class="no" data-src="市场报告-1020/试点-1020/长期目标与推进.md:34">0 / 10</td>
+      <td data-src="市场报告-1020/决策卡-1020/试点函.md:120">闸门表 :34 ｜ 试点函 §4.1 R/N 双臂定义 :120</td></tr>
+    <tr data-scan="not_run"><td>G2</td><td>2 封 LOI；安全审查；SBOM / DPA / 责任边界</td><td class="no" data-src="市场报告-1020/试点-1020/长期目标与推进.md:35">0 / 2 · 0 / 1 · 0 / 1</td>
+      <td data-src="市场报告-1020/试点-1020/G2-材料准备清单.md:5">闸门表 :35 ｜ G2-材料准备清单.md:5</td></tr>
+    <tr data-scan="not_run"><td>G3</td><td>≥3 家付费 ≥1 万美元，或 ≥5 家付费试点；≥1 续费 / 转正</td><td class="no" data-src="市场报告-1020/试点-1020/长期目标与推进.md:36">0</td>
+      <td data-src="市场报告-1020/试点-1020/长期目标与推进.md:121">闸门表 :36 ｜ :121「这些没有发生，全部 NOT_RUN」</td></tr>
+  </table>
+
+  <h2 id="s7-8" data-key="s7-8">7.8 本章仍是 NOT_RUN 的清单（不许折成 0，也不许由相邻材料顶）</h2>
+  <ul class="checklist avoid">
+    <li data-scan="not_run">非作者 ≤30 分钟接入门：<strong>0 / 1，且这一句是禁用对外宣称</strong>，只能作为待量的门存在
+      （<code data-src="市场报告-1020/决策卡-1020/试点函.md:142">试点函.md:142</code>）。</li>
+    <li>八种待新增核对类型：<strong>本轮不实现</strong>；今天提交会被判「核不了」，不是会被通过。</li>
+    <li data-scan="not_run">第四证据源 <code>contract</code>：<strong>只有规格，没有一行代码</strong>，也没有一次真跑。</li>
+    <li data-scan="not_run">语义真值三样中的第三样（具名仲裁人）：<strong>本轮 0 条</strong>，且现有底盘类型装不下它。</li>
+    <li>H1 / H2 / H3 的全部观测：<strong>未开始</strong>；三条假设都还没被任何读数碰过。</li>
+    <li>真人试读、买方访谈、客户、LOI、付费、法务与安全确认、真实拒收实例：<strong>全部未做</strong>（第 2 章）。</li>
+    <li>本报告自己的尺子分辨力：<strong>臂检未跑</strong>（波 2 未起的那一半），所以「这把尺子会红」这句话仍未成立。</li>
+  </ul>
+</section>

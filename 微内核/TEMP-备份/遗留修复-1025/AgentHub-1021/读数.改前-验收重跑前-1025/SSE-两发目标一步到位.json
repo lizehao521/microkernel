@@ -1,0 +1,48 @@
+{
+ "HTTP": 200,
+ "帧数": 38,
+ "毫秒": 4253,
+ "事件种类": {
+  "meta": 1,
+  "plan": 6,
+  "tool_status": 18,
+  "tool_result": 6,
+  "result": 1,
+  "answer_delta": 5,
+  "done": 1
+ },
+ "最后一步": {
+  "step": 6,
+  "tool": "text.stats",
+  "args": {
+   "path": "src/hubd"
+  },
+  "args_from": "话里抽的",
+  "class": "upstream",
+  "attempts": 1,
+  "evidence": "absent",
+  "provenance": "estimated",
+  "text_首行": "读 C:\\Users\\Admin\\Desktop\\微内核\\AgentHub-1021\\src\\hubd 失败：read C:\\Users\\Admin\\Desktop\\微内核\\AgentHub-1021\\src\\hubd: Incorrect function."
+ },
+ "结论": {
+  "turn": 1,
+  "steps": 6,
+  "stop": "步数上限",
+  "sane": true,
+  "sane_why": "整列 6 步 / 10 条结论自洽（判据 12 条全过）",
+  "mix": {
+   "absent": 6,
+   "estimated": 1,
+   "measured": 3,
+   "total": 10
+  },
+  "mix_ok": true,
+  "retries": 0,
+  "degrades": 0,
+  "plan": "本机规则",
+  "memory_msgs": 7,
+  "dropped": 0,
+  "answer": "fs.list：C:\\Users\\Admin\\Desktop\\微内核\\AgentHub-1021\\src\\hubd ｜ 目录下共 18 条 ｜ 这里最大的文件是 hubd.exe（11980288 字节）",
+  "findings数": 10
+ }
+}

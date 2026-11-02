@@ -1,0 +1,22 @@
+--- team_adapter.py(orig)
++++ team_adapter.py(patched)
+@@ -81,7 +81,7 @@
+     _HAS_METAGENE = False
+ 
+ try:
+-    from evolution_enhancer import EvolutionEnhancer, COGNITIVE_STRATEGIES, _TRANSFORM_IDS
++    from evolution_enhancer import EvolutionEnhancer, COGNITIVE_STRATEGIES, _TRANSFORM_IDS, _SELECTABLE_IDS
+     _HAS_ENHANCER = True
+ except Exception:
+     _HAS_ENHANCER = False
+@@ -381,8 +381,8 @@
+         )
+ 
+     def _distribute_strategies(self, n_engineers: int) -> List[List[str]]:
+-        """将 26 认知策略分发给 N 个工程师（按顺序交替分配，公平覆盖）"""
+-        strat_ids = list(_TRANSFORM_IDS) if _HAS_ENHANCER else [
++        """将 20 条可变换策略分发给 N 个工程师（按顺序交替分配，公平覆盖；剔除恒等 context_switch）"""
++        strat_ids = list(_SELECTABLE_IDS) if _HAS_ENHANCER else [
+             "substitute", "combine", "adapt", "modify", "put", "eliminate", "reverse",
+             "grafting", "enc_tunnel", "polymorphism", "first_principle", "analogy",
+         ]

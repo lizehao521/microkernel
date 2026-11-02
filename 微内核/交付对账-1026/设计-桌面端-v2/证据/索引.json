@@ -1,0 +1,60 @@
+{
+  "generated_at": "2026-10-26T04:31:51+08:00",
+  "files": [
+    {
+      "file": "pgagent-13步.json",
+      "bytes": 13254,
+      "sha256": "2d50c85bade3e386eb7009c7e6b8e07631ba2156f21d5d9f1cdc72933e358a91",
+      "kind": "pgagent-13-step",
+      "scope": "本机真跑，假端点，未执行代码"
+    },
+    {
+      "file": "agentd-事件.json",
+      "bytes": 10664,
+      "sha256": "7ffa0b4bb44a88ba316cd442ad04e209a1d9e653dccabdaef3d019a6b27c26de",
+      "kind": "agentd-events",
+      "scope": "两条 run 的真实事件导出副本"
+    },
+    {
+      "file": "内核-49格.json",
+      "bytes": 28739,
+      "sha256": "d9e9486f78e0914eecb818ad894cb315d7e9f7d13450b4a9d3ae990deb1188e8",
+      "kind": "kernel-49-cells",
+      "scope": "仓库样例账首块，非同发"
+    },
+    {
+      "file": "交付.json",
+      "bytes": 11591,
+      "sha256": "822a4f3710932dc41ec96898ad2554198c185348a9a402f2dcd8f92fc88c367a",
+      "kind": "delivery-claims",
+      "scope": "三份交付单与 16 条声明判定"
+    },
+    {
+      "file": "raw/pgagent-真跑.json",
+      "bytes": 17522,
+      "sha256": "eabbd1dc620c7056f3f52b49df74cb3e9c9c91e06fb501301ccdcccd9a1496b1",
+      "kind": "raw-sse",
+      "scope": "pgagent 原始 SSE"
+    },
+    {
+      "name": "agentd-真端点.events.jsonl",
+      "src": "C:\\Users\\Admin\\Desktop\\微内核\\PDF-1022\\真端点-1023\\读数\\agentd-真端点.events.jsonl",
+      "bytes": 4586,
+      "sha256": "59d1deb636993cf1e67e7bf6a56313f08ef3c817ffb0d03404ff5581b083218e",
+      "kind": "raw-source",
+      "scope": "源文件拷贝"
+    },
+    {
+      "name": "样例-agent.jsonl",
+      "src": "C:\\Users\\Admin\\Desktop\\微内核\\微内核\\微内核\\报告\\样例-agent.jsonl",
+      "bytes": 140634,
+      "sha256": "69a3046bc5059130cbdce2b4eae4458e848fd2bb810ea02fbcb988688256e83e",
+      "kind": "raw-source",
+      "scope": "源文件拷贝"
+    }
+  ],
+  "not_same_run": [
+    "pgagent 13 步（desk-1026#1）、agentd 14 条（real-agentd-1 / agentd-27276）、内核 49 格（样例账）三者不是同一次执行。",
+    "UI 必须按交付单分别标注来源，不得把三个数混写成同一发。"
+  ]
+}

@@ -1,0 +1,229 @@
+{
+  "meta": {
+    "name": "收货台 Receiving Desk",
+    "product": "交付对账 · 桌面端",
+    "version": "0.1.0-prototype",
+    "generated_at": "2026-10-26",
+    "source_of_truth": "原型-源/style.css",
+    "build": {
+      "file": "收货台-原型.html",
+      "bytes": 117357,
+      "lines": 2795,
+      "sha256": "440014553deb2b947451d99368a3c737ea35b57870fd472de0919d32df104d65"
+    },
+    "method": "逐值从 style.css 抽取，未新造色；对比度由脚本对最终六位色值重算",
+    "status": "prototype · offline · sample data"
+  },
+  "color": {
+    "surface": {
+      "paper": { "value": "#f3f2ed", "use": "应用底色" },
+      "surface": { "value": "#ffffff", "use": "面板 / 表格 / 抽屉" },
+      "surface-2": { "value": "#faf9f5", "use": "表头 / 次层块" },
+      "surface-3": { "value": "#eeede6", "use": "计数胶囊 / 占位格" },
+      "line": { "value": "#e4e2da", "use": "常规分隔线" },
+      "line-2": { "value": "#d3d0c6", "use": "强分隔线" }
+    },
+    "text": {
+      "ink": { "value": "#17191e", "use": "主文本" },
+      "ink-2": { "value": "#4b505b", "use": "正文次级" },
+      "ink-3": { "value": "#646974", "use": "元信息 / 表头 / 面包屑 / 小字" },
+      "ink-4": { "value": "#a3a7b0", "use": "仅装饰点；不可承载正文" },
+      "on-dark": { "value": "#f0f1f4", "use": "深色栏主文本" },
+      "side-text": { "value": "#a9aeb9", "use": "侧栏常规项" },
+      "side-dim": { "value": "#868c98", "use": "侧栏元信息；不得放在 side-3 上" }
+    },
+    "accent": {
+      "accent": { "value": "#1f49d6", "use": "主操作 / 焦点环" },
+      "accent-weak": { "value": "#e9eeff", "use": "选中底 / 选区" },
+      "accent-ink": { "value": "#1637a8", "use": "强调底上的文字" }
+    },
+    "sidebar": {
+      "side": { "value": "#16181d", "use": "标题栏 / 侧栏底" },
+      "side-2": { "value": "#1e2128", "use": "侧栏卡片 / hover" },
+      "side-3": { "value": "#2a2e37", "use": "选中项底；此处只放白字或 #e6e8ec" }
+    }
+  },
+  "status": {
+    "ok": {
+      "fg": "#0e7a4d",
+      "bg": "#e7f4ec",
+      "line": "#bfe3cd",
+      "meaning": "可收：所有关键声明都有盘上依据且相符"
+    },
+    "bad": {
+      "fg": "#b42318",
+      "bg": "#fdeceb",
+      "line": "#f5c6c2",
+      "meaning": "需退：存在 MISMATCH，整单必须退回"
+    },
+    "warn": {
+      "fg": "#8a5a00",
+      "bg": "#fdf3dd",
+      "line": "#ecd9a8",
+      "meaning": "核不了：证据缺席，不等于通过"
+    },
+    "unk": {
+      "fg": "#5c6270",
+      "bg": "#eef0f4",
+      "line": "#d8dbe2",
+      "meaning": "处理中 / 待核：尚未出回执"
+    },
+    "relay": {
+      "fg": "#6a5a9a",
+      "bg": "#f4f0fb",
+      "line": "#ddd4ef",
+      "meaning": "转述依据（relayed）：来自交付方自述，不算盘上实测"
+    },
+    "amber-marker": {
+      "value": "#c99a2e",
+      "use": "ABSENT 圆点 / 三态色条；仅作 8px 标记，不承载文字"
+    }
+  },
+  "verdict": {
+    "MATCH": { "color": "ok", "label": "相符" },
+    "MISMATCH": { "color": "bad", "label": "不符" },
+    "ABSENT": { "color": "warn", "label": "缺席 · 核不了" },
+    "PENDING": { "color": "unk", "label": "核对中" }
+  },
+  "delivery_status": {
+    "ACCEPTED": { "rc": 0, "color": "ok" },
+    "NOT-ACCEPTED-MISMATCH": { "rc": 2, "color": "bad" },
+    "NOT-ACCEPTED-UNVERIFIED": { "rc": 3, "color": "warn" },
+    "PROCESSING": { "rc": null, "color": "unk" }
+  },
+  "basis": {
+    "disk": { "label": "盘上", "color": "ok", "rule": "唯一算实测的依据" },
+    "relayed": { "label": "转述", "color": "relay", "rule": "交付方自述；只能支撑到 UNVERIFIED" },
+    "absent": { "label": "缺席", "color": "warn", "rule": "必须写明为什么缺席，不得记 0" }
+  },
+  "decision": {
+    "accepted": { "label": "已收下", "rule": "记录决定；不改变声明真假，不为质量背书" },
+    "returned": { "label": "已退回", "rule": "必须带理由，回执可转发" },
+    "archived": { "label": "已归档", "rule": "只读留存" },
+    "pending": { "label": "未决定" }
+  },
+  "typography": {
+    "font-family": {
+      "sans": "\"Segoe UI\", \"Microsoft YaHei UI\", \"Microsoft YaHei\", system-ui, -apple-system, sans-serif",
+      "mono": "\"Cascadia Mono\", \"Cascadia Code\", Consolas, \"Courier New\", monospace"
+    },
+    "size": {
+      "display-1": "28px",
+      "display-2": "25px",
+      "h1": "23px",
+      "h2": "17px",
+      "h3": "15px",
+      "body": "13px",
+      "body-sm": "12.5px",
+      "body-xs": "12px",
+      "meta": "11.5px",
+      "meta-sm": "11px",
+      "micro": "10.5px",
+      "tag": "10px",
+      "tag-sm": "9.5px",
+      "chip": "9px"
+    },
+    "weight": { "regular": 400, "medium": 500, "semibold": 600, "bold": 700 },
+    "line-height": { "body": 1.5, "heading": 1.2 },
+    "rule": "10px 及以下只用于编号 / 表头 / 来源字母；正文最小 11.5px。数字一律 tabular-nums。"
+  },
+  "space": {
+    "micro": "2px",
+    "3xs": "4px",
+    "2xs": "6px",
+    "xs": "8px",
+    "s": "10px",
+    "m": "12px",
+    "l": "14px",
+    "xl": "16px",
+    "2xl": "20px",
+    "3xl": "24px",
+    "4xl": "30px",
+    "page-pad": "26px 30px 40px",
+    "dense-rule": "桌面表格以 10/14px 为密度基准；卡片用 12/16px。"
+  },
+  "radius": {
+    "xs": "3px",
+    "sm": "4px",
+    "md": "6px",
+    "lg": "8px",
+    "xl": "12px",
+    "pill": "999px"
+  },
+  "shadow": {
+    "e1": "0 1px 2px rgba(20, 22, 28, .05)",
+    "e2": "0 12px 32px rgba(20, 22, 28, .14), 0 2px 8px rgba(20, 22, 28, .06)"
+  },
+  "motion": {
+    "duration": {
+      "quick": "120ms",
+      "base": "180ms",
+      "drawer": "220ms",
+      "skeleton": "1300ms"
+    },
+    "easing": {
+      "standard": "ease",
+      "drawer": "cubic-bezier(.22,.61,.36,1)"
+    },
+    "reduced-motion": "prefers-reduced-motion: reduce 时全部 animation/transition 压到 .01ms"
+  },
+  "layout": {
+    "titlebar-height": "44px",
+    "sidebar-width": "236px",
+    "content-max": "1320px",
+    "drawer-width": "min(620px, 92vw)",
+    "button-height": { "md": "32px", "sm": "27px" },
+    "search-height": "28px",
+    "search-min-width": "210px",
+    "triage-columns": 4,
+    "breakpoint": { "detail-single-column": "1120px" }
+  },
+  "contrast_audit": {
+    "target": "WCAG 2.1 AA 正文 4.5:1 / 大字 3:1",
+    "method": "最终 build 上逐元素取 color + 合成背景色，脚本计算；非人工估色",
+    "pairs": [
+      { "pair": "ink / paper", "ratio": 15.69, "verdict": "PASS" },
+      { "pair": "ink / surface", "ratio": 17.58, "verdict": "PASS" },
+      { "pair": "ink-2 / paper", "ratio": 7.21, "verdict": "PASS" },
+      { "pair": "ink-2 / surface", "ratio": 8.08, "verdict": "PASS" },
+      { "pair": "ink-3 / paper", "ratio": 4.91, "verdict": "PASS" },
+      { "pair": "ink-3 / surface", "ratio": 5.51, "verdict": "PASS" },
+      { "pair": "ink-3 / surface-2", "ratio": 5.23, "verdict": "PASS" },
+      { "pair": "ink-3 / surface-3", "ratio": 4.69, "verdict": "PASS" },
+      { "pair": "side-text / side", "ratio": 7.98, "verdict": "PASS" },
+      { "pair": "side-dim / side", "ratio": 5.26, "verdict": "PASS" },
+      { "pair": "side-dim / side-2", "ratio": 4.77, "verdict": "PASS" },
+      { "pair": "accent / surface", "ratio": 7.04, "verdict": "PASS" },
+      { "pair": "accent-ink / accent-weak", "ratio": 8.45, "verdict": "PASS" },
+      { "pair": "ok / ok-bg", "ratio": 4.74, "verdict": "PASS" },
+      { "pair": "bad / bad-bg", "ratio": 5.75, "verdict": "PASS" },
+      { "pair": "warn / warn-bg", "ratio": 5.37, "verdict": "PASS" },
+      { "pair": "unk / unk-bg", "ratio": 5.36, "verdict": "PASS" },
+      { "pair": "relay / relay-bg", "ratio": 5.28, "verdict": "PASS" },
+      { "pair": "white / accent", "ratio": 7.04, "verdict": "PASS" },
+      { "pair": "white / bad", "ratio": 6.57, "verdict": "PASS" }
+    ],
+    "exceptions": [
+      {
+        "token": "ink-4",
+        "pair": "ink-4 / surface",
+        "ratio": 2.41,
+        "why_allowed": "仅用于 evidence-item 的关闭态圆点，是纯装饰；旁边有文字状态，不承载信息"
+      },
+      {
+        "token": "side-dim",
+        "pair": "side-dim / side-3",
+        "ratio": 4.03,
+        "why_allowed": "side-3 只出现在选中导航项与图标按钮 hover，两处文字分别固定为 #ffffff 与 #e6e8ec；side-dim 文本只落在 side / side-2"
+      }
+    ]
+  },
+  "content_rules": {
+    "verdict_language": "相符 / 不符 / 缺席（核不了）/ 核对中，不用「通过 / 失败」代替真假判断",
+    "absent_rule": "每条 ABSENT 必须写缺席理由；核不了不折算成 0，也不读成通过",
+    "self_claim_rule": "转述依据封顶 NOT-ACCEPTED-UNVERIFIED",
+    "mismatch_rule": "出现 MISMATCH 时收下按钮禁用，整单只能退回",
+    "accept_rule": "收下只记录决定与保留结论，不改变声明真假，不为代码质量背书",
+    "sample_rule": "演示数据逐行标注「实测回执 / 演示占位」，头部写清 3 份实测 + 3 条占位"
+  }
+}

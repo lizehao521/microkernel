@@ -1,0 +1,49 @@
+{
+  "件": "W25 新 build 的截图读数（app.js 05:17 改过之后，画面第一次重新有据）",
+  "时间": "2026-10-21 05:30–05:32（本机墙钟）",
+  "为什么要单开这一轮": "闸 5 的口径是『旧读数不能替新 build 说话』。W24 改了 web/app.js（05:17:07），而 读数/截图/ 里最新那张是 W14 时代的 ⇒ 目标验收那句『留截图读数』对**这一版**其实是空的。DOM 读数 W24 补上了，像素没补。",
+
+  "现场": {
+    "服务端": "TEMP-W25\\pg.exe（从 src/pgagent 现编，build_rc=0），只听 127.0.0.1:4401，-step-delay=0、-data=数据-s，内核接缝=true",
+    "同源对账": "GET /app.js ⇒ http=200、sha256 前 16 位 142d2325af8c417f == 盘上 src/pgagent/web/app.js（先印状态码再取哈希，这是 W23 那条坑的复发预防）",
+    "触发方式": "http://127.0.0.1:4401/?run=1 —— 走同一条 /api/turn，代码与栈用页内置样例；造的是触发方式不是数据，页面上 #autorun 自己声明了这一点（截图里看得见那行灰字）"
+  },
+
+  "两条出图路各自的结果": {
+    "路_A_in-app面板（目标验收原本要的那条）": {
+      "结果": "NOT_VERIFIED（依旧给不了）",
+      "原话": "NATIVE_BROWSER_VIEWPORT_UNAVAILABLE: In-app Browser did not provide a visible surface with a positive viewport within 1000ms (operation=screenshot, viewport=580x425, visible=false, attached=true, cdpAttached=true, visibilityState=hidden). Open the in-app Browser before retrying this visual action.",
+      "同一页面同时量到的 DOM 读数": "trace 13 步、#autorun 可见、band 首句『第 1 发跑完：问题路由=审查…』、viewport 580x425",
+      "口径": "这台机要我把面板开到前台才补得上；我没有把它写成『截图已交』，也没编一张替它"
+    },
+    "路_B_Edge无头": {
+      "命令": "msedge --headless=new --disable-gpu --window-size=1440,900 --user-data-dir=%TEMP%/pgagent-shot-w25c --virtual-time-budget=40000 --screenshot=C:/Users/Admin/AppData/Local/Temp/w25-shot.png http://127.0.0.1:4401/?run=1",
+      "产物": "读数/截图/W25-1440-run1-新build.png ｜ file 判：PNG image data, 1440 x 900, 8-bit/color RGB ｜ 174666 字节",
+      "画面里看得见的（我肉眼看过这张图）": [
+        "三栏齐：代码编辑区 / 对话历史 / 结构化结果；标题旁徽章『本机 · 只读不执行』",
+        "左栏灰字『这一发由 URL 参数 ?run=1 自动触发（不是人点出来的；代码与栈用的是页内置样例）。』",
+        "结论带：账本触发过 9 次决定（读回 12 格，只有真改写了结果的才计入）· KPI = 9 格 · 反臂：不 read_back ⇒ 0 格 · 代码执行=否 · 结束=跑完：九步走全 · 到这里已亮 13 步（真跑了 12 步）",
+        "九步逐条带出处徽章：1 intake measured（483 字节 / 36 行 / 指纹 34bad706594c08f2 · parts=830 字节、额度 14745 ⇒ 不超）、2 shape measured（判为 go，Go 语法树解析过了）、3 select-analyzers measured（12 族）、4 analyze measured（findings 12 条 measured 8/estimated 4）、5 check_call、6 record_call、7 read_back 三轴读回、8 gateway absent 没跑（NOT_RUN：PGAGENT_BASE_URL 未设 ⇒ 真端点 NOT_RUN；假端点没开）、9 fold measured（五档 8/4/0/0/9，加总 21 条，恒等式 true）",
+        "历史栏那行『本会话 1 发（数据/会话-web-trwnp2.jsonl）· 面板内可滚动，最新在最后一行』（W22 那三件修法都在画面里）"
+      ]
+    }
+  },
+
+  "两个 KPI 数为什么不一样（不许混着说）": {
+    "这张图（?run=1 内置样例）": "读回 12 / 改写 9 ⇒ KPI 9",
+    "验收.py 闸 3（自带脏样本、随机端口那一发）": "KPI 4",
+    "口径": "两处都是真数，差在**输入形状**：样例考卷命中的是『账上缺席 ⇒ 结果区跟着记 absent』那一族动作（W6 记过：管路七格有真值后那批动作消失，KPI 会掉），脏样本那一发走的就是掉档后的形状。所以报数必须带『哪一发』，不能只报一个 KPI"
+  },
+
+  "自己造的两次弯路（留着不涂）": [
+    "第一次出图：--screenshot 指了中文相对路径『读数/截图/W25-1440-run1-新build.png』，Edge 在 stderr 里报『Failed to write file … 系统找不到指定的路径』（GBK 控制台把中文路径咬坏），**而进程退出码仍是 0** ⇒ 只看 rc 就会写出一张不存在的图。第二次改 ASCII 相对名，Edge 又把它写到自己认为的 cwd（当前目录里找不到）。第三次改绝对 ASCII 路径才落盘，然后 mv 进 读数/截图/。规矩：出图这类动作，验收要看 file/字节数与肉眼开图，不能看退出码。",
+    "browser-use take_screenshot 第一次调用我传了 filename ⇒ 参数校验失败（它的字段是 filePath）。这是工具姿势错，不是产品问题，记一笔免得下次再猜。"
+  ],
+
+  "没量到的": [
+    "in-app 面板那张像素：NOT_VERIFIED，要用户把面板开到前台（路 A 的原话就是拦在这）",
+    "窄屏 PNG：这台机 Edge 无头把窗口宽度夹在 ~528（W9 量过），所以 390/320 的排版读数只认 iframe 探针，不拿 PNG 说话",
+    "真模型端点：NOT_RUN（截图里第 8 步那格灰徽章 + 理由就是这条的实物）",
+    "真人连点/真人试读：0 次"
+  ]
+}

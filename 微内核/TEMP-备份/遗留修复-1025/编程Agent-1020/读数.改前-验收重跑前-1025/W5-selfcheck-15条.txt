@@ -1,0 +1,17 @@
+[OK ] 脏样本命中 ignore-error｜findings=9
+[OK ] 脏样本命中 empty-err-block｜
+[OK ] 脏样本命中 dup-name-same-scope｜
+[OK ] 脏样本命中 print-as-log｜
+[OK ] 五档加总恒等｜{Measured:7 Estimated:2 ModelSays:0 Relayed:0 Absent:10 Total:19}
+[OK ] 接缝已装：内核三步都真跑了｜三轴读回（session/发号/侧）；读回 12 格，其中 9 格真的改写了这一发的结果
+[OK ] KPI：读回的格里有格真的改写了结果，且 ≥1｜读回 12 格 / 改写 9 格
+[OK ] 账上 content_bytes 落成了独立一格（不冒充代码字节）｜BytesSource="账上读回来的 content_bytes（整块送出量），与 metrics.bytes（贴进来的代码量）分列两格"｜账上那一格的读数：[input/measured] 830
+[OK ] 反臂：不 read_back ⇒ KPI 掉回 0｜KPI=0
+[OK ] 干净样本不许被编出 critical（反臂：尺子不能凭空红）｜findings=2
+[OK ] Python 样本整份降 estimated（不冒充 measured）｜measured=0 estimated=1
+[OK ] 栈那一发认出帧并落进贴入范围｜&{StackBytes:276 Frames:2 InRange:2}
+[OK ] 行号映射署 estimated（文件名没对上，不许升 measured）｜stack-frame(estimated) 2 条
+[OK ] 优化建议每条都写了怎么复验，且没有一条署 measured｜带修法的建议 4 条
+[OK ] 没给栈：记 absent 带理由，不许读成「没有 bug」｜
+
+读数自印：dirty=9 clean=2 py=1 条；未决项 10/10/12；失败项 0

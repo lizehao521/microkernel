@@ -1,0 +1,1051 @@
+{
+ "surface": "agenthub",
+ "task": "T12",
+ "shape": "T02 x20 (same session)",
+ "endpoint": "http://121.36.29.96:8787/v1/chat/completions",
+ "model": "MiniMax-M2.5",
+ "prompt_version": "v2",
+ "prompt_file": "PDF-1022/真端点-1023/提示词体检/prompt-hub-system-v2.md",
+ "key_masked": "sk-rel...IbWA",
+ "port": 58180,
+ "reps_declared": 20,
+ "started": "2026-10-23T12:57:31+08:00",
+ "health": {
+  "allow_exec": false,
+  "allow_write": false,
+  "memory": 0,
+  "model_endpoint": "http://121.36.29.96:8787/v1/chat/completions",
+  "next_turn": 1,
+  "ok": true,
+  "tools": 12
+ },
+ "exe": {
+  "sha256": "157b5ba0cb742e0473964468cad19708601fc7a225befbbb75ad7b9ca3ee8e31",
+  "bytes": 12066816
+ },
+ "reps": [
+  {
+   "rep": 1,
+   "ok": false,
+   "status": 200,
+   "turn": 1,
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "text.stats"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "model_says_steps": 2,
+   "read_present": true,
+   "read_class": "ok",
+   "stats_present": true,
+   "stats_class": "ok",
+   "lines": 8,
+   "sane": true,
+   "sane_why": "整列 2 步 / 5 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 3,
+   "dropped_from_window": 0,
+   "context_chars_used": 323,
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-c3est8xq\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）；text.stats：参数 text ｜ 字节 40 ｜ UTF-8 码元 40 ｜ 行 8（空行 1）｜ 最长一行 7 字节，在第 5 行 ｜ 试了 1 次 ｜ 0ms",
+   "ms": 6459.8,
+   "err": null,
+   "at": "2026-10-23T12:57:39+08:00"
+  },
+  {
+   "rep": 2,
+   "ok": false,
+   "status": 200,
+   "turn": 2,
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 0,
+   "tools": [],
+   "classes": [],
+   "provenances": [],
+   "evidences": [],
+   "model_says_steps": 0,
+   "read_present": false,
+   "read_class": null,
+   "stats_present": false,
+   "stats_class": null,
+   "lines": null,
+   "sane": true,
+   "sane_why": "整列 0 步 / 3 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 5,
+   "dropped_from_window": 0,
+   "context_chars_used": 633,
+   "answer_head": "这一发没有任何成功读数",
+   "ms": 2079.9,
+   "err": null,
+   "at": "2026-10-23T12:57:41+08:00"
+  },
+  {
+   "rep": 3,
+   "ok": false,
+   "status": 200,
+   "turn": 3,
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 0,
+   "tools": [],
+   "classes": [],
+   "provenances": [],
+   "evidences": [],
+   "model_says_steps": 0,
+   "read_present": false,
+   "read_class": null,
+   "stats_present": false,
+   "stats_class": null,
+   "lines": null,
+   "sane": true,
+   "sane_why": "整列 0 步 / 3 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 7,
+   "dropped_from_window": 0,
+   "context_chars_used": 758,
+   "answer_head": "这一发没有任何成功读数",
+   "ms": 4774.5,
+   "err": null,
+   "at": "2026-10-23T12:57:46+08:00"
+  },
+  {
+   "rep": 4,
+   "ok": false,
+   "status": 200,
+   "turn": 4,
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "model_says_steps": 1,
+   "read_present": true,
+   "read_class": "ok",
+   "stats_present": false,
+   "stats_class": null,
+   "lines": null,
+   "sane": true,
+   "sane_why": "整列 1 步 / 4 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 10,
+   "dropped_from_window": 0,
+   "context_chars_used": 1046,
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-c3est8xq\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）",
+   "ms": 8066.5,
+   "err": null,
+   "at": "2026-10-23T12:57:54+08:00"
+  },
+  {
+   "rep": 5,
+   "ok": false,
+   "status": 200,
+   "turn": 5,
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "text.stats"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "model_says_steps": 1,
+   "read_present": false,
+   "read_class": null,
+   "stats_present": true,
+   "stats_class": "ok",
+   "lines": 7,
+   "sane": true,
+   "sane_why": "整列 1 步 / 4 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 13,
+   "dropped_from_window": 0,
+   "context_chars_used": 1413,
+   "answer_head": "text.stats：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-c3est8xq\\fixture\\numbers.txt ｜ 字节 45 ｜ UTF-8 码元 45 ｜ 行 7（空行 0）｜ 最长一行 7 字节，在第 5 行 ｜ 试了 1 次 ｜ 0ms",
+   "ms": 5129.3,
+   "err": null,
+   "at": "2026-10-23T12:58:00+08:00"
+  },
+  {
+   "rep": 6,
+   "ok": false,
+   "status": 200,
+   "turn": 6,
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 0,
+   "tools": [],
+   "classes": [],
+   "provenances": [],
+   "evidences": [],
+   "model_says_steps": 0,
+   "read_present": false,
+   "read_class": null,
+   "stats_present": false,
+   "stats_class": null,
+   "lines": null,
+   "sane": true,
+   "sane_why": "整列 0 步 / 3 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 15,
+   "dropped_from_window": 0,
+   "context_chars_used": 1681,
+   "answer_head": "这一发没有任何成功读数",
+   "ms": 5077.5,
+   "err": null,
+   "at": "2026-10-23T12:58:05+08:00"
+  },
+  {
+   "rep": 7,
+   "ok": false,
+   "status": 200,
+   "turn": 7,
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 0,
+   "tools": [],
+   "classes": [],
+   "provenances": [],
+   "evidences": [],
+   "model_says_steps": 0,
+   "read_present": false,
+   "read_class": null,
+   "stats_present": false,
+   "stats_class": null,
+   "lines": null,
+   "sane": true,
+   "sane_why": "整列 0 步 / 3 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 17,
+   "dropped_from_window": 0,
+   "context_chars_used": 1806,
+   "answer_head": "这一发没有任何成功读数",
+   "ms": 3665.3,
+   "err": null,
+   "at": "2026-10-23T12:58:09+08:00"
+  },
+  {
+   "rep": 8,
+   "ok": false,
+   "status": 200,
+   "turn": 8,
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 0,
+   "tools": [],
+   "classes": [],
+   "provenances": [],
+   "evidences": [],
+   "model_says_steps": 0,
+   "read_present": false,
+   "read_class": null,
+   "stats_present": false,
+   "stats_class": null,
+   "lines": null,
+   "sane": true,
+   "sane_why": "整列 0 步 / 3 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 19,
+   "dropped_from_window": 0,
+   "context_chars_used": 1931,
+   "answer_head": "这一发没有任何成功读数",
+   "ms": 3140.1,
+   "err": null,
+   "at": "2026-10-23T12:58:12+08:00"
+  },
+  {
+   "rep": 9,
+   "ok": false,
+   "status": 200,
+   "turn": 9,
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "fs.read"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "model_says_steps": 2,
+   "read_present": true,
+   "read_class": "ok",
+   "stats_present": false,
+   "stats_class": null,
+   "lines": null,
+   "sane": true,
+   "sane_why": "整列 2 步 / 5 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 23,
+   "dropped_from_window": 0,
+   "context_chars_used": 2382,
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-c3est8xq\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-c3est8xq\\fixture\\numbers.txt ｜ 读到",
+   "ms": 8846.2,
+   "err": null,
+   "at": "2026-10-23T12:58:21+08:00"
+  },
+  {
+   "rep": 10,
+   "ok": false,
+   "status": 200,
+   "turn": 10,
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 0,
+   "tools": [],
+   "classes": [],
+   "provenances": [],
+   "evidences": [],
+   "model_says_steps": 0,
+   "read_present": false,
+   "read_class": null,
+   "stats_present": false,
+   "stats_class": null,
+   "lines": null,
+   "sane": true,
+   "sane_why": "整列 0 步 / 3 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 25,
+   "dropped_from_window": 0,
+   "context_chars_used": 2717,
+   "answer_head": "这一发没有任何成功读数",
+   "ms": 5026.2,
+   "err": null,
+   "at": "2026-10-23T12:58:26+08:00"
+  },
+  {
+   "rep": 11,
+   "ok": false,
+   "status": 200,
+   "turn": 11,
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 0,
+   "tools": [],
+   "classes": [],
+   "provenances": [],
+   "evidences": [],
+   "model_says_steps": 0,
+   "read_present": false,
+   "read_class": null,
+   "stats_present": false,
+   "stats_class": null,
+   "lines": null,
+   "sane": true,
+   "sane_why": "整列 0 步 / 3 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 27,
+   "dropped_from_window": 0,
+   "context_chars_used": 2842,
+   "answer_head": "这一发没有任何成功读数",
+   "ms": 2670.4,
+   "err": null,
+   "at": "2026-10-23T12:58:29+08:00"
+  },
+  {
+   "rep": 12,
+   "ok": false,
+   "status": 200,
+   "turn": 12,
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "text.stats"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "model_says_steps": 1,
+   "read_present": false,
+   "read_class": null,
+   "stats_present": true,
+   "stats_class": "ok",
+   "lines": 7,
+   "sane": true,
+   "sane_why": "整列 1 步 / 4 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 30,
+   "dropped_from_window": 0,
+   "context_chars_used": 3110,
+   "answer_head": "text.stats：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-c3est8xq\\fixture\\numbers.txt ｜ 字节 45 ｜ UTF-8 码元 45 ｜ 行 7（空行 0）｜ 最长一行 7 字节，在第 5 行 ｜ 试了 1 次 ｜ 0ms",
+   "ms": 7008.1,
+   "err": null,
+   "at": "2026-10-23T12:58:37+08:00"
+  },
+  {
+   "rep": 13,
+   "ok": false,
+   "status": 200,
+   "turn": 13,
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "text.stats"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "model_says_steps": 1,
+   "read_present": false,
+   "read_class": null,
+   "stats_present": true,
+   "stats_class": "ok",
+   "lines": 7,
+   "sane": true,
+   "sane_why": "整列 1 步 / 4 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 33,
+   "dropped_from_window": 0,
+   "context_chars_used": 3521,
+   "answer_head": "text.stats：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-c3est8xq\\fixture\\numbers.txt ｜ 字节 45 ｜ UTF-8 码元 45 ｜ 行 7（空行 0）｜ 最长一行 7 字节，在第 5 行 ｜ 试了 1 次 ｜ 1ms",
+   "ms": 12496.6,
+   "err": null,
+   "at": "2026-10-23T12:58:49+08:00"
+  },
+  {
+   "rep": 14,
+   "ok": false,
+   "status": 200,
+   "turn": 14,
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "fs.read"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "model_says_steps": 2,
+   "read_present": true,
+   "read_class": "ok",
+   "stats_present": false,
+   "stats_class": null,
+   "lines": null,
+   "sane": true,
+   "sane_why": "整列 2 步 / 5 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 37,
+   "dropped_from_window": 2,
+   "context_chars_used": 3866,
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-c3est8xq\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-c3est8xq\\fixture\\numbers.txt ｜ 读到",
+   "ms": 8988.1,
+   "err": null,
+   "at": "2026-10-23T12:58:58+08:00"
+  },
+  {
+   "rep": 15,
+   "ok": false,
+   "status": 200,
+   "turn": 15,
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 0,
+   "tools": [],
+   "classes": [],
+   "provenances": [],
+   "evidences": [],
+   "model_says_steps": 0,
+   "read_present": false,
+   "read_class": null,
+   "stats_present": false,
+   "stats_class": null,
+   "lines": null,
+   "sane": true,
+   "sane_why": "整列 0 步 / 3 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 39,
+   "dropped_from_window": 4,
+   "context_chars_used": 3903,
+   "answer_head": "这一发没有任何成功读数",
+   "ms": 4338.4,
+   "err": null,
+   "at": "2026-10-23T12:59:03+08:00"
+  },
+  {
+   "rep": 16,
+   "ok": false,
+   "status": 200,
+   "turn": 16,
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 0,
+   "tools": [],
+   "classes": [],
+   "provenances": [],
+   "evidences": [],
+   "model_says_steps": 0,
+   "read_present": false,
+   "read_class": null,
+   "stats_present": false,
+   "stats_class": null,
+   "lines": null,
+   "sane": true,
+   "sane_why": "整列 0 步 / 3 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 41,
+   "dropped_from_window": 5,
+   "context_chars_used": 3942,
+   "answer_head": "这一发没有任何成功读数",
+   "ms": 5210.2,
+   "err": null,
+   "at": "2026-10-23T12:59:08+08:00"
+  },
+  {
+   "rep": 17,
+   "ok": false,
+   "status": 200,
+   "turn": 17,
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "memory.recall"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "model_says_steps": 1,
+   "read_present": false,
+   "read_class": null,
+   "stats_present": false,
+   "stats_class": null,
+   "lines": null,
+   "sane": true,
+   "sane_why": "整列 1 步 / 4 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 44,
+   "dropped_from_window": 8,
+   "context_chars_used": 3974,
+   "answer_head": "memory.recall：会话里匹配 \"text.stats numbers.txt 行 7\" 的命中 0 条（这轮一共 43 条记忆）",
+   "ms": 5705.4,
+   "err": null,
+   "at": "2026-10-23T12:59:14+08:00"
+  },
+  {
+   "rep": 18,
+   "ok": false,
+   "status": 200,
+   "turn": 18,
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "text.stats"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "model_says_steps": 1,
+   "read_present": false,
+   "read_class": null,
+   "stats_present": true,
+   "stats_class": "ok",
+   "lines": 7,
+   "sane": true,
+   "sane_why": "整列 1 步 / 4 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 47,
+   "dropped_from_window": 11,
+   "context_chars_used": 3913,
+   "answer_head": "text.stats：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-c3est8xq\\fixture\\numbers.txt ｜ 字节 45 ｜ UTF-8 码元 45 ｜ 行 7（空行 0）｜ 最长一行 7 字节，在第 5 行 ｜ 试了 1 次 ｜ 1ms",
+   "ms": 9170.3,
+   "err": null,
+   "at": "2026-10-23T12:59:24+08:00"
+  },
+  {
+   "rep": 19,
+   "ok": false,
+   "status": 200,
+   "turn": 19,
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "text.stats",
+    "text.stats"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "model_says_steps": 2,
+   "read_present": false,
+   "read_class": null,
+   "stats_present": true,
+   "stats_class": "ok",
+   "lines": 7,
+   "sane": true,
+   "sane_why": "整列 2 步 / 5 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 51,
+   "dropped_from_window": 15,
+   "context_chars_used": 3970,
+   "answer_head": "text.stats：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-c3est8xq\\fixture\\numbers.txt ｜ 字节 45 ｜ UTF-8 码元 45 ｜ 行 7（空行 0）｜ 最长一行 7 字节，在第 5 行 ｜ 试了 1 次 ｜ 0ms；text.stats：C:\\Users\\Admin\\AppData\\Local\\Temp\\",
+   "ms": 11976.6,
+   "err": null,
+   "at": "2026-10-23T12:59:36+08:00"
+  },
+  {
+   "rep": 20,
+   "ok": false,
+   "status": 200,
+   "turn": 20,
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 0,
+   "tools": [],
+   "classes": [],
+   "provenances": [],
+   "evidences": [],
+   "model_says_steps": 0,
+   "read_present": false,
+   "read_class": null,
+   "stats_present": false,
+   "stats_class": null,
+   "lines": null,
+   "sane": true,
+   "sane_why": "整列 0 步 / 3 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 53,
+   "dropped_from_window": 22,
+   "context_chars_used": 3855,
+   "answer_head": "这一发没有任何成功读数",
+   "ms": 5220.5,
+   "err": null,
+   "at": "2026-10-23T12:59:41+08:00"
+  }
+ ],
+ "summary": {
+  "reps_ran": 20,
+  "ok": 0,
+  "success_rate": 0.0,
+  "stops": {
+   "跑完": 20
+  },
+  "provenance_counts": {
+   "model_says": 14
+  },
+  "reps_without_model_says": 10,
+  "ms_p50": 5220.5,
+  "ms_p95": 11976.6,
+  "ms_max": 12496.6,
+  "failures": [
+   {
+    "rep": 1,
+    "stop": "跑完",
+    "stop_why": "端点说可以收口",
+    "tools": [
+     "fs.read",
+     "text.stats"
+    ],
+    "classes": [
+     "ok",
+     "ok"
+    ],
+    "read_class": "ok",
+    "stats_class": "ok",
+    "lines": 8,
+    "sane_why": "整列 2 步 / 5 条结论自洽（判据 13 条全过）",
+    "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-c3est8xq\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）；text.stats：参数 text ｜ 字节 40 ｜ UTF-8 码元 40 ｜ 行 8（空行 1）｜ 最长一行 7 字节，在第 5 行 ｜ 试了 1 次 ｜ 0ms",
+    "err": null
+   },
+   {
+    "rep": 2,
+    "stop": "跑完",
+    "stop_why": "端点说可以收口",
+    "tools": [],
+    "classes": [],
+    "read_class": null,
+    "stats_class": null,
+    "lines": null,
+    "sane_why": "整列 0 步 / 3 条结论自洽（判据 13 条全过）",
+    "answer_head": "这一发没有任何成功读数",
+    "err": null
+   },
+   {
+    "rep": 3,
+    "stop": "跑完",
+    "stop_why": "端点说可以收口",
+    "tools": [],
+    "classes": [],
+    "read_class": null,
+    "stats_class": null,
+    "lines": null,
+    "sane_why": "整列 0 步 / 3 条结论自洽（判据 13 条全过）",
+    "answer_head": "这一发没有任何成功读数",
+    "err": null
+   },
+   {
+    "rep": 4,
+    "stop": "跑完",
+    "stop_why": "端点说可以收口",
+    "tools": [
+     "fs.read"
+    ],
+    "classes": [
+     "ok"
+    ],
+    "read_class": "ok",
+    "stats_class": null,
+    "lines": null,
+    "sane_why": "整列 1 步 / 4 条结论自洽（判据 13 条全过）",
+    "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-c3est8xq\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）",
+    "err": null
+   },
+   {
+    "rep": 5,
+    "stop": "跑完",
+    "stop_why": "端点说可以收口",
+    "tools": [
+     "text.stats"
+    ],
+    "classes": [
+     "ok"
+    ],
+    "read_class": null,
+    "stats_class": "ok",
+    "lines": 7,
+    "sane_why": "整列 1 步 / 4 条结论自洽（判据 13 条全过）",
+    "answer_head": "text.stats：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-c3est8xq\\fixture\\numbers.txt ｜ 字节 45 ｜ UTF-8 码元 45 ｜ 行 7（空行 0）｜ 最长一行 7 字节，在第 5 行 ｜ 试了 1 次 ｜ 0ms",
+    "err": null
+   },
+   {
+    "rep": 6,
+    "stop": "跑完",
+    "stop_why": "端点说可以收口",
+    "tools": [],
+    "classes": [],
+    "read_class": null,
+    "stats_class": null,
+    "lines": null,
+    "sane_why": "整列 0 步 / 3 条结论自洽（判据 13 条全过）",
+    "answer_head": "这一发没有任何成功读数",
+    "err": null
+   },
+   {
+    "rep": 7,
+    "stop": "跑完",
+    "stop_why": "端点说可以收口",
+    "tools": [],
+    "classes": [],
+    "read_class": null,
+    "stats_class": null,
+    "lines": null,
+    "sane_why": "整列 0 步 / 3 条结论自洽（判据 13 条全过）",
+    "answer_head": "这一发没有任何成功读数",
+    "err": null
+   },
+   {
+    "rep": 8,
+    "stop": "跑完",
+    "stop_why": "端点说可以收口",
+    "tools": [],
+    "classes": [],
+    "read_class": null,
+    "stats_class": null,
+    "lines": null,
+    "sane_why": "整列 0 步 / 3 条结论自洽（判据 13 条全过）",
+    "answer_head": "这一发没有任何成功读数",
+    "err": null
+   },
+   {
+    "rep": 9,
+    "stop": "跑完",
+    "stop_why": "端点说可以收口",
+    "tools": [
+     "fs.read",
+     "fs.read"
+    ],
+    "classes": [
+     "ok",
+     "ok"
+    ],
+    "read_class": "ok",
+    "stats_class": null,
+    "lines": null,
+    "sane_why": "整列 2 步 / 5 条结论自洽（判据 13 条全过）",
+    "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-c3est8xq\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-c3est8xq\\fixture\\numbers.txt ｜ 读到",
+    "err": null
+   },
+   {
+    "rep": 10,
+    "stop": "跑完",
+    "stop_why": "端点说可以收口",
+    "tools": [],
+    "classes": [],
+    "read_class": null,
+    "stats_class": null,
+    "lines": null,
+    "sane_why": "整列 0 步 / 3 条结论自洽（判据 13 条全过）",
+    "answer_head": "这一发没有任何成功读数",
+    "err": null
+   },
+   {
+    "rep": 11,
+    "stop": "跑完",
+    "stop_why": "端点说可以收口",
+    "tools": [],
+    "classes": [],
+    "read_class": null,
+    "stats_class": null,
+    "lines": null,
+    "sane_why": "整列 0 步 / 3 条结论自洽（判据 13 条全过）",
+    "answer_head": "这一发没有任何成功读数",
+    "err": null
+   },
+   {
+    "rep": 12,
+    "stop": "跑完",
+    "stop_why": "端点说可以收口",
+    "tools": [
+     "text.stats"
+    ],
+    "classes": [
+     "ok"
+    ],
+    "read_class": null,
+    "stats_class": "ok",
+    "lines": 7,
+    "sane_why": "整列 1 步 / 4 条结论自洽（判据 13 条全过）",
+    "answer_head": "text.stats：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-c3est8xq\\fixture\\numbers.txt ｜ 字节 45 ｜ UTF-8 码元 45 ｜ 行 7（空行 0）｜ 最长一行 7 字节，在第 5 行 ｜ 试了 1 次 ｜ 0ms",
+    "err": null
+   },
+   {
+    "rep": 13,
+    "stop": "跑完",
+    "stop_why": "端点说可以收口",
+    "tools": [
+     "text.stats"
+    ],
+    "classes": [
+     "ok"
+    ],
+    "read_class": null,
+    "stats_class": "ok",
+    "lines": 7,
+    "sane_why": "整列 1 步 / 4 条结论自洽（判据 13 条全过）",
+    "answer_head": "text.stats：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-c3est8xq\\fixture\\numbers.txt ｜ 字节 45 ｜ UTF-8 码元 45 ｜ 行 7（空行 0）｜ 最长一行 7 字节，在第 5 行 ｜ 试了 1 次 ｜ 1ms",
+    "err": null
+   },
+   {
+    "rep": 14,
+    "stop": "跑完",
+    "stop_why": "端点说可以收口",
+    "tools": [
+     "fs.read",
+     "fs.read"
+    ],
+    "classes": [
+     "ok",
+     "ok"
+    ],
+    "read_class": "ok",
+    "stats_class": null,
+    "lines": null,
+    "sane_why": "整列 2 步 / 5 条结论自洽（判据 13 条全过）",
+    "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-c3est8xq\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-c3est8xq\\fixture\\numbers.txt ｜ 读到",
+    "err": null
+   },
+   {
+    "rep": 15,
+    "stop": "跑完",
+    "stop_why": "端点说可以收口",
+    "tools": [],
+    "classes": [],
+    "read_class": null,
+    "stats_class": null,
+    "lines": null,
+    "sane_why": "整列 0 步 / 3 条结论自洽（判据 13 条全过）",
+    "answer_head": "这一发没有任何成功读数",
+    "err": null
+   },
+   {
+    "rep": 16,
+    "stop": "跑完",
+    "stop_why": "端点说可以收口",
+    "tools": [],
+    "classes": [],
+    "read_class": null,
+    "stats_class": null,
+    "lines": null,
+    "sane_why": "整列 0 步 / 3 条结论自洽（判据 13 条全过）",
+    "answer_head": "这一发没有任何成功读数",
+    "err": null
+   },
+   {
+    "rep": 17,
+    "stop": "跑完",
+    "stop_why": "端点说可以收口",
+    "tools": [
+     "memory.recall"
+    ],
+    "classes": [
+     "ok"
+    ],
+    "read_class": null,
+    "stats_class": null,
+    "lines": null,
+    "sane_why": "整列 1 步 / 4 条结论自洽（判据 13 条全过）",
+    "answer_head": "memory.recall：会话里匹配 \"text.stats numbers.txt 行 7\" 的命中 0 条（这轮一共 43 条记忆）",
+    "err": null
+   },
+   {
+    "rep": 18,
+    "stop": "跑完",
+    "stop_why": "端点说可以收口",
+    "tools": [
+     "text.stats"
+    ],
+    "classes": [
+     "ok"
+    ],
+    "read_class": null,
+    "stats_class": "ok",
+    "lines": 7,
+    "sane_why": "整列 1 步 / 4 条结论自洽（判据 13 条全过）",
+    "answer_head": "text.stats：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-c3est8xq\\fixture\\numbers.txt ｜ 字节 45 ｜ UTF-8 码元 45 ｜ 行 7（空行 0）｜ 最长一行 7 字节，在第 5 行 ｜ 试了 1 次 ｜ 1ms",
+    "err": null
+   },
+   {
+    "rep": 19,
+    "stop": "跑完",
+    "stop_why": "端点说可以收口",
+    "tools": [
+     "text.stats",
+     "text.stats"
+    ],
+    "classes": [
+     "ok",
+     "ok"
+    ],
+    "read_class": null,
+    "stats_class": "ok",
+    "lines": 7,
+    "sane_why": "整列 2 步 / 5 条结论自洽（判据 13 条全过）",
+    "answer_head": "text.stats：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-c3est8xq\\fixture\\numbers.txt ｜ 字节 45 ｜ UTF-8 码元 45 ｜ 行 7（空行 0）｜ 最长一行 7 字节，在第 5 行 ｜ 试了 1 次 ｜ 0ms；text.stats：C:\\Users\\Admin\\AppData\\Local\\Temp\\",
+    "err": null
+   },
+   {
+    "rep": 20,
+    "stop": "跑完",
+    "stop_why": "端点说可以收口",
+    "tools": [],
+    "classes": [],
+    "read_class": null,
+    "stats_class": null,
+    "lines": null,
+    "sane_why": "整列 0 步 / 3 条结论自洽（判据 13 条全过）",
+    "answer_head": "这一发没有任何成功读数",
+    "err": null
+   }
+  ]
+ },
+ "landing_ok": null,
+ "finished": "2026-10-23T12:59:41+08:00"
+}

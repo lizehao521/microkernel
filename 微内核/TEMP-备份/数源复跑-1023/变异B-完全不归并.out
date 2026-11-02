@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "C:\Users\Admin\Desktop\微内核\PDF-1022\真端点-1023\变异B-完全不归并.py", line 872, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\Admin\Desktop\微内核\PDF-1022\真端点-1023\变异B-完全不归并.py", line 815, in main
+    sys.exit(selftest())
+             ~~~~~~~~^^
+  File "C:\Users\Admin\Desktop\微内核\PDF-1022\真端点-1023\变异B-完全不归并.py", line 720, in selftest
+    fam = adjudicate(frows, TASKS_ALL)["families"]
+          ~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\微内核\PDF-1022\真端点-1023\变异B-完全不归并.py", line 382, in adjudicate
+    fam[k]["rows_hedged"] = sum(1 for (kk, _s, _i, _p), v in row_hedged.items()
+                            ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                if kk == k and v)
+                                ^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\微内核\PDF-1022\真端点-1023\变异B-完全不归并.py", line 382, in <genexpr>
+    fam[k]["rows_hedged"] = sum(1 for (kk, _s, _i, _p), v in row_hedged.items()
+                                      ^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 4, got 5)

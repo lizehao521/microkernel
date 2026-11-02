@@ -1,0 +1,56 @@
+证据模型核对 · event-layer.evidence.json（回盘可解析）
+节点 34 ｜ 边 26 ｜ sourceRefs 123 ｜ 解析失败 0 ｜ 悬空边 0 ｜ id 重复 0
+分档：符号可核 53 条（本件自己回盘反推行号来比） ｜ 仅存在性 70 条（只验文件在、行界内）
+  [符号对不上] ev.bus 的 微内核/微内核/cmd/agentd/loop.go:325 不指到 `r\.emit\(Event\{Kind: "run_started` 所在行（盘上是 [338]）
+  [符号对不上] host.hooks 的 微内核/微内核/cmd/agentd/loop.go:325 不指到 `r\.emit\(Event\{Kind: "run_started` 所在行（盘上是 [338]）
+  [符号对不上] host.hooks 的 微内核/微内核/cmd/agentd/loop.go:394 不指到 `stepEv\("shot_started"` 所在行（盘上是 [409]）
+  [符号对不上] host.hooks 的 微内核/微内核/cmd/agentd/loop.go:413 不指到 `stepEv\("precheck", "refused"` 所在行（盘上是 [428]）
+  [符号对不上] host.hooks 的 微内核/微内核/cmd/agentd/loop.go:422 不指到 `stepEv\("precheck", "ok"` 所在行（盘上是 [437]）
+  [符号对不上] host.hooks 的 微内核/微内核/cmd/agentd/loop.go:442 不指到 `stepEv\("recorded", "refused"` 所在行（盘上是 [457]）
+  [符号对不上] host.hooks 的 微内核/微内核/cmd/agentd/loop.go:467 不指到 `stepEv\("recorded", "ok"` 所在行（盘上是 [482]）
+  [符号对不上] host.hooks 的 微内核/微内核/cmd/agentd/loop.go:872 不指到 `r\.emit\(settle\)` 所在行（盘上是 [894]）
+  [符号对不上] host.eventFlags 的 微内核/微内核/cmd/agentd/main.go:42 不指到 `eventsOn\s+= flag\.Bool` 所在行（盘上是 [44]）
+  [符号对不上] host.eventFlags 的 微内核/微内核/cmd/agentd/main.go:43 不指到 `eventsPath\s+= flag\.String` 所在行（盘上是 [45]）
+  [符号对不上] host.eventFlags 的 微内核/微内核/cmd/agentd/main.go:167 不指到 `func eventLogPath\(` 所在行（盘上是 [191]）
+  [符号对不上] host.eventFlags 的 微内核/微内核/cmd/agentd/main.go:186 不指到 `func printEventBanner\(` 所在行（盘上是 [210]）
+  [符号对不上] ev.settle 的 微内核/微内核/cmd/agentd/loop.go:254 不指到 `func \(r \*run\) settleTurn\(` 所在行（盘上是 [258]）
+  [符号对不上] host.stopentry 的 微内核/微内核/cmd/agentd/loop.go:134 不指到 `func \(r \*run\) Stop\(` 所在行（盘上是 [138]）
+  [符号对不上] ev.accept 的 微内核/微内核/cmd/agentd/loop.go:352 不指到 `r\.emit\(r\.acceptedEv\(\)\)` 所在行（盘上是 [367]）
+  [符号对不上] ev.sse 的 微内核/微内核/cmd/agentd/main.go:45 不指到 `eventsServe\s+= flag\.Bool` 所在行（盘上是 [47]）
+  [符号对不上] ev.resumeAxis 的 微内核/微内核/cmd/agentd/loop.go:965 不指到 `func \(r \*run\) turnNo\(` 所在行（盘上是 [988]）
+  [符号对不上] ev.resumeAxis 的 微内核/微内核/cmd/agentd/loop.go:668 不指到 `r\.turnFloor = shots` 所在行（盘上是 [686]）
+  [符号对不上] ev.checklog 的 微内核/微内核/cmd/agentd/main.go:46 不指到 `checkLog\s+= flag\.String` 所在行（盘上是 [48]）
+  [符号对不上] ev.watchdog 的 微内核/微内核/cmd/agentd/loop.go:175 不指到 `func \(r \*run\) startTick\(` 所在行（盘上是 [179]）
+  [符号对不上] ev.watchdog 的 微内核/微内核/cmd/agentd/main.go:30 不指到 `tickIdle\s+= flag\.Duration` 所在行（盘上是 [32]）
+  [口径坏] ev.bus 的 微内核/微内核/cmd/agentd/loop.go:325 不指到 `r\.emit\(Event\{Kind: "run_started` 所在行（盘上是 [338]）
+  [口径坏] host.hooks 的 微内核/微内核/cmd/agentd/loop.go:325 不指到 `r\.emit\(Event\{Kind: "run_started` 所在行（盘上是 [338]）
+  [口径坏] host.hooks 的 微内核/微内核/cmd/agentd/loop.go:394 不指到 `stepEv\("shot_started"` 所在行（盘上是 [409]）
+  [口径坏] host.hooks 的 微内核/微内核/cmd/agentd/loop.go:413 不指到 `stepEv\("precheck", "refused"` 所在行（盘上是 [428]）
+  [口径坏] host.hooks 的 微内核/微内核/cmd/agentd/loop.go:422 不指到 `stepEv\("precheck", "ok"` 所在行（盘上是 [437]）
+  [口径坏] host.hooks 的 微内核/微内核/cmd/agentd/loop.go:442 不指到 `stepEv\("recorded", "refused"` 所在行（盘上是 [457]）
+  [口径坏] host.hooks 的 微内核/微内核/cmd/agentd/loop.go:467 不指到 `stepEv\("recorded", "ok"` 所在行（盘上是 [482]）
+  [口径坏] host.hooks 的 微内核/微内核/cmd/agentd/loop.go:872 不指到 `r\.emit\(settle\)` 所在行（盘上是 [894]）
+  [口径坏] host.eventFlags 的 微内核/微内核/cmd/agentd/main.go:42 不指到 `eventsOn\s+= flag\.Bool` 所在行（盘上是 [44]）
+  [口径坏] host.eventFlags 的 微内核/微内核/cmd/agentd/main.go:43 不指到 `eventsPath\s+= flag\.String` 所在行（盘上是 [45]）
+  [口径坏] host.eventFlags 的 微内核/微内核/cmd/agentd/main.go:167 不指到 `func eventLogPath\(` 所在行（盘上是 [191]）
+  [口径坏] host.eventFlags 的 微内核/微内核/cmd/agentd/main.go:186 不指到 `func printEventBanner\(` 所在行（盘上是 [210]）
+  [口径坏] ev.settle 的 微内核/微内核/cmd/agentd/loop.go:254 不指到 `func \(r \*run\) settleTurn\(` 所在行（盘上是 [258]）
+  [口径坏] host.stopentry 的 微内核/微内核/cmd/agentd/loop.go:134 不指到 `func \(r \*run\) Stop\(` 所在行（盘上是 [138]）
+  [口径坏] ev.accept 的 微内核/微内核/cmd/agentd/loop.go:352 不指到 `r\.emit\(r\.acceptedEv\(\)\)` 所在行（盘上是 [367]）
+  [口径坏] ev.sse 的 微内核/微内核/cmd/agentd/main.go:45 不指到 `eventsServe\s+= flag\.Bool` 所在行（盘上是 [47]）
+  [口径坏] ev.resumeAxis 的 微内核/微内核/cmd/agentd/loop.go:965 不指到 `func \(r \*run\) turnNo\(` 所在行（盘上是 [988]）
+  [口径坏] ev.resumeAxis 的 微内核/微内核/cmd/agentd/loop.go:668 不指到 `r\.turnFloor = shots` 所在行（盘上是 [686]）
+  [口径坏] ev.checklog 的 微内核/微内核/cmd/agentd/main.go:46 不指到 `checkLog\s+= flag\.String` 所在行（盘上是 [48]）
+  [口径坏] ev.watchdog 的 微内核/微内核/cmd/agentd/loop.go:175 不指到 `func \(r \*run\) startTick\(` 所在行（盘上是 [179]）
+  [口径坏] ev.watchdog 的 微内核/微内核/cmd/agentd/main.go:30 不指到 `tickIdle\s+= flag\.Duration` 所在行（盘上是 [32]）
+状态分布：current 33 ｜ target 1（target 允许无代码证据，但必须标 target 且 confidence ≤ low）
+符号档形状：SPEC 槽 16（字面量 9 ＋ 追加 7，其中只有追加给的 7）｜ 解不出来的 0
+
+臂：A1 塞一条不存在的 sourceRef → 有效（抓到了）
+臂：A2 塞一条端点悬空的边 → 有效（抓到了）
+臂：A3 把一个 target 节点改标成 current → 有效（抓到了）
+臂：A4 把一条符号档 ref 改成界内错行（路 B 的 P2-8） → 有效（抓到了）
+臂：A4b 同一条坏点必须进「判 rc」那份清单（不是只印出来） → 有效（抓到了）
+臂：A5 改一条「追加式 SPEC（SPEC["x"] = […]）」推出的 ref（尺子上一版根本读不到这类形状） → 有效（抓到了）
+
+结论：模型有坏件，按上面点名的行改模型（别改尺子迁就它）。

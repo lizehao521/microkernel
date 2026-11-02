@@ -1,0 +1,60 @@
+{
+  "时刻": "2026-10-23T05:26:14.740Z",
+  "hub": "http://127.0.0.1:55378/",
+  "fault": "http://127.0.0.1:55377/slow",
+  "exe": "C:\\Users\\Admin\\Desktop\\微内核\\AgentHub-1021\\构建-hubd\\hubd-停止-1023.exe",
+  "exe_bytes": 12070912,
+  "exe_sha256": "8ad1abadd5305db43ed550c5de8656065ddb2b1fc80016eb3a009277cee5aca6",
+  "served_app_js_sha256": "0dbadb137d9d4845e875340487167e5bf4da5ec5c45edd47adbf093b846c615f",
+  "disk_app_js_sha256": "0dbadb137d9d4845e875340487167e5bf4da5ec5c45edd47adbf093b846c615f",
+  "served_app_js_equals_disk": true,
+  "served_index_sha256": "bfaeada2d175e67ef0de34901243c87fb9f84a5a6daba2f9346f2fdde3c706b5",
+  "disk_index_sha256": "bfaeada2d175e67ef0de34901243c87fb9f84a5a6daba2f9346f2fdde3c706b5",
+  "served_index_equals_disk": true,
+  "手法": "MutationObserver 等 #band 出现「结束=被打断」；不用 setTimeout 轮询（后台 Tab 计时器会被钳到 ~1s，轮询量的是钳位不是延迟）",
+  "探针": [
+    {
+      "how": "stop-button",
+      "sawTool": true,
+      "seen": true,
+      "ms": 53,
+      "budget": "这一发收了 8 帧 · 120ms",
+      "stopLine": "结束=被打断：停止指令到了（/api/stop 或连接断开）⇒ 这一发停在步 1；已经亮出来的 1 步留在账上，没走到的不补",
+      "steps": 1,
+      "callText": [
+        "步 1 取地址 http.get ✕ 失败 类别 internal 63ms · 试 1 次 参数 url=\"http://127.0.0.1:55377/slow\"（话里抽的） 为什么走这步：（这一步由状态事件先带出来，参数见下） 返回正文 · 35 字 被打断：停止指令到了，这次工具调用被取消（这一格没量到，不是它回了空） ∅ 没量到 谁选的：本机规则 ｜ 风险档 net_local ｜ 试了 1 次 ∅ 没量到：http.get "
+      ],
+      "saneText": true,
+      "dirty": []
+    },
+    {
+      "how": "esc",
+      "sawTool": true,
+      "seen": true,
+      "ms": 12,
+      "budget": "这一发收了 8 帧 · 17ms",
+      "stopLine": "结束=被打断：停止指令到了（/api/stop 或连接断开）⇒ 这一发停在步 1；已经亮出来的 1 步留在账上，没走到的不补",
+      "steps": 1,
+      "callText": [
+        "步 1 取地址 http.get ✕ 失败 类别 internal 4ms · 试 1 次 参数 url=\"http://127.0.0.1:55377/slow\"（话里抽的） 为什么走这步：（这一步由状态事件先带出来，参数见下） 返回正文 · 35 字 被打断：停止指令到了，这次工具调用被取消（这一格没量到，不是它回了空） ∅ 没量到 谁选的：本机规则 ｜ 风险档 net_local ｜ 试了 1 次 ∅ 没量到：http.get 这"
+      ],
+      "saneText": true,
+      "dirty": []
+    }
+  ],
+  "空闲叫停": {
+    "ok": false,
+    "stopped": false,
+    "why": "现在没有在跑的一发 ⇒ 没有可打断的东西"
+  },
+  "判据": {
+    "两次都在 1 秒内交出被打断": true,
+    "前提工具行都亮过": true,
+    "每次恰好 1 步": true,
+    "引用不到脏字": true,
+    "跑的 build 前端字节等于盘上源码": true,
+    "截图": "C:\\Users\\Admin\\Desktop\\微内核\\AgentHub-1021\\读数\\截图\\hubd-停止-1023.png",
+    "截图像素": "1395x1021"
+  },
+  "过": true
+}

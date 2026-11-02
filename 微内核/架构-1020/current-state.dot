@@ -1,0 +1,55 @@
+digraph agentkernel_current {
+  rankdir=TB;
+  compound=true;
+  graph [fontname="Segoe UI", labelloc=t, fontsize=15,
+         label="agentkernel 当前态 · L2 容器（2026-10-20 采集）\n回答的问题：今天到底有几块、谁连着谁、账本活在哪一面"];
+  node [fontname="Segoe UI", fontsize=10];
+  edge [fontname="Segoe UI", fontsize=9];
+
+  subgraph cluster_callers {
+    label="调用方 —— 全部在内核边界之外"; style=dashed; color=gray55;
+    qoder [shape=box, style=rounded, color=gray30,
+           label="Qoder 会话（本机实连）\nMCP: kernel.* 10 件\n本轮实读 tally：账 0 条"];
+    pyh [shape=box, style=rounded, color=gray30,
+         label="tasks/mcp Python 驱动（13 个脚本，3172 行）\nclient.py 起 mcpkernel.exe 子进程\nagent.py = 示踪弹循环 · replay.py · drive.py · fork.py"];
+    fw [shape=box, style=rounded, color=gray30,
+        label="被接入的 Agent 框架\n依赖方向：框架 → 内核（README）"];
+  }
+
+  subgraph cluster_ship {
+    label="发布包 agentkernel-2026-10-19-win-x64.zip（26,774,478 B · 32 条清单）"; color=gray55; style=bold;
+    mcpk [shape=box, label="mcpkernel.exe（62 行 main）\nstdio JSON-RPC\n账 = 进程内存，随进程死"];
+    mcpp [shape=box, label="mcphttp.exe（278 行 main）\nHTTP POST /mcp · 默认 127.0.0.1:8797\n有写入口 record_call / load_journal"];
+    kau  [shape=box, label="kaudit.exe（339 行 main）\n只读 HTTP · 默认 127.0.0.1:8788\n6 条端点：/healthz /v1/verify /v1/tally\n/v1/celltable /v1/turns /v1/read_back"];
+    kche [shape=box, label="kcheck.exe（559 行 main）\n快闸：自带判据，不读当前目录源码"];
+    kre  [shape=box, label="kresearch.exe（347 行 main）\n第一个真实调用方：自己发 HTTP/流式实测"];
+  }
+
+  kwire [shape=box, style=dashed, color=gray45,
+         label="kwire.exe（main 559 + report 557）\n文档↔代码 wire 对账器\n第 6 个 main —— 未进发布包"];
+
+  subgraph cluster_kernel {
+    label="Go 包 agentkernel —— 被动库（不调度 / 不联网 / 不执行工具 / 不写盘）"; color=gray55; style=bold;
+    kpkg [shape=component, label="kernel.go 382（Entry :91-122 · Append :250-269 · seal :271-277）\nrecord.go 347 · journal.go 539（CheckChain :394-481）\ncells.go 495（Cell :22 · CheckCells :177 · Readers :423-468）\ninput.go 640 · output.go 403 · measure.go 208 · isolate.go 402\n内核包 3416 行 · mcpsrv.go 991 行"];
+    celltab [shape=note, label="判据表（contract.md §3 :336）\n48 键 / 49 格 —— v1 已冻结\n§2.5 :188 才是写侧 wire 形状真相"];
+  }
+
+  jfile [shape=cylinder, label="账本 JSONL（磁盘上的那本）\n账本-全量-1018.jsonl 1,483,939 B / 2,940 条\n样例-agent-loop-1017.jsonl 98 条"];
+
+  fw -> mcpp [label="stdio / HTTP\n写一发（两侧一起）"];
+  pyh -> mcpk [label="spawn + tools/call", style=bold];
+  qoder -> mcpp [label="10 件 kernel.* 工具"];
+  mcpk -> kpkg [label="in-process"];
+  mcpp -> kpkg [label="in-process"];
+  kche -> kpkg [label="只读判据"];
+  kre -> kpkg [label="只读判据 + 自己联网"];
+  kwire -> celltab [label="对账", style=dashed];
+  kpkg -> celltab [label="判据来自这张表"];
+  mcpk -> jfile [label="encode_journal 交字节（不写盘）\n写盘是调用方的活", style=dashed];
+  kau -> jfile [label="-journal 载入\n篡改即拒载入 rc=1", style=bold];
+  kau -> kpkg [label="复用同一份 CheckChain"];
+  pyh -> jfile [label="AGENT_BOOK 落文件"];
+
+  note1 [shape=note, style=dashed, fontsize=9, label="两条今天要记住的边界：\n① 内存在账（mcpkernel/mcphttp）与磁盘在账（JSONL）是两个状态，\n   中间靠 encode_journal / load_journal 手工搭桥；\n② kaudit 只读、不接写面 —— 面板方案 §1 把这条写死了。"];
+  mcpp -> note1 [style=invis];
+}

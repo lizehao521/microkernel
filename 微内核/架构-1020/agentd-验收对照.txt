@@ -1,0 +1,53 @@
+# 目标 → 证据 逐条对照（agentd · 2026-10-20 14:03 现场复跑）
+
+口径：每条只写**当场跑得出来的读数**与出处；跑不出来的写在最后一节，不折算成 0。
+
+| 目标里那句 | 怎么证的（本轮现场） | 出处 |
+|---|---|---|
+| Go 写的宿主 `cmd/agentd` | 10 个 .go 文件在树里：`main rpc wire policy driver loop trace fakesrv`（8 个实现）+ `agentd_test same_ruler_test`（2 个针文件） | `ls cmd/agentd/*.go` 自印 |
+| 同一进程驱动 mcpsrv（与 mcpkernel 同一份判据） | 两半：① `newKernelRPC` 用 `mcpsrv.New()` + `srv.Serialize(line)`，与 `cmd/mcpkernel/main.go:26,45-54` 同一条路，全包无自写 Check；② **10-20 新加的跨面读数** —— 同一发同时喂进程内那把尺子和交付件 `构建-1017\agentkernel\bin\mcpkernel.exe`（stdio），十个内核工具（十一发，含 `celltable/declare_reader/readers_report/encode_journal/load_journal`）比对通过，违规那发两边都拒、`load_journal` 两边拒得逐字一样；`encode_journal` 不比字节、比内容字段（时间戳的六格倒影逐名让开，反臂实测掩码不吞 `payload_b64`） | `cmd/agentd/rpc.go:12-31`；`cmd/agentd/same_ruler_test.go`；`运行记录 §15/§16` |
+| think（要干什么来自驱动） | 循环每发先 `drv.Propose(turn, obs, body)`；四种驱动 scripted / fake / real / session | `loop.go:163`、`driver.go`、`fakesrv.go` |
+| 按 §2.5 装两侧 | `asm.buildInput(call)` + `buildOutput(call, p, body)`，键名就是 Go 字段名（`DisallowUnknownFields` 会拒格名当字段名） | `wire.go:96,147`；`contract.md:188` |
+| `check_call` 预检（跑在副本上，一条不写回） | 循环里先 `kernel.check_call`；预检能红有针：抹掉 `Notice` 整块 ⇒ 门口挡、发号 0 ⇒ 内核判据挡，且与落账那笔**分开数** | `loop.go:171`；`TestPrecheckPathCanGoRedAndWritesNothing` |
+| `record_call` 落账（任一侧不自洽整发拒收） | 循环里 `kernel.record_call`；拒收后不读格、依据记「本地」 | `loop.go:187`；`TestLedgerCapStopsAndStaysOutOfKPI` |
+| `read_back` 三轴读回 | 值只从回帧字节里读（`cellFromReadBack`）；换 session 读 ⇒「链上一条都没有」，空 session 当场被点名拒 | `loop.go:279`；`TestWrongSessionAxisYieldsNothing` |
+| 按账上 fail_kind 决定下一步 | `POLICY[fail]` 六条（逐字搬自 `tasks/mcp/agent.py:53-60`）；且**真改了下一发**：budget⇒折历史、malformed⇒换说法，折完再回账读 `input/folded` 确认 | `policy.go`；`TestBackEdgeChangesTheNextAssembly`、`TestFoldIsConfirmedFromTheLedgerNotFromTheFlag` |
+| 收口 | `verify` 三态 + `tally` + `readers_report` 原样打印；六种结束原因各带退出码 0/2/3/4/5/6 | `loop.go:577`；`TestTurnCapIsItsOwnEnding` 等 |
+| `encode_journal` checkpoint | 只交字节、宿主写盘；写完另起空账 `load_journal`+`verify` 回读；`--checkpoint-every` 每 N 发编一次 | `loop.go:505-563`；`TestCheckpointLoadsSelfConsistent` |
+
+## 核心 KPI 与反臂（本轮现场三个数）
+
+```
+agentd --script full                        → 账本触发过的决定：10（共 9 发，本地 0 发不计）  rc=4
+agentd --read-back=false --script happy     → 账本触发过的决定：0（共 6 发，本地 6 发不计）   rc=0
+agentd --driver real                        → 账本触发过的决定：0（共 0 发）· NOT_RUN        rc=2
+```
+
+去掉 `read_back` 那一调用，KPI 自己从 10 掉回 0 —— 所以那个 10 不是拿内存里那份结构体自证的。
+
+## 硬约束的四条，各自的答案
+
+| 那条 | 现场 |
+|---|---|
+| 内核包与 `contract.md` 的 48 键/49 格一字不动 | `diff -rq` 对 TEMP 备份只有一行 `Only in ./cmd: agentd`；闸门自己报「输入侧 20 格 + 输出侧 29 格；合计 49 格」，一没多 |
+| agentd 只消费格 | 它读 `output/fail_kind`、`input/folded`、`output/model_says_sha256` 三格，全是既有格；`readers_report` 输出侧从 29→**28** 无声明者（`fail_kind`+`folded` 各占一格，其中 folded 在输入侧 20→19） |
+| 剧本绿不说成模型自主决定 | `Autonomous()=false` 印在 stderr 横幅；轨迹页页首写「本地剧本，不是模型自主决定」；假端点模型 id 原字是 `fake-endpoint-127（本机，不是模型）` |
+| 不打真流量进 8797/8799 | 宿主全程同进程调 mcpsrv，不开端口；本轮 `find 构建-1017 -newermt 今天` 为空 = 连交付件都没碰；`netstat` 查过假端点退出后无残留监听 |
+
+## 跑不出来 / 没验的（不折算成 0）
+
+| 项 | 态 | 说明 |
+|---|---|---|
+| S8 交付面：`bin/agentd.exe` 进包、清单 32→33、重跑 `打包.py` | **未做（等批准）** | 改共享交付件、会让 10-19 那批凭据过期 |
+| OS 级 SIGINT 交付 | **NOT_VERIFIED** | Git Bash 的 `kill` 送不到 Go 原生进程；只靠两根进程内的针撑着 |
+| 真端点（`--driver real`） | **NOT_RUN** | 本机 env 无凭据；`rc=2`、落账 0 条 |
+| `--driver session`（把 Qoder 会话当端点） | **NOT_RUN** | 驱动位留着，返回 NOT_RUN |
+| 面板 M0–M3 | **未开工** | 等 `报告/面板方案-待批.txt` 那三个决定 + 整轮落地；agentd 那份 `--trace-out` 是循环自己的轨迹解剖，不是面板 |
+| 真人试点：试读 / G0 访谈 | **0/1、0/10** | 智能体化之后这两个数不会自己变 |
+
+## 现在这一版的机械读数
+
+`go test ./cmd/agentd -count=1 -v | grep -c '^--- PASS'` ⇒ **34 根针全过**（10-20 23:24 复跑自印）；
+`go test ./...` 全仓过；`go vet ./cmd/agentd` 干净；
+闸门给 `GOBIN_EXE` 时 41 ✓ / 6 —，依赖闭包 220 个包越界 0；不给时 40 ✓ / 7 —（那一路「核不了」）。
+闸门那一读要用建好的 exe 跑：`go run` 下两读法会塌成一种（见 `evidence.md` 二节）。

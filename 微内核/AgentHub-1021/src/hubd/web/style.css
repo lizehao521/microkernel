@@ -1,0 +1,506 @@
+/* AgentHub · 工程纸面（paper-and-ink）
+   一套语言：暖纸底、墨黑正文、朱砂只用在"正在跑/关键数"上；层级靠细规线与留白，不靠阴影。
+   类名与 id 是 app.js 的契约，改样式不许改名字。 */
+
+:root {
+  --paper: #f5f2ea;
+  --paper-2: #fbf9f4;
+  --ink: #14161a;
+  --ink-2: #3d434c;
+  --dim: #5c626b;  /* 纸底上 5.50:1；上一版 #6a7079 只有 4.46 ⇒ 差 0.04 就不达标，探针量出来的 */
+  --rule: #d8d2c4;
+  --rule-strong: #b9b1a0;
+  --seal: #b4331f;
+  --measured: #1f5c3d;
+  --estimated: #8a5a00;
+  --model: #1b4a7a;
+  --relayed: #5b3a8e;
+  --absent: #8e2b20;
+  --mono: "Cascadia Mono", Consolas, "Courier New", monospace;
+  --display: Cambria, Georgia, "Times New Roman", "SimSun", serif;
+  --body: "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font: 14px/1.65 var(--body);
+  color: var(--ink);
+  background-color: var(--paper);
+  /* 纸面纹理：两道极淡的斜向纤维 + 一层渐隐的天光，不用图片 */
+  background-image:
+    repeating-linear-gradient(115deg, rgba(180, 51, 31, .022) 0 1px, transparent 1px 6px),
+    repeating-linear-gradient(8deg, rgba(20, 22, 26, .02) 0 1px, transparent 1px 7px),
+    radial-gradient(120% 80% at 12% -10%, #fffdf8 0%, rgba(255, 253, 248, 0) 55%);
+  background-attachment: fixed;
+}
+
+/* —— 页眉：字标 + 一行台账抬头 —— */
+header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+  padding: 22px 26px 12px;
+  border-bottom: 2px solid var(--ink);
+}
+
+h1 {
+  margin: 0;
+  font: 400 26px/1.1 var(--display);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+h1::before {
+  content: "";
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  margin-right: 11px;
+  background: var(--seal);
+  transform: translateY(-1px);
+}
+
+#health {
+  font: 12.5px/1.5 var(--mono);
+  color: var(--ink-2);
+  letter-spacing: .01em;
+}
+
+/* —— 三栏 —— */
+main {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  padding: 0 26px 40px;
+}
+
+section {
+  padding: 18px 0 22px;
+  min-width: 0;
+  animation: rise .5s cubic-bezier(.22, .7, .3, 1) both;
+}
+
+section + section { border-top: 1px solid var(--rule); }
+section:nth-child(2) { animation-delay: .07s; }
+section:nth-child(3) { animation-delay: .14s; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(9px); }
+  to { opacity: 1; transform: none; }
+}
+
+h2 {
+  margin: 0 0 12px;
+  font: 400 11px/1 var(--mono);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+h2::before {
+  content: counter(章, decimal-leading-zero) "  ";
+  counter-increment: 章;
+  color: var(--seal);
+  font-weight: 700;
+}
+
+main { counter-reset: 章 0; }
+
+h3 {
+  margin: 18px 0 6px;
+  font: 600 12.5px/1.4 var(--body);
+  letter-spacing: .04em;
+  color: var(--ink-2);
+}
+
+h3::after {
+  content: "";
+  display: block;
+  margin-top: 5px;
+  border-top: 1px solid var(--rule);
+}
+
+/* —— 会增长的容器一律有界（无界撑栏是这类面板的老病）—— */
+#msgs, #calls, #hist, #registry, #findings, #unknowns {
+  max-height: 30vh;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--rule-strong) transparent;
+}
+
+#msgs::-webkit-scrollbar, #calls::-webkit-scrollbar, #hist::-webkit-scrollbar,
+#registry::-webkit-scrollbar, #findings::-webkit-scrollbar, #unknowns::-webkit-scrollbar {
+  width: 7px;
+}
+
+#msgs::-webkit-scrollbar-thumb, #calls::-webkit-scrollbar-thumb, #hist::-webkit-scrollbar-thumb,
+#registry::-webkit-scrollbar-thumb, #findings::-webkit-scrollbar-thumb, #unknowns::-webkit-scrollbar-thumb {
+  background: var(--rule-strong);
+}
+
+/* —— 对话 —— */
+#msgs .msg {
+  margin: 0 0 14px;
+  padding: 0 0 12px 14px;
+  border-left: 2px solid var(--rule-strong);
+}
+
+#msgs .msg.user { border-left-color: var(--ink); }
+#msgs .msg.agent { border-left-color: var(--seal); }
+#msgs .msg b { display: block; font: 400 11px/1.6 var(--mono); letter-spacing: .12em; color: var(--dim); }
+#msgs .streaming { overflow-wrap: anywhere; }
+
+/* 正在流式时那一道会呼吸的竖线：只在跑的这一发上出现（body 上的开关由 app.js 拨） */
+body.streaming-on #msgs .msg.agent:last-child .streaming::after {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 1.05em;
+  margin-left: 3px;
+  vertical-align: -.18em;
+  background: var(--seal);
+  animation: blink 1s steps(2, start) infinite;
+}
+
+@keyframes blink { 50% { opacity: .18; } }
+
+.legend {
+  margin: 18px 0 0;
+  padding-top: 9px;
+  border-top: 1px solid var(--rule);
+  font-size: 11.5px;
+  line-height: 1.8;
+}
+
+form label {
+  display: block;
+  margin: 4px 0 5px;
+  font: 400 11px/1.6 var(--mono);
+  letter-spacing: .1em;
+  color: var(--dim);
+}
+
+textarea, input, select {
+  width: 100%;
+  font: inherit;
+  color: var(--ink);
+  padding: 9px 11px;
+  background: var(--paper-2);
+  border: 1px solid var(--rule-strong);
+  border-radius: 0;
+}
+
+textarea { font-family: var(--mono); font-size: 12.5px; line-height: 1.6; }
+textarea:focus, input:focus, select:focus { outline: none; border-color: var(--ink); }
+
+.row { display: flex; gap: 10px; align-items: center; margin-top: 9px; flex-wrap: wrap; }
+
+button {
+  font: 600 13px/1 var(--body);
+  letter-spacing: .06em;
+  padding: 10px 22px;
+  color: var(--paper-2);
+  background: var(--ink);
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  cursor: pointer;
+  transition: transform .12s ease, background .12s ease;
+}
+
+button:hover { background: var(--seal); border-color: var(--seal); transform: translateY(-1px); }
+button:active { transform: none; }
+button.ghost { background: transparent; color: var(--ink); }
+button.ghost:hover { background: transparent; color: var(--seal); border-color: var(--seal); }
+button:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+
+#budget { font: 12px/1.5 var(--mono); color: var(--dim); }
+
+/* —— 结论带 —— */
+#band {
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  background: var(--paper-2);
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--rule);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+#band b { font-family: var(--mono); letter-spacing: .06em; }
+
+/* 结论带分两层：账（.带一）永远摊开，两句"为什么"折起来。
+   坏的那一发由 app.js 把 details 打开 —— 藏进折叠里的红等于没有红。 */
+#band .带一 { min-height: 20px; }
+
+#band details.带折 { margin-top: 6px; }
+
+#band details.带折 > summary {
+  cursor: pointer;
+  font: 400 11px/1.7 var(--mono);
+  letter-spacing: .06em;
+  color: var(--dim);
+  list-style: none;
+}
+
+#band details.带折 > summary::before { content: "▸ "; color: var(--rule-strong); }
+#band details.带折[open] > summary::before { content: "▾ "; color: var(--rule-strong); }
+#band .带故 { margin-top: 4px; font-size: 12px; line-height: 1.75; overflow-wrap: anywhere; }
+#band .账全 { overflow-wrap: anywhere; }
+
+/* —— 工具调用时间线：一行一步（名称 ← 状态 → 耗时条 → 右对齐元数字）—— */
+ol#calls { list-style: none; margin: 0; padding: 0 0 0 16px; border-left: 1px solid var(--rule-strong); }
+
+li.call {
+  position: relative;
+  margin: 0 0 14px;
+  padding: 0 0 0 14px;
+  overflow-wrap: anywhere;
+  animation: rise .34s ease both;
+}
+
+li.call::before {
+  content: "";
+  position: absolute;
+  left: -22px;
+  top: 9px;
+  width: 11px;
+  height: 1px;
+  background: var(--rule-strong);
+}
+
+li.call[data-state="ok"]::before { background: var(--measured); height: 7px; top: 6px; }
+li.call[data-state="bad"]::before { background: var(--absent); height: 7px; top: 6px; }
+
+li.call .hd {
+  display: grid;
+  /* 三格三轨道：步号 / 工具名（可截断）/ 状态徽（不换行）。毫秒在下一行。 */
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  min-height: 26px;
+}
+
+/* 表头下面那一行：耗时条 + 重试旁白 + 右对齐毫秒数（会换行，不跟工具名抢宽度） */
+li.call .sub {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 1px;
+  font: 11px/1.6 var(--mono);
+  letter-spacing: .04em;
+}
+
+li.call .step {
+  font: 400 11px/1.6 var(--mono);
+  letter-spacing: .16em;
+  color: var(--dim);
+  margin-right: 8px;
+}
+
+li.call .tool {
+  font: 600 13.5px/1.6 var(--mono);
+  letter-spacing: .01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+li.call .why { margin-top: 2px; font-size: 12px; color: var(--dim); }
+li.call .st { white-space: nowrap; }
+li.call .tag { display: block; margin-top: 5px; font-size: 11.5px; color: var(--dim); }
+
+/* 元数字一律等宽对齐，别让 1ms / 245ms 跳位 */
+li.call .meta, .dur, #budget, #band b, td, th { font-variant-numeric: tabular-nums; }
+
+li.call .meta {
+  font: 12px/1.6 var(--mono);
+  color: var(--ink-2);
+  text-align: right;
+  white-space: nowrap;
+  margin-left: auto;   /* 挪进旁白行之后靠右顶住，别跟着旁白换行 */
+}
+
+/* 耗时条：轨道 + 按这一发最慢一步归一化的实心段；宽度由 app.js 写进 --w */
+li.call .dur {
+  position: relative;
+  display: block;
+  height: 6px;
+  flex: 0 0 64px;
+  border-radius: 2px;
+  background: repeating-linear-gradient(90deg, var(--rule) 0 1px, transparent 1px 6px);
+}
+
+li.call .dur i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  display: block;
+  width: 0;
+  min-width: 2px;
+  border-radius: 2px;
+  background: var(--ink-2);
+  transition: width .2s ease;
+}
+
+li.call[data-state="bad"] .dur i { background: var(--absent); }
+li.call[data-state="ok"] .dur i { background: var(--measured); }
+
+/* 折叠：参数与返回正文都用原生 <details>（键盘 Tab/Enter/Space 天然可达）；
+   收起态的 summary 必须自带信息（动作 + 参数摘要 + 来处 + 正文字数）。 */
+li.call details.fold { margin-top: 5px; }
+
+li.call details.fold > summary {
+  cursor: pointer;
+  padding: 3px 6px;
+  font: 12px/1.6 var(--mono);
+  color: var(--ink-2);
+  border-left: 2px solid var(--rule);
+  list-style: none;
+}
+
+li.call details.fold > summary::-webkit-details-marker { display: none; }
+
+li.call details.fold > summary::before { content: "▸ "; color: var(--dim); }
+li.call details.fold[open] > summary::before { content: "▾ "; color: var(--seal); }
+li.call details.fold > summary:hover { border-left-color: var(--seal); color: var(--ink); }
+
+li.call .args { margin: 0; font: 12px/1.6 var(--mono); color: var(--ink-2); }
+li.call .args pre { margin: 4px 0 0; padding: 7px 9px; background: var(--paper-2); border: 1px solid var(--rule); overflow-x: auto; }
+
+/* 返回正文那一格与参数那一格要分得开：一条实线 vs 一条虚线，不只靠颜色 */
+li.call details.out > summary { border-left-style: dashed; }
+li.call details.out[open] > summary { border-left-color: var(--seal); }
+
+li.call .result {
+  display: block;
+  margin: 4px 0 0;
+  padding: 8px 10px;
+  background: var(--paper-2);
+  border-left: 2px solid var(--rule-strong);
+  font: 12px/1.6 var(--mono);
+  white-space: pre-wrap;
+  max-height: 20vh;
+  overflow: auto;
+  scrollbar-width: thin;
+}
+
+li.call.plan { opacity: .95; }
+li.call.plan .tool { font-family: var(--body); font-weight: 600; }
+
+/* 展开/收起全部 + 页签 + 快捷键提示 */
+.小钮 { padding: 4px 10px; font-size: 11.5px; margin: 0 0 10px; }
+
+.tabs { display: flex; gap: 6px; margin: 18px 0 8px; }
+
+.tab {
+  padding: 4px 10px;
+  font: 600 11.5px/1.6 var(--mono);
+  letter-spacing: .04em;
+  color: var(--dim);
+  background: transparent;
+  border: 1px solid var(--rule-strong);
+}
+
+.tab[aria-selected="true"] { color: var(--paper-2); background: var(--ink); border-color: var(--ink); }
+
+kbd {
+  padding: 0 5px;
+  margin: 0 2px;
+  font: 11px/1.7 var(--mono);
+  color: var(--ink-2);
+  background: var(--paper-2);
+  border: 1px solid var(--rule-strong);
+  border-bottom-width: 2px;
+}
+
+#band .统计 { font-variant-numeric: tabular-nums; }
+
+/* —— 徽章：方切、字距、纯色底白字（全部 ≥4.5:1）—— */
+.b {
+  display: inline-block;
+  padding: 1px 7px;
+  margin-right: 5px;
+  border-radius: 2px;
+  font: 600 10.5px/1.7 var(--mono);
+  letter-spacing: .08em;
+  color: #fff;
+  background: #55595f;
+}
+
+.b.measured, .b.ok { background: var(--measured); }
+.b.estimated, .b.attempt, .b.retrying, .b.backoff { background: var(--estimated); }
+.b.model_says, .b.queued { background: var(--model); }
+.b.relayed { background: var(--relayed); }
+.b.absent, .b.failed, .b.bad { background: var(--absent); }
+
+/* —— 右栏 —— */
+.answer {
+  padding: 10px 12px;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  font-size: 13px;
+  min-height: 34px;
+  overflow-wrap: anywhere;
+}
+
+ul { margin: 0; padding-left: 17px; }
+ul li { margin: 0 0 6px; font-size: 12.8px; overflow-wrap: anywhere; }
+ul li::marker { color: var(--rule-strong); }
+
+.dim { color: var(--dim); }
+.red { color: var(--absent); }
+.warn { color: var(--estimated); }
+
+/* —— 断点：700 两栏、1100 三栏（窄屏一律单栏不横滚）—— */
+@media (min-width: 700px) {
+  main { grid-template-columns: 1fr 1fr; column-gap: 26px; }
+  section + section { border-top: none; }
+  #pane-chat, #pane-tools { border-bottom: 1px solid var(--rule); }
+  #pane-side { grid-column: 1 / -1; }
+  #msgs, #calls { max-height: 34vh; }
+}
+
+@media (min-width: 1100px) {
+  main { grid-template-columns: 1.05fr .95fr 1fr; }
+  #pane-chat, #pane-tools { border-bottom: none; }
+  #pane-chat, #pane-tools { border-right: 1px solid var(--rule); padding-right: 22px; }
+  #pane-side { grid-column: auto; padding-left: 22px; }
+  #msgs, #calls { max-height: 62vh; }
+  #hist, #registry, #findings, #unknowns { max-height: 24vh; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+
+/* 窄屏：耗时条在 480 以下会挤掉名称，改成只留右对齐的毫秒数（条是锦上添花，数字是证据）；
+   名称改成可换行 —— 320 档实测 ellipsis 会把 "text.stats" 截成 101/125px，宁可它占两行。 */
+@media (max-width: 480px) {
+  li.call .dur { display: none; }
+  li.call .tool { white-space: normal; overflow-wrap: anywhere; }
+  /* 结论带在窄屏只摊一行，其余进"展开"里（全文在 .账全 那一行里，一个字没少） */
+  #band .带一 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+button:focus-visible, textarea:focus-visible, input:focus-visible, [tabindex]:focus-visible {
+  outline: 3px solid var(--seal);
+  outline-offset: 2px;
+}
+
+/* 键盘焦点在旧引擎上也要看得见（:focus-visible 不被支持时退回 :focus）*/
+@supports not selector(:focus-visible) {
+  button:focus, input:focus, textarea:focus, [tabindex]:focus { outline: 3px solid var(--seal); outline-offset: 2px; }
+}

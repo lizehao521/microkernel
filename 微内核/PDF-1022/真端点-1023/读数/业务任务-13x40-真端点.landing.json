@@ -1,0 +1,10 @@
+{
+ "reading": "业务任务-13x40-真端点.json",
+ "checked_at": "2026-10-23T19:09:48+08:00",
+ "reading_exists": true,
+ "reading_bytes": 802293,
+ "reading_sha256": "a90415ca8b6c7169de034557adcce60074212cb00cc186a9c27142ee08a3340c",
+ "log_bytes": 322,
+ "key_in_reading": false,
+ "key_in_log": false
+}

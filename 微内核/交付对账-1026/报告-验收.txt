@@ -1,0 +1,102 @@
+交付对账-1026 验收 · 2026-10-26 01:52:17
+产品根 C:\Users\Admin\Desktop\微内核\交付对账-1026
+工具 C:\Users\Admin\Desktop\微内核\交付对账-1026\工具\对账单.py
+输入文件 13 个（跑前已取 sha256）
+
+== 样例回放 ==
+[PASS] good rc == 0  -- got 0
+[PASS] good receipt generated_at not older than this run  -- generated_at=2026-10-25T17:52:17Z run_start=2026-10-25T17:52:17Z
+[PASS] good html data-claim rows == 8  -- found 8
+[PASS] good html claim row class == 8  -- found 8
+[PASS] good html landing check n/n OK  -- landing check: 8/8 rows OK
+[PASS] good html no U+FFFD
+[PASS] good html tag balance  -- ok
+[PASS] good html rows match json verdicts  -- 8 rows
+[PASS] good html evidence sections == 0  -- found 0
+[PASS] good html banner class ok  -- ok
+[PASS] good html banner status ACCEPTED  -- ACCEPTED
+[PASS] good receipt status ACCEPTED  -- ACCEPTED
+[PASS] good summary claims == 8  -- 8
+[PASS] good summary disk == 8  -- 8
+[PASS] good summary self == 0  -- 0
+[PASS] good claim verdicts  -- 8 checked
+[PASS] good source verdicts  -- ok
+[PASS] good receipt tool sha matches current build
+[PASS] good receipt spec sha matches input
+[PASS] good receipt landing.ok  -- True
+[PASS] good tool printed landing check OK
+[PASS] bad rc == 2  -- got 2
+[PASS] bad receipt generated_at not older than this run  -- generated_at=2026-10-25T17:52:17Z run_start=2026-10-25T17:52:17Z
+[PASS] bad html data-claim rows == 8  -- found 8
+[PASS] bad html claim row class == 8  -- found 8
+[PASS] bad html landing check n/n OK  -- landing check: 8/8 rows OK
+[PASS] bad html no U+FFFD
+[PASS] bad html tag balance  -- ok
+[PASS] bad html rows match json verdicts  -- 8 rows
+[PASS] bad html evidence sections == 0  -- found 0
+[PASS] bad html banner class bad  -- bad
+[PASS] bad html banner status NOT-ACCEPTED-MISMATCH  -- NOT-ACCEPTED-MISMATCH
+[PASS] bad receipt status NOT-ACCEPTED-MISMATCH  -- NOT-ACCEPTED-MISMATCH
+[PASS] bad summary claims == 8  -- 8
+[PASS] bad summary disk == 8  -- 8
+[PASS] bad summary self == 0  -- 0
+[PASS] bad claim verdicts  -- 8 checked
+[PASS] bad source verdicts  -- ok
+[PASS] bad receipt tool sha matches current build
+[PASS] bad receipt spec sha matches input
+[PASS] bad receipt landing.ok  -- True
+[PASS] bad tool printed landing check OK
+[PASS] real rc == 3  -- got 3
+[PASS] real receipt generated_at not older than this run  -- generated_at=2026-10-25T17:52:17Z run_start=2026-10-25T17:52:17Z
+[PASS] real html data-claim rows == 9  -- found 9
+[PASS] real html claim row class == 9  -- found 9
+[PASS] real html landing check n/n OK  -- landing check: 9/9 rows OK
+[PASS] real html no U+FFFD
+[PASS] real html tag balance  -- ok
+[PASS] real html rows match json verdicts  -- 9 rows
+[PASS] real html evidence sections == 3  -- found 3
+[PASS] real html banner class warn  -- warn
+[PASS] real html banner status NOT-ACCEPTED-UNVERIFIED  -- NOT-ACCEPTED-UNVERIFIED
+[PASS] real receipt status NOT-ACCEPTED-UNVERIFIED  -- NOT-ACCEPTED-UNVERIFIED
+[PASS] real summary claims == 9  -- 9
+[PASS] real summary disk == 1  -- 1
+[PASS] real summary self == 8  -- 8
+[PASS] real claim verdicts  -- 9 checked
+[PASS] real source verdicts  -- ok
+[PASS] real pgagent checks  -- 11 checked
+[PASS] real agentd checks  -- 7 checked
+[PASS] real journal checks  -- 8 checked
+[PASS] real pgagent relayed (self-reported, not recomputed)  -- 4 checked
+[PASS] real receipt tool sha matches current build
+[PASS] real receipt spec sha matches input
+[PASS] real receipt landing.ok  -- True
+[PASS] real tool printed landing check OK
+
+== HTML 交叉核对（盘上重读） ==
+[PASS] good json/html row counts agree  -- html=8 json=8 landing=8
+[PASS] bad json/html row counts agree  -- html=8 json=8 landing=8
+[PASS] real json/html row counts agree  -- html=9 json=9 landing=9
+
+== 只读性 ==
+[PASS] inputs unchanged  -- 0 changed
+[PASS] inputs not removed  -- 0 missing
+[PASS] no stray input files added  -- 0 added
+[PASS] input file count stable  -- 13 -> 13
+
+== 静态边界 ==
+[PASS] receipt tool imports no network/model client  -- argparse,base64,datetime,hashlib,html,json,os,re,sys
+[PASS] receipt tool imports stay in declared stdlib set  -- ok
+[PASS] arm harness imports no network/model client  -- argparse,datetime,hashlib,json,os,shutil,subprocess,sys,tempfile
+[PASS] arm harness imports stay in declared stdlib set  -- ok
+
+== 臂检 ==
+[PASS] arms denominator >= 24 (floor, not a reading)  -- 24
+[PASS] arms all bite  -- pass=24 fail=0
+[PASS] arms negative control bites  -- True
+[PASS] arms rc 0  -- 0
+[PASS] arms conclusion ALL-ARMS-BITE
+[PASS] arms report on disk
+[PASS] arms report content
+
+checks: 85 pass=85 fail=0
+conclusion: ALL-GREEN

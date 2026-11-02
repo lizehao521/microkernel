@@ -1,0 +1,3673 @@
+{
+ "surface": "agenthub",
+ "set": "business-13",
+ "task_set": "C:\\Users\\Admin\\Desktop\\微内核\\PDF-1022\\真端点-1023\\业务任务-13.jsonl",
+ "task_set_sha256": "709cd76d2cbd86efcdc3b473140bc2c775b3ac52605ebbf877697393a8daa7d4",
+ "oracle": "business-13-v3: stats(path) substitutes a read only where requires.stats names the same path; stats accepts read(path)+stats(any); B12 any_groups 不一致/缺少",
+ "shape": "13 tasks x 20 passes, fresh session per task",
+ "fixture": "PDF-1022/真端点-1023/业务现场",
+ "fixture_files": 21,
+ "endpoint": "http://121.36.29.96:8787/v1/chat/completions",
+ "model": "MiniMax-M2.5",
+ "key_masked": "sk-rel...IbWA",
+ "port": 49478,
+ "passes_declared": 20,
+ "only": [
+  "B01",
+  "B02",
+  "B09"
+ ],
+ "tasks_run": [
+  "B01",
+  "B02",
+  "B09"
+ ],
+ "started": "2026-10-23T14:53:18+08:00",
+ "health": {
+  "allow_exec": false,
+  "allow_write": false,
+  "memory": 0,
+  "model_endpoint": "http://121.36.29.96:8787/v1/chat/completions",
+  "next_turn": 1,
+  "ok": true,
+  "tools": 12
+ },
+ "exe": {
+  "sha256": "8ad1abadd5305db43ed550c5de8656065ddb2b1fc80016eb3a009277cee5aca6",
+  "bytes": 12070912
+ },
+ "runs": [
+  {
+   "id": "B01",
+   "name": "发票合计",
+   "pass": 1,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/财务/发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "根据发票文件，合计金额为1280元，但文件中没有提供税率信息，无法计算含税合计。如需计算，请提供税率（例如6%或13%）。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 9281.8,
+   "err": null,
+   "at": "2026-10-23T14:53:29+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B02",
+   "name": "预算超支",
+   "pass": 1,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/财务/预算-2026-Q3.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "实际支出比预算多 1500 元。\n\n计算过程：\n- 预算：50000 元\n- 实际支出：21800 + 15600 + 9400 + 4700 = 51500 元\n- 超支金额：51500 - 50000 = 1500 元",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 9473.0,
+   "err": null,
+   "at": "2026-10-23T14:53:38+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B09",
+   "name": "投诉最大金额",
+   "pass": 1,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture\\客户\\投诉.csv",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "金额最大的投诉单号是 T-1042，金额为 8800 元。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 4660.8,
+   "err": null,
+   "at": "2026-10-23T14:53:43+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B01",
+   "name": "发票合计",
+   "pass": 2,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/财务/发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "含税合计为 1356.8 元（1280元 × 1.06 = 1356.8元）",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 12614.3,
+   "err": null,
+   "at": "2026-10-23T14:53:56+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B02",
+   "pass": 2,
+   "ok": false,
+   "model_ok": false,
+   "steps_ok": false,
+   "answer_ok": false,
+   "answer_echo": true,
+   "misses": [
+    "session_new_exception"
+   ],
+   "err": "ConnectionResetError: [WinError 10054] 远程主机强迫关闭了一个现有的连接。",
+   "hub_alive_before_session": true,
+   "at": "2026-10-23T14:53:56+08:00"
+  },
+  {
+   "id": "B09",
+   "name": "投诉最大金额",
+   "pass": 2,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 4,
+   "tools": [
+    "fs.read",
+    "calc.eval",
+    "text.stats",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "bad_args",
+    "ok",
+    "bad_args"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "absent",
+    "measured",
+    "absent"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/客户/投诉.csv",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "bad_args",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "absent"
+    },
+    {
+     "tool": "text.stats",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "bad_args",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "absent"
+    }
+   ],
+   "answer_head": "金额最大的投诉单号是 T-1042，金额为 8800 元。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 19479.1,
+   "err": null,
+   "at": "2026-10-23T14:54:16+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B01",
+   "name": "发票合计",
+   "pass": 3,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+   "steps": 3,
+   "tools": [
+    "fs.read",
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture\\财务\\发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/财务/发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "根据发票内容：\n- 服务器托管：1200 元\n- 域名续费：80 元\n- 合计：1280 元\n\n含税合计（税率 6%）：1280 × 1.06 = **1356.80 元**",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 13039.8,
+   "err": null,
+   "at": "2026-10-23T14:54:29+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B02",
+   "name": "预算超支",
+   "pass": 3,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/财务/预算-2026-Q3.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "[TOOL_CALL]\n{tool => \"done\", args => {\n  --answer \"实际支出比预算多 1500 元。\\n\\n计算过程：\\n- 预算：50000 元\\n- 实际支出：21800 + 15600 + 9400 + 4700 = 51500 元\\n- 超支：51500 - 50000 = 1500 元\"\n}}\n[/TOOL_CALL]",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 8779.6,
+   "err": null,
+   "at": "2026-10-23T14:54:38+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B09",
+   "name": "投诉最大金额",
+   "pass": 3,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/客户/投诉.csv",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "金额最大的投诉单号是 T-1042，金额为 8800 元。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 4519.6,
+   "err": null,
+   "at": "2026-10-23T14:54:43+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B01",
+   "pass": 4,
+   "ok": false,
+   "model_ok": false,
+   "steps_ok": false,
+   "answer_ok": false,
+   "answer_echo": true,
+   "misses": [
+    "session_new_exception"
+   ],
+   "err": "ConnectionResetError: [WinError 10054] 远程主机强迫关闭了一个现有的连接。",
+   "hub_alive_before_session": true,
+   "at": "2026-10-23T14:54:43+08:00"
+  },
+  {
+   "id": "B02",
+   "name": "预算超支",
+   "pass": 4,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/财务/预算-2026-Q3.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "实际支出比预算多1500元。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 10181.9,
+   "err": null,
+   "at": "2026-10-23T14:54:53+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B09",
+   "name": "投诉最大金额",
+   "pass": 4,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "text.stats"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/客户/投诉.csv",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "text.stats",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "金额最大的投诉单号是 T-1042，金额为 8800 元。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 8263.0,
+   "err": null,
+   "at": "2026-10-23T14:55:02+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B01",
+   "pass": 5,
+   "ok": false,
+   "model_ok": false,
+   "steps_ok": false,
+   "answer_ok": false,
+   "answer_echo": true,
+   "misses": [
+    "session_new_exception"
+   ],
+   "err": "ConnectionResetError: [WinError 10054] 远程主机强迫关闭了一个现有的连接。",
+   "hub_alive_before_session": true,
+   "at": "2026-10-23T14:55:02+08:00"
+  },
+  {
+   "id": "B02",
+   "name": "预算超支",
+   "pass": 5,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/财务/预算-2026-Q3.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "实际支出为 21800 + 15600 + 9400 + 4700 = 51500 元，比预算 50000 元多出 1500 元。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 8790.4,
+   "err": null,
+   "at": "2026-10-23T14:55:11+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B09",
+   "name": "投诉最大金额",
+   "pass": 5,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/客户/投诉.csv",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "金额最大的投诉单号是 T-1042，金额为 8800 元（客户：北方物流，渠道：邮件）",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 4060.1,
+   "err": null,
+   "at": "2026-10-23T14:55:15+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B01",
+   "name": "发票合计",
+   "pass": 6,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 3,
+   "tools": [
+    "fs.read",
+    "fs.read",
+    "fs.read"
+   ],
+   "classes": [
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/财务/发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture\\财务\\发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/财务/发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "根据发票文件，发票合计金额为 1280 元。由于发票上未标注税率和税额，默认此金额即为含税合计。含税合计：1280 元。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 11438.5,
+   "err": null,
+   "at": "2026-10-23T14:55:27+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B02",
+   "name": "预算超支",
+   "pass": 6,
+   "ok": false,
+   "model_ok": false,
+   "steps_ok": true,
+   "answer_ok": false,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [
+    "number:1500"
+   ],
+   "step_misses": [],
+   "answer_misses": [
+    "number:1500"
+   ],
+   "stop": "跑完",
+   "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture\\财务\\预算-2026-Q3.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "{\"tool\": \"calc.eval\", \"args\": {\"expr\": \"21800+15600+9400+4700-50000\"}]}",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 6120.9,
+   "err": null,
+   "at": "2026-10-23T14:55:33+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B09",
+   "name": "投诉最大金额",
+   "pass": 6,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/客户/投诉.csv",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "金额最大的投诉单号是 T-1042，金额为 8800 元。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 3633.9,
+   "err": null,
+   "at": "2026-10-23T14:55:37+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B01",
+   "name": "发票合计",
+   "pass": 7,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 4,
+   "tools": [
+    "fs.read",
+    "fs.read",
+    "calc.eval",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/财务/发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture\\财务\\发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "根据发票内容：\n- 服务器托管：2台 × 600元 = 1200元\n- 域名续费：1个 × 80元 = 80元\n- 合计：1280元\n\n按默认 6% 增值税税率计算：\n含税合计 = 1280 × 1.06 = 1356.8 元",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 18220.6,
+   "err": null,
+   "at": "2026-10-23T14:55:55+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B02",
+   "name": "预算超支",
+   "pass": 7,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture\\财务\\预算-2026-Q3.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "实际支出比预算多 1500 元。\n\n计算过程：\n- 预算：50000 元\n- 实际支出：21800 + 15600 + 9400 + 4700 = 51500 元\n- 超支：51500 - 50000 = 1500 元",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 8671.7,
+   "err": null,
+   "at": "2026-10-23T14:56:04+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B09",
+   "name": "投诉最大金额",
+   "pass": 7,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/客户/投诉.csv",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "金额最大的投诉单号是 T-1042，金额为 8800 元。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 3633.8,
+   "err": null,
+   "at": "2026-10-23T14:56:08+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B01",
+   "name": "发票合计",
+   "pass": 8,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 3,
+   "tools": [
+    "fs.read",
+    "calc.eval",
+    "fs.read"
+   ],
+   "classes": [
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/财务/发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture\\财务\\发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "含税合计为 1280 元。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 16962.2,
+   "err": null,
+   "at": "2026-10-23T14:56:25+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B02",
+   "name": "预算超支",
+   "pass": 8,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/财务/预算-2026-Q3.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "实际支出比预算多 1500 元。\n\n预算：50000 元\n实际支出：21800 + 15600 + 9400 + 4700 = 51500 元\n差额：51500 - 50000 = 1500 元",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 7373.5,
+   "err": null,
+   "at": "2026-10-23T14:56:33+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B09",
+   "name": "投诉最大金额",
+   "pass": 8,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/客户/投诉.csv",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "金额最大的投诉单号是 T-1042，金额为 8800 元。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 3450.0,
+   "err": null,
+   "at": "2026-10-23T14:56:36+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B01",
+   "name": "发票合计",
+   "pass": 9,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 4,
+   "tools": [
+    "fs.read",
+    "fs.read",
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/财务/发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture\\财务\\发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture\\财务\\发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "含税合计是 1356.8 元（1280 × 6% = 76.8 元税金）",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 14855.9,
+   "err": null,
+   "at": "2026-10-23T14:56:52+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B02",
+   "name": "预算超支",
+   "pass": 9,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture\\财务\\预算-2026-Q3.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "实际支出比预算多 1500 元（实际支出 51500 元，预算 50000 元）",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 5878.0,
+   "err": null,
+   "at": "2026-10-23T14:56:58+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B09",
+   "name": "投诉最大金额",
+   "pass": 9,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/客户/投诉.csv",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "金额最大的投诉单号是 T-1042，金额为 8800 元（客户：北方物流，渠道：邮件）。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 4551.8,
+   "err": null,
+   "at": "2026-10-23T14:57:02+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B01",
+   "name": "发票合计",
+   "pass": 10,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/财务/发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "根据发票内容：\n- 不含税合计：1280 元\n- 税率 6%\n- **含税合计：1356.8 元**（1280 × 1.06 = 1356.8）",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 11009.5,
+   "err": null,
+   "at": "2026-10-23T14:57:14+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B02",
+   "name": "预算超支",
+   "pass": 10,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/财务/预算-2026-Q3.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "实际支出比预算多 1500 元。\n\n预算：50000 元\n实际支出：21800 + 15600 + 9400 + 4700 = 51500 元\n差额：51500 - 50000 = 1500 元",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 6983.5,
+   "err": null,
+   "at": "2026-10-23T14:57:21+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B09",
+   "name": "投诉最大金额",
+   "pass": 10,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/客户/投诉.csv",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "金额最大的投诉单号是 T-1042，金额为 8800 元。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 4498.3,
+   "err": null,
+   "at": "2026-10-23T14:57:26+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B01",
+   "name": "发票合计",
+   "pass": 11,
+   "ok": false,
+   "model_ok": false,
+   "steps_ok": false,
+   "answer_ok": false,
+   "answer_echo": true,
+   "answer_tier": "measured",
+   "answer_why": "模型收口没写 answer（或这一发不是模型收的）⇒ 这一格是本机按工具读数抄的，不是模型的话",
+   "misses": [
+    "stop:步数上限",
+    "answer_tier:measured"
+   ],
+   "step_misses": [
+    "stop:步数上限"
+   ],
+   "answer_misses": [
+    "answer_tier:measured"
+   ],
+   "stop": "步数上限",
+   "stop_why": "步数上限：跑到第 6 步还没收口 ⇒ 停了（剩下的目标：看着都做过了）",
+   "steps": 6,
+   "tools": [
+    "fs.read",
+    "text.stats",
+    "calc.eval",
+    "fs.read",
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok",
+    "ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured",
+    "measured",
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture\\财务\\发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "text.stats",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture\\财务\\发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture\\财务\\发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture\\财务\\发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture\\财务\\发票-2026-031.txt ｜ 读到 190 字节（UTF-8 码元 112 个）；text.stats：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture\\财务\\发票-2026-031.txt ｜ 字节 190 ｜ UTF-8 码元 112 ｜ 行 7（空行 1）｜ 最长一行 50 字节，在第 4 行 ｜ 试了 1 次 ｜ 1ms；calc.eval：1200 + 80 = 1280 ｜ 试了 1 次 ｜ 0ms；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture\\",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 22431.3,
+   "err": null,
+   "at": "2026-10-23T14:57:48+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B02",
+   "name": "预算超支",
+   "pass": 11,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/财务/预算-2026-Q3.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "实际支出比预算多 1500 元。\n\n计算过程：\n- 预算：50000 元\n- 实际支出：21800 + 15600 + 9400 + 4700 = 51500 元\n- 超支：51500 - 50000 = 1500 元",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 6211.6,
+   "err": null,
+   "at": "2026-10-23T14:57:55+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B09",
+   "name": "投诉最大金额",
+   "pass": 11,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture\\客户\\投诉.csv",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "金额最大的投诉单号是 T-1042，金额为 8800 元。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 4235.3,
+   "err": null,
+   "at": "2026-10-23T14:57:59+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B01",
+   "name": "发票合计",
+   "pass": 12,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 3,
+   "tools": [
+    "fs.read",
+    "text.stats",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/财务/发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "text.stats",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "含税合计为 1356.80 元（本金 1280 元，增值税 76.80 元）。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 17947.6,
+   "err": null,
+   "at": "2026-10-23T14:58:17+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B02",
+   "name": "预算超支",
+   "pass": 12,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/财务/预算-2026-Q3.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "实际支出比预算多 1500 元。\n\n计算过程：\n- 预算：50000 元\n- 实际支出：21800 + 15600 + 9400 + 4700 = 51500 元\n- 超出金额：51500 - 50000 = 1500 元",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 6677.4,
+   "err": null,
+   "at": "2026-10-23T14:58:24+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B09",
+   "name": "投诉最大金额",
+   "pass": 12,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/客户/投诉.csv",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "金额最大的投诉单号是 T-1042，金额为 8800 元。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 4928.3,
+   "err": null,
+   "at": "2026-10-23T14:58:29+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B01",
+   "name": "发票合计",
+   "pass": 13,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/财务/发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "文件内容显示合计为 1280 元，但未标注税率。请确认税率是多少？（常见税率如 6%、13% 等）",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 6149.3,
+   "err": null,
+   "at": "2026-10-23T14:58:36+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B02",
+   "name": "预算超支",
+   "pass": 13,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 3,
+   "tools": [
+    "fs.read",
+    "calc.eval",
+    "fs.read"
+   ],
+   "classes": [
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/财务/预算-2026-Q3.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/财务/预算-2026-Q3.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "实际支出比预算多 1500 元。\n\n计算过程：\n- 预算：50000 元\n- 实际支出：21800 + 15600 + 9400 + 4700 = 51500 元\n- 超出：51500 - 50000 = 1500 元",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 7614.4,
+   "err": null,
+   "at": "2026-10-23T14:58:44+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B09",
+   "name": "投诉最大金额",
+   "pass": 13,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/客户/投诉.csv",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "金额最大的投诉单号是 T-1042，金额为 8800 元。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 3370.4,
+   "err": null,
+   "at": "2026-10-23T14:58:47+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B01",
+   "name": "发票合计",
+   "pass": 14,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 3,
+   "tools": [
+    "fs.read",
+    "text.stats",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/财务/发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "text.stats",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "含税合计：1356.80 元（1280元 × 6%税率 = 1356.80元）",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 11642.4,
+   "err": null,
+   "at": "2026-10-23T14:58:59+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B02",
+   "name": "预算超支",
+   "pass": 14,
+   "ok": false,
+   "model_ok": false,
+   "steps_ok": true,
+   "answer_ok": false,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [
+    "number:1500"
+   ],
+   "step_misses": [],
+   "answer_misses": [
+    "number:1500"
+   ],
+   "stop": "跑完",
+   "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/财务/预算-2026-Q3.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "{\"tool\": \"calc.eval\", \"parameter name=\"expr\">21800+15600+9400+4700-50000</parameter>}\n</invoke>",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 3712.7,
+   "err": null,
+   "at": "2026-10-23T14:59:03+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B09",
+   "pass": 14,
+   "ok": false,
+   "model_ok": false,
+   "steps_ok": false,
+   "answer_ok": false,
+   "answer_echo": true,
+   "misses": [
+    "session_new_exception"
+   ],
+   "err": "ConnectionResetError: [WinError 10054] 远程主机强迫关闭了一个现有的连接。",
+   "hub_alive_before_session": true,
+   "at": "2026-10-23T14:59:03+08:00"
+  },
+  {
+   "id": "B01",
+   "name": "发票合计",
+   "pass": 15,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "text.stats"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture\\财务\\发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "text.stats",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture\\财务\\发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "发票文件已读取。根据文件内容：\n\n- 服务器托管：1200 元\n- 域名续费：80 元\n- 合计：**1280 元**\n\n文件中没有单独标明税率和税额，只显示了\"合计：1280 元\"。如果这已是含税金额，那么**含税合计为 1280 元**；如果需要计算税额，需提供税率信息。\n[TOOL_CALL]\n{\"tool\": \"demo.flaky\", \"args\": {\n  --fail_first 1\n}}\n[/TOOL_CALL]",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 11205.2,
+   "err": null,
+   "at": "2026-10-23T14:59:14+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B02",
+   "name": "预算超支",
+   "pass": 15,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/财务/预算-2026-Q3.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "实际支出 51500 元（21800+15600+9400+4700），比预算 50000 元多 1500 元。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 6153.7,
+   "err": null,
+   "at": "2026-10-23T14:59:21+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B09",
+   "name": "投诉最大金额",
+   "pass": 15,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/客户/投诉.csv",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "金额最大的投诉单号是 T-1042，金额为 8800 元。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 4501.6,
+   "err": null,
+   "at": "2026-10-23T14:59:25+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B01",
+   "name": "发票合计",
+   "pass": 16,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/财务/发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "[TOOL_CALL]\n{tool => \"text.stats\", args => {\n  --text \"1280\"\n}}\n[/TOOL_CALL]",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 6437.6,
+   "err": null,
+   "at": "2026-10-23T14:59:32+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B02",
+   "name": "预算超支",
+   "pass": 16,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/财务/预算-2026-Q3.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "实际支出比预算多 1500 元。\n\n计算过程：\n- 预算：50000 元\n- 实际支出：21800 + 15600 + 9400 + 4700 = 51500 元\n- 超支：51500 - 50000 = 1500 元",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 8095.0,
+   "err": null,
+   "at": "2026-10-23T14:59:40+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B09",
+   "name": "投诉最大金额",
+   "pass": 16,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/客户/投诉.csv",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "根据CSV数据，金额最大的投诉是：\n\n- **单号**：T-1042\n- **金额**：8800（北方物流，邮件渠道）",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 5128.9,
+   "err": null,
+   "at": "2026-10-23T14:59:46+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B01",
+   "name": "发票合计",
+   "pass": 17,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/财务/发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "含税合计为 1446.4 元（1280 × 1.13 = 1446.4）",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 6922.3,
+   "err": null,
+   "at": "2026-10-23T14:59:53+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B02",
+   "name": "预算超支",
+   "pass": 17,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 3,
+   "tools": [
+    "fs.read",
+    "calc.eval",
+    "text.stats"
+   ],
+   "classes": [
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture\\财务\\预算-2026-Q3.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "text.stats",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "实际支出为 51500 元（21800+15600+9400+4700），比预算 50000 元多出 1500 元。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 8817.8,
+   "err": null,
+   "at": "2026-10-23T15:00:02+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B09",
+   "name": "投诉最大金额",
+   "pass": 17,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/客户/投诉.csv",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "金额最大的投诉单号是 T-1042，金额为 8800 元。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 4230.5,
+   "err": null,
+   "at": "2026-10-23T15:00:06+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B01",
+   "name": "发票合计",
+   "pass": 18,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/财务/发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "根据发票内容，合计金额为 1280 元。按 6% 税率计算，含税合计为：1280 × 1.06 = 1356.8 元。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 10980.1,
+   "err": null,
+   "at": "2026-10-23T15:00:18+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B02",
+   "name": "预算超支",
+   "pass": 18,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/财务/预算-2026-Q3.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "实际支出比预算多 1500 元。\n\n预算：50000 元\n实际支出：21800 + 15600 + 9400 + 4700 = 51500 元\n差额：51500 - 50000 = 1500 元",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 7563.0,
+   "err": null,
+   "at": "2026-10-23T15:00:25+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B09",
+   "name": "投诉最大金额",
+   "pass": 18,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/客户/投诉.csv",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "金额最大的投诉单号是 T-1042，金额为 8800 元。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 4725.0,
+   "err": null,
+   "at": "2026-10-23T15:00:30+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B01",
+   "name": "发票合计",
+   "pass": 19,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 3,
+   "tools": [
+    "fs.read",
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture\\财务\\发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture\\财务\\发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "含税合计为 1356.8 元（1280元 × 6%税率）",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 14188.4,
+   "err": null,
+   "at": "2026-10-23T15:00:45+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B02",
+   "name": "预算超支",
+   "pass": 19,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/财务/预算-2026-Q3.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "实际支出比预算多 1500 元。\n\n预算：50000 元\n实际支出：21800 + 15600 + 9400 + 4700 = 51500 元\n超支：51500 - 50000 = 1500 元",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 6743.1,
+   "err": null,
+   "at": "2026-10-23T15:00:52+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B09",
+   "name": "投诉最大金额",
+   "pass": 19,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/客户/投诉.csv",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "金额最大的投诉单号是 T-1042，金额为 8800 元。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 4681.8,
+   "err": null,
+   "at": "2026-10-23T15:00:57+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B01",
+   "name": "发票合计",
+   "pass": 20,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 3,
+   "tools": [
+    "fs.read",
+    "calc.eval",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture\\财务\\发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "含税合计为 1356.8 元（1280元 × 6%增值税）。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 10152.7,
+   "err": null,
+   "at": "2026-10-23T15:01:07+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B02",
+   "name": "预算超支",
+   "pass": 20,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 4,
+   "tools": [
+    "fs.read",
+    "calc.eval",
+    "calc.eval",
+    "tools.list"
+   ],
+   "classes": [
+    "ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/财务/预算-2026-Q3.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "tools.list",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "实际支出比预算多 1500 元。\n\n计算过程：\n- 实际支出：21800 + 15600 + 9400 + 4700 = 51500 元\n- 预算：50000 元\n- 超支：51500 - 50000 = 1500 元",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 11710.7,
+   "err": null,
+   "at": "2026-10-23T15:01:19+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B09",
+   "name": "投诉最大金额",
+   "pass": 20,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture/客户/投诉.csv",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "金额最大的投诉单号是 T-1042，金额为 8800 元。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 5158.3,
+   "err": null,
+   "at": "2026-10-23T15:01:24+08:00",
+   "hub_alive_before_session": true
+  }
+ ],
+ "summary": {
+  "runs": 60,
+  "tasks": 3,
+  "oracle_ok": 53,
+  "model_ok": 53,
+  "steps_ok": 55,
+  "answer_ok": 53,
+  "answer_echo": 5,
+  "answer_tiers": {
+   "model_says": 55,
+   "missing": 4,
+   "measured": 1
+  },
+  "tasks_both_passes": 0,
+  "tasks_any_pass": 3,
+  "by_task": {
+   "B01": {
+    "ok": 17,
+    "model_ok": 17,
+    "runs": 20,
+    "misses": [
+     {
+      "pass": 4,
+      "misses": [
+       "session_new_exception"
+      ]
+     },
+     {
+      "pass": 5,
+      "misses": [
+       "session_new_exception"
+      ]
+     },
+     {
+      "pass": 11,
+      "misses": [
+       "stop:步数上限",
+       "answer_tier:measured"
+      ]
+     }
+    ]
+   },
+   "B02": {
+    "ok": 17,
+    "model_ok": 17,
+    "runs": 20,
+    "misses": [
+     {
+      "pass": 2,
+      "misses": [
+       "session_new_exception"
+      ]
+     },
+     {
+      "pass": 6,
+      "misses": [
+       "number:1500"
+      ]
+     },
+     {
+      "pass": 14,
+      "misses": [
+       "number:1500"
+      ]
+     }
+    ]
+   },
+   "B09": {
+    "ok": 19,
+    "model_ok": 19,
+    "runs": 20,
+    "misses": [
+     {
+      "pass": 14,
+      "misses": [
+       "session_new_exception"
+      ]
+     }
+    ]
+   }
+  },
+  "stops": {
+   "跑完": 55,
+   "null": 4,
+   "步数上限": 1
+  },
+  "sane": 56,
+  "estimated_steps": 0,
+  "ms_p50": 6922.3,
+  "ms_p95": 17947.6,
+  "ms_max": 22431.3,
+  "failures": [
+   {
+    "id": "B02",
+    "pass": 2,
+    "misses": [
+     "session_new_exception"
+    ],
+    "stop": null,
+    "tools": null,
+    "answer_head": null,
+    "err": "ConnectionResetError: [WinError 10054] 远程主机强迫关闭了一个现有的连接。"
+   },
+   {
+    "id": "B01",
+    "pass": 4,
+    "misses": [
+     "session_new_exception"
+    ],
+    "stop": null,
+    "tools": null,
+    "answer_head": null,
+    "err": "ConnectionResetError: [WinError 10054] 远程主机强迫关闭了一个现有的连接。"
+   },
+   {
+    "id": "B01",
+    "pass": 5,
+    "misses": [
+     "session_new_exception"
+    ],
+    "stop": null,
+    "tools": null,
+    "answer_head": null,
+    "err": "ConnectionResetError: [WinError 10054] 远程主机强迫关闭了一个现有的连接。"
+   },
+   {
+    "id": "B02",
+    "pass": 6,
+    "misses": [
+     "number:1500"
+    ],
+    "stop": "跑完",
+    "tools": [
+     "fs.read"
+    ],
+    "answer_head": "{\"tool\": \"calc.eval\", \"args\": {\"expr\": \"21800+15600+9400+4700-50000\"}]}",
+    "err": null
+   },
+   {
+    "id": "B01",
+    "pass": 11,
+    "misses": [
+     "stop:步数上限",
+     "answer_tier:measured"
+    ],
+    "stop": "步数上限",
+    "tools": [
+     "fs.read",
+     "text.stats",
+     "calc.eval",
+     "fs.read",
+     "fs.read",
+     "calc.eval"
+    ],
+    "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture\\财务\\发票-2026-031.txt ｜ 读到 190 字节（UTF-8 码元 112 个）；text.stats：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture\\财务\\发票-2026-031.txt ｜ 字节 190 ｜ UTF-8 码元 112 ｜ 行 7（空行 1）｜ 最长一行 50 字节，在第 4 行 ｜ 试了 1 次 ｜ 1ms；calc.eval：1200 + 80 = 1280 ｜ 试了 1 次 ｜ 0ms；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-juctvdfi\\fixture\\",
+    "err": null
+   },
+   {
+    "id": "B02",
+    "pass": 14,
+    "misses": [
+     "number:1500"
+    ],
+    "stop": "跑完",
+    "tools": [
+     "fs.read"
+    ],
+    "answer_head": "{\"tool\": \"calc.eval\", \"parameter name=\"expr\">21800+15600+9400+4700-50000</parameter>}\n</invoke>",
+    "err": null
+   },
+   {
+    "id": "B09",
+    "pass": 14,
+    "misses": [
+     "session_new_exception"
+    ],
+    "stop": null,
+    "tools": null,
+    "answer_head": null,
+    "err": "ConnectionResetError: [WinError 10054] 远程主机强迫关闭了一个现有的连接。"
+   }
+  ]
+ },
+ "landing_ok": null,
+ "arms": [
+  {
+   "name": "B04 stats(path) 算读",
+   "want_red": false,
+   "red": false,
+   "misses": [],
+   "ok": true
+  },
+  {
+   "name": "B04 read(path)+stats(text) 算统计",
+   "want_red": false,
+   "red": false,
+   "misses": [],
+   "ok": true
+  },
+  {
+   "name": "B04 零工具必须红",
+   "want_red": true,
+   "red": true,
+   "misses": [
+    "read:运维/app.log",
+    "stats:运维/app.log"
+   ],
+   "ok": true
+  },
+  {
+   "name": "B04 数字错必须红",
+   "want_red": true,
+   "red": true,
+   "misses": [
+    "number:12"
+   ],
+   "ok": true
+  },
+  {
+   "name": "B12 缺少=不一致",
+   "want_red": false,
+   "red": false,
+   "misses": [],
+   "ok": true
+  },
+  {
+   "name": "B12 不一致仍认",
+   "want_red": false,
+   "red": false,
+   "misses": [],
+   "ok": true
+  },
+  {
+   "name": "B12 一致必须红",
+   "want_red": true,
+   "red": true,
+   "misses": [
+    "any:不一致|缺少"
+   ],
+   "ok": true
+  },
+  {
+   "name": "B01 stats 不能替代读内容",
+   "want_red": true,
+   "red": true,
+   "misses": [
+    "read:财务/发票-2026-031.txt"
+   ],
+   "ok": true
+  }
+ ],
+ "arms_ok": true,
+ "finished": "2026-10-23T15:01:25+08:00"
+}

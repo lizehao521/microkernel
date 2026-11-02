@@ -1,0 +1,61 @@
+<!-- ================= CH 7-8 ================= -->
+<section class="chapter pagebreak" id="ch7">
+  <div class="chap-kicker">07 · Route &amp; Gates</div>
+  <h1><span class="num">07</span>推荐路线与五道闸：改判据不改骨架</h1>
+  <p class="lede">v2 的五道闸结构保留——它的价值在于「每道闸都能红」。v3 只做两件事：
+    把<strong>判据换成盘上可数的东西</strong>，并把一条从未真跑过的闸（G1.5）标回它真实的状态。</p>
+
+  <h2 id="s7-1">7.1 路线</h2>
+  <ol class="flow">
+    <li><strong>先把过程投影做出来（事件层 E1–E9）</strong>：今天轨迹页是跑完才写，「实时可见」这句还说不出口。这一步是本件唯一能把 L5 从 Planned 推到 Wired 的动作。</li>
+    <li><strong>再补完整性机制（L2）</strong>：外部锚或非写方验证器。CT 的教训写死了一件事——运营日志的人不能同时是唯一验的人。</li>
+    <li><strong>并行做出版（D 路）</strong>：把「出处五档 + absent 必带理由 + 停=结算」写成可被引用的件，而不是产品页文案。先例已在（Traccia），我们不占首创，只占清晰度。</li>
+    <li><strong>销售动作放到 G2 之后</strong>：在拿到 SOC 2 之前，任何采购动作都会在同一面墙上重演。</li>
+  </ol>
+
+  <h2 id="s7-2">7.2 五道闸（v3 判据）</h2>
+  <table class="tbl">
+    <tr><th>闸</th><th>时点</th><th>通过条件（v3 改写）</th><th>当前状态</th></tr>
+    <tr><td>G0 需求</td><td>第 30 天</td><td>10 次真人访谈；≥3 个真实触发；≥1 个 POC 志愿者；≥1 个预算科目</td><td><span class="tag tag-x">0/10 · 未启动</span></td></tr>
+    <tr><td>G1 交付</td><td>第 60 天</td><td>非作者真人 ≤60 分钟产出 1 个证据包并完成 1 次修改；拒收被计数；链自洽；密钥扫描 0 命中；调用方模型代码 0 改动</td><td><span class="tag tag-x">未跑（0/1）</span></td></tr>
+    <tr><td>G1.5 增量</td><td>第 90 天</td><td>10 例 R/N 双臂：R 臂留出集通过率 ≥ N 臂 +20 个百分点；假修复率不高于 N 臂；反臂按预期失败或拒绝</td><td><span class="tag tag-x">NOT_RUN</span>；且 v2 同期另一组双臂已给出<strong>无增益</strong>的负结果</td></tr>
+    <tr><td>G2 采购</td><td>第 120 天</td><td>2 封 LOI；1 次安全审查通过；SBOM / DPA / 责任边界齐备</td><td><span class="tag tag-x">未发生</span>（SBOM 草案已在盘，未提交未审）</td></tr>
+    <tr><td>G3 完整性（v3 新增）</td><td>与 G2 并行</td><td>给出<strong>可被非写方复核</strong>的机制：锚定件 + 验签命令 + 一份第三方能独立跑通的说明书；做不到就把话术降级为「自证口径」</td><td><span class="tag tag-x">未启动</span>——这是 §4 那张「右上角为空」的唯一填补动作</td></tr>
+  </table>
+  <div class="callout danger-row">
+    <div class="t">为什么新增 G3 而不是新增销售动作</div>
+    <p>§4 显示：市面上「防篡改」的声明很多，机制描述<strong>一个都没有</strong>。
+      在声明层竞争只会让我们和 UiPath/小厂群说同一句话；在机制层竞争，输赢都可核对。
+      G3 是把自己钉在机制层的唯一办法，也顺带把「审计层≠防线」这条口径守住了。</p>
+  </div>
+
+  <h2>7.3 需求叙述的接口（v3 替换 v2 的那句）</h2>
+  <p>v2 写「买家需要为 AI Act 提供技术证据」。v3 替换为：
+    <strong>「买家已经自己把治理/安全/合规列为 AI 规模化第一障碍（53%），而他们的成熟治理模型只有约 1/5 ——
+      缺的不是记录，是把记录变成可归属、可持续、可分发复核对象的能力。」</strong>
+    这句话的每个数都带 D 级标注（二级来源/厂商转述），比原句弱，但不会在尽调第一轮被推翻。</p>
+</section>
+
+<section class="chapter pagebreak" id="ch8">
+  <div class="chap-kicker">08 · Pricing</div>
+  <h1><span class="num">08</span>定价与单位经济：用竞品锚点校 v2 的价</h1>
+
+  <h2>8.1 v2 的四档，逐项对锚</h2>
+  <table class="tbl diff-table">
+    <tr><th>档</th><th>v2 价</th><th>本轮取到的锚</th><th>v3 处理</th></tr>
+    <tr><td>社区版（免费）</td><td>适配器 + 证据包模板 + 单机账本</td><td>Langfuse 自托管免费；LiteLLM 开源即带逐请求审计</td><td><strong>保留</strong>，但明确「免费档不含完整性机制」，否则 G3 的价值被自己抹掉</td></tr>
+    <tr><td>团队版</td><td>$1.5–3.0 万/年</td><td>Langfuse Pro $199/月（≈$2.4k/年）；Enterprise $2,499/月（≈$30k/年）；LangSmith Plus $39/席/月 + 按量</td><td><span class="tag tag-c">C 级偏高</span>。锚点显示<strong>「软件订阅」这一档市场价在 $2k–30k/年</strong>，我们卡在中间但没有任何机制件可交付 ⇒ v3 建议<strong>团队版降到 $0.8–1.5 万</strong>，把它当「有人回邮件 + 模板更新」的服务层，而不是产品层</td></tr>
+    <tr><td>证据包版</td><td>$4–8 万/年（私有化、SBOM/DPA、安全审查、季度复盘）</td><td>A 级锚点唯一：SOC 2 Type II 本身对中型企业约 $12k–20k（一次性/年）；Enterprise 档普遍含 SSO/审计日志</td><td><strong>保留价格但改性质</strong>：这一档卖的不是件，是「陪你把留存配置变成可评估对象」的人力包。若没有 G3，这档<strong>不该报价</strong></td></tr>
+    <tr><td>试点</td><td>$3–5 千/6 周</td><td>无锚（本轮未取到任何同类试点定价）</td><td>保留，标注为 C 级假设；试点目的写成 G1 而非「演示」</td></tr>
+  </table>
+
+  <h2>8.2 单位经济：三件不能说的</h2>
+  <ul class="avoid">
+    <li><strong>不能说获客成本与转化。</strong>补证波明写 OSS free→paid 转化率、企业安全评审时长、试点周期「一个可信数字都没取到」，且两次检索因查询校验失败耗尽预算 ⇒ §12（研究件）与附录 D 里这块是<strong>空白</strong>，v3 不用任何代理值顶替。</li>
+    <li><strong>不能说 LTV/回本周期。</strong>依赖上一条。</li>
+    <li><strong>不能说「私有化省合规成本」。Cohasset 那条限定语「when correctly configured」意味着责任在配置方，省不掉审计。</strong></li>
+  </ul>
+
+  <p class="small">人力侧仍按 v2 的粗算：证据包不是纯软件（私有化、安全审查、审计陪同都要人力）。这里刻意不给新数字——
+    本轮没有取到任何可引用的服务定价人日基准，v2 的那组（每天成本 800 美元、年支持 3 天）是作者假设，v3 维持其 C 级标注不动。</p>
+</section>

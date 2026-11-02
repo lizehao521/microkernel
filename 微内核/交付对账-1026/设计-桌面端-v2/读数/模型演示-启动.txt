@@ -1,0 +1,2 @@
+BRIDGE_READY http://127.0.0.1:63264/
+UI_READY http://127.0.0.1:63266/

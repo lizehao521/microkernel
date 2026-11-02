@@ -1,0 +1,194 @@
+{
+  "schema": "agentkernel-slice-check/v2",
+  "generated_at": "2026-10-19T19:41:35.182Z",
+  "source": {
+    "file": "C:\\Users\\Admin\\Desktop\\微内核\\市场报告-1020\\试点-1020\\样本包-491-539\\受控副本\\账本-前缀-1-539.jsonl",
+    "bytes": 271187,
+    "sha256": "b0920a2927a681b2f2cc28122f002a7ef650845e6de4c17304fe2c41501e340a",
+    "preamble": null,
+    "preamble_bytes": 0,
+    "jsonl_bytes": 271187,
+    "records": 539
+  },
+  "slice": {
+    "file": "C:\\Users\\Admin\\Desktop\\微内核\\市场报告-1020\\试点-1020\\样本包-491-539\\受控副本\\链切片-491-539.jsonl",
+    "bytes": 24929,
+    "sha256": "3fe708f5201089e2ef0c3e4a9576c89caae425448bfada7e50733e98b7ae0fe3",
+    "seq_start": 491,
+    "seq_end": 539,
+    "count": 49,
+    "session": "客服靶场-无依据",
+    "actor": "客服靶场-探针",
+    "step": 1,
+    "ts_first": "2026-10-17T14:32:42.5338534Z",
+    "ts_last": "2026-10-17T14:32:42.5338534Z",
+    "kinds": 49,
+    "basis": {
+      "measured": 37,
+      "estimated": 2,
+      "relayed": 4,
+      "model_says": 1,
+      "absent": 5
+    },
+    "source_nonempty": 6,
+    "payload_b64_null": 0
+  },
+  "full_chain": {
+    "count": 539,
+    "first_seq": 1,
+    "last_seq": 539,
+    "seq_contiguous": true,
+    "basis": {
+      "measured": 415,
+      "estimated": 26,
+      "relayed": 40,
+      "model_says": 11,
+      "absent": 47
+    },
+    "seal_ok": "539/539",
+    "prev_link_ok": "538/538",
+    "payload_value_image_ok": "539/539",
+    "first_prev_hash": ""
+  },
+  "anchor": {
+    "seq": 490,
+    "file": "C:\\Users\\Admin\\Desktop\\微内核\\市场报告-1020\\试点-1020\\样本包-491-539\\受控副本\\锚点-490.json",
+    "bytes": 484,
+    "sha256": "81af28ed9d185efd633e12476cca62b87266689ed609b6df2bc62ae8cd3fc628",
+    "record_hash": "f8e16f262ad27d1cde6b808997276e3953321e9ddbbd1d697f5af1b4d879138e",
+    "seal_ok": true,
+    "payload_value_image_ok": true,
+    "prev_link_ok": true,
+    "prev_seq": 489
+  },
+  "checks": {
+    "anchor_seq": 490,
+    "anchor_hash": "f8e16f262ad27d1cde6b808997276e3953321e9ddbbd1d697f5af1b4d879138e",
+    "anchor_present": true,
+    "anchor_seal_ok": true,
+    "anchor_prev_link_ok": true,
+    "first_prev_hash": "f8e16f262ad27d1cde6b808997276e3953321e9ddbbd1d697f5af1b4d879138e",
+    "anchor_link_ok": true,
+    "seal_ok": "49/49",
+    "prev_link_ok": "48/48",
+    "payload_value_image_ok": "49/49"
+  },
+  "absent_cells": [
+    {
+      "seq": 527,
+      "kind": "model_output:chunks",
+      "claim": "—（没量到，不是 0）：这一发不是流式的，结构上没有分帧"
+    },
+    {
+      "seq": 528,
+      "kind": "model_output:first_byte_ms",
+      "claim": "—（没量到，不是 0）：这一发不是流式的，没有首帧这件事"
+    },
+    {
+      "seq": 529,
+      "kind": "model_output:max_gap_ms",
+      "claim": "—（没量到，不是 0）：这一发不是流式的，没有帧间"
+    },
+    {
+      "seq": 535,
+      "kind": "model_output:fail_status",
+      "claim": "—（没量到，不是 0）：这一发没故障，也就没有要记的状态码"
+    },
+    {
+      "seq": 536,
+      "kind": "model_output:retry_after_ms",
+      "claim": "—（没量到，不是 0）：这一发没断，也就没有要等多久"
+    }
+  ],
+  "non_measured_cells": [
+    {
+      "seq": 495,
+      "kind": "model_input:tokens",
+      "basis": "estimated",
+      "claim": "≈153（这是估算，不是测量）：估的是1 token ≈ 3 字节的粗估（靶场按段表字节推）",
+      "source": "1 token ≈ 3 字节的粗估（靶场按段表字节推）"
+    },
+    {
+      "seq": 502,
+      "kind": "model_input:fixed_overhead",
+      "basis": "estimated",
+      "claim": "≈48（这是估算，不是测量）：估的是system 头 + 模型名 + 工具清单的粗估",
+      "source": "system 头 + 模型名 + 工具清单的粗估"
+    },
+    {
+      "seq": 513,
+      "kind": "model_output:finish",
+      "basis": "relayed",
+      "claim": "stop",
+      "source": "endpoint-response"
+    },
+    {
+      "seq": 515,
+      "kind": "model_output:endpoint_model",
+      "basis": "model_says",
+      "claim": "cs-flash",
+      "source": null
+    },
+    {
+      "seq": 517,
+      "kind": "model_output:wire_format",
+      "basis": "relayed",
+      "claim": "chat.completion",
+      "source": "endpoint-response"
+    },
+    {
+      "seq": 523,
+      "kind": "model_output:usage_in",
+      "basis": "relayed",
+      "claim": "177（转述自 对端 usage.prompt_tokens（cs-flash 自报））",
+      "source": "对端 usage.prompt_tokens（cs-flash 自报）"
+    },
+    {
+      "seq": 524,
+      "kind": "model_output:usage_out",
+      "basis": "relayed",
+      "claim": "15（转述自 对端 usage.completion_tokens（cs-flash 自报））",
+      "source": "对端 usage.completion_tokens（cs-flash 自报）"
+    },
+    {
+      "seq": 527,
+      "kind": "model_output:chunks",
+      "basis": "absent",
+      "claim": "—（没量到，不是 0）：这一发不是流式的，结构上没有分帧",
+      "source": null
+    },
+    {
+      "seq": 528,
+      "kind": "model_output:first_byte_ms",
+      "basis": "absent",
+      "claim": "—（没量到，不是 0）：这一发不是流式的，没有首帧这件事",
+      "source": null
+    },
+    {
+      "seq": 529,
+      "kind": "model_output:max_gap_ms",
+      "basis": "absent",
+      "claim": "—（没量到，不是 0）：这一发不是流式的，没有帧间",
+      "source": null
+    },
+    {
+      "seq": 535,
+      "kind": "model_output:fail_status",
+      "basis": "absent",
+      "claim": "—（没量到，不是 0）：这一发没故障，也就没有要记的状态码",
+      "source": null
+    },
+    {
+      "seq": 536,
+      "kind": "model_output:retry_after_ms",
+      "basis": "absent",
+      "claim": "—（没量到，不是 0）：这一发没断，也就没有要等多久",
+      "source": null
+    }
+  ],
+  "limits": [
+    "payload_b64 是逐格值镜像，不是产物原件；原件不在账内",
+    "本切片只有一次调用；没有 gate 行、没有复核记录、没有版本三元组",
+    "全链复算只证明账本自洽，不证明调用内容真实或正确"
+  ]
+}

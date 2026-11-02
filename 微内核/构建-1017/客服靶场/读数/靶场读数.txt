@@ -1,0 +1,46 @@
+== 客服靶场 · 带内核跑任务 10-17 22:20 ==
+配置：额度上限 2048 字节、传输余量 12% ⇒ 内容额度 1802（这两个数是靶场设的，内核落账时会重算比对）
+
+【第 1 发 非流式】段表 system/history/user ｜ 内容字节 1102（额度 1802）｜ 折叠 0 段 ｜ 线入 1537 线出 3421 ｜ 帧 1 首帧 8476ms 峰间 0ms ｜ 对端自报 usage=378/476 ｜ object=chat.completion ｜ 答复摘要=未检索到工单库中针对该订单可依据的处置口径，无法给出退款、核实时效或金额
+   预检=放行 ｜ isError=False ｜ 原文：输入侧：自洽 输出侧：自洽 预检结论：整发可落账（副本上真跑过一遍 RecordCall，两侧都不写回这本账）
+   落账原文：整发落账 49 条（输入侧 20 格 + 输出侧 29 格），链上共 1372 条
+【第 2 发 流式】段表 system/history/user ｜ 内容字节 1271（额度 1802）｜ 折叠 0 段 ｜ 线入 1738 线出 121285 ｜ 帧 240 首帧 929ms 峰间 303ms ｜ 对端自报 usage=0/0 ｜ object=chat.completion.chunk ｜ 答复摘要=处置口径（不含金额/时效承诺，需以工单库核验结果为准）：\n\n1. *
+   预检=放行 ｜ isError=False ｜ 原文：输入侧：自洽 输出侧：自洽 预检结论：整发可落账（副本上真跑过一遍 RecordCall，两侧都不写回这本账）
+   落账原文：整发落账 49 条（输入侧 20 格 + 输出侧 29 格），链上共 1421 条
+【第 3 发 非流式】段表 system/history/user ｜ 内容字节 1359（额度 1802）｜ 折叠 0 段 ｜ 线入 1860 线出 14388 ｜ 帧 1 首帧 52061ms 峰间 27ms ｜ 对端自报 usage=445/3348 ｜ object=chat.completion ｜ 答复摘要=根据当前工单库/本单可见字段可确认：
+
+- 订单号：SO-2026-04
+   预检=放行 ｜ isError=False ｜ 原文：输入侧：自洽 输出侧：自洽 预检结论：整发可落账（副本上真跑过一遍 RecordCall，两侧都不写回这本账）
+   落账原文：整发落账 49 条（输入侧 20 格 + 输出侧 29 格），链上共 1470 条
+【第 4 发 流式】段表 system/history/user ｜ 内容字节 1524（额度 1802）｜ 折叠 0 段 ｜ 线入 2057 线出 474513 ｜ 帧 943 首帧 478ms 峰间 207ms ｜ 对端自报 usage=0/0 ｜ object=chat.completion.chunk ｜ 答复摘要=仅按您给出的工单库信息可回答；未核验入库存的订单号不得引用金额或时效。本
+   预检=放行 ｜ isError=False ｜ 原文：输入侧：自洽 输出侧：自洽 预检结论：整发可落账（副本上真跑过一遍 RecordCall，两侧都不写回这本账）
+   落账原文：整发落账 49 条（输入侧 20 格 + 输出侧 29 格），链上共 1519 条
+【第 5 发 非流式】段表 system/history/user ｜ 内容字节 1630（额度 1802）｜ 折叠 0 段 ｜ 线入 2197 线出 6784 ｜ 帧 1 首帧 23920ms 峰间 0ms ｜ 对端自报 usage=516/1257 ｜ object=chat.completion ｜ 答复摘要=当前可核对的工单库中未确认到该订单号的库内有效明细，因此不能基于库外信息
+   预检=放行 ｜ isError=False ｜ 原文：输入侧：自洽 输出侧：自洽 预检结论：整发可落账（副本上真跑过一遍 RecordCall，两侧都不写回这本账）
+   落账原文：整发落账 49 条（输入侧 20 格 + 输出侧 29 格），链上共 1568 条
+【第 6 发 流式】段表 system/history/user ｜ 内容字节 1791（额度 1802）｜ 折叠 0 段 ｜ 线入 2390 线出 235781 ｜ 帧 468 首帧 1551ms 峰间 179ms ｜ 对端自报 usage=0/0 ｜ object=chat.completion.chunk ｜ 答复摘要=按工单库现有记录，可给出的处置口径如下（不对库外规则做扩展）：\n\n*
+   预检=放行 ｜ isError=False ｜ 原文：输入侧：自洽 输出侧：自洽 预检结论：整发可落账（副本上真跑过一遍 RecordCall，两侧都不写回这本账）
+   落账原文：整发落账 49 条（输入侧 20 格 + 输出侧 29 格），链上共 1617 条
+【第 7 发 非流式】段表 system/truncation-notice/history/user ｜ 内容字节 1705（额度 1802）｜ 折叠 2 段 ｜ 线入 2305 线出 4361 ｜ 帧 1 首帧 14565ms 峰间 0ms ｜ 对端自报 usage=540/804 ｜ object=chat.completion ｜ 答复摘要=按工单 SO-2026-0420-9588 记录，客户诉求为“发票开错抬
+   预检=放行 ｜ isError=False ｜ 原文：输入侧：自洽 输出侧：自洽 预检结论：整发可落账（副本上真跑过一遍 RecordCall，两侧都不写回这本账）
+   落账原文：整发落账 49 条（输入侧 20 格 + 输出侧 29 格），链上共 1666 条
+【第 8 发 流式】段表 system/truncation-notice/history/user ｜ 内容字节 1694（额度 1802）｜ 折叠 3 段 ｜ 线入 2293 线出 66651 ｜ 帧 132 首帧 799ms 峰间 197ms ｜ 对端自报 usage=0/0 ｜ object=chat.completion.chunk ｜ 答复摘要=当前工单库中未查询到订单号 SO-2026-0420-9589 的可引用
+   预检=放行 ｜ isError=False ｜ 原文：输入侧：自洽 输出侧：自洽 预检结论：整发可落账（副本上真跑过一遍 RecordCall，两侧都不写回这本账）
+   落账原文：整发落账 49 条（输入侧 20 格 + 输出侧 29 格），链上共 1715 条
+
+-- 无依据那一发：客户报的订单号不在库里，还自带一个金额 --
+【第 1 发 非流式】段表 system/history/user ｜ 内容字节 459（额度 1802）｜ 折叠 0 段 ｜ 线入 762 线出 2557 ｜ 帧 1 首帧 5908ms 峰间 0ms ｜ 对端自报 usage=201/287 ｜ object=chat.completion ｜ 答复摘要=未查询到工单号 SO-2026-9999-0000 对应的可执行退款口径
+   预检=放行 ｜ isError=False ｜ 原文：输入侧：自洽 输出侧：自洽 预检结论：整发可落账（副本上真跑过一遍 RecordCall，两侧都不写回这本账）
+   落账原文：整发落账 49 条（输入侧 20 格 + 输出侧 29 格），链上共 1764 条
+
+== 收口 ==
+落账成功 8 发 ｜ 跑了 9 发（分母：工单 8 发 + 无依据 1 发）
+verify：✓ 链自洽（共 1764 条，其中 1764 条比对过原像）
+tally：账 1764 条（absent=139 estimated=76 measured=1373 model_says=36 relayed=140）；被拒的写入 0 次 —— 拒收也要看得见，不然「被拒」会读成「没发生过」；另有 0 次写请求根本没走到内核（外壳在门口挡下：整块没给／写侧没这个键）；0 条请求被协议层判成无效（解不开 -32700／没有 method、不是请求 -32600；走到了协议层，只是没走进内核）；0 条请求连协议层都没到（传输层的形状预检挡下，比第三笔更早一步；拒它的是门，不是分类 —— #44）
+readers：输入侧：键名表 20 格，其中 13 格没有任何声明者读：call call_bytes_ceiling clamp_rounds content_bytes content_ceiling effective_ceiling fixed_overhead leftover_pct part_totals parts shares tokens transport_slack_pct 输出侧：键名表 29 格，其中 19 格没有任何声明者读：call chunks endpoint_model fail_status finish first_byte_ms malformed_actions malformed_streak max_gap_ms model_says_bytes model_says_kept model_says_sha256 retry_after_ms sent tool_calls usage_in 
+
+== 反针四根（只预检、不落账）==
+N1 转述不带出处（UsageIn relayed、Source 空）                      ⇒ 拒 ｜ isError=True ｜ 输入侧：自洽 输出侧：kernel: 入 token 说是 relayed 的，却没说来源（转述谁 / 估的是什么） 预检结论：整发会被拒 —— kernel: 输出侧账不自洽，第 1 发整发拒收（输入侧也不写）：kernel: 入 token 说是 relayed 的，却没说来源（转述谁 / 估的是什么）
+N2 absent 却有数（Chunks Absent=true 且 N=7）                  ⇒ 拒 ｜ isError=True ｜ 输入侧：自洽 输出侧：kernel: 分帧数 报的是缺席，却带着数 7 —— 缺席不许顺手塞一个值 预检结论：整发会被拒 —— kernel: 输出侧账不自洽，第 1 发整发拒收（输入侧也不写）：kernel: 分帧数 报的是缺席，却带着数 7 —— 缺席不许顺手塞一个值
+N3 声称流式却没帧（Streaming=true 而 Chunks absent）               ⇒ 拒 ｜ isError=True ｜ 输入侧：自洽 输出侧：kernel: 这一发是流式的，分帧数 却报缺席 —— 流式就该量得到它 预检结论：整发会被拒 —— kernel: 输出侧账不自洽，第 1 发整发拒收（输入侧也不写）：kernel: 这一发是流式的，分帧数 却报缺席 —— 流式就该量得到它
+N4 usage 全 0 同时线字节记 measured（#47 那一族）                    ⇒ 没拦 ｜ isError=False ｜ 输入侧：自洽 输出侧：自洽 预检结论：整发可落账（副本上真跑过一遍 RecordCall，两侧都不写回这本账）

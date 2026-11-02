@@ -1,0 +1,27 @@
+{"arm": "\u5168\u5bf9\u5fc5\u987b\u7eff", "want_ok": true, "got_ok": true, "why": "ok", "pass": true}
+{"arm": "\u5c11\u4e00\u4e2a\u7ed3\u679c\u5fc5\u987b\u7ea2", "want_ok": false, "got_ok": false, "why": "answer_missing=[16]", "pass": true}
+{"arm": "\u5de5\u5177\u8c03\u7528\u6587\u672c\u5f53\u7b54\u6848\u5fc5\u987b\u7ea2", "want_ok": false, "got_ok": false, "why": "answer_missing=[2, 4, 6, 10, 12, 14, 16]", "pass": true}
+{"arm": "\u649e\u6b65\u6570\u4e0a\u9650\u5fc5\u987b\u7ea2", "want_ok": false, "got_ok": false, "why": "stop=\u6b65\u6570\u4e0a\u9650", "pass": true}
+{"arm": "\u56de\u663e\u7b54\u6848\u5fc5\u987b\u7ea2", "want_ok": false, "got_ok": false, "why": "answer_tier=measured", "pass": true}
+{"arm": "\u53ea\u8dd1\u4e03\u6b65\u5fc5\u987b\u7ea2", "want_ok": false, "got_ok": false, "why": "steps<8(7)", "pass": true}
+{"max_steps": 6, "rep": 1, "ok": false, "why": "steps<8(6)", "n_steps": 6, "stop": "\u6b65\u6570\u4e0a\u9650", "tier": "measured", "ms": 38665, "err": null}
+{"max_steps": 6, "rep": 2, "ok": false, "why": "steps<8(6)", "n_steps": 6, "stop": "\u6b65\u6570\u4e0a\u9650", "tier": "measured", "ms": 12620, "err": null}
+{"max_steps": 6, "rep": 3, "ok": false, "why": "steps<8(6)", "n_steps": 6, "stop": "\u6b65\u6570\u4e0a\u9650", "tier": "measured", "ms": 14890, "err": null}
+{"max_steps": 7, "rep": 1, "ok": false, "why": "steps<8(7)", "n_steps": 7, "stop": "\u6b65\u6570\u4e0a\u9650", "tier": "measured", "ms": 21943, "err": null}
+{"max_steps": 7, "rep": 2, "ok": false, "why": "steps<8(7)", "n_steps": 7, "stop": "\u6b65\u6570\u4e0a\u9650", "tier": "measured", "ms": 19368, "err": null}
+{"max_steps": 7, "rep": 3, "ok": false, "why": "steps<8(7)", "n_steps": 7, "stop": "\u6b65\u6570\u4e0a\u9650", "tier": "measured", "ms": 26401, "err": null}
+{"max_steps": 8, "rep": 1, "ok": false, "why": "steps<8(7)", "n_steps": 7, "stop": "\u8dd1\u5b8c", "tier": "model_says", "ms": 26685, "err": null}
+{"max_steps": 8, "rep": 2, "ok": false, "why": "stop=\u6b65\u6570\u4e0a\u9650", "n_steps": 8, "stop": "\u6b65\u6570\u4e0a\u9650", "tier": "measured", "ms": 20970, "err": null}
+{"max_steps": 8, "rep": 3, "ok": false, "why": "stop=\u6b65\u6570\u4e0a\u9650", "n_steps": 8, "stop": "\u6b65\u6570\u4e0a\u9650", "tier": "measured", "ms": 15043, "err": null}
+{"max_steps": 9, "rep": 1, "ok": true, "why": "ok", "n_steps": 8, "stop": "\u8dd1\u5b8c", "tier": "model_says", "ms": 56438, "err": null}
+{"max_steps": 9, "rep": 2, "ok": true, "why": "ok", "n_steps": 8, "stop": "\u8dd1\u5b8c", "tier": "model_says", "ms": 24280, "err": null}
+{"max_steps": 9, "rep": 3, "ok": false, "why": "steps<8(3)", "n_steps": 3, "stop": "\u8dd1\u5b8c", "tier": "model_says", "ms": 7998, "err": null}
+{"max_steps": 10, "rep": 1, "ok": true, "why": "ok", "n_steps": 8, "stop": "\u8dd1\u5b8c", "tier": "model_says", "ms": 23370, "err": null}
+{"max_steps": 10, "rep": 2, "ok": true, "why": "ok", "n_steps": 8, "stop": "\u8dd1\u5b8c", "tier": "model_says", "ms": 21542, "err": null}
+{"max_steps": 10, "rep": 3, "ok": true, "why": "ok", "n_steps": 8, "stop": "\u8dd1\u5b8c", "tier": "model_says", "ms": 43676, "err": null}
+{"reading": "C:\\Users\\Admin\\Desktop\\\u5fae\u5185\u6838\\PDF-1022\\\u771f\u7aef\u70b9-1023\\\u8bfb\u6570\\T09-\u6b65\u6570\u4e0a\u9650\u9636\u68af-1023.json", "bytes": 19491, "sha256": "b8dd8406f02732856a652107f1f5428c2177796d178767b14d0199f8e56a9e9e", "key_in_reading": false, "exe_sha256": "8ad1abadd5305db43ed550c5de8656065ddb2b1fc80016eb3a009277cee5aca6"}
+{"max_steps": 6, "n": 3, "pass": 0, "n_ok_calc": [6, 6, 6], "stops": ["\u6b65\u6570\u4e0a\u9650", "\u6b65\u6570\u4e0a\u9650", "\u6b65\u6570\u4e0a\u9650"], "tiers": ["measured", "measured", "measured"], "why": ["steps<8(6)", "steps<8(6)", "steps<8(6)"], "errors": []}
+{"max_steps": 7, "n": 3, "pass": 0, "n_ok_calc": [7, 7, 7], "stops": ["\u6b65\u6570\u4e0a\u9650", "\u6b65\u6570\u4e0a\u9650", "\u6b65\u6570\u4e0a\u9650"], "tiers": ["measured", "measured", "measured"], "why": ["steps<8(7)", "steps<8(7)", "steps<8(7)"], "errors": []}
+{"max_steps": 8, "n": 3, "pass": 0, "n_ok_calc": [7, 8, 8], "stops": ["\u8dd1\u5b8c", "\u6b65\u6570\u4e0a\u9650", "\u6b65\u6570\u4e0a\u9650"], "tiers": ["model_says", "measured", "measured"], "why": ["steps<8(7)", "stop=\u6b65\u6570\u4e0a\u9650", "stop=\u6b65\u6570\u4e0a\u9650"], "errors": []}
+{"max_steps": 9, "n": 3, "pass": 2, "n_ok_calc": [8, 8, 3], "stops": ["\u8dd1\u5b8c", "\u8dd1\u5b8c", "\u8dd1\u5b8c"], "tiers": ["model_says", "model_says", "model_says"], "why": ["ok", "ok", "steps<8(3)"], "errors": []}
+{"max_steps": 10, "n": 3, "pass": 3, "n_ok_calc": [8, 8, 8], "stops": ["\u8dd1\u5b8c", "\u8dd1\u5b8c", "\u8dd1\u5b8c"], "tiers": ["model_says", "model_says", "model_says"], "why": ["ok", "ok", "ok"], "errors": []}

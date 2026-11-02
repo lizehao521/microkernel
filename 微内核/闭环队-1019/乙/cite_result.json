@@ -1,0 +1,39 @@
+{
+ "meta": {
+  "L1018": {
+   "path": "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl",
+   "lines": 2941,
+   "header": 1,
+   "entries": 2940,
+   "bad": 0,
+   "gate": 0,
+   "basisHist": {
+    "1": 2213,
+    "2": 188,
+    "3": 124,
+    "4": 60,
+    "5": 355
+   },
+   "shots": 60
+  },
+  "L8799": {
+   "path": "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl",
+   "lines": 491,
+   "header": 1,
+   "entries": 490,
+   "bad": 0,
+   "gate": 0,
+   "basisHist": {
+    "1": 350,
+    "2": 20,
+    "4": 10,
+    "5": 110
+   },
+   "shots": 10
+  }
+ },
+ "neverFilledBoth": [
+  "model_output:fail_status",
+  "model_output:retry_after_ms"
+ ]
+}

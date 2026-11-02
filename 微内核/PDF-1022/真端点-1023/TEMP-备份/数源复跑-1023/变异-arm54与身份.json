@@ -1,0 +1,31 @@
+{
+ "mutants_run": 3,
+ "results": [
+  {
+   "mutant": "\u53d8\u5f02-\u8eab\u4efd\u9000\u56depass\u5e8f\u53f7-\u6570\u6e90.py",
+   "skipped": "needle absent from current file"
+  },
+  {
+   "mutant": "\u53d8\u5f02-hedge\u4e0d\u8bb0\u8bcd\u8868-\u6570\u6e90.py",
+   "rc": 1,
+   "arms": 54,
+   "selftest_fails": 1,
+   "failed": [
+    "arm54 hedge \u884c\u9010\u540d\u5370\u51fa\u4e14\u4e0e\u8ba1\u6570\u4e00\u81f4"
+   ],
+   "stderr_tail": ""
+  },
+  {
+   "mutant": "\u53d8\u5f02-hedge\u540d\u5355\u6052\u7a7a-\u6570\u6e90.py",
+   "rc": 1,
+   "arms": 54,
+   "selftest_fails": 1,
+   "failed": [
+    "arm54 hedge \u884c\u9010\u540d\u5370\u51fa\u4e14\u4e0e\u8ba1\u6570\u4e00\u81f4"
+   ],
+   "stderr_tail": ""
+  }
+ ],
+ "leftover_mutants": [],
+ "source_file_bytes": 45698
+}

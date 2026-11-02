@@ -1,0 +1,24 @@
+{
+ "id": "E3",
+ "title": "停止入口与结算事件（被打断=退出码 6）",
+ "covers": [
+  4,
+  12,
+  13
+ ],
+ "tasks": [
+  "把 abort（loop.go:124/130 两处 <-r.abort）接成一个可被外部叫的停止入口：进程内导出 run.Stop(why string)，信号路径 main.go 已 close(abort)，不动",
+  "abort 命中时 emit turn_interrupted，随后走 closeOut（loop.go:591）并 emit turn_settled，载荷交三样：停在哪（第几步之后/当前在做什么）、已经发生了什么（成功/失败/被挡/没量到各几条 + 每条 absent 的理由）、没发生什么（没走到的步骤逐条列出，注明「根本没执行，不是执行了没结果」）",
+  "结算不许把未执行的步骤写进轨迹（对照 pgagent 测试 11）；已经落账的 KPI 与计数必须活过打断（对照 pgagent 测试 12）",
+  "测试：带 -shot-delay 造一个真能停的窗口，断言 1s 内出现 turn_settled、已完成计数与打断前一致、退出码 6",
+  "反臂：故意在结算里补一条没跑的步 ⇒ 补步针必须红；故意把 kpi 在打断路径上清零 ⇒ 另一臂必须红"
+ ],
+ "executionFit": "fits-one-run",
+ "demoBoundary": "运行中停掉，1s 内事件流出现 turn_settled，列出的已执行步数与轨迹一致且没有凭空多出的步",
+ "scopeNotes": "六态退出码契约已在盘上，这一发只是把它投影成事件。",
+ "blockedBy": [
+  "E1"
+ ],
+ "techGuidance": "「打断」与「跑完」走同一条收口，不许分叉出两套收口代码 —— 分叉就是 W35 那族「两个数并排上屏」的复发点。",
+ "status": "Planned"
+}

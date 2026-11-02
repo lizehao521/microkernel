@@ -1,0 +1,622 @@
+{
+  "generated_at": "2026-10-20T02:55:01+08:00",
+  "method": "机械检查：pdftotext 页数 + Edge CDP 布局测量 + HTML 文本/ CSS 静态解析；不含真人",
+  "card": {
+    "name": "主卡",
+    "html": "C:\\Users\\Admin\\Desktop\\微内核\\市场报告-1020\\决策卡-1020\\decision-card.html",
+    "pdf": "C:\\Users\\Admin\\Desktop\\微内核\\市场报告-1020\\决策卡-1020\\decision-card.pdf",
+    "checks": [
+      {
+        "id": "P1",
+        "name": "PDF 单页",
+        "status": "PASS",
+        "evidence": "pages=1（form-feed count）"
+      },
+      {
+        "id": "P2",
+        "name": "A4 无纵向溢出",
+        "status": "PASS",
+        "evidence": "bodyScroll=1096 bodyClient=1096"
+      },
+      {
+        "id": "P3",
+        "name": "页脚在纸面内",
+        "status": "PASS",
+        "evidence": "foot.bottom=1141.40625 sheet.bottom=1160.296875"
+      },
+      {
+        "id": "P4",
+        "name": "无外部资源",
+        "status": "PASS",
+        "evidence": "src/href=0 @import=0 url(http)=0"
+      },
+      {
+        "id": "P5",
+        "name": "禁用宣称（正面文本）",
+        "status": "PASS",
+        "evidence": "正面 0 类；负面清单块内隔离 5 类，剔除逻辑已执行"
+      },
+      {
+        "id": "P6",
+        "name": "必备声明齐全",
+        "status": "PASS",
+        "evidence": "11/11 齐全"
+      },
+      {
+        "id": "P7",
+        "name": "证据状态不塌",
+        "status": "PASS",
+        "evidence": "NOT_RUN=3 X徽标=2 A读数=有"
+      },
+      {
+        "id": "P8",
+        "name": "正文对比度 ≥4.5",
+        "status": "PASS",
+        "evidence": "15/15 对达标，最小 4.72"
+      },
+      {
+        "id": "P9",
+        "name": "最小字号 ≥6pt",
+        "status": "PASS",
+        "evidence": "min=6.0pt，共 35 处"
+      },
+      {
+        "id": "P10",
+        "name": "三个决定在页面上半部",
+        "status": "PASS",
+        "evidence": "decide.bottom=344.9 mid=599.0；样式在"
+      }
+    ],
+    "summary": {
+      "pass": 10,
+      "fail": 0,
+      "not_run": 0
+    },
+    "forbidden_hits": [],
+    "missing_markers": [],
+    "contrast": [
+      {
+        "selector": ".foot .fine",
+        "label": "页脚免责小字",
+        "status": "PASS",
+        "ratio": 5.45,
+        "fg": "#5b6b7f",
+        "bg": "#ffffff"
+      },
+      {
+        "selector": ".foot .src",
+        "label": "页脚来源",
+        "status": "PASS",
+        "ratio": 6.33,
+        "fg": "#526173",
+        "bg": "#ffffff"
+      },
+      {
+        "selector": ".foot .legend",
+        "label": "证据分级图例",
+        "status": "PASS",
+        "ratio": 6.33,
+        "fg": "#526173",
+        "bg": "#ffffff"
+      },
+      {
+        "selector": ".sec-h .note",
+        "label": "章节右侧说明",
+        "status": "PASS",
+        "ratio": 6.33,
+        "fg": "#526173",
+        "bg": "#ffffff"
+      },
+      {
+        "selector": ".decide .head .t",
+        "label": "00 决策带标题",
+        "status": "PASS",
+        "ratio": 9.23,
+        "fg": "#064e3b",
+        "bg": "#ecfdf5"
+      },
+      {
+        "selector": ".decide .head .n",
+        "label": "00 决策带说明",
+        "status": "PASS",
+        "ratio": 5.21,
+        "fg": "#047857",
+        "bg": "#ecfdf5"
+      },
+      {
+        "selector": ".decide .ask .n",
+        "label": "00 决策序号",
+        "status": "PASS",
+        "ratio": 5.2,
+        "fg": "#0f766e",
+        "bg": "#ecfdf5"
+      },
+      {
+        "selector": ".decide .ask .why",
+        "label": "00 决策理由",
+        "status": "PASS",
+        "ratio": 8.99,
+        "fg": "#134e4a",
+        "bg": "#ecfdf5"
+      },
+      {
+        "selector": ".gap-list li",
+        "label": "01 缺口列表",
+        "status": "PASS",
+        "ratio": 9.58,
+        "fg": "#33475b",
+        "bg": "#ffffff"
+      },
+      {
+        "selector": ".card .detail",
+        "label": "02 证据卡正文",
+        "status": "PASS",
+        "ratio": 6.24,
+        "fg": "#526173",
+        "bg": "#fbfefd"
+      },
+      {
+        "selector": ".badge.x",
+        "label": "X 徽标",
+        "status": "PASS",
+        "ratio": 7.6,
+        "fg": "#991b1b",
+        "bg": "#fef2f2"
+      },
+      {
+        "selector": ".badge.a",
+        "label": "A 徽标",
+        "status": "PASS",
+        "ratio": 5.2,
+        "fg": "#0f766e",
+        "bg": "#ecfdf5"
+      },
+      {
+        "selector": ".poc .col li",
+        "label": "04 试点三列",
+        "status": "PASS",
+        "ratio": 8.99,
+        "fg": "#134e4a",
+        "bg": "#ecfdf5"
+      },
+      {
+        "selector": ".poc .fine",
+        "label": "04 试点小字",
+        "status": "PASS",
+        "ratio": 7.29,
+        "fg": "#065f46",
+        "bg": "#ecfdf5"
+      },
+      {
+        "selector": ".who .trig",
+        "label": "01 触发条件",
+        "status": "PASS",
+        "ratio": 4.72,
+        "fg": "#b45309",
+        "bg": "#f6f8fa"
+      }
+    ],
+    "min_font_pt": 6.0,
+    "layout": {
+      "sheet": {
+        "top": 37.78125,
+        "bottom": 1160.296875,
+        "height": 1122.515625
+      },
+      "body": {
+        "top": 64.234375,
+        "bottom": 1160.296875,
+        "height": 1096.0625
+      },
+      "foot": {
+        "top": 1061.09375,
+        "bottom": 1141.40625,
+        "height": 80.3125
+      },
+      "decide": {
+        "top": 264.421875,
+        "bottom": 344.890625,
+        "height": 80.46875
+      },
+      "bodyScroll": 1096,
+      "bodyClient": 1096,
+      "docScroll": 1198,
+      "secs": [
+        {
+          "i": 1,
+          "top": 356.21875,
+          "bottom": 496.5625,
+          "height": 140.34375
+        },
+        {
+          "i": 2,
+          "top": 507.890625,
+          "bottom": 693.40625,
+          "height": 185.515625
+        },
+        {
+          "i": 3,
+          "top": 704.734375,
+          "bottom": 838.734375,
+          "height": 134
+        },
+        {
+          "i": 4,
+          "top": 850.0625,
+          "bottom": 1010.890625,
+          "height": 160.828125
+        }
+      ],
+      "font": "\"Noto Sans SC\", \"Source Han Sans SC\", \"Microsoft YaHei\", sans-serif"
+    },
+    "visible_chars": 2039,
+    "positive_chars": 1883,
+    "pdf_pages": 1
+  },
+  "anti_arm": {
+    "name": "反臂（故意夸大）",
+    "html": "C:\\Users\\Admin\\Desktop\\微内核\\市场报告-1020\\决策卡-1020\\测评\\anti-arm.html",
+    "pdf": "C:\\Users\\Admin\\Desktop\\微内核\\市场报告-1020\\决策卡-1020\\测评\\anti-arm.pdf",
+    "checks": [
+      {
+        "id": "P1",
+        "name": "PDF 单页",
+        "status": "PASS",
+        "evidence": "pages=1（form-feed count）"
+      },
+      {
+        "id": "P2",
+        "name": "A4 无纵向溢出",
+        "status": "PASS",
+        "evidence": "bodyScroll=1096 bodyClient=1096"
+      },
+      {
+        "id": "P3",
+        "name": "页脚在纸面内",
+        "status": "PASS",
+        "evidence": "foot.bottom=1141.40625 sheet.bottom=1160.296875"
+      },
+      {
+        "id": "P4",
+        "name": "无外部资源",
+        "status": "PASS",
+        "evidence": "src/href=0 @import=0 url(http)=0"
+      },
+      {
+        "id": "P5",
+        "name": "禁用宣称（正面文本）",
+        "status": "FAIL",
+        "evidence": "命中 13 类：闭环已通、30 分钟接入、内容可信、攻击已被挡住、自动改进已有效、符合 EU AI Act、审计层就是防线、成熟平台（非否定）、所有项均、R/N 双臂 +N、已通过合规认证、保证做出、已服务多家；负面块隔离 2 类"
+      },
+      {
+        "id": "P6",
+        "name": "必备声明齐全",
+        "status": "FAIL",
+        "evidence": "缺失 8 项：NOT_RUN 标记、不构成合规认证、审计层不是防线、不能证明、当前缺口、做不出不收尾款、不是成熟平台、不塌成 0"
+      },
+      {
+        "id": "P7",
+        "name": "证据状态不塌",
+        "status": "FAIL",
+        "evidence": "NOT_RUN=0 X徽标=0 A读数=有"
+      },
+      {
+        "id": "P8",
+        "name": "正文对比度 ≥4.5",
+        "status": "PASS",
+        "evidence": "11/15 对达标，最小 4.72；4 项选择器不适用"
+      },
+      {
+        "id": "P9",
+        "name": "最小字号 ≥6pt",
+        "status": "PASS",
+        "evidence": "min=6.0pt，共 33 处"
+      },
+      {
+        "id": "P10",
+        "name": "三个决定在页面上半部",
+        "status": "NOT_RUN",
+        "evidence": "未找到 .decide（反臂不适用）"
+      }
+    ],
+    "summary": {
+      "pass": 6,
+      "fail": 3,
+      "not_run": 1
+    },
+    "forbidden_hits": [
+      {
+        "label": "闭环已通",
+        "pattern": "闭环已通",
+        "samples": [
+          "闭环已通"
+        ]
+      },
+      {
+        "label": "30 分钟接入",
+        "pattern": "30\\s*分钟接入",
+        "samples": [
+          "30 分钟接入"
+        ]
+      },
+      {
+        "label": "内容可信",
+        "pattern": "内容可信",
+        "samples": [
+          "内容可信"
+        ]
+      },
+      {
+        "label": "攻击已被挡住",
+        "pattern": "攻击已被挡住",
+        "samples": [
+          "攻击已被挡住"
+        ]
+      },
+      {
+        "label": "自动改进已有效",
+        "pattern": "自动改进已有效",
+        "samples": [
+          "自动改进已有效"
+        ]
+      },
+      {
+        "label": "符合 EU AI Act",
+        "pattern": "符合\\s*EU\\s*AI\\s*Act",
+        "samples": [
+          "符合 EU AI Act"
+        ]
+      },
+      {
+        "label": "审计层就是防线",
+        "pattern": "审计层(?:就是|是)防线",
+        "samples": [
+          "审计层就是防线"
+        ]
+      },
+      {
+        "label": "成熟平台（非否定）",
+        "pattern": "(?<!不是)成熟平台",
+        "samples": [
+          "成熟平台"
+        ]
+      },
+      {
+        "label": "所有项均",
+        "pattern": "所有项均",
+        "samples": [
+          "所有项均"
+        ]
+      },
+      {
+        "label": "R/N 双臂 +N",
+        "pattern": "R/N\\s*双臂\\s*\\+\\s*\\d",
+        "samples": [
+          "R/N 双臂 +3"
+        ]
+      },
+      {
+        "label": "已通过合规认证",
+        "pattern": "已通过合规认证",
+        "samples": [
+          "已通过合规认证"
+        ]
+      },
+      {
+        "label": "保证做出",
+        "pattern": "保证做出",
+        "samples": [
+          "保证做出"
+        ]
+      },
+      {
+        "label": "已服务多家",
+        "pattern": "已服务多家",
+        "samples": [
+          "已服务多家"
+        ]
+      }
+    ],
+    "missing_markers": [
+      "NOT_RUN 标记",
+      "不构成合规认证",
+      "审计层不是防线",
+      "不能证明",
+      "当前缺口",
+      "做不出不收尾款",
+      "不是成熟平台",
+      "不塌成 0"
+    ],
+    "contrast": [
+      {
+        "selector": ".foot .fine",
+        "label": "页脚免责小字",
+        "status": "PASS",
+        "ratio": 5.45,
+        "fg": "#5b6b7f",
+        "bg": "#ffffff"
+      },
+      {
+        "selector": ".foot .src",
+        "label": "页脚来源",
+        "status": "PASS",
+        "ratio": 6.33,
+        "fg": "#526173",
+        "bg": "#ffffff"
+      },
+      {
+        "selector": ".foot .legend",
+        "label": "证据分级图例",
+        "status": "PASS",
+        "ratio": 6.33,
+        "fg": "#526173",
+        "bg": "#ffffff"
+      },
+      {
+        "selector": ".sec-h .note",
+        "label": "章节右侧说明",
+        "status": "PASS",
+        "ratio": 6.33,
+        "fg": "#526173",
+        "bg": "#ffffff"
+      },
+      {
+        "selector": ".decide .head .t",
+        "label": "00 决策带标题",
+        "status": "NOT_RUN",
+        "ratio": null,
+        "fg": null,
+        "bg": "#ecfdf5"
+      },
+      {
+        "selector": ".decide .head .n",
+        "label": "00 决策带说明",
+        "status": "NOT_RUN",
+        "ratio": null,
+        "fg": null,
+        "bg": "#ecfdf5"
+      },
+      {
+        "selector": ".decide .ask .n",
+        "label": "00 决策序号",
+        "status": "NOT_RUN",
+        "ratio": null,
+        "fg": null,
+        "bg": "#ecfdf5"
+      },
+      {
+        "selector": ".decide .ask .why",
+        "label": "00 决策理由",
+        "status": "NOT_RUN",
+        "ratio": null,
+        "fg": null,
+        "bg": "#ecfdf5"
+      },
+      {
+        "selector": ".gap-list li",
+        "label": "01 缺口列表",
+        "status": "PASS",
+        "ratio": 9.58,
+        "fg": "#33475b",
+        "bg": "#ffffff"
+      },
+      {
+        "selector": ".card .detail",
+        "label": "02 证据卡正文",
+        "status": "PASS",
+        "ratio": 6.24,
+        "fg": "#526173",
+        "bg": "#fbfefd"
+      },
+      {
+        "selector": ".badge.x",
+        "label": "X 徽标",
+        "status": "PASS",
+        "ratio": 7.6,
+        "fg": "#991b1b",
+        "bg": "#fef2f2"
+      },
+      {
+        "selector": ".badge.a",
+        "label": "A 徽标",
+        "status": "PASS",
+        "ratio": 5.2,
+        "fg": "#0f766e",
+        "bg": "#ecfdf5"
+      },
+      {
+        "selector": ".poc .col li",
+        "label": "04 试点三列",
+        "status": "PASS",
+        "ratio": 8.99,
+        "fg": "#134e4a",
+        "bg": "#ecfdf5"
+      },
+      {
+        "selector": ".poc .fine",
+        "label": "04 试点小字",
+        "status": "PASS",
+        "ratio": 7.29,
+        "fg": "#065f46",
+        "bg": "#ecfdf5"
+      },
+      {
+        "selector": ".who .trig",
+        "label": "01 触发条件",
+        "status": "PASS",
+        "ratio": 4.72,
+        "fg": "#b45309",
+        "bg": "#f6f8fa"
+      }
+    ],
+    "min_font_pt": 6.0,
+    "layout": {
+      "sheet": {
+        "top": 37.78125,
+        "bottom": 1160.296875,
+        "height": 1122.515625
+      },
+      "body": {
+        "top": 64.234375,
+        "bottom": 1160.296875,
+        "height": 1096.0625
+      },
+      "foot": {
+        "top": 1061.09375,
+        "bottom": 1141.40625,
+        "height": 80.3125
+      },
+      "decide": null,
+      "bodyScroll": 1096,
+      "bodyClient": 1096,
+      "docScroll": 1198,
+      "secs": [
+        {
+          "i": 1,
+          "top": 265.9375,
+          "bottom": 406.28125,
+          "height": 140.34375
+        },
+        {
+          "i": 2,
+          "top": 417.609375,
+          "bottom": 603.125,
+          "height": 185.515625
+        },
+        {
+          "i": 3,
+          "top": 614.453125,
+          "bottom": 748.453125,
+          "height": 134
+        },
+        {
+          "i": 4,
+          "top": 759.78125,
+          "bottom": 920.609375,
+          "height": 160.828125
+        },
+        {
+          "i": 5,
+          "top": 931.9375,
+          "bottom": 1030.328125,
+          "height": 98.390625
+        }
+      ],
+      "font": "\"Noto Sans SC\", \"Source Han Sans SC\", \"Microsoft YaHei\", sans-serif"
+    },
+    "visible_chars": 1920,
+    "positive_chars": 1785,
+    "pdf_pages": 1
+  },
+  "sensitivity": {
+    "ruler_turns_red": true,
+    "card_green_on_same": true,
+    "anti_red": [
+      "P5",
+      "P6",
+      "P7"
+    ],
+    "card_red": []
+  },
+  "human_status": "NOT_RUN"
+}

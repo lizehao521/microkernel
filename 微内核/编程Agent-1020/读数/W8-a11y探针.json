@@ -1,0 +1,148 @@
+{
+  "breakpoints": [
+    {
+      "cols": 1,
+      "expect_cols": 1,
+      "overflow_px": 0,
+      "pane_widths": [
+        321,
+        321,
+        321
+      ],
+      "width": 360
+    },
+    {
+      "cols": 2,
+      "expect_cols": 2,
+      "overflow_px": 0,
+      "pane_widths": [
+        359,
+        359,
+        729
+      ],
+      "width": 768
+    },
+    {
+      "cols": 2,
+      "expect_cols": 2,
+      "overflow_px": 0,
+      "pane_widths": [
+        487,
+        487,
+        985
+      ],
+      "width": 1024
+    },
+    {
+      "cols": 3,
+      "expect_cols": 3,
+      "overflow_px": 0,
+      "pane_widths": [
+        466,
+        355,
+        555
+      ],
+      "width": 1440
+    }
+  ],
+  "contrast": [
+    {
+      "bg": "rgb(11, 107, 52)",
+      "color": "rgb(255, 255, 255)",
+      "ratio": 6.63,
+      "sel": ".b.m",
+      "size_px": "11px"
+    },
+    {
+      "bg": "rgb(138, 109, 31)",
+      "color": "rgb(255, 255, 255)",
+      "ratio": 4.9,
+      "sel": ".b.e",
+      "size_px": "11px"
+    },
+    {
+      "bg": "rgb(19, 77, 122)",
+      "color": "rgb(255, 255, 255)",
+      "ratio": 8.86,
+      "sel": ".b.s",
+      "size_px": "11px"
+    },
+    {
+      "bg": "rgb(107, 63, 160)",
+      "color": "rgb(255, 255, 255)",
+      "ratio": 7.38,
+      "sel": ".b.r",
+      "size_px": "11px"
+    },
+    {
+      "bg": "rgb(90, 90, 90)",
+      "color": "rgb(255, 255, 255)",
+      "ratio": 6.9,
+      "sel": ".b.a",
+      "size_px": "11px"
+    },
+    {
+      "bg": "rgb(255, 255, 255)",
+      "color": "rgb(91, 102, 115)",
+      "ratio": 5.84,
+      "sel": ".dim",
+      "size_px": "13px"
+    },
+    {
+      "bg": "rgb(255, 255, 255)",
+      "color": "rgb(91, 102, 115)",
+      "ratio": 5.84,
+      "sel": ".note",
+      "size_px": "12px"
+    },
+    {
+      "bg": "rgb(247, 248, 250)",
+      "color": "rgb(22, 25, 29)",
+      "ratio": 16.59,
+      "sel": "h1",
+      "size_px": "19px"
+    }
+  ],
+  "failures": [
+    "聚焦后 outline 看不见：none 3px"
+  ],
+  "focus": {
+    "document_active": true,
+    "outline_color": "rgb(255, 255, 255)",
+    "outline_style": "none",
+    "outline_width": "3px"
+  },
+  "headings": [
+    "H1:看得见的编程 Agent",
+    "H2:代码编辑区",
+    "H2:对话历史",
+    "H2:结构化结果",
+    "H3:这一发的循环（九步）",
+    "H3:结论",
+    "H3:账本改写了哪几格",
+    "H3:没量到的（不许折叠）"
+  ],
+  "names": [
+    {
+      "id": "lang",
+      "name": "语言",
+      "tag": "SELECT"
+    },
+    {
+      "id": "code",
+      "name": "要分析的代码（本件只读字节与解析语法树，不会执行",
+      "tag": "TEXTAREA"
+    },
+    {
+      "id": "stack",
+      "name": "报错/栈（可留空）—— 贴进来就把每一帧指回上面",
+      "tag": "TEXTAREA"
+    },
+    {
+      "id": "q",
+      "name": "问题",
+      "tag": "INPUT"
+    }
+  ],
+  "summary": "断点 4 个 · 对比度 8 项 · 可及名 4 项 · 标题 8 个 · 不达标 1 条"
+}

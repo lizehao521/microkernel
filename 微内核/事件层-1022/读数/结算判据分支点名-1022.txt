@@ -1,0 +1,24 @@
+结算判据的「每一形有没有走得到的负载」点名对照（2026-10-23 00:10，本会话现跑）
+
+方法（可复跑，不是印象）：
+1. 从盘上数分支：`cmd/agentd/events.go` 里 `func ValidateSettlement` 到 `// reCanResume` 之间，
+   加上 `func checkPhaseShape` 体内的每一条 `return fmt.Errorf(...)` —— 一条 = 一种该被抓的坏形。
+2. 拿每条错误文案的关键词回测试里找现场：`events_settle_teeth_test.go`、`events_settle_test.go`、
+   `events_m5_p1_test.go`、`events_e5_test.go`、`events_e7_page_test.go`、`events_e8_trace_test.go`。
+3. 找不到的逐个手核（脚本的关键词截法会误报，不拿脚本的「没找到」当「没负载」）。
+
+结果：
+- 分支数 = **25**（含 checkPhaseShape 的三条：前缀 / 余段 / phase 与最远那一相）
+- 关键词直接点到现场的 = 24
+- 脚本点不到、手核确认有现场的 = 1：
+  「同一趟里第 %d 发结算说已完成 %d 发，前一发说的是 %d 发 —— 计数不许倒退」
+  现场在 `events_settle_teeth_test.go:127`（用例名「同趟内 done_before 倒退（第二发比第一发少）」，
+  期望子串「倒退」；同处注释记了学费：前一版把它写成 0/-1，先撞了「负数」那条，等于没走到这一支），
+  反臂 = F5（`prevDone[runKey]; has && false`），在本轮 82/82 那趟里 verdict=BIT、对照绿。
+- ⇒ **25/25 都有走得到的负载**；「被拒那一形」另有三支真负载
+  （`events_refused_load_test.go`：NOT_RUN / 端点耗尽 / 门口预检拒），全量套件里绿。
+
+不许从这条读出的话：
+- 这不证明判据**不会误伤**合法形状（那是另外的对照，`TestSettlementPhaseShapeJudges` 的绿形与
+  `TestRunSettledPresence` 的「没开账不许判缺收口」各自钉住了一部分）；
+- 这也不证明真模型端点/真人参与下仍成立（两项 NOT_RUN，不折成 0）。

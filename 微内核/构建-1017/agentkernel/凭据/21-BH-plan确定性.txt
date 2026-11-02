@@ -1,0 +1,15 @@
+=== BH checkup --phase plan 的 digest 稳不稳（尺子的自核，正反对照各两发）===
+[A] 不钉窗口（默认 until=跑的那一刻）：两发同参数连跑
+    第 1 发 digest = b72e765b94aca27a5e054ad84b788d3ea184a1a2537e6aaf59c7d8070b4bb61f
+    第 2 发 digest = 6340d0e28d712d44fa12b6177cefa8a3de38924242781137c2334208b4c2113b
+    两发相同 = False
+[B] 钉住 --since 2026-09-17T00:00:00.000Z --until 2026-10-17T00:00:00.000Z：两发连跑
+    第 1 发 digest = 108f52c34ff07ff82ebf3c82e43e3e2fcb818f86170fd7b8796f2b1e0d76e0f8
+    第 2 发 digest = 108f52c34ff07ff82ebf3c82e43e3e2fcb818f86170fd7b8796f2b1e0d76e0f8
+    两发相同 = True
+⇒ 结论（正反各两发对上才敢这么说）：plan digest 里含观察窗口的戳。
+   它自己那句「Apply requires this digest and explicit action ids」因此只有在**同样钉住窗口**重跑时才核得回来；
+   默认跑法每次 digest 都不同，事后拿旧 digest 去核对必然核不上。
+   包内收的是 [B] 那一发（20-BH-checkup-plan.md），窗口就是上面那两个 ISO 串。
+Actions 三发都是 0；三发都自印「No configuration was changed」，我没跑过 apply 那一相。
+它报 configured 0 是按**项目作用域**数资产（这仓库里没有 .qoder 级的 Rules/Skills/MCP 配置），不是本机没装插件。

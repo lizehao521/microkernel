@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgentHub · 会自己挑工具真跑的本地 Agent</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>AgentHub</h1>
+  <div id="health" aria-live="polite">在读这台机器认识了几个工具…</div>
+</header>
+
+<main>
+  <section id="pane-chat" aria-labelledby="h-chat">
+    <h2>对话</h2>
+    <div id="msgs" tabindex="0" role="log" aria-label="对话历史，可用键盘滚动"></div>
+    <form id="say">
+      <label for="input">说一句 <kbd>Enter</kbd> 发 · <kbd>Shift+Enter</kbd> 换行 · <kbd>Esc</kbd> 打断</label>
+      <textarea id="input" rows="3" placeholder="例：列一下当前目录，按大小排，再统计最大的那个文件有多少行"></textarea>
+      <div class="row">
+        <button id="go" type="submit">发</button>
+        <button id="stop" type="button" class="ghost">打断这一发</button>
+        <button id="new" type="button" class="ghost">开一本新账</button>
+        <span id="budget" class="dim"></span>
+      </div>
+    </form>
+  </section>
+
+  <section id="pane-tools" aria-labelledby="h-tools">
+    <h2>工具调用过程</h2>
+    <div id="band" role="status" aria-live="polite"></div>
+    <button id="fold" type="button" class="ghost 小钮" hidden>全部展开</button>
+    <ol id="calls" aria-label="工具调用时间线：每步含工具名、参数与来处、状态、耗时、返回正文、风险档与出处档"></ol>
+  </section>
+
+  <section id="pane-side" aria-labelledby="h-side">
+    <h2>结论与账</h2>
+    <div id="answer" class="answer"></div>
+    <h3>结论按出处分档</h3>
+    <ul id="findings"></ul>
+    <h3>没量到的（不许折叠）</h3>
+    <ul id="unknowns"></ul>
+    <div class="tabs" role="tablist">
+      <button id="tab-reg" class="tab" role="tab" aria-selected="true" aria-controls="registry" data-for="registry">工具注册表</button>
+      <button id="tab-hist" class="tab" role="tab" aria-selected="false" aria-controls="hist" data-for="hist">会话记忆</button>
+    </div>
+    <ul id="registry" role="tabpanel"></ul>
+    <ul id="hist" role="tabpanel" tabindex="0" aria-label="往轮轨迹，可键盘滚动" hidden></ul>
+    <p class="legend dim">档：▣ 量到＝本机真算出来的 · ◐ 本机推的＝规则/摘要写的 · ✦ 端点说的＝模型回的 · ❝ 外部正文＝转述别人的话 · ∅ 没量到＝空着并写为什么（绝不写 0）。</p>
+  </section>
+</main>
+
+<noscript>这一页要 JS 才看得见循环；后端仍可用 curl -N POST /api/chat 收 SSE。</noscript>
+<script src="app.js"></script>
+</body>
+</html>

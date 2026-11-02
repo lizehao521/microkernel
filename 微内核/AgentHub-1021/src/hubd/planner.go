@@ -1,0 +1,736 @@
+package main
+
+// 规划器：把一句话变成"下一步该调哪个工具、参数从哪来"。
+//
+// 这里有两个实现，故意分开记账：
+//   localPlanner —— 本机规则，出处档 estimated，并且句子明写"这是本机规则选的，不是模型选的"；
+//   modelPlanner —— 真接一个 OpenAI 式端点，出处档 model_says；端点没配/回坏 ⇒ 交回错误，
+//                  由调度循环降级到本机规则并把"为什么降级"留在读数里。
+// 两者的差别必须能在屏幕上看见 —— 把规则选件说成模型自主决定，是这个应用最贵的一类谎。
+
+import (
+	"bytes"
+	"context"
+	"encoding/json"
+	"fmt"
+	"io"
+	"net/http"
+	"regexp"
+	"strings"
+	"time"
+)
+
+type Observation struct {
+	Step         int            `json:"step"`
+	Tool         string         `json:"tool"`
+	Args         map[string]any `json:"args"`
+	ArgsFrom     string         `json:"args_from"` // 话里抽的 / 记忆里补的 / 上一发读数绑的 / 说明书默认
+	Class        string         `json:"class"`
+	Risk         string         `json:"risk,omitempty"` // 这一步动的是哪一档风险：前端徽章要用，别让它空着
+	Text         string         `json:"text"`
+	Data         map[string]any `json:"data,omitempty"`
+	MS           int64          `json:"ms"`
+	Attempts     int            `json:"attempts"`
+	DegradedFrom string         `json:"degraded_from,omitempty"` // 从哪个工具降级来的
+	Why          string         `json:"why,omitempty"`           // 选这一步的理由（可读、可回放）
+	Provenance   string         `json:"provenance"`              // 谁选的：estimated | model_says
+	Evidence     string         `json:"evidence"`                // 读数哪来的：measured | relayed | absent
+	AbsentWhy    string         `json:"absent_why,omitempty"`    // Evidence=absent 时必须非空
+	Plan         string         `json:"plan,omitempty"`          // 这一发用的哪个规划器
+}
+
+type Action struct {
+	Kind   string // tool | done | ask
+	Tool   string
+	Args   map[string]any
+	From   string
+	Why    string
+	Answer string // 收口时模型自己写的回答；没写就是空
+	Proven string // estimated | model_says
+}
+
+type PlanCtx struct {
+	Turn      int
+	Utterance string
+	Obs       []Observation
+}
+
+type Planner interface {
+	Name() string
+	// Provenance()：这个规划器选出来的步该署哪一档。写死在类型上，
+	// 免得将来加第三个规划器时忘了改出处、把规则选的记成模型说的。
+	Provenance() string
+	Propose(ctx context.Context, pc PlanCtx, mem *Memory, reg *Registry) (Action, error)
+}
+
+// —— 目标表：一句话里可能藏好几个目标，顺序照话里的出现次序排 ——
+
+type goalRule struct {
+	ID  string
+	触发  []string
+	工具  string
+	参数  func(pc PlanCtx, mem *Memory, reg *Registry) (map[string]any, string, string)
+	完成判 func(o Observation) bool
+}
+
+func 默认完成(o Observation) bool { return o.Class == ClassOK }
+
+// 指代：话里有没有"要的是上一发那个东西"的意思。有 ⇒ 记忆读数优先于话里的裸路径 token。
+func 指代(s string) bool {
+	for _, k := range []string{"那个", "最大", "刚才", "刚刚", "上一", "这批", "该文件", "它"} {
+		if strings.Contains(s, k) {
+			return true
+		}
+	}
+	return false
+}
+
+// 补目录 只回答"哪儿可以列"：话里点了"当前/这个目录"就用工作目录，其次只认记忆里
+// 真是一个目录的读数（fs.list 的 dir）。以前它走通用的 补路径，于是"列一下当前目录，
+// 再统计最大的那个文件"里的 list 目标被绑成了上一发那个 .md 文件 —— 拿文件去列目录，
+// 失败之后靠降级才绕回来：一次错参数换来一整串降级噪声。
+func 补目录(s string, mem *Memory) (string, string) {
+	for _, k := range []string{"当前目录", "这个目录", "本目录", "工作目录", "根目录"} {
+		if strings.Contains(s, k) {
+			return ".", "话里点了「" + k + "」⇒ 用工作目录"
+		}
+	}
+	if p := 抽路径(s); p != "" && !strings.HasSuffix(p, ".md") && !strings.HasSuffix(p, ".go") && !strings.HasSuffix(p, ".txt") {
+		return p, "话里抽的"
+	}
+	if v, ok, turn := mem.最后一次读数("fs.list", "dir"); ok {
+		if d, is := v.(string); is && d != "" {
+			return d, fmt.Sprintf("记忆里第 %d 发 fs.list 列过的目录", turn)
+		}
+	}
+	return "", ""
+}
+
+// 最大文件路径 把上一发 fs.list 留下的 top+dir 拼成一个真路径（记忆在干活的证据就在这）。
+func 最大文件路径(mem *Memory) (string, string) {
+	v, ok, turn := mem.最后一次读数("fs.list", "top")
+	if !ok {
+		return "", ""
+	}
+	s, is := v.(string)
+	if !is || s == "" {
+		return "", ""
+	}
+	d, ok2, _ := mem.最后一次读数("fs.list", "dir")
+	if !ok2 {
+		return "", ""
+	}
+	ds, is2 := d.(string)
+	if !is2 {
+		return "", ""
+	}
+	return joinPath(ds, s), fmt.Sprintf("记忆里第 %d 发 fs.list 的 top+dir 拼的", turn)
+}
+
+// 从记忆里补一个路径：用户说"那个文件"却没给路径时，宁可问，也不要编一个。
+func 补路径(pc PlanCtx, mem *Memory) (string, string) {
+	if 指代(pc.Utterance) {
+		if p, 来处 := 最大文件路径(mem); p != "" {
+			return p, 来处
+		}
+	}
+	if p := 抽路径(pc.Utterance); p != "" {
+		return p, "话里抽的"
+	}
+	if p, 来处 := 最大文件路径(mem); p != "" {
+		return p, 来处
+	}
+	for _, key := range []string{"path", "dir"} {
+		for _, tool := range []string{"", "fs.list", "fs.read", "text.stats"} {
+			if v, ok, turn := mem.最后一次读数(tool, key); ok {
+				if s, is := v.(string); is && s != "" {
+					return s, fmt.Sprintf("记忆里第 %d 发留下的 %s", turn, key)
+				}
+			}
+		}
+	}
+	return "", ""
+}
+
+func joinPath(dir, name string) string {
+	if dir == "" || name == "" {
+		return dir + name
+	}
+	if strings.HasSuffix(dir, `/`) || strings.HasSuffix(dir, `\`) {
+		return dir + name
+	}
+	return dir + "/" + name
+}
+
+var 目标表 = []goalRule{
+	{ID: "list", 触发: []string{"列", "目录下", "有哪些文件", "ls ", "list", "看看文件夹", "文件列表"},
+		工具: "fs.list",
+		参数: func(pc PlanCtx, mem *Memory, reg *Registry) (map[string]any, string, string) {
+			p, from := 补目录(pc.Utterance, mem)
+			if p == "" {
+				p, from = ".", "话里没路径、记忆里也没列过的目录 ⇒ 用工作目录（这一步会写明）"
+			}
+			a := map[string]any{"path": p}
+			if strings.Contains(pc.Utterance, "大小") || strings.Contains(pc.Utterance, "最大") {
+				a["sort"] = "size"
+			}
+			if strings.Contains(pc.Utterance, "只") {
+				// 只留 N 条：从话里抓一个小整数，抓不到就用默认
+				if n, ok := 抓小整数(pc.Utterance, 3, 200); ok {
+					a["limit"] = n
+				}
+			}
+			return a, from, ""
+		}},
+	{ID: "read", 触发: []string{"读", "看内容", "打开这个文件", "正文", "read", "内容是什么"},
+		工具: "fs.read",
+		参数: func(pc PlanCtx, mem *Memory, reg *Registry) (map[string]any, string, string) {
+			p, from := 补路径(pc, mem)
+			if p == "" {
+				return nil, "", "这句话要读文件，但没给路径，记忆里也没有可绑的路径 ⇒ 该问，不该编"
+			}
+			return map[string]any{"path": p}, from, ""
+		}},
+	{ID: "stats", 触发: []string{"统计", "多少行", "多少字", "几行", "字数", "字节数", "stats", "多长"},
+		工具: "text.stats",
+		参数: func(pc PlanCtx, mem *Memory, reg *Registry) (map[string]any, string, string) {
+			// 指代优先：话里点了"那个/最大的/刚才"就先绑上一发的读数。
+			// 顺序反过来的实测后果：「列一下 src/hubd 目录，再统计最大的那个文件」里
+			// 裸路径 src/hubd 是个目录，被当成统计对象撞了两次上游错，最后吃掉步数上限收场。
+			if 指代(pc.Utterance) {
+				if p, 来处 := 最大文件路径(mem); p != "" {
+					return map[string]any{"path": p}, 来处, ""
+				}
+			}
+			if p := 抽路径(pc.Utterance); p != "" {
+				return map[string]any{"path": p}, "话里抽的", ""
+			}
+			for _, o := range pc.Obs {
+				if o.Class != ClassOK || o.Data == nil {
+					continue
+				}
+				if v, ok := o.Data["path"]; ok {
+					return map[string]any{"path": v}, fmt.Sprintf("第 %d 步 %s 的读数绑的", o.Step, o.Tool), ""
+				}
+				if v, ok := o.Data["top"]; ok {
+					d, _ := o.Data["dir"]
+					return map[string]any{"path": joinPath(fmt.Sprint(d), fmt.Sprint(v))},
+						fmt.Sprintf("第 %d 步 %s 的最大文件绑的", o.Step, o.Tool), ""
+				}
+			}
+			// 本发没有可绑的观察 ⇒ 再看记忆里上一发的读数（"再统计最大的那个文件"就是靠这一步接上的）
+			if p, 来处 := 最大文件路径(mem); p != "" {
+				return map[string]any{"path": p}, 来处, ""
+			}
+			if v, ok, turn := mem.最后一次读数("", "path"); ok {
+				if s, is := v.(string); is && s != "" {
+					return map[string]any{"path": s}, fmt.Sprintf("记忆里第 %d 发留下的 path", turn), ""
+				}
+			}
+			// 话里点了"文件"却没有可绑的文件读数 ⇒ 停下来问。
+			// 退一步拿这句话自己当统计对象是错的：那会把"没找到那个文件"演成"统计出了一个数"。
+			if strings.Contains(pc.Utterance, "文件") || strings.Contains(pc.Utterance, "那个") {
+				return nil, "", "记忆里没有任何一步留下过文件路径（上一发列出来的可能全是目录）⇒ 该问用户要哪个文件，不该拿这句话自己当统计对象"
+			}
+			if s := strings.TrimSpace(pc.Utterance); strings.Contains(s, "统计") {
+				return map[string]any{"text": s}, "话里没点文件、也没有可绑的读数 ⇒ 退到统计这句话本身（会写明）", ""
+			}
+			return nil, "", "没给要统计的对象 ⇒ 该问，不该编"
+		}},
+	{ID: "calc", 触发: []string{"算", "等于", "多少乘", "加一下", "计算", "calc", "表达式"},
+		工具: "calc.eval",
+		参数: func(pc PlanCtx, mem *Memory, reg *Registry) (map[string]any, string, string) {
+			e := 抽算式(pc.Utterance)
+			if e == "" {
+				return nil, "", "话里没扒出算式 ⇒ 该问，不该编"
+			}
+			return map[string]any{"expr": e}, "话里抽的", ""
+		}},
+	{ID: "time", 触发: []string{"几点", "时间", "今天", "现在", "日期", "date", "time"},
+		工具: "time.now",
+		参数: func(pc PlanCtx, mem *Memory, reg *Registry) (map[string]any, string, string) {
+			return map[string]any{}, "无参", ""
+		},
+		完成判: 默认完成},
+	{ID: "http", 触发: []string{"取一下", "http", "接口", "url", "请求", "端点", "fetch"},
+		工具: "http.get",
+		参数: func(pc PlanCtx, mem *Memory, reg *Registry) (map[string]any, string, string) {
+			u := 抽URL(pc.Utterance)
+			if u == "" {
+				return nil, "", "话里没 URL ⇒ 该问，不该编（编一个地址去打就是乱流量）"
+			}
+			return map[string]any{"url": u}, "话里抽的", ""
+		}},
+	{ID: "tools", 触发: []string{"有哪些工具", "工具列表", "你能做什么", "工具清单", "what tools"},
+		工具: "tools.list",
+		参数: func(pc PlanCtx, mem *Memory, reg *Registry) (map[string]any, string, string) {
+			return map[string]any{}, "无参", ""
+		}},
+	{ID: "recall", 触发: []string{"还记得", "刚才", "上一条", "之前说", "回忆", "recall", "上次"},
+		工具: "memory.recall",
+		参数: func(pc PlanCtx, mem *Memory, reg *Registry) (map[string]any, string, string) {
+			q := 抽查询词(pc.Utterance)
+			if q == "" {
+				q = "文件"
+			}
+			return map[string]any{"query": q, "limit": 5}, "话里抽的（抽不到用了默认词）", ""
+		}},
+	{ID: "note", 触发: []string{"笔记", "存成文件", "保存成", "写个文件", "记下来", "save note"},
+		工具: "notes.write",
+		参数: func(pc PlanCtx, mem *Memory, reg *Registry) (map[string]any, string, string) {
+			var 正文 strings.Builder
+			for _, o := range pc.Obs {
+				if o.Class == ClassOK {
+					fmt.Fprintf(&正文, "$ %s %v\n%s\n", o.Tool, o.Args, o.Text)
+				}
+			}
+			if 正文.Len() == 0 {
+				正文.WriteString(pc.Utterance + "\n（这一发没有可写的读数，笔记里只有用户原话）")
+			}
+			return map[string]any{"name": fmt.Sprintf("第%d发笔记.md", pc.Turn), "content": 正文.String()},
+				"由前面几步的读数拼的", ""
+		}},
+	{ID: "exec", 触发: []string{"跑一下命令", "执行命令", "跑个命令", "exec", "运行这条"},
+		工具: "exec.run",
+		参数: func(pc PlanCtx, mem *Memory, reg *Registry) (map[string]any, string, string) {
+			argv := 抽命令(pc.Utterance)
+			if len(argv) == 0 {
+				return nil, "", "没扒出命令 ⇒ 该问，不该编"
+			}
+			return map[string]any{"argv": argv}, "话里抽的", ""
+		}},
+	{ID: "flaky", 触发: []string{"重试", "flaky", "降级演示", "故意失败"},
+		工具: "demo.flaky",
+		参数: func(pc PlanCtx, mem *Memory, reg *Registry) (map[string]any, string, string) {
+			// 上限给到 12：以前压到 5，用户说"前 9 次都失败"会被静默改成 1，
+			// 于是"降级"那一形永远不会被真跑出来 —— 静默改参比报错更难查。
+			n, ok := 抓小整数(pc.Utterance, 1, 12)
+			话 := "话里抽的"
+			if !ok {
+				n = 1
+				话 = "话里的小整数超了 12 或没给 ⇒ 用 1（这一句要看得见，不许静默改参）"
+			}
+			return map[string]any{"fail_first": n}, 话, ""
+		}},
+}
+
+func 抓小整数(s string, lo, hi int) (int, bool) {
+	digits := ""
+	for _, r := range s {
+		if r >= '0' && r <= '9' {
+			digits += string(r)
+			continue
+		}
+		if digits != "" {
+			var n int
+			if _, err := fmt.Sscanf(digits, "%d", &n); err == nil && n >= lo && n <= hi {
+				return n, true
+			}
+			digits = ""
+		}
+	}
+	if digits != "" {
+		var n int
+		if _, err := fmt.Sscanf(digits, "%d", &n); err == nil && n >= lo && n <= hi {
+			return n, true
+		}
+	}
+	return 0, false
+}
+
+func 抽查询词(s string) string {
+	for _, cut := range []string{"还记得", "刚才", "上一条", "之前说", "回忆", "上次", "查"} {
+		if i := strings.Index(s, cut); i >= 0 {
+			rest := strings.TrimSpace(s[i+len(cut):])
+			rest = strings.Trim(rest, "？?。的了吗")
+			if rest != "" {
+				return 截(rest, 24)
+			}
+		}
+	}
+	return ""
+}
+
+func 抽命令(s string) []string {
+	for _, q := range []string{"「", "\"", "“", "`", "'"} {
+		if i := strings.Index(s, q); i >= 0 {
+			rest := s[i+len(q):]
+			if j := strings.IndexAny(rest, "」\"“”`'"); j > 0 {
+				return strings.Fields(rest[:j])
+			}
+		}
+	}
+	return nil
+}
+
+type localPlanner struct{}
+
+func (localPlanner) Name() string       { return "本机规则" }
+func (localPlanner) Provenance() string { return "estimated" }
+
+// 抽目标：按触发词命中，顺序按词在话里出现的位置排（"先列再统计"不会被打乱）。
+// 额外目标 = 清单挂载且自己声明了触发词的工具；传 nil 就是只用内置表。
+func 抽目标(s string, 额外 []goalRule) []goalRule {
+	表 := append(append([]goalRule(nil), 目标表...), 额外...)
+	低 := strings.ToLower(s)
+	type hit struct {
+		r  goalRule
+		at int
+	}
+	var hits []hit
+	seen := map[string]bool{}
+	for _, r := range 表 {
+		最好 := -1
+		for _, k := range r.触发 {
+			if i := strings.Index(低, strings.ToLower(k)); i >= 0 && (最好 < 0 || i < 最好) {
+				最好 = i
+			}
+		}
+		if 最好 >= 0 && !seen[r.ID] {
+			seen[r.ID] = true
+			hits = append(hits, hit{r, 最好})
+		}
+	}
+	for i := 1; i < len(hits); i++ {
+		for j := i; j > 0 && hits[j].at < hits[j-1].at; j-- {
+			hits[j], hits[j-1] = hits[j-1], hits[j]
+		}
+	}
+	var out []goalRule
+	for _, h := range hits {
+		out = append(out, h.r)
+	}
+	return out
+}
+
+// 挂载目标 让清单里带 triggers 的工具进入本机规划器的目标表。
+// 没有这一步，"放一个 JSON 就多一个工具"只对模型端点成立 —— 本机规则不认得它，
+// 新工具能被 tools.list 数到却永远不会被自主选起（存在性不等于被跑到）。
+func 挂载目标(reg *Registry) []goalRule {
+	var out []goalRule
+	for _, s := range reg.Specs() {
+		if len(s.Triggers) == 0 || !strings.HasPrefix(s.Source, "manifest:") {
+			continue
+		}
+		out = append(out, goalRule{ID: "挂载:" + s.Name, 触发: s.Triggers, 工具: s.Name,
+			参数: 清单参数(s), 完成判: 默认完成})
+	}
+	return out
+}
+
+// 清单参数：必填参数只认 path / url 两种能从话里或记忆里扒到的；
+// 别的必填参数一律交回"该问"，不许编一个值把工具跑起来。
+func 清单参数(spec ToolSpec) func(PlanCtx, *Memory, *Registry) (map[string]any, string, string) {
+	return func(pc PlanCtx, mem *Memory, reg *Registry) (map[string]any, string, string) {
+		a := map[string]any{}
+		来处 := []string{}
+		for _, ps := range spec.Params {
+			switch ps.Name {
+			case "url":
+				if u := 抽URL(pc.Utterance); u != "" {
+					a["url"] = u
+					来处 = append(来处, "url 话里抽的")
+				} else if ps.Required {
+					return nil, "", fmt.Sprintf("%s 要一个 URL 但话里没有 ⇒ 该问，不该编一个地址去打", spec.Name)
+				}
+			case "path":
+				if v, from := 补路径(pc, mem); v != "" {
+					a["path"] = v
+					来处 = append(来处, "path "+from)
+				} else if ps.Required {
+					return nil, "", fmt.Sprintf("%s 要一个 path，但话里没给、记忆里也没可绑的读数 ⇒ 该问，不该编", spec.Name)
+				}
+			default:
+				if ps.Required {
+					return nil, "", fmt.Sprintf("%s 的必填参数 %q 本机规则扒不出来 ⇒ 该问用户（或给这台机器配 -model-endpoint）", spec.Name, ps.Name)
+				}
+			}
+		}
+		if len(来处) == 0 {
+			来处 = append(来处, "没必填参数，用清单里声明的默认")
+		}
+		return a, strings.Join(来处, "；"), ""
+	}
+}
+
+func (localPlanner) Propose(ctx context.Context, pc PlanCtx, mem *Memory, reg *Registry) (Action, error) {
+	目标 := 抽目标(pc.Utterance, 挂载目标(reg))
+	if len(目标) == 0 {
+		return Action{Kind: "ask", Why: "这句话没命中任何可用工具的目标词，也没有能绑的记忆 ⇒ 该回问，不该硬选一个工具", Proven: "estimated"}, nil
+	}
+	做了 := map[string]Observation{}
+	for _, o := range pc.Obs {
+		if o.Class == ClassOK {
+			做了[o.Tool] = o
+		}
+	}
+	for _, g := range 目标 {
+		if _, done := 做了[g.工具]; done {
+			continue
+		}
+		if g.完成判 != nil {
+			// 有自定义完成判据的目标（比如"只要拿到过一次读数就算"）不只看 Class==ok；
+			// 目前表里所有目标都用默认判据，这条分支是给扩展留的口子，扩展时不许空转。
+			做了这一步 := false
+			for _, o := range pc.Obs {
+				if o.Tool == g.工具 && g.完成判(o) {
+					做了这一步 = true
+					break
+				}
+			}
+			if 做了这一步 {
+				continue
+			}
+		}
+		args, from, 缺 := g.参数(pc, mem, reg)
+		if 缺 != "" {
+			return Action{Kind: "ask", Why: 缺, Proven: "estimated"}, nil
+		}
+		if args == nil {
+			args = map[string]any{}
+		}
+		return Action{Kind: "tool", Tool: g.工具, Args: args, From: from,
+			Why:    fmt.Sprintf("话里的目标「%s」还没满足 ⇒ 选 %s（剩下的目标：%s）", g.ID, g.工具, 剩下(目标, 做了)),
+			Proven: "estimated"}, nil
+	}
+	return Action{Kind: "done", Why: "话里点到的目标都已有成功读数 ⇒ 可以收口", Proven: "estimated"}, nil
+}
+
+func 剩下(目标 []goalRule, 做了 map[string]Observation) string {
+	var 名 []string
+	for _, g := range 目标 {
+		if _, ok := 做了[g.工具]; !ok {
+			名 = append(名, g.ID)
+		}
+	}
+	if len(名) == 0 {
+		return "没有了"
+	}
+	return strings.Join(名, "、")
+}
+
+// —— 模型适配器：真的发一次 OpenAI 式请求；没端点/回坏 ⇒ 交错误给循环去降级 ——
+
+type modelPlanner struct {
+	cfg    Config
+	client *http.Client
+}
+
+func (modelPlanner) Name() string       { return "模型端点" }
+func (modelPlanner) Provenance() string { return "model_says" }
+
+type 模型消息 struct {
+	Role    string `json:"role"`
+	Content string `json:"content"`
+}
+
+// 模型历史 把本机记账用的角色换成 OpenAI 面只认的三种。
+// role=tool 是给本机页面/记忆用的；标准端点收到不带 tool_call_id 的 tool 消息会整发 400，
+// 于是同一发第 2 步就被退回本机规则（10-23 真端点实测），跨步规划永远走不出去。
+func 模型历史(窗口 []Msg) []模型消息 {
+	out := make([]模型消息, 0, len(窗口))
+	for _, x := range 窗口 {
+		role, text := x.Role, x.Text
+		switch role {
+		case "user":
+		case "agent":
+			role = "assistant"
+		case "tool":
+			role = "user"
+			text = fmt.Sprintf("工具读数（第 %d 发，%s）：%s", x.Turn, x.Tool, x.Text)
+		default:
+			if role != "system" {
+				role = "user"
+			}
+			text = fmt.Sprintf("第 %d 发（%s）：%s", x.Turn, x.Role, x.Text)
+		}
+		if strings.TrimSpace(text) == "" {
+			text = "（空读数）"
+		}
+		out = append(out, 模型消息{Role: role, Content: text})
+	}
+	return out
+}
+
+func (m modelPlanner) Propose(ctx context.Context, pc PlanCtx, mem *Memory, reg *Registry) (Action, error) {
+	if m.cfg.ModelEndpoint == "" {
+		return Action{}, fmt.Errorf("没配 -model-endpoint ⇒ 模型这一路没启动（不是它选了不做）")
+	}
+	var specs []map[string]any
+	for _, s := range reg.Specs() {
+		if s.RequiresFlag != "" && !m.cfg.旗标开了(s.RequiresFlag) {
+			continue // 没放行的工具不给模型看，免得它选一个必然被门口挡下的
+		}
+		specs = append(specs, map[string]any{"name": s.Name, "description": s.Summary,
+			"parameters": s.Params})
+	}
+	窗口, 用了, 挤掉 := mem.窗口(pc.Turn, m.cfg.ContextChars)
+	历史 := 模型历史(窗口)
+	摘要, _ := mem.摘要(pc.Turn)
+	规格, _ := json.Marshal(specs)
+	系统 := fmt.Sprintf("你是调度器。只能从 tools 里选，每一步只输出一个动作，不要解释：{\"tool\":名字,\"args\":{...}}。"+
+		"任务全部做完才允许收口：{\"done\":true,\"answer\":\"...\"}；没做完就继续调工具。"+
+		"若服务端要求原生工具调用，也可用 <invoke name=\"工具\"><parameter name=\"参数\">值</parameter></invoke>，一次只调一个。"+
+		"工具读数报错就换参数或换工具，别用同一套参数重撞；连续两次同形失败就收口说明卡在哪。"+
+		"可用工具（JSON 数组，parameters 是 JSON Schema）：%s。"+
+		"上下文摘要（本机算的）：%s；窗口内 %d 条、用了 %d 码元、窗口外挤掉 %d 条。已做过：%d 步。",
+		string(规格), 摘要, len(窗口), 用了, 挤掉, len(pc.Obs))
+	历史 = append([]模型消息{{Role: "system", Content: 系统}}, 历史...)
+	body := map[string]any{
+		"model":    m.cfg.ModelName,
+		"messages": append(历史, 模型消息{Role: "user", Content: pc.Utterance}),
+		// 顶层 system 是给本机假端点读「已做过」的；标准 OpenAI 面只认 messages 里的 system。
+		"system": 系统,
+	}
+	b, _ := json.Marshal(body)
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, m.cfg.ModelEndpoint, bytes.NewReader(b))
+	if err != nil {
+		return Action{}, fmt.Errorf("请求装不起来：%v", err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+	if m.cfg.ModelKeyEnv != "" {
+		key := 读环境变量(m.cfg.ModelKeyEnv)
+		if key == "" {
+			return Action{}, fmt.Errorf("环境变量 %s 是空的 ⇒ 没有口令，这一路打不出去", m.cfg.ModelKeyEnv)
+		}
+		req.Header.Set("Authorization", "Bearer "+key)
+	}
+	cctx, cancel := context.WithTimeout(ctx, time.Duration(m.cfg.ModelTimeoutMs)*time.Millisecond)
+	defer cancel()
+	resp, err := (&http.Client{Timeout: time.Duration(m.cfg.ModelTimeoutMs) * time.Millisecond}).Do(req.WithContext(cctx))
+	if err != nil {
+		return Action{}, fmt.Errorf("端点取不回：%v", err)
+	}
+	defer resp.Body.Close()
+	raw, _ := io.ReadAll(io.LimitReader(resp.Body, 1<<20))
+	if resp.StatusCode >= 400 {
+		return Action{}, fmt.Errorf("端点回了 HTTP %d：%s", resp.StatusCode, 截(string(raw), 200))
+	}
+	回, err := 解模型动作(raw)
+	if err != nil {
+		return Action{}, fmt.Errorf("端点回的不是那形状：%v（正文 %s）", err, 截(string(raw), 160))
+	}
+	if 回.Done {
+		// 一步没动就回自然语言，多半是没跟上动作格式（或干脆拒答）；
+		// 把它当收口会把"什么都没做"演成"跑完"（10-23 八步那发就是这么空转的）。
+		if 回.How == "prose" && len(pc.Obs) == 0 {
+			return Action{}, fmt.Errorf("端点只回了话、一步没动（没按动作格式回）：%s", 截(回.Answer, 140))
+		}
+		why := "端点说可以收口"
+		if 回.How == "prose" {
+			why = "端点用自然语言收口（不是 JSON 动作）"
+		}
+		return Action{Kind: "done", Why: why, Answer: strings.TrimSpace(回.Answer), Proven: "model_says"}, nil
+	}
+	if 回.Tool == "" {
+		return Action{}, fmt.Errorf("端点既没说 done 也没给工具名 ⇒ 这一读没法用（正文 %s）", 截(string(raw), 160))
+	}
+	if _, ok := reg.Get(回.Tool); !ok {
+		return Action{}, fmt.Errorf("端点选了不认识的工具 %q", 回.Tool)
+	}
+	if 回.Args == nil {
+		回.Args = map[string]any{}
+	}
+	why := "端点选的件"
+	if 回.How == "xml" {
+		why = "端点选的件（原生工具调用语法）"
+	}
+	if 回.Batch > 0 {
+		why += fmt.Sprintf("（端点一帧给了 %d 个动作，只取了第一个，其余下一次再问）", 回.Batch+1)
+	}
+	return Action{Kind: "tool", Tool: 回.Tool, Args: 回.Args, From: "端点给的参数",
+		Why: why, Proven: "model_says"}, nil
+}
+
+type 模型动作 struct {
+	Tool   string         `json:"tool"`
+	Args   map[string]any `json:"args"`
+	Done   bool           `json:"done"`
+	Answer string         `json:"answer"`
+	How    string         `json:"-"` // json / xml / prose —— 这三种要能分开说
+	Batch  int            `json:"-"` // 同一帧里除第一个之外还给了几个动作
+}
+
+var jsonActionOpen = regexp.MustCompile(`\{\s*"tool"\s*:`)
+
+var (
+	xmlInvoke = regexp.MustCompile(`(?s)<invoke\s+name="([^"]+)"\s*>(.*?)</invoke>`)
+	xmlParam  = regexp.MustCompile(`(?s)<parameter\s+name="([^"]+)"\s*>(.*?)</parameter>`)
+)
+
+// 解XML动作 认 MiniMax 式原生工具调用：
+// <invoke name="text.stats"><parameter name="path">alpha.txt</parameter></invoke>。
+// 10-23 真端点实测：第 2 步端点回的就是这一形；只认 JSON 会把它判成坏帧、退回本机规则。
+func 解XML动作(话 string) (模型动作, bool) {
+	m := xmlInvoke.FindStringSubmatch(话)
+	if len(m) < 3 {
+		return 模型动作{}, false
+	}
+	回 := 模型动作{Tool: strings.TrimSpace(m[1]), Args: map[string]any{}, How: "xml"}
+	for _, p := range xmlParam.FindAllStringSubmatch(m[2], -1) {
+		v := strings.TrimSpace(p[2])
+		var anyV any
+		if json.Unmarshal([]byte(v), &anyV) == nil {
+			回.Args[strings.TrimSpace(p[1])] = anyV
+		} else {
+			回.Args[strings.TrimSpace(p[1])] = v
+		}
+	}
+	return 回, true
+}
+
+// 解模型动作 认三种回帧：本机假端点的裸 JSON、OpenAI 式
+// {"choices":[{"message":{"content":"{\"tool\":...}"}}]}，与 MiniMax 式
+// <invoke name="工具"><parameter name="参数">值</parameter></invoke>。
+// 只认裸 JSON 会让真端点"没给工具名"，把管路不通伪装成模型不做；
+// 不认原生工具调用则跨步时每一步都被判成坏帧（10-23 实测）。三种要能分开记。
+func 解模型动作(raw []byte) (模型动作, error) {
+	var 回 模型动作
+	if err := json.Unmarshal(raw, &回); err != nil {
+		return 回, err
+	}
+	if 回.Done || 回.Tool != "" {
+		return 回, nil
+	}
+	var 封 struct {
+		Choices []struct {
+			Message struct {
+				Content string `json:"content"`
+			} `json:"message"`
+		} `json:"choices"`
+	}
+	if err := json.Unmarshal(raw, &封); err != nil || len(封.Choices) == 0 {
+		return 回, fmt.Errorf("既不是动作 JSON，也没有 choices")
+	}
+	话 := strings.TrimSpace(封.Choices[0].Message.Content)
+	if i := strings.Index(话, "```"); i >= 0 {
+		if j := strings.Index(话[i+3:], "```"); j >= 0 {
+			块 := 话[i+3 : i+3+j]
+			if 行 := strings.IndexByte(块, '\n'); 行 >= 0 {
+				块 = 块[行+1:]
+			}
+			话 = strings.TrimSpace(块)
+		}
+	}
+	if i := strings.Index(话, "{"); i >= 0 {
+		// 只解第一帧：端点常常一次吐一串动作（一帧一行 JSON），
+		// 拿首尾花括号去切会把整串判成坏帧，模型选的件就白丢了（10-23 八步那发）。
+		if err := json.NewDecoder(strings.NewReader(话[i:])).Decode(&回); err == nil {
+			if 回.Done || 回.Tool != "" {
+				回.How = "json"
+				if n := len(jsonActionOpen.FindAllString(话, -1)); n > 1 {
+					回.Batch = n - 1
+				}
+				return 回, nil
+			}
+			return 回, fmt.Errorf("动作 JSON 里既没有 tool 也没有 done")
+		}
+	}
+	if a, ok := 解XML动作(话); ok {
+		return a, nil
+	}
+	if strings.TrimSpace(话) != "" {
+		return 模型动作{Done: true, Answer: strings.TrimSpace(话), How: "prose"}, nil
+	}
+	return 回, fmt.Errorf("choices 里的正文既不是动作 JSON，也没有工具调用")
+}

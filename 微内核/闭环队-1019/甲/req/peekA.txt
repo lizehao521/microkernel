@@ -1,0 +1,11 @@
+line6 model_input:tokens basis=3 claim=≈42（这是估算，不是测量）：估的是挂载验收用的合成演示值，不是真实测量 payload={"N":42,"Basis":3,"Source":"挂载验收用的合成演示值，不是真实测量","Absent":false,"Refused":false,"Why":""}
+line13 model_input:fixed_overhead basis=3 claim=≈37（这是估算，不是测量）：估的是挂载验收用的合成演示值，不是真实测量 payload={"N":37,"Basis":3,"Source":"挂载验收用的合成演示值，不是真实测量","Absent":false,"Refused":false,"Why":""}
+line18 model_input:notice_text basis=1 claim=（这一格是空的） payload=""
+line36 model_output:wire_bytes_out basis=3 claim=≈210（这是估算，不是测量）：估的是挂载验收用的合成演示值，不是真实测量 payload={"N":210,"Basis":3,"Source":"挂载验收用的合成演示值，不是真实测量","Absent":false,"Refused":false,"Why":""}
+line49 model_output:sent basis=1 claim=发出去了 payload="发出去了"
+line122 model_output:finish basis=2 claim=stop payload="stop"
+line124 model_output:endpoint_model basis=4 claim=cs-flash payload="cs-flash"
+line132 model_output:usage_in basis=2 claim=393（转述自 对端 usage.prompt_tokens（cs-flash 自报）） payload={"N":393,"Basis":2,"Source":"对端 usage.prompt_tokens（cs-flash 自报）","Absent":false,"Refused":false,"Why":""}
+line185 model_output:chunks basis=1 claim=12 payload={"N":12,"Basis":1,"Source":"","Absent":false,"Refused":false,"Why":""}
+line413 model_input:dropped basis=1 claim=2 段：history/坐席备注一段：最后一次整段随第 6 发发出，第 7 发超额度时整段挤出（连桩也没发） histo payload=[{"Kind":"history","Ref":"坐席备注一段：最后一次整段随第 6 发发出，第 7 发超额度时整段挤出（连桩也没发）","RefCall":6,"Role":"user","Squeeze":"dropped-whole","FromBytes":144,"ToBytes":0,"SHA256":"fc405e0ff811d299b46da419fbd74b2876a45bc4d1ce4fd3f084e5ae5f3f
+line240 model_output:fail_kind basis=1 claim=（这一格是空的） payload=""

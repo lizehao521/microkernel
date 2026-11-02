@@ -1,0 +1,10 @@
+=== per-file ===
+C:\Users\Admin\Desktop\微内核\构建-1017\客服靶场\导出\账本-全量-1018.jsonl {"lines":2941,"header":1,"gateLines":0,"badLines":0,"entries":2940,"sessions":["mount-check","客服靶场","客服靶场-无依据","客服靶场-替身抖装配","客服靶场-替身抖装配-无依据","客服靶场-替身抖装配2","客服靶场-替身抖装配2-无依据","客服靶场-真流量","客服靶场-真流量-无依据","考题-自检","考题-B","考题2-B"],"shots":120,"basisHist":{"1":2213,"2":188,"3":124,"4":60,"5":355}}
+C:\Users\Admin\Desktop\店面游戏\账本-8799-第二次快照-included.jsonl {"lines":491,"header":1,"gateLines":0,"badLines":0,"entries":490,"sessions":["9ff63c40-273c-4185-9a49-c11248bec807","ai-home-2026-10-18"],"shots":20,"basisHist":{"1":350,"2":20,"4":10,"5":110}}
+=== never-filled cells (49格中两本账都没填过) ===
+model_output:fail_status
+model_output:retry_after_ms
+never-filled count = 2 / 49
+=== extra kinds not in table ===
+{}
+input keys: 20 output keys: 29 total cells: 49

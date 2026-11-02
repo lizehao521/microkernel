@@ -1,0 +1,34 @@
+{
+  "band": "第 1 发跑完： 命中 10 条，其中 critical 5 条；每条带出处档与自己数出来的分母 · 真跑了 13/13 步 · 账本触发过 4 次决定（读回 12 格，只有真改写了结果的才计入）· KPI = 账上读回来的值/出处档真的改写了结果的那几格（4 格，读回共 12 格）；反臂：不 read_back ⇒ 0 格 · 代码执行=否 · 结束=跑完：九步走完：到这里已亮 13 步（真跑了 13 步）、账本触发 4 次决定、findings 10 条、未决 2 条",
+  "cards": 10,
+  "decisions": [
+    "input / content_bytes=measured",
+    "input / tokens=estimated",
+    "input / parts=measured",
+    "output / usage_in=relayed",
+    "output / usage_out=relayed",
+    "output / wire_bytes_in=measured",
+    "output / wire_bytes_out=estimated",
+    "output / chunks=measured",
+    "output / first_byte_ms=measured",
+    "output / max_gap_ms=measured",
+    "output / fail_kind=measured",
+    "output / model_says_sha256=measured"
+  ],
+  "gateway_step_line": "8gatewaymeasured本机端点（127.0.0.1，出不了",
+  "gw_badges": [
+    "model_says"
+  ],
+  "gw_cards": 1,
+  "gw_claims": [
+    "端点原话（照抄，不解读）：这台机不执行你的代码。上面的行号来自语法树与栈文本的对位，是定位线索，不是诊断。"
+  ],
+  "gwline": "通道读数：本机端点（127.0.0.1，出不了这台机）·演示件：真实模型 0 次｜读回 523 字节、送出 762 字节（估）、4 帧、首帧 9ms、最大间隔 8ms、畸形帧 0、收尾=stop｜usage 0/0（relayed，端点自报）｜格式=chat.completion.chunk",
+  "mix": "measured 7 / estimated 2 / model_says 1 / relayed 0 / absent 2 = 12　加总核对：对得上",
+  "trace_items": 13,
+  "unknowns": [
+    "运行时行为（这段实际会返回什么、慢在哪）",
+    "报错/栈 → 行号absent为什么没量"
+  ],
+  "waited_ms": 2024
+}

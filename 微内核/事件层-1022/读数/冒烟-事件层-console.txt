@@ -1,0 +1,13 @@
+build rc=0 exe=C:\Users\Admin\AppData\Local\Temp\E1-冒烟-18732\agentd-e1.exe sha256=0dc37daabdd0
+PASS S0 跑的是哪一份 build | exe=agentd-e1.exe sha256_12=0dc37daabdd0 build_rc=0
+PASS S1 stdout 不受事件层影响 | rc_on=0 rc_off=0 stdout_equal=True on_bytes=2440 off_bytes=2441 events_in_stdout=False
+PASS S2 append-only 跨进程 | first_run=26 after_second=52 seq_regressions=0 run_started=2
+PASS S3 撞车守卫保住账本 | journal_is_file=True journal_bytes=147902 rc=0 stderr_has_collision_note=True nested_events_written=False
+PASS S4 横幅三态各说各的 | 内存态=True 没开态=True 落盘态=True file_line=['agentd: 事件层 26 条 → C:\\Users\\Admin\\AppData\\Local\\Temp\\E1-冒烟-18732\\s4.events.jsonl']
+PASS S5 六态退出码未改 | real=2 turns=3 capped=5 script=0 bad_resume=2
+PASS S6 收口事件形状 | state=settled stop=跑完：端点剧本走到最后一发 progress={'done': 6, 'total': 6, 'limit': 20} evidence=measured turn=0 step_field=absent
+PASS S7 回执先于干活 | 有回执的发=6 最大ack_ms=0 第一条不是回执={} 没ack=[] 超上限=[] 载荷缺项=[] 声称可续=[]
+INFO 真实流出处档分布 {'measured': 26}；带 why 的 6/26
+
+steps 8, passed 8
+readings: C:\Users\Admin\Desktop\微内核\事件层-1022\读数\冒烟-事件层.jsonl

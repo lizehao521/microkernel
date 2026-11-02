@@ -1,0 +1,484 @@
+const { spawn } = require('child_process');
+const fs = require('fs');
+const path = require('path');
+
+const URL = process.argv[2] || 'http://127.0.0.1:57195/';
+const OUT = path.resolve(process.argv[3] || '读数/对比度-全屏.json');
+const EDGE = 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
+const port = 9800 + Math.floor(Math.random() * 180);
+const profile = path.join(process.env.TEMP || 'C:\\Users\\Admin\\AppData\\Local\\Temp', 'weihuetai-contrast', 'edge-' + port);
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+async function waitVersion() {
+  for (let i = 0; i < 120; i++) {
+    try {
+      const r = await fetch('http://127.0.0.1:' + port + '/json/version');
+      if (r.ok) return await r.json();
+    } catch (_) {}
+    await sleep(250);
+  }
+  throw new Error('EDGE_DEBUG_NOT_READY');
+}
+
+class CDP {
+  constructor(url) {
+    this.ws = new WebSocket(url);
+    this.id = 0;
+    this.pending = new Map();
+    this.events = new Map();
+    this.ready = new Promise((resolve, reject) => {
+      this.ws.onopen = resolve;
+      this.ws.onerror = reject;
+    });
+    this.ws.onmessage = (ev) => {
+      const msg = JSON.parse(ev.data);
+      if (msg.id && this.pending.has(msg.id)) {
+        const { resolve, reject } = this.pending.get(msg.id);
+        this.pending.delete(msg.id);
+        if (msg.error) reject(new Error(JSON.stringify(msg.error)));
+        else resolve(msg.result);
+      } else if (msg.method && this.events.has(msg.method)) {
+        for (const fn of this.events.get(msg.method)) fn(msg.params);
+      }
+    };
+  }
+  async send(method, params = {}) {
+    await this.ready;
+    const id = ++this.id;
+    return new Promise((resolve, reject) => {
+      this.pending.set(id, { resolve, reject });
+      this.ws.send(JSON.stringify({ id, method, params }));
+    });
+  }
+  once(method, timeout = 30000) {
+    return new Promise((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error('TIMEOUT ' + method)), timeout);
+      const fn = (params) => {
+        clearTimeout(timer);
+        this.events.get(method).delete(fn);
+        resolve(params);
+      };
+      if (!this.events.has(method)) this.events.set(method, new Set());
+      this.events.get(method).add(fn);
+    });
+  }
+}
+
+function scanPage() {
+  const parse = (c) => {
+    const m = c && c.match(/rgba?\(([^)]+)\)/);
+    if (!m) return null;
+    const p = m[1].replace(/\//g, ' ').split(/[\s,]+/).filter(Boolean).map(Number);
+    return { r: p[0], g: p[1], b: p[2], a: p.length > 3 ? p[3] : 1 };
+  };
+  const blend = (fg, bg) => ({
+    r: fg.r * fg.a + bg.r * (1 - fg.a),
+    g: fg.g * fg.a + bg.g * (1 - fg.a),
+    b: fg.b * fg.a + bg.b * (1 - fg.a),
+    a: 1,
+  });
+  const lum = (c) => {
+    const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+    return 0.2126 * f(c.r) + 0.7152 * f(c.g) + 0.0722 * f(c.b);
+  };
+  const ratio = (a, b) => {
+    const l1 = lum(a), l2 = lum(b);
+    return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+  };
+  const rgb = (c) => 'rgb(' + Math.round(c.r) + ',' + Math.round(c.g) + ',' + Math.round(c.b) + ')';
+  const sel = (el) => {
+    let s = el.tagName.toLowerCase();
+    if (el.id) s += '#' + el.id;
+    if (el.classList && el.classList.length) s += '.' + [...el.classList].slice(0, 3).join('.');
+    return s;
+  };
+  const skip = { gradientApprox: 0, backgroundImage: 0, disabled: 0, opacity: 0, hidden: 0, noText: 0, ariaHidden: 0 };
+  const failures = [];
+  let checked = 0;
+  const els = document.querySelectorAll('body *');
+  for (const el of els) {
+    const tag = el.tagName;
+    let text = '';
+    const direct = [];
+    for (const n of el.childNodes) {
+      if (n.nodeType === 3 && n.nodeValue.trim()) direct.push(n.nodeValue.trim());
+    }
+    text = direct.join(' ');
+    let colorCss = null;
+    if (!text && (tag === 'INPUT' || tag === 'TEXTAREA')) {
+      const ph = el.getAttribute('placeholder');
+      if (ph && !el.value) {
+        text = ph;
+        colorCss = getComputedStyle(el, '::placeholder').color;
+      }
+    }
+    if (!text) { skip.noText++; continue; }
+    if (el.closest('[aria-hidden="true"]')) { skip.ariaHidden++; continue; }
+    if (el.closest('button[disabled], input[disabled], textarea[disabled], select[disabled], [aria-disabled="true"], .is-disabled')) {
+      skip.disabled++;
+      continue;
+    }
+    const rect = el.getBoundingClientRect();
+    if (rect.width < 1 || rect.height < 1) { skip.hidden++; continue; }
+    let opacity = 1;
+    let hidden = false;
+    const chain = [];
+    for (let n = el; n && n.nodeType === 1; n = n.parentElement) {
+      chain.unshift(n);
+      const s = getComputedStyle(n);
+      if (s.display === 'none' || s.visibility === 'hidden' || s.visibility === 'collapse') { hidden = true; break; }
+      opacity *= parseFloat(s.opacity || '1');
+    }
+    if (hidden) { skip.hidden++; continue; }
+    if (opacity < 0.99) { skip.opacity++; continue; }
+    const s = getComputedStyle(el);
+    let candidates = [{ r: 255, g: 255, b: 255, a: 1 }];
+    let imageBg = false;
+    let gradientUsed = false;
+    for (const n of chain) {
+      const ns = getComputedStyle(n);
+      const bgi = ns.backgroundImage || 'none';
+      const solid = parse(ns.backgroundColor);
+      if (solid && solid.a > 0) candidates = candidates.map((c) => blend(solid, c));
+      if (bgi !== 'none') {
+        if (bgi.indexOf('gradient') >= 0) {
+          const stops = [];
+          const re = /rgba?\([^)]+\)/g;
+          let m;
+          while ((m = re.exec(bgi))) {
+            const c = parse(m[0]);
+            if (c) stops.push(c);
+          }
+          if (stops.length) {
+            gradientUsed = true;
+            const out = [];
+            for (const base of candidates) {
+              for (const st of stops) out.push(blend(st, base));
+            }
+            candidates = out.slice(0, 8);
+          } else {
+            imageBg = true;
+          }
+        } else {
+          imageBg = true;
+        }
+      }
+    }
+    if (imageBg) { skip.backgroundImage++; continue; }
+    if (gradientUsed) skip.gradientApprox++;
+    const fg0 = parse(colorCss || s.color);
+    if (!fg0) { skip.noText++; continue; }
+    let bg = candidates[0];
+    let r = 0;
+    for (const c of candidates) {
+      const rr = ratio(blend(fg0, c), c);
+      if (r === 0 || rr < r) { r = rr; bg = c; }
+    }
+    const fg = blend(fg0, bg);
+    const size = parseFloat(s.fontSize);
+    const weight = parseInt(s.fontWeight, 10) || 400;
+    const need = (size >= 24 || (size >= 18.66 && weight >= 700)) ? 3 : 4.5;
+    checked++;
+    if (r + 1e-9 < need) {
+      failures.push({
+        selector: sel(el),
+        text: text.replace(/\s+/g, ' ').slice(0, 60),
+        ratio: Math.round(r * 100) / 100,
+        need,
+        fg: rgb(fg),
+        bg: rgb(bg),
+        size: Math.round(size * 10) / 10,
+        weight,
+      });
+    }
+  }
+  return { checked, failures: failures.slice(0, 60), failureCount: failures.length, skip };
+}
+
+(async () => {
+  fs.mkdirSync(path.dirname(OUT), { recursive: true });
+  fs.mkdirSync(profile, { recursive: true });
+  const child = spawn(EDGE, [
+    '--headless=new', '--disable-gpu', '--no-first-run', '--disable-extensions',
+    '--remote-debugging-port=' + port, '--user-data-dir=' + profile, 'about:blank',
+  ], { stdio: 'ignore' });
+  try {
+    await waitVersion();
+    const targetRes = await fetch('http://127.0.0.1:' + port + '/json/new?' + encodeURIComponent('about:blank'), { method: 'PUT' });
+    const target = await targetRes.json();
+    const cdp = new CDP(target.webSocketDebuggerUrl);
+    await cdp.send('Page.enable');
+    await cdp.send('Runtime.enable');
+    await cdp.send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
+    const loaded = cdp.once('Page.loadEventFired', 30000).catch(() => null);
+    await cdp.send('Page.navigate', { url: URL });
+    await loaded;
+    await sleep(1400);
+
+    async function js(fn, arg) {
+      const expr = '(' + fn.toString() + ')(' + JSON.stringify(arg === undefined ? null : arg) + ')';
+      const r = await cdp.send('Runtime.evaluate', { expression: expr, awaitPromise: true, returnByValue: true });
+      if (r.exceptionDetails) throw new Error('JS ' + JSON.stringify(r.exceptionDetails.exception && r.exceptionDetails.exception.description || r.exceptionDetails.text));
+      return r.result.value;
+    }
+
+    const ready = await js(async () => {
+      for (let i = 0; i < 60; i++) {
+        if (document.querySelectorAll('.q-item').length === 3) return true;
+        await new Promise((r) => setTimeout(r, 100));
+      }
+      return false;
+    });
+    if (!ready) throw new Error('APP_NOT_READY');
+
+    const build = await js(() => {
+      const m = (document.body.innerText || '').match(/build\s+([0-9a-f]{8})/);
+      return m ? m[1] : 'unknown';
+    });
+
+    if (process.argv.includes('--teeth')) {
+      await js(async () => {
+        const st = document.createElement('style');
+        st.textContent = '.q-title{color:#f2f2f2 !important}';
+        document.head.appendChild(st);
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      });
+      const res = await js(scanPage);
+      const teethOut = path.join(path.dirname(OUT), '对比度-齿检.json');
+      fs.writeFileSync(teethOut, JSON.stringify({
+        teeth: true, build, checked: res.checked, failures: res.failureCount,
+        sample: res.failures.slice(0, 5),
+      }, null, 2) + '\n', 'utf8');
+      console.log('TEETH checked=' + res.checked + ' failures=' + res.failureCount + ' build=' + build);
+      for (const f of res.failures.slice(0, 5)) console.log('  TEETH_HIT ' + f.ratio + ' ' + f.selector + ' "' + f.text + '"');
+      console.log(res.failureCount > 0 ? 'CONTRAST_TEETH_PASS' : 'CONTRAST_TEETH_FAIL');
+      cdp.ws.close();
+      process.exitCode = res.failureCount > 0 ? 0 : 1;
+      return;
+    }
+
+    const states = [];
+    async function scan(name) {
+      await js(async () => { await new Promise((r) => setTimeout(r, 250)); });
+      const res = await js(scanPage);
+      states.push({ name, ...res });
+      console.log('SCAN ' + name + ' checked=' + res.checked + ' fail=' + res.failureCount +
+        ' gradientApprox=' + res.skip.gradientApprox + ' imageBg=' + res.skip.backgroundImage +
+        ' disabled=' + res.skip.disabled + ' opacity=' + res.skip.opacity + ' hidden=' + res.skip.hidden +
+        ' ariaHidden=' + res.skip.ariaHidden);
+      for (const f of res.failures) {
+        console.log('  FAIL ' + f.ratio + '<' + f.need + ' ' + f.selector + ' [' + f.fg + ' on ' + f.bg + '] "' + f.text + '"');
+      }
+      return res;
+    }
+
+    await scan('operate');
+
+    await js(async () => {
+      document.querySelector('.q-item[data-id="D-1026-01"]')?.click();
+      await new Promise((r) => setTimeout(r, 300));
+    });
+    await scan('operate-D1');
+
+    await js(async () => {
+      document.querySelector('[data-open-drawer="steps"]')?.click();
+      for (let i = 0; i < 30; i++) {
+        await new Promise((r) => setTimeout(r, 100));
+        if (document.querySelector('#drawer')?.classList.contains('is-open')) break;
+      }
+      document.querySelector('[data-tab="claims"]')?.click();
+    });
+    await scan('drawer-claims');
+
+    await js(async () => {
+      document.querySelector('#drawerClose')?.click();
+      document.querySelector('.q-item[data-id="D-1026-02"]')?.click();
+      await new Promise((r) => setTimeout(r, 250));
+      document.querySelector('[data-open-drawer="cells"]')?.click();
+      for (let i = 0; i < 30; i++) {
+        await new Promise((r) => setTimeout(r, 100));
+        if (document.querySelector('#drawer')?.classList.contains('is-open')) break;
+      }
+    });
+    await scan('drawer-cells');
+
+    await js(async () => {
+      document.querySelector('[data-tab="source"]')?.click();
+    });
+    await scan('drawer-source');
+
+    await js(async () => {
+      document.querySelector('#drawerClose')?.click();
+      document.querySelector('.q-item[data-id="D-1026-01"]')?.click();
+      await new Promise((r) => setTimeout(r, 250));
+      document.querySelector('[data-open-drawer="steps"]')?.click();
+      for (let i = 0; i < 30; i++) {
+        await new Promise((r) => setTimeout(r, 100));
+        if (document.querySelector('#drawer')?.classList.contains('is-open')) break;
+      }
+    });
+    await scan('drawer-steps');
+
+    await js(async () => {
+      document.querySelector('#drawerClose')?.click();
+      document.querySelector('.q-item[data-id="D-1026-03"]')?.click();
+      await new Promise((r) => setTimeout(r, 250));
+      document.querySelector('[data-open-drawer="events"]')?.click();
+      for (let i = 0; i < 30; i++) {
+        await new Promise((r) => setTimeout(r, 100));
+        if (document.querySelector('#drawer')?.classList.contains('is-open')) break;
+      }
+    });
+    await scan('drawer-events');
+
+    await js(async () => {
+      document.querySelector('#drawerClose')?.click();
+      document.querySelector('#kernelPill')?.click();
+      await new Promise((r) => setTimeout(r, 500));
+    });
+    await scan('kernel-modal');
+
+    await js(async () => {
+      document.querySelector('#modalKernel [data-close-modal]')?.click();
+      document.querySelector('.q-item[data-id="D-1026-02"]')?.click();
+      await new Promise((r) => setTimeout(r, 250));
+      document.querySelector('[data-action="accept"]')?.click();
+      await new Promise((r) => setTimeout(r, 350));
+    });
+    await scan('decision-modal');
+
+    await js(async () => {
+      document.querySelector('#modalDecision [data-close-modal]')?.click();
+      document.querySelector('#modeDialogue')?.click();
+      await new Promise((r) => setTimeout(r, 350));
+    });
+    await scan('dialogue-empty');
+
+    const modelOn = await js(async () => {
+      const cb = document.querySelector('#useModel');
+      if (!cb || cb.disabled) return false;
+      cb.click();
+      await new Promise((r) => setTimeout(r, 120));
+      const form = document.querySelector('#chatForm');
+      const input = document.querySelector('#chatInput');
+      const before = document.querySelectorAll('.msg.assistant').length;
+      input.value = '接入验收：哪几条声明与盘上不符？';
+      form.requestSubmit();
+      for (let i = 0; i < 60; i++) {
+        await new Promise((r) => setTimeout(r, 100));
+        if (document.querySelectorAll('.msg.assistant').length > before && !document.querySelector('#chatPending')) break;
+      }
+      await new Promise((r) => setTimeout(r, 250));
+      return !document.querySelector('#useModel').disabled;
+    });
+    console.log('MODEL_SCAN ' + (modelOn ? 'on' : 'skipped'));
+    if (modelOn) await scan('dialogue-model');
+
+    await js(async () => {
+      document.querySelector('#chatInput').value = '';
+      const cb = document.querySelector('#useModel');
+      if (cb && !cb.disabled && cb.checked) cb.click();
+      await new Promise((r) => setTimeout(r, 80));
+      const form = document.querySelector('#chatForm');
+      const input = document.querySelector('#chatInput');
+      for (const q of ['这版能收吗？', '测试过了吗？', '事件断线可续吗？']) {
+        const before = document.querySelectorAll('.msg.assistant').length;
+        input.value = q;
+        form.requestSubmit();
+        for (let i = 0; i < 50; i++) {
+          await new Promise((r) => setTimeout(r, 100));
+          if (document.querySelectorAll('.msg.assistant').length > before && !document.querySelector('#chatPending')) break;
+        }
+      }
+      await new Promise((r) => setTimeout(r, 300));
+    });
+    await scan('dialogue-answers');
+
+    const decided = await js(async (pairs) => {
+      document.querySelector('#modeOperate')?.click();
+      await new Promise((r) => setTimeout(r, 200));
+      const out = [];
+      for (const [id, action, reason] of pairs) {
+        document.querySelector('.q-item[data-id="' + id + '"]')?.click();
+        await new Promise((r) => setTimeout(r, 250));
+        document.querySelector('[data-action="' + action + '"]')?.click();
+        await new Promise((r) => setTimeout(r, 250));
+        const ta = document.querySelector('#decReason');
+        if (ta) ta.value = reason;
+        document.querySelector('#decConfirm')?.click();
+        for (let i = 0; i < 60; i++) {
+          await new Promise((r) => setTimeout(r, 100));
+          if (!document.querySelector('#modalDecision')?.classList.contains('is-open')) break;
+        }
+        out.push(id + ' ' + (document.querySelector('.decision-state')?.innerText || 'NO_STATE').replace(/\s+/g, ' ').slice(0, 20));
+      }
+      return out;
+    }, [
+      ['D-1026-01', 'reject', '测试声明没有盘上证据'],
+      ['D-1026-03', 'hold', '证据缺席，无法判断'],
+      ['D-1026-02', 'accept', '声明与盘上证据全部相符'],
+    ]);
+    console.log('SEED ' + decided.join(' | '));
+
+    await js(async () => {
+      document.querySelector('#btnMemory')?.click();
+      await new Promise((r) => setTimeout(r, 450));
+    });
+    await scan('memory-decisions');
+
+    const cleared = await js(async () => {
+      const r = await fetch('/api/memory/clear', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ confirm: 'CLEAR' }),
+      });
+      return r.status;
+    });
+    console.log('CLEAR ' + cleared);
+    const reloaded = cdp.once('Page.loadEventFired', 30000).catch(() => null);
+    await cdp.send('Page.reload', { ignoreCache: true });
+    await reloaded;
+    await sleep(1400);
+
+    await js(async () => {
+      document.querySelector('#btnMemory')?.click();
+      await new Promise((r) => setTimeout(r, 350));
+    });
+    await scan('memory-empty');
+
+    const totals = {
+      checked: states.reduce((a, s) => a + s.checked, 0),
+      failures: states.reduce((a, s) => a + s.failureCount, 0),
+      gradientApprox: states.reduce((a, s) => a + s.skip.gradientApprox, 0),
+      backgroundImage: states.reduce((a, s) => a + s.skip.backgroundImage, 0),
+      disabled: states.reduce((a, s) => a + s.skip.disabled, 0),
+      opacity: states.reduce((a, s) => a + s.skip.opacity, 0),
+      hidden: states.reduce((a, s) => a + s.skip.hidden, 0),
+      noText: states.reduce((a, s) => a + s.skip.noText, 0),
+      ariaHidden: states.reduce((a, s) => a + s.skip.ariaHidden, 0),
+    };
+    const report = {
+      url: URL,
+      build,
+      when: new Date().toISOString(),
+      thresholds: { normal: 4.5, large: 3 },
+      totals,
+      states,
+    };
+    fs.writeFileSync(OUT, JSON.stringify(report, null, 2) + '\n', 'utf8');
+    console.log('TOTALS checked=' + totals.checked + ' failures=' + totals.failures +
+      ' gradientApprox=' + totals.gradientApprox + ' imageBgSkipped=' + totals.backgroundImage +
+      ' disabledSkipped=' + totals.disabled + ' opacitySkipped=' + totals.opacity +
+      ' hiddenSkipped=' + totals.hidden + ' noTextSkipped=' + totals.noText +
+      ' ariaHiddenSkipped=' + totals.ariaHidden);
+    console.log('WROTE ' + OUT);
+    console.log(totals.failures === 0 ? 'CONTRAST_PASS' : 'CONTRAST_FAIL ' + totals.failures);
+    cdp.ws.close();
+    process.exitCode = totals.failures === 0 ? 0 : 1;
+  } finally {
+    try { child.kill(); } catch (_) {}
+  }
+})().catch((err) => {
+  console.error('CONTRAST_ERROR ' + err.message);
+  process.exit(1);
+});

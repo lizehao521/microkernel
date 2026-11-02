@@ -1,0 +1,396 @@
+{
+  "source": {
+    "kind": "local-event-export",
+    "file": "证据/raw/agentd-真端点.events.jsonl",
+    "src_path": "C:\\Users\\Admin\\Desktop\\微内核\\PDF-1022\\真端点-1023\\读数\\agentd-真端点.events.jsonl",
+    "bytes": 4586,
+    "sha256": "59d1deb636993cf1e67e7bf6a56313f08ef3c817ffb0d03404ff5581b083218e",
+    "note": "两条 run 的导出副本（real-agentd-1 / agentd-27276），非同一次 pgagent 运行。"
+  },
+  "events": [
+    {
+      "v": 1,
+      "session": "real-agentd-1",
+      "run": "r28960-1792729790298584000",
+      "turn": 0,
+      "seq": 1,
+      "ts": "2026-10-23T12:29:50.2997138+08:00",
+      "kind": "run_started",
+      "state": "running",
+      "evidence": "measured",
+      "elapsed_ms": 9
+    },
+    {
+      "v": 1,
+      "session": "real-agentd-1",
+      "run": "r28960-1792729790298584000",
+      "turn": 1,
+      "seq": 1,
+      "ts": "2026-10-23T12:29:50.298584+08:00",
+      "kind": "turn_accepted",
+      "state": "running",
+      "evidence": "measured",
+      "why": "断开可续：游标就是日志里的身份四元组，投送层按日志行序取游标之后的尾部",
+      "accept": {
+        "planned_shots": null,
+        "turn_limit": 12,
+        "stop_via": "signal:SIGINT|in-proc:run.Stop(why)",
+        "resumable": true,
+        "ack_ms": 19
+      },
+      "elapsed_ms": 19
+    },
+    {
+      "v": 1,
+      "session": "real-agentd-1",
+      "run": "r28960-1792729790298584000",
+      "turn": 1,
+      "seq": 2,
+      "ts": "2026-10-23T12:29:52.0458596+08:00",
+      "kind": "shot_started",
+      "step": {
+        "no": 1,
+        "name": "assemble"
+      },
+      "state": "running",
+      "evidence": "measured",
+      "elapsed_ms": 1747
+    },
+    {
+      "v": 1,
+      "session": "real-agentd-1",
+      "run": "r28960-1792729790298584000",
+      "turn": 1,
+      "seq": 3,
+      "ts": "2026-10-23T12:29:52.0829496+08:00",
+      "kind": "precheck",
+      "step": {
+        "no": 1,
+        "name": "kernel.check_call"
+      },
+      "state": "ok",
+      "evidence": "measured",
+      "elapsed_ms": 1784
+    },
+    {
+      "v": 1,
+      "session": "real-agentd-1",
+      "run": "r28960-1792729790298584000",
+      "turn": 1,
+      "seq": 4,
+      "ts": "2026-10-23T12:29:52.0896446+08:00",
+      "kind": "recorded",
+      "step": {
+        "no": 1,
+        "name": "kernel.record_call"
+      },
+      "state": "ok",
+      "evidence": "measured",
+      "elapsed_ms": 1791
+    },
+    {
+      "v": 1,
+      "session": "real-agentd-1",
+      "run": "r28960-1792729790298584000",
+      "turn": 1,
+      "seq": 5,
+      "ts": "2026-10-23T12:29:52.0949527+08:00",
+      "kind": "turn_settled",
+      "state": "settled",
+      "evidence": "measured",
+      "why": "这一发做完了：剧本的这一步走到收口，下一发接着来",
+      "progress": {
+        "done": 1,
+        "limit": 12
+      },
+      "settle": {
+        "phase": "record_call",
+        "reached": [
+          "accept",
+          "work",
+          "check_call",
+          "record_call"
+        ],
+        "not_reached": [],
+        "counts": {
+          "ok": 2,
+          "running": 2
+        },
+        "kind": "completed",
+        "why": "这一发做完了：剧本的这一步走到收口，下一发接着来",
+        "done_before_shots": 1,
+        "ledger_driven_decisions": 1
+      },
+      "elapsed_ms": 1796
+    },
+    {
+      "v": 1,
+      "session": "real-agentd-1",
+      "run": "r28960-1792729790298584000",
+      "turn": 0,
+      "seq": 2,
+      "ts": "2026-10-23T12:29:52.1002379+08:00",
+      "kind": "run_settled",
+      "state": "settled",
+      "evidence": "measured",
+      "stop": "script",
+      "stop_why": "跑完：端点剧本走到最后一发",
+      "progress": {
+        "done": 1,
+        "total": 1,
+        "limit": 12
+      },
+      "elapsed_ms": 1801
+    },
+    {
+      "v": 1,
+      "session": "agentd-27276",
+      "run": "r27276-1792730534367101400",
+      "turn": 0,
+      "seq": 3,
+      "ts": "2026-10-23T12:42:14.3671877+08:00",
+      "kind": "run_started",
+      "state": "running",
+      "evidence": "measured",
+      "elapsed_ms": 11
+    },
+    {
+      "v": 1,
+      "session": "agentd-27276",
+      "run": "r27276-1792730534367101400",
+      "turn": 1,
+      "seq": 6,
+      "ts": "2026-10-23T12:42:14.3671877+08:00",
+      "kind": "turn_accepted",
+      "state": "running",
+      "evidence": "measured",
+      "why": "断开可续：游标就是日志里的身份四元组，投送层按日志行序取游标之后的尾部",
+      "accept": {
+        "planned_shots": null,
+        "turn_limit": 1,
+        "stop_via": "signal:SIGINT|in-proc:run.Stop(why)",
+        "resumable": true,
+        "ack_ms": 25
+      },
+      "elapsed_ms": 25
+    },
+    {
+      "v": 1,
+      "session": "agentd-27276",
+      "run": "r27276-1792730534367101400",
+      "turn": 1,
+      "seq": 7,
+      "ts": "2026-10-23T12:42:17.2953627+08:00",
+      "kind": "shot_started",
+      "step": {
+        "no": 1,
+        "name": "assemble"
+      },
+      "state": "running",
+      "evidence": "measured",
+      "elapsed_ms": 2928
+    },
+    {
+      "v": 1,
+      "session": "agentd-27276",
+      "run": "r27276-1792730534367101400",
+      "turn": 1,
+      "seq": 8,
+      "ts": "2026-10-23T12:42:17.3088855+08:00",
+      "kind": "precheck",
+      "step": {
+        "no": 1,
+        "name": "kernel.check_call"
+      },
+      "state": "ok",
+      "evidence": "measured",
+      "elapsed_ms": 2941
+    },
+    {
+      "v": 1,
+      "session": "agentd-27276",
+      "run": "r27276-1792730534367101400",
+      "turn": 1,
+      "seq": 9,
+      "ts": "2026-10-23T12:42:17.3138072+08:00",
+      "kind": "recorded",
+      "step": {
+        "no": 1,
+        "name": "kernel.record_call"
+      },
+      "state": "ok",
+      "evidence": "measured",
+      "elapsed_ms": 2946
+    },
+    {
+      "v": 1,
+      "session": "agentd-27276",
+      "run": "r27276-1792730534367101400",
+      "turn": 1,
+      "seq": 10,
+      "ts": "2026-10-23T12:42:17.3179357+08:00",
+      "kind": "turn_settled",
+      "state": "settled",
+      "evidence": "measured",
+      "why": "这一发做完了：剧本的这一步走到收口，下一发接着来",
+      "progress": {
+        "done": 1,
+        "limit": 1
+      },
+      "settle": {
+        "phase": "record_call",
+        "reached": [
+          "accept",
+          "work",
+          "check_call",
+          "record_call"
+        ],
+        "not_reached": [],
+        "counts": {
+          "ok": 2,
+          "running": 2
+        },
+        "kind": "completed",
+        "why": "这一发做完了：剧本的这一步走到收口，下一发接着来",
+        "done_before_shots": 1,
+        "ledger_driven_decisions": 1
+      },
+      "elapsed_ms": 2950
+    },
+    {
+      "v": 1,
+      "session": "agentd-27276",
+      "run": "r27276-1792730534367101400",
+      "turn": 0,
+      "seq": 4,
+      "ts": "2026-10-23T12:42:17.3228124+08:00",
+      "kind": "run_settled",
+      "state": "settled",
+      "evidence": "measured",
+      "stop": "turns",
+      "stop_why": "停下：轮次额度到（--max-turns）",
+      "progress": {
+        "done": 1,
+        "total": 1,
+        "limit": 1
+      },
+      "elapsed_ms": 2955
+    }
+  ],
+  "runs": [
+    {
+      "index": 1,
+      "run": "r28960-1792729790298584000",
+      "session": "real-agentd-1",
+      "events": 7,
+      "kinds": [
+        "run_started",
+        "turn_accepted",
+        "shot_started",
+        "precheck",
+        "recorded",
+        "turn_settled",
+        "run_settled"
+      ],
+      "accept": {
+        "planned_shots": null,
+        "turn_limit": 12,
+        "stop_via": "signal:SIGINT|in-proc:run.Stop(why)",
+        "resumable": true,
+        "ack_ms": 19
+      },
+      "turn_settle": {
+        "phase": "record_call",
+        "reached": [
+          "accept",
+          "work",
+          "check_call",
+          "record_call"
+        ],
+        "not_reached": [],
+        "counts": {
+          "ok": 2,
+          "running": 2
+        },
+        "kind": "completed",
+        "why": "这一发做完了：剧本的这一步走到收口，下一发接着来",
+        "done_before_shots": 1,
+        "ledger_driven_decisions": 1
+      },
+      "run_settle": {
+        "stop": "script",
+        "why": "跑完：端点剧本走到最后一发",
+        "progress": {
+          "done": 1,
+          "total": 1,
+          "limit": 12
+        }
+      },
+      "first_ts": "2026-10-23T12:29:50.298584+08:00",
+      "last_ts": "2026-10-23T12:29:52.1002379+08:00"
+    },
+    {
+      "index": 2,
+      "run": "r27276-1792730534367101400",
+      "session": "agentd-27276",
+      "events": 7,
+      "kinds": [
+        "run_started",
+        "turn_accepted",
+        "shot_started",
+        "precheck",
+        "recorded",
+        "turn_settled",
+        "run_settled"
+      ],
+      "accept": {
+        "planned_shots": null,
+        "turn_limit": 1,
+        "stop_via": "signal:SIGINT|in-proc:run.Stop(why)",
+        "resumable": true,
+        "ack_ms": 25
+      },
+      "turn_settle": {
+        "phase": "record_call",
+        "reached": [
+          "accept",
+          "work",
+          "check_call",
+          "record_call"
+        ],
+        "not_reached": [],
+        "counts": {
+          "ok": 2,
+          "running": 2
+        },
+        "kind": "completed",
+        "why": "这一发做完了：剧本的这一步走到收口，下一发接着来",
+        "done_before_shots": 1,
+        "ledger_driven_decisions": 1
+      },
+      "run_settle": {
+        "stop": "turns",
+        "why": "停下：轮次额度到（--max-turns）",
+        "progress": {
+          "done": 1,
+          "total": 1,
+          "limit": 1
+        }
+      },
+      "first_ts": "2026-10-23T12:42:14.3671877+08:00",
+      "last_ts": "2026-10-23T12:42:17.3228124+08:00"
+    }
+  ],
+  "counts": {
+    "events": 14,
+    "runs": 2,
+    "turns_settled": 2,
+    "runs_settled": 2,
+    "resumable": 2
+  },
+  "scope_notes": [
+    "事件来自 agentd 事件层真实落盘文件，不是脚本编的。",
+    "这是导出副本：只证明导出的 14 条自洽，不证明投送端一条没丢。",
+    "seq 是「每发 turn 内」的自增序号，turn 0 与 turn 1 各自从 1 开始；文件顺序按落盘先后。"
+  ]
+}

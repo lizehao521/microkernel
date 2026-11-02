@@ -1,0 +1,303 @@
+<!-- ================= CH 4 ================= -->
+<section class="chapter" id="ch4">
+  <div class="chap-kicker">Chapter 04</div>
+  <h1><span class="num">04</span>竞争格局：功能，还是平台</h1>
+
+  <div class="chap-q">
+    <b>问题：</b>如果可观测性、评测、治理平台都能往上加一层“证据”，agentkernel 的位置还剩多少？
+  </div>
+
+  <h2>4.1 五类玩家</h2>
+  <table class="tbl">
+    <caption><b>表 5</b> 五类玩家与它们的缺口</caption>
+    <thead><tr><th style="width:18%">类型</th><th style="width:30%">代表</th><th style="width:26%">已经有的</th><th>缺口</th></tr></thead>
+    <tbody>
+      <tr><td><b>可观测性</b></td><td>LangSmith、Langfuse、Arize、AgentOps、Datadog</td><td>trace、span、会话回放、成本</td><td>产物原像、判据版本、拒收计数、可回滚的证据包</td></tr>
+      <tr><td><b>评测 / 实验</b></td><td>LangSmith、Braintrust</td><td>dataset、experiment、并排比较</td><td>“为什么改”的归因与版本绑定</td></tr>
+      <tr><td><b>治理 / 合规</b></td><td>Credo AI、Holistic AI 等</td><td>政策、风险登记、合规映射</td><td>技术级执行证据、链上完整性</td></tr>
+      <tr><td><b>云账本</b></td><td>AWS CloudTrail 校验、Azure Confidential Ledger</td><td>不可抵赖日志、完整性校验</td><td>Agent 语义、49 格、拒收与修改版本</td></tr>
+      <tr><td><b>自建</b></td><td>团队自己写日志 + 脚本</td><td>完全可控、零采购</td><td>证据包规范、跨工具适配、外部复核</td></tr>
+    </tbody>
+  </table>
+  <p>
+    这张表说明：<b>每一类都有一部分，但没有一类把“二次修改证据”做全</b>。可观测性有 trace，缺原像与版本；评测有 experiment，缺拒收与回滚；
+    治理有政策，缺技术读数；云账本有完整性，缺 Agent 语义；自建可控，缺规范与外部复核。空白存在，但它是“跨类的缝”，不是“独立的大市场”。
+  </p>
+
+  <h2>4.2 价格锚：为什么不能按 seat / span / token 卖</h2>
+  <p>
+    可观测性平台按 seat、span 或数据量计价 [16][17][19][20]；评测平台按 experiment / 样本量计价 [18]；治理平台按年度合同计价。
+    这些锚都不适合“证据包”：证据包的价值不在“记录了多少”，而在“能不能支撑一次修改、能不能回滚、能不能对外披露”。
+    按 span 卖，会把证据层拉进可观测性的价格战；按 seat 卖，会把价值锚在“人头”而不是“风险”。
+  </p>
+  <p>
+    合理的锚是“每次可复核修改”或“每年证据包订阅”：试点 3–5 千美元 / 6 周，年度 1.5–3.0 万美元；需要私有化与安全审查的版本 4–8 万美元 / 年。
+    这个价格带低于企业治理平台，高于纯工具订阅；它对应的是“事故成本”而不是“日志成本”。
+  </p>
+
+  <h2>4.3 竞争定位：追踪深度 × 证据强度</h2>
+  <figure>
+    <div class="pad">
+      <svg viewBox="0 0 760 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="竞争定位矩阵">
+        <rect x="0" y="0" width="760" height="420" fill="#ffffff"/>
+        <line x1="90" y1="350" x2="720" y2="350" stroke="#94a3b8" stroke-width="1.5"/>
+        <line x1="90" y1="350" x2="90" y2="50" stroke="#94a3b8" stroke-width="1.5"/>
+        <text x="405" y="390" font-size="12" text-anchor="middle" fill="#475569">追踪深度（trace / 回放 / 成本）→</text>
+        <text x="28" y="205" font-size="12" text-anchor="middle" fill="#475569" transform="rotate(-90 28 205)">证据强度（原像 / 版本 / 拒收 / 回滚）→</text>
+        <line x1="405" y1="50" x2="405" y2="350" stroke="#e2e8f0" stroke-dasharray="4 4"/>
+        <line x1="90" y1="200" x2="720" y2="200" stroke="#e2e8f0" stroke-dasharray="4 4"/>
+        <g font-size="11">
+          <circle cx="560" cy="290" r="30" fill="#dbeafe" stroke="#3b82f6"/>
+          <text x="560" y="294" text-anchor="middle" fill="#1e40af">可观测性</text>
+          <circle cx="520" cy="235" r="26" fill="#ede9fe" stroke="#8b5cf6"/>
+          <text x="520" y="239" text-anchor="middle" fill="#5b21b6">评测</text>
+          <circle cx="250" cy="120" r="30" fill="#fef3c7" stroke="#d97706"/>
+          <text x="250" y="124" text-anchor="middle" fill="#92400e">治理平台</text>
+          <circle cx="170" cy="270" r="28" fill="#e2e8f0" stroke="#64748b"/>
+          <text x="170" y="274" text-anchor="middle" fill="#334155">云账本</text>
+          <circle cx="300" cy="280" r="24" fill="#f1f5f9" stroke="#94a3b8"/>
+          <text x="300" y="284" text-anchor="middle" fill="#475569">自建</text>
+          <circle cx="330" cy="115" r="36" fill="#ccfbf1" stroke="#0f766e" stroke-width="2.5"/>
+          <text x="330" y="112" text-anchor="middle" fill="#0f766e" font-weight="700">证据层</text>
+          <text x="330" y="128" text-anchor="middle" fill="#0f766e" font-size="10">agentkernel</text>
+        </g>
+        <text x="720" y="76" font-size="10" text-anchor="end" fill="#94a3b8">高证据 / 低追踪</text>
+        <text x="720" y="338" font-size="10" text-anchor="end" fill="#94a3b8">高追踪 / 低证据</text>
+        <text x="105" y="338" font-size="10" fill="#94a3b8">低追踪 / 低证据</text>
+      </svg>
+    </div>
+    <figcaption><b>图 3</b> 竞争定位。agentkernel 不试图在“追踪深度”上竞争；它的位置是“低追踪、高证据”，通过适配层消费别人的 trace。</figcaption>
+  </figure>
+
+  <h2>4.4 五力：横向 SaaS 不具吸引力</h2>
+  <table class="tbl">
+    <thead><tr><th style="width:18%">力量</th><th style="width:12%">强度</th><th>理由</th></tr></thead>
+    <tbody>
+      <tr><td>现有竞争</td><td class="no">高</td><td>可观测性 / 评测平台密集，功能重叠，价格透明</td></tr>
+      <tr><td>新进入者</td><td class="no">高</td><td>哈希链 + 49 格可复制；开源方案多</td></tr>
+      <tr><td>买方议价</td><td class="no">高</td><td>预算挂在既有科目，买家可自建或等平台打包</td></tr>
+      <tr><td>供应商议价</td><td class="mid">中</td><td>依赖 OTel / MCP / 云日志；标准开放但字段演化</td></tr>
+      <tr><td>替代品</td><td class="no">高</td><td>现有 trace + 脚本 + 人工复盘，能覆盖 60–70% 需求</td></tr>
+    </tbody>
+  </table>
+  <p>
+    五力结论很直接：<b>作为一个横向 SaaS，这不是一个有吸引力的市场</b>。但如果把它做成“嵌在现有平台里的证据层”，竞争强度会下降：
+    替换成本低、采购链条短、不需要教育买家“再买一个平台”。这也是 v2 把 A 的形态定为适配层，而不是独立 SaaS 的原因。
+  </p>
+
+  <h2>4.5 竞争会从哪里打死它</h2>
+  <ol>
+    <li><b>平台打包：</b>LangSmith / Langfuse / Datadog 把“证据包”做成高级功能，免费或低价捆绑。</li>
+    <li><b>云账本下沉：</b>AWS / Azure 把不可抵赖日志与 Agent 语义结合，直接覆盖“完整性”需求 [24][25]。</li>
+    <li><b>治理平台上探：</b>治理平台加技术读数，把“政策 + 证据”一起卖。</li>
+    <li><b>开源克隆：</b>哈希链 + 49 格 + 读回接口没有专利壁垒，复制成本低。</li>
+    <li><b>买家自建：</b>平台团队用现有 trace + 脚本拼一个“够用”的证据包，不采购。</li>
+  </ol>
+  <p>
+    这五条里，最致命的是第一条和第五条。平台打包会压缩价格，买家自建会压缩需求。能对抗这两条的，不是“链更安全”，而是
+    <b>证据包规范 + 拒收计数 + 版本三元组 + R/N 协议</b>这四样“跨工具、跨团队、可对外”的东西；它们比哈希链更难复制，也更容易被外部复核。
+  </p>
+
+  <h2>4.6 合作而非替代：做签收层，不做追踪层</h2>
+  <p>
+    正确的合作姿态是：trace 从 OTel / LangSmith / Langfuse 来，评测结果从 LangSmith / Braintrust 来，存储从云账本来，agentkernel 只做“签收”：
+    把产物原像、行为/判据版本、拒收计数、外部验证结果装成一个可复核的包，签发给审计、客户或内部复盘。
+    这样既不与平台争入口，也不与云账本争存储；它争的是“最后一公里”的签收权。
+  </p>
+
+  <h2>4.7 壁垒：什么能守，什么不能守</h2>
+  <table class="tbl">
+    <thead><tr><th style="width:30%">能守</th><th style="width:30%">不能守</th><th>原因</th></tr></thead>
+    <tbody>
+      <tr><td>证据包规范与适配器</td><td>哈希链 / 49 格本身</td><td>后者可复制；前者需要跨工具、跨团队磨合</td></tr>
+      <tr><td>拒收计数与判据版本</td><td>“可验证”这个词</td><td>词会被平台拿去用；计数与版本需要真实流程</td></tr>
+      <tr><td>R/N 协议与外部复核记录</td><td>单次 demo</td><td>协议与负结果需要时间积累；demo 可复制</td></tr>
+      <tr><td>受监管客户的部署经验</td><td>通用日志功能</td><td>经验带信任；功能会被打包</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ================= CH 5 ================= -->
+<section class="chapter" id="ch5">
+  <div class="chap-kicker">Chapter 05</div>
+  <h1><span class="num">05</span>产品证据现状</h1>
+
+  <div class="chap-q">
+    <b>问题：</b>面对市场时，哪些话现在能说，哪些话必须等到 Gate 1.5 之后？
+  </div>
+
+  <h2>5.1 能说的：A / B 级证据</h2>
+  <ul>
+    <li><b>账本形状稳定：</b>2,940 条记录 = 60 次调用 × 49 格；12 个会话；4 个自报 actor；basis 分布 measured 2,213 / absent 355 / relayed 188 / estimated 124 / model_says 60 / unset 0 [30]。</li>
+    <li><b>链完整：</b>`seq/prev/payload/seal` 2,940/2,940 重算通过；无签名、无密钥 [30]。</li>
+    <li><b>封板轮可复跑：</b>78 根针 / 整轮跑；退出码 0；空针 / 坏针 0；对照成立 [28]。</li>
+    <li><b>外部评估可对账：</b>外部 6 发 / 294 条；整本 490 条；逐发指纹对上 [29]。</li>
+    <li><b>缺席带理由：</b>355 条 absent 均带理由；这是“没量到”与“没发生”分开的基础 [30]。</li>
+  </ul>
+
+  <h2>5.2 不能说的：X 级缺口</h2>
+  <table class="tbl">
+    <caption><b>表 6</b> 能说 / 不能说（对外材料的第一屏）</caption>
+    <thead><tr><th style="width:30%">不能说</th><th style="width:30%">现状</th><th>要等到什么</th></tr></thead>
+    <tbody>
+      <tr><td>“30 分钟接入”</td><td>非作者真人未跑；v1 是目标值</td><td>Gate 1：≤60 分钟证据包 + 1 次修改</td></tr>
+      <tr><td>“闭环已通”</td><td>R/N 双臂 NOT_RUN；严格双臂 FAIL</td><td>Gate 1.5：10 例 R/N + 反臂 A/B</td></tr>
+      <tr><td>“记录驱动改进”</td><td>没有增量读数</td><td>Gate 1.5 通过</td></tr>
+      <tr><td>“审计层是防线”</td><td>不拦截、不调度、不执行</td><td>永远不说；定位不是防线</td></tr>
+      <tr><td>“内容可信”</td><td>verify 只证链未改；A1 注入通过</td><td>外部验证器 + 出处核验</td></tr>
+      <tr><td>“符合 EU AI Act”</td><td>第 12 条是记录义务，不是认证</td><td>不做合规认证声明</td></tr>
+    </tbody>
+  </table>
+
+  <h2>5.3 证据阶梯</h2>
+  <figure>
+    <div class="pad">
+      <svg viewBox="0 0 760 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="证据阶梯">
+        <rect x="0" y="0" width="760" height="330" fill="#ffffff"/>
+        <g font-size="11">
+          <rect x="30" y="40" width="120" height="46" fill="#dcfce7" stroke="#16a34a"/>
+          <text x="90" y="60" text-anchor="middle" fill="#166534" font-weight="700">A 工具自印 + 复算</text>
+          <text x="90" y="78" text-anchor="middle" fill="#166534">2,940 条 / 链全通过</text>
+          <rect x="170" y="40" width="120" height="46" fill="#dbeafe" stroke="#2563eb"/>
+          <text x="230" y="60" text-anchor="middle" fill="#1e40af" font-weight="700">B 单源自印</text>
+          <text x="230" y="78" text-anchor="middle" fill="#1e40af">外部 6 发 / 490 条</text>
+          <rect x="310" y="40" width="120" height="46" fill="#fef3c7" stroke="#d97706"/>
+          <text x="370" y="60" text-anchor="middle" fill="#92400e" font-weight="700">C 规划假设</text>
+          <text x="370" y="78" text-anchor="middle" fill="#92400e">SAM 3–6% / 财务情景</text>
+          <rect x="450" y="40" width="120" height="46" fill="#ede9fe" stroke="#7c3aed"/>
+          <text x="510" y="60" text-anchor="middle" fill="#5b21b6" font-weight="700">D 外部公开</text>
+          <text x="510" y="78" text-anchor="middle" fill="#5b21b6">法规 / 价格锚 / 竞品</text>
+          <rect x="590" y="40" width="140" height="46" fill="#fee2e2" stroke="#dc2626"/>
+          <text x="660" y="60" text-anchor="middle" fill="#991b1b" font-weight="700">X 未验证</text>
+          <text x="660" y="78" text-anchor="middle" fill="#991b1b">R/N / 真人 / 原像 / 版本</text>
+        </g>
+        <line x1="30" y1="120" x2="730" y2="120" stroke="#cbd5e1"/>
+        <text x="30" y="150" font-size="11" fill="#475569">对外材料只能引用左侧四类；右侧 X 级必须写“未跑 / 未找到”，不能塌成 0。</text>
+        <g font-size="10.5" fill="#475569">
+          <text x="30" y="185">能直接支撑技术可信度：A</text>
+          <text x="30" y="207">能作为线索、需标注：B</text>
+          <text x="30" y="229">能用于数量级与设计、不能当调查：C</text>
+          <text x="30" y="251">能用于背景、法规、竞品：D</text>
+          <text x="30" y="273">只能写“不知道 / 未跑”：X</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>图 4</b> 证据阶梯。R/N 双臂、真人计时、产物原像、版本字段都在 X 级；它们不是“0”，是“未验证”。<span class="figsrc">来源：v1 与 v2 本地读数 [27][28][29][30]。</span></figcaption>
+  </figure>
+
+  <h2>5.4 对市场进入的四条含义</h2>
+  <ol>
+    <li><b>不能以“闭环”为卖点。</b>至少到 Gate 1.5 通过之前，只能卖“可复核的记录与证据包”。</li>
+    <li><b>不能以“30 分钟”为卖点。</b>改为“一个证据包 + 一次修改”的 60 分钟目标，并让非作者真人跑。</li>
+    <li><b>不能以“合规认证”为卖点。</b>可以说“为第 12 条记录义务提供技术证据”，不能说“符合 AI Act”。</li>
+    <li><b>可以卖“可回滚 + 可披露”。</b>这是现有平台没有做全、且买家能感知的价值。</li>
+  </ol>
+
+  <div class="callout neutral">
+    <div class="t">先补哪三个 X</div>
+    <p>
+      顺序是：<b>产物原像</b>（改的是哪个文件 / 配置 / 提示词）→ <b>版本三元组</b>（产物、行为、判据各是哪一版）→ <b>拒收计数</b>（被验证器拒了多少、为什么）。
+      这三样都不需要改 v1 账本，放在链外证据包里；先补它们，再谈自动修改。缺任何一样，R/N 双臂的结果都不可归因，Gate 1.5 也无法开始。
+    </p>
+  </div>
+</section>
+
+<!-- ================= CH 6 ================= -->
+<section class="chapter" id="ch6">
+  <div class="chap-kicker">Chapter 06</div>
+  <h1><span class="num">06</span>五条进入方式重评</h1>
+
+  <div class="chap-q">
+    <b>问题：</b>在“功能而非平台”的判断下，五条路各自还剩下什么？哪条先走，哪条不做？
+  </div>
+
+  <h2 id="s6-a">选项 A：开源证据适配层</h2>
+  <p>
+    <b>交付物：</b>证据包规范 + OTel / LangSmith / Langfuse 适配器 + 参考实现 + 一个 10 例的失败样本包。
+    <b>不交付：</b>又一个 trace 后端、又一个 dashboard、又一个托管服务。
+    <b>目标：</b>非作者真人在 60 分钟内，把一个失败运行变成“账本 + 原像 + 版本 + 外部验证结果”的证据包，并完成一次可复核修改。
+  </p>
+  <p>
+    <b>商业模式：</b>开放核心。适配器与规范免费；企业版收“私有化部署 + 安全审查 + 支持”。<b>为什么先走：</b>它直接解决“交付判据”，且替换成本低，
+    买家可以在现有 trace 上试用，不需要换平台。<b>风险：</b>平台把适配器吸进主产品；对策是把“拒收计数 + 版本三元组 + R/N 协议”做成规范，而不是单个连接器。
+  </p>
+
+  <h2 id="s6-b">选项 B：企业私有化</h2>
+  <p>
+    <b>交付物：</b>VPC / 本地部署的证据包服务 + SBOM + DPA + 责任边界 + 安全审查材料。
+    <b>价格：</b>基础版 1.5–3.0 万美元 / 年；证据包版 4–8 万美元 / 年；试点 3–5 千美元 / 6 周。
+    <b>为什么条件触发：</b>它解决“预算判据”，但销售周期长、支持成本高；在 Gate 1.5 证明增量之前，不应把资源压到 B。
+    <b>触发条件：</b>Gate 2 的 2 封 LOI + 1 次安全审查 + SBOM/DPA/责任边界都过；且 Gate 1.5 已通过。
+  </p>
+
+  <h2 id="s6-c">选项 C：托管按次</h2>
+  <p>
+    <b>为什么不做：</b>托管意味着接客户的 prompt、工具输出与产物；隐私、留存、跨境、运维成本同时上升，且与“不执行工具”的定位冲突。
+    按次计价还会把价值锚在“调用量”，而不是“证据包”。如果未来一定要做托管，只做“元数据 + 哈希”的签收服务，不接内容；但这仍然不是当前优先项。
+  </p>
+
+  <h2 id="s6-d">选项 D：研究出版 / 标准</h2>
+  <p>
+    <b>交付物：</b>《Agent 执行 → 项目记录 → 二次修改》研究报告、R/N 双臂协议、负结果（严格双臂 FAIL、拒收六桶全 0）、证据包规范草案。
+    <b>为什么第一：</b>它解决“证据判据”。这个类别还没有被外部复核过；先发布“什么能证明、什么不能证明”，比先卖产品更能建立信任。
+    <b>不是收入线：</b>D 的直接收入接近 0；它的产出是外部复现、批评、引用与第一个 POC 志愿者。
+  </p>
+
+  <h2 id="s6-e">选项 E：竞赛 / 生态</h2>
+  <p>
+    <b>形态：</b>“二次修改证据”基准赛：给 10 个失败运行，要求参赛者产出可复核的证据包并完成修改；评分看留出集通过率、假修复率、证据完整性。
+    <b>为什么可选：</b>它能带来传播与外部样本，但不解决预算与交付；只有在 A 的适配层可用之后才有意义，否则会变成一次性活动。
+  </p>
+
+  <h2>五条路放在一张表里</h2>
+  <table class="tbl">
+    <caption><b>表 7</b> 五条进入方式对比（v2）</caption>
+    <thead><tr><th style="width:8%">选项</th><th style="width:24%">交付物</th><th style="width:14%">解决哪条判据</th><th style="width:12%">收入</th><th style="width:12%">成本</th><th>结论</th></tr></thead>
+    <tbody>
+      <tr class="em-row"><td><b>D</b></td><td>研究报告 + 协议 + 负结果</td><td>证据判据</td><td>≈0</td><td>低</td><td><b>第一</b>：先换外部复核</td></tr>
+      <tr class="em-row"><td><b>A</b></td><td>证据包规范 + 适配器 + 参考实现</td><td>交付判据</td><td>低 / 中</td><td>中</td><td><b>第二</b>：先换真实使用</td></tr>
+      <tr><td><b>B</b></td><td>私有化证据包 + 安全材料</td><td>预算判据</td><td>高</td><td>高</td><td><b>条件触发</b>：Gate 1.5 + 2</td></tr>
+      <tr class="danger-row"><td><b>C</b></td><td>托管按次证据服务</td><td>违反交付判据</td><td>中</td><td>高</td><td><b>不做</b></td></tr>
+      <tr><td><b>E</b></td><td>基准赛 / 生态</td><td>传播</td><td>低</td><td>中</td><td><b>可选</b>：A 之后</td></tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <div class="pad">
+      <svg viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="五条进入方式矩阵">
+        <rect x="0" y="0" width="760" height="360" fill="#ffffff"/>
+        <line x1="80" y1="310" x2="720" y2="310" stroke="#94a3b8"/>
+        <line x1="80" y1="310" x2="80" y2="50" stroke="#94a3b8"/>
+        <text x="400" y="345" font-size="12" text-anchor="middle" fill="#475569">到可复核证据的时间（短 → 长）</text>
+        <text x="26" y="190" font-size="12" text-anchor="middle" fill="#475569" transform="rotate(-90 26 190)">可防守性（低 → 高）</text>
+        <g font-size="11">
+          <circle cx="180" cy="105" r="34" fill="#ccfbf1" stroke="#0f766e" stroke-width="2"/>
+          <text x="180" y="102" text-anchor="middle" fill="#0f766e" font-weight="700">D</text>
+          <text x="180" y="118" text-anchor="middle" fill="#0f766e" font-size="9">研究</text>
+          <circle cx="340" cy="150" r="42" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+          <text x="340" y="146" text-anchor="middle" fill="#1e40af" font-weight="700">A</text>
+          <text x="340" y="162" text-anchor="middle" fill="#1e40af" font-size="9">适配层</text>
+          <circle cx="560" cy="120" r="48" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+          <text x="560" y="116" text-anchor="middle" fill="#92400e" font-weight="700">B</text>
+          <text x="560" y="132" text-anchor="middle" fill="#92400e" font-size="9">私有化</text>
+          <circle cx="390" cy="260" r="34" fill="#fee2e2" stroke="#dc2626"/>
+          <text x="390" y="256" text-anchor="middle" fill="#991b1b" font-weight="700">C</text>
+          <text x="390" y="272" text-anchor="middle" fill="#991b1b" font-size="9">托管</text>
+          <circle cx="600" cy="245" r="30" fill="#f1f5f9" stroke="#94a3b8"/>
+          <text x="600" y="241" text-anchor="middle" fill="#475569" font-weight="700">E</text>
+          <text x="600" y="257" text-anchor="middle" fill="#475569" font-size="9">竞赛</text>
+        </g>
+        <text x="95" y="80" font-size="10" fill="#94a3b8">证据强 / 时间短</text>
+        <text x="700" y="300" font-size="10" text-anchor="end" fill="#94a3b8">证据弱 / 时间长</text>
+      </svg>
+    </div>
+    <figcaption><b>图 5</b> 五条进入方式矩阵。D 先解决“证据”，A 再解决“交付”，B 等两者都过；C 在证据与时间上都不占优；E 只解决传播。</figcaption>
+  </figure>
+
+  <div class="callout">
+    <div class="t">排序结论</div>
+    <p>
+      D → A → Gate 1.5 → B；C 不做；E 可选。不是五选一，而是“先证明，再交付，最后才卖私有化”。
+    </p>
+  </div>
+</section>

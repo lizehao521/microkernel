@@ -1,0 +1,7 @@
+{"arm": "\u597d\u8d26\u4e0d\u8bef\u4f24\uff08\u5bf9\u7167\u5fc5\u987b\u4e0d\u54cd\uff09", "expect": "match \u4e14\u6876\u548c=\u5370\u7684=\u53d1\u6570", "got": "match buckets=60/60 runs=60", "pass": true}
+{"arm": "\u6539\u4e00\u53d1\u7ed3\u679c\u4e0d\u52a8\u8d26\uff08\u91cd\u6570\u5fc5\u987b\u7ea2\uff09", "expect": "oracle_ok mismatch", "got": "52 vs 53", "flipped": 1, "pass": true}
+{"arm": "\u865a\u589e\u8d26\u9762\u6570\uff08\u53ea\u6709\u90a3\u4e00\u683c\u7ea2\uff09", "expect": "only oracle_ok", "got": "oracle_ok", "pass": true}
+{"arm": "\u4f20\u8f93\u5931\u8d25\u5355\u5f00\u8d26\uff08\u5206\u6bcd\u8981\u6389\u3001\u5206\u5b50\u4e5f\u8981\u6389\u3001\u5e26\u5f02\u5e38\u53c8\u6807\u8fc7\u8d26\u7684\u8981\u70b9\u540d\uff09", "expect": "transport+1 \u4e14 n-1 \u4e14 ok-1 \u4e14 flagged=1", "got": "transport=4->5 n=56->55 ok=53->52 flagged=1", "pass": true}
+{"arm": "\u649e\u4e0a\u9650\u7684\u53d1\u8981\u5f52\u8fdb step_cap", "expect": "step_cap>=1 \u4e14\u6876\u548c=\u5370\u7684=\u53d1\u6570", "got": "{\"step_cap\": 2, \"pass\": 52, \"transport\": 4, \"fake_close\": 2} buckets=60/60 runs=60", "pass": true}
+{"arm": "\u6876\u548c\u6052\u7b49\u4e8e\u53d1\u6570\uff08\u526f\u672c\u5168\u96c6\uff09", "expect": "no violation", "got": "none", "pass": true}
+{"arms": 6, "arms_ok": true, "blind": []}

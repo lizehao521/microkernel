@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>交付对账单 · 真端点-真交付</title><style>
+body{font-family:Consolas,'Courier New',monospace;background:#f6f6f4;color:#1b1b1b;margin:0;padding:24px;line-height:1.55}
+h1{font-size:22px;margin:0 0 4px}h2{font-size:16px;margin:26px 0 8px;border-bottom:1px solid #ccc;padding-bottom:4px}
+h3{font-size:14px;margin:16px 0 6px}
+.meta{color:#666;font-size:12px}
+.banner{margin:16px 0;padding:12px 16px;border-radius:6px;font-size:15px;font-weight:bold;border:1px solid #999}
+.banner.ok{background:#e6f4ea;border-color:#2e7d32;color:#1b5e20}
+.banner.bad{background:#fdecea;border-color:#c62828;color:#8e1b1b}
+.banner.warn{background:#fff8e1;border-color:#f9a825;color:#7a5b00}
+.banner small{display:block;font-weight:normal;margin-top:4px;font-size:12px}
+table{border-collapse:collapse;width:100%;margin:6px 0 14px;font-size:12px}
+th,td{border:1px solid #ccc;padding:5px 7px;text-align:left;vertical-align:top}
+th{background:#ebebe8}
+td.ok{color:#1b5e20}td.bad{color:#b71c1c;font-weight:bold}td.warn{color:#7a5b00}td.info{color:#0d47a1}
+.tag{display:inline-block;padding:0 5px;border-radius:3px;font-size:11px;border:1px solid #aaa}
+.tag.disk{background:#e8eefc}.tag.self{background:#fce8f4}
+ul{margin:4px 0 12px 20px;padding:0}li{margin:2px 0}
+.foot{margin-top:28px;border-top:1px solid #bbb;padding-top:8px;color:#555;font-size:11px}
+.num{font-weight:bold}
+</style></head><body>
+<h1>交付对账单</h1>
+<div class="meta">会话 真端点-真交付 ｜ 生成 2026-10-25T17:52:17Z ｜ 交付方 编程 Agent pgagent（MiniMax-M2.5，2026-10-23 真端点那一发）</div>
+<div class="banner warn">NOT-ACCEPTED-UNVERIFIED<small>1 条声明无法回盘核：D3；证据源核不全：pgagent；8 条声明只有交付方自己的产物作证：D1, D2, D4, D5, D6, D7, D8, D9</small></div>
+<p>声明 <span class='num'>9</span> 条：MATCH <span class='num'>8</span> ｜ MISMATCH <span class='num'>0</span> ｜ ABSENT <span class='num'>1</span> ｜ 盘上 1 / 自报 8</p>
+<h2>逐条声明</h2>
+<table><tr><th>编号</th><th>声明</th><th>期望</th><th>盘上实际</th><th>判定</th><th>依据档</th><th>来源</th></tr>
+<tr class="claim" data-claim="D1"><td>D1</td><td>json_value<br><span class="meta">这是本会话的第 1 发</span></td><td>1</td><td>1</td><td class="ok">MATCH</td><td>relayed</td><td><span class="tag self">自报</span></td></tr>
+<tr class="claim" data-claim="D2"><td>D2</td><td>json_value<br><span class="meta">被审代码被数成 6 行</span></td><td>6</td><td>6</td><td class="ok">MATCH</td><td>relayed</td><td><span class="tag self">自报</span></td></tr>
+<tr class="claim" data-claim="D3"><td>D3</td><td>file_sha256<br><span class="meta">交付报出的源码指纹（16 位前缀）</span></td><td>05bdf4a2f686c85b</td><td>—</td><td class="warn">ABSENT</td><td>absent</td><td><span class="tag disk">盘上</span></td></tr>
+<tr class="claim" data-claim="D4"><td>D4</td><td>json_len<br><span class="meta">找到 1 条问题</span></td><td>1</td><td>长度 1</td><td class="ok">MATCH</td><td>relayed</td><td><span class="tag self">自报</span></td></tr>
+<tr class="claim" data-claim="D5"><td>D5</td><td>json_len<br><span class="meta">另有 6 条未决</span></td><td>6</td><td>长度 6</td><td class="ok">MATCH</td><td>relayed</td><td><span class="tag self">自报</span></td></tr>
+<tr class="claim" data-claim="D6"><td>D6</td><td>json_value<br><span class="meta">账本有 4 格改写了这一发的结果</span></td><td>4</td><td>4</td><td class="ok">MATCH</td><td>relayed</td><td><span class="tag self">自报</span></td></tr>
+<tr class="claim" data-claim="D7"><td>D7</td><td>json_value<br><span class="meta">13 步整列自洽</span></td><td>true</td><td>true</td><td class="ok">MATCH</td><td>relayed</td><td><span class="tag self">自报</span></td></tr>
+<tr class="claim" data-claim="D8"><td>D8</td><td>json_value<br><span class="meta">跨发账链对得上</span></td><td>true</td><td>true</td><td class="ok">MATCH</td><td>relayed</td><td><span class="tag self">自报</span></td></tr>
+<tr class="claim" data-claim="D9"><td>D9</td><td>json_value<br><span class="meta">五档加总 7 条</span></td><td>7</td><td>7</td><td class="ok">MATCH</td><td>relayed</td><td><span class="tag self">自报</span></td></tr></table>
+<h2>证据源：pgagent 轨迹 <span class="tag">本交付的证据</span> <span class="warn">ABSENT</span></h2><div class="meta">路径 ../../PDF-1022/真端点-1023/读数/pgagent-真端点.json ｜ sha256 11e8b994a25483ad ｜ 关系：13 步轨迹从这里读；不要和 agentd 那一发混成一次运行</div><table><tr><th>编号</th><th>判据</th><th>结论</th><th>读数</th></tr><tr><td>P0</td><td>指纹与钉住的一致</td><td class="ok">GREEN</td><td>钉住 11e8b994a25483ad… 实际 11e8b994a25483ad…</td></tr>
+<tr><td>P1</td><td>JSON 可解析</td><td class="ok">GREEN</td><td>顶层键 8 个</td></tr>
+<tr><td>P2</td><td>步数</td><td class="ok">GREEN</td><td>13 步（期望 13）</td></tr>
+<tr><td>P3</td><td>每步都 ran=true</td><td class="ok">GREEN</td><td>全部 13 步</td></tr>
+<tr><td>P4</td><td>每步 basis 合法</td><td class="ok">GREEN</td><td>全部落在五档</td></tr>
+<tr><td>P5</td><td>末步是终态</td><td class="ok">GREEN</td><td>末步=stop（期望 stop）</td></tr>
+<tr><td>P6</td><td>五档恒等</td><td class="ok">GREEN</td><td>五档加总 7，findings+unknowns 7，mix.total 7</td></tr>
+<tr><td>P7</td><td>finding/unknown 的 basis 合法</td><td class="ok">GREEN</td><td>findings 1 条 / unknowns 6 条</td></tr>
+<tr><td>P8</td><td>unknown 都带「为什么缺席」</td><td class="ok">GREEN</td><td>全部 6 条都带理由</td></tr>
+<tr><td>P9</td><td>条数与钉住的一致</td><td class="ok">GREEN</td><td>findings 1 / unknowns 6（期望 1 / 6）</td></tr>
+<tr><td>P10</td><td>finding 定位能回盘</td><td class="warn">ABSENT</td><td>1/1 条 finding 的 where.lines 是 [0,0]（或空）；本次交付没有把被审源码一起交出来 ⇒ 回盘核不了</td></tr></table><h3>自报项（本件不重算）</h3><ul><li>trace_sane = <b>True</b> —— 交付方自报，本件不重算</li><li>chain_sane = <b>True</b> —— 交付方自报，本件不重算</li><li>KPI（账本改写了结果的格数） = <b>4</b> —— 交付方自报，本件不重算</li><li>mix_identity_ok = <b>True</b> —— 交付方自报，本件不重算</li></ul>
+<h2>证据源：agentd 事件层 <span class="tag">形状样例（与本交付无因果关系）</span> <span class="ok">GREEN</span></h2><div class="meta">路径 ../../PDF-1022/真端点-1023/读数/agentd-真端点.events.jsonl ｜ sha256 59d1deb636993cf1 ｜ 关系：同一批真端点验收里 agentd 那一发的会话名是 real-agentd-1，本交付是 real-pgagent-1，两发不同</div><table><tr><th>编号</th><th>判据</th><th>结论</th><th>读数</th></tr><tr><td>E0</td><td>指纹与钉住的一致</td><td class="ok">GREEN</td><td>钉住 59d1deb636993cf1… 实际 59d1deb636993cf1…</td></tr>
+<tr><td>E1</td><td>每行都可解析</td><td class="ok">GREEN</td><td>14 条事件，坏行 0，非对象行 0</td></tr>
+<tr><td>E2</td><td>必备字段齐</td><td class="ok">GREEN</td><td>全齐</td></tr>
+<tr><td>E3</td><td>每个 (session,turn) 的 seq 严格递增</td><td class="ok">GREEN</td><td>4 个 (session,turn) 严格递增（起始 seq real-agentd-1/turn0:1 / real-agentd-1/turn1:1 / agentd-27276/turn0:3 / agentd-27276/turn1:6）</td></tr>
+<tr><td>E4</td><td>evidence 档合法</td><td class="ok">GREEN</td><td>全部落在五档</td></tr>
+<tr><td>E5</td><td>拒绝必须带理由</td><td class="warn">VACUOUS</td><td>本批 0 条拒绝事件 ⇒ 这条判据没有现场</td></tr>
+<tr><td>E6</td><td>absent 事件带理由</td><td class="warn">VACUOUS</td><td>本批 0 条 absent 事件</td></tr>
+<tr><td>E7</td><td>每一发与每一程都有终态事件</td><td class="ok">GREEN</td><td>2 发 / 2 程全部 settled</td></tr></table>
+<h2>证据源：内核账本 <span class="tag">形状样例（与本交付无因果关系）</span> <span class="ok">GREEN</span></h2><div class="meta">路径 ../../构建-1017/客服靶场/导出/账本-全量-1018.jsonl ｜ sha256 fb1fa5ef7a934776 ｜ 关系：这是 10-18 客服靶场导出的 2940 条账，不是本交付的账本；本件只核它自己的链与 49 格形状</div><table><tr><th>编号</th><th>判据</th><th>结论</th><th>读数</th></tr><tr><td>J0</td><td>指纹与钉住的一致</td><td class="ok">GREEN</td><td>钉住 fb1fa5ef7a934776… 实际 fb1fa5ef7a934776…</td></tr>
+<tr><td>J1</td><td>账行可解析</td><td class="ok">GREEN</td><td>2940 条账 + 1 行人读表头，坏行 0</td></tr>
+<tr><td>J2</td><td>条数</td><td class="ok">GREEN</td><td>2940 条（期望 2940）</td></tr>
+<tr><td>J3</td><td>人读表头行</td><td class="ok">GREEN</td><td>1 行（期望 1）</td></tr>
+<tr><td>J4</td><td>seal 逐条复算</td><td class="ok">GREEN</td><td>2940/2940</td></tr>
+<tr><td>J5</td><td>prev_hash 链接</td><td class="ok">GREEN</td><td>2940/2940</td></tr>
+<tr><td>J6</td><td>seq 从 1 连续</td><td class="ok">GREEN</td><td>1..2940</td></tr>
+<tr><td>J7</td><td>payload 指纹</td><td class="ok">GREEN</td><td>2940/2940</td></tr>
+<tr><td>J8</td><td>49 格分组（20 入 + 29 出）</td><td class="ok">GREEN</td><td>60 组，尺寸分布 {&quot;49&quot;: 60}，入/出 20/29</td></tr></table>
+<h2>这张单子证明不了什么</h2><ul><li>本件只读盘上文件：不执行被交付的代码，不联网，不改任何输入。</li><li>核对的是「声明 vs 盘上证据」是否一致，不判断代码或结论本身对不对。</li><li>证据怎么产生的，本件证不了：日志与文件可能是事后补的，本件只核它们与声明是否对得上。</li><li>交付方自报的读数（trace_sane / KPI / chain_sane 等）记为 relayed，本件不重算。</li><li>内核账本只核 seal / 链接 / 序号 / payload / 49 格分组这些可复算的形状，不核每格内容对不对。</li><li>ACCEPTED 只代表「每条声明都由盘上证据复核通过，且没有仅凭自报的项」；不代表代码正确或测试充分。</li></ul>
+<div class="foot">工具 sha256 7994b6660cd80d62e21b5b6cc4eda8ef7f3077d57ed7ab66fdb451212f10fa9f ｜ spec sha256 e1fce41a2c7a3c5c7148db96248d5b8d2376a67e709d7544e92804853280437c ｜ 工具版本 1.0<br>landing check: 9/9 rows OK</div>
+</body></html>

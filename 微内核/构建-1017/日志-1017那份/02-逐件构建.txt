@@ -1,0 +1,10 @@
+--- ./cmd/kaudit ---
+OK
+--- ./cmd/kcheck ---
+OK
+--- ./cmd/kresearch ---
+OK
+--- ./cmd/mcphttp ---
+OK
+--- ./cmd/mcpkernel ---
+OK

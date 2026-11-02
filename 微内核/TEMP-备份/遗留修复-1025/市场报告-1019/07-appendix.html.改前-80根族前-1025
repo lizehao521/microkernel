@@ -1,0 +1,334 @@
+<!-- ================= APPENDIX A ================= -->
+<section class="chapter appendix" id="appA">
+  <div class="chap-kicker">Appendix A</div>
+  <h1><span class="num">A</span>方法与证据分级</h1>
+
+  <h2>A.1 研究问题与范围</h2>
+  <p>
+    研究问题是“agentkernel 应该以哪种方式面对市场”。范围包括：市场定义与规模、需求驱动、竞争格局、客户细分、
+    产品证据现状、五种进入方式、推荐路线、定价、风险、路线图与财务情景。
+    不包括：具体销售话术的逐字稿、法律意见、合规认证方案、竞品的内部数据、26 策略引擎的商业化。
+  </p>
+  <p>
+    研究对象是 agentkernel v1（48 键 / 49 格，判据表冻结）。26 策略引擎只作为“内部研究资产”在第 1 章说明为什么不是市场对象；
+    本报告不评价其真实靶场能力，也不把它计入市场规模。
+  </p>
+
+  <h2>A.2 证据分级</h2>
+  <table class="tbl">
+    <thead><tr><th style="width:10%">等级</th><th style="width:32%">定义</th><th style="width:28%">本报告的使用方式</th><th>禁止的读法</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag tag-a">A</span></td><td>工具自印 + 独立复算，或双源逐字对上</td><td>可直接用于技术可信度与验收判断</td><td>不能外推到“所有故障/所有客户”</td></tr>
+      <tr><td><span class="tag tag-b">B</span></td><td>单一来源自印，未被本报告独立复算</td><td>可作为线索，需标注“单源”</td><td>不能读成“已独立验证”</td></tr>
+      <tr><td><span class="tag tag-c">C</span></td><td>作者复算 / 规划假设，无原始件</td><td>用于决策数量级、情景与设计</td><td>不能读成市场调查结论</td></tr>
+      <tr><td><span class="tag tag-d">D</span></td><td>外部公开资料，注明访问日，不是内核读数</td><td>用于背景、法规、竞品与价格锚</td><td>不能读成“本报告独立复算过”</td></tr>
+      <tr><td><span class="tag tag-x">X</span></td><td>不可核 / 未验证</td><td>明确写“不知道/未跑”，不塌成 0</td><td>不能读成“0 个/没有发生”</td></tr>
+    </tbody>
+  </table>
+
+  <h2>A.3 资料收集</h2>
+  <ul>
+    <li><b>内部证据：</b>来自仓库中的产品定位、可行性研究报告、封板轮凭据、外部评估对账、收尾记录、慢闸输出、账本导出。引用时保留原始件路径。</li>
+    <li><b>外部资料：</b>法规原文/官方页、OWASP 页面、CVE/NVD、厂商公开定价页、行业研究摘要、公开调查转引。访问日统一为 2026-10-19。</li>
+    <li><b>没有做的：</b>没有购买付费数据库；没有做独立市场调查；没有做 10 次访谈（这是 Phase 0 的任务）；没有做法律意见；没有联系竞品/买方获取内部数据。</li>
+  </ul>
+
+  <h2>A.4 规模估算方法</h2>
+  <p>
+    采用“自上而下三角 + 自下而上校验”，不做单点预测：
+  </p>
+  <ul>
+    <li><b>自上而下：</b>取 LLM 可观测性、AI TRiSM、AI 治理三个口径；对每个口径乘一个“证据/审计子层占比”假设，得到三个 SAM 区间；取前两路交集作为主区间，第三路作为下界校验。</li>
+    <li><b>自下而上：</b>组织数 × 需要独立证据闸门的比例 × 年付费意愿；用区间相乘得到宽区间，再用“中低段”校验自上而下的主区间。</li>
+    <li><b>SOM：</b>SAM × 0.5–2%（三年可获取比例），按 ARPU 折算账户数；明确这是“上限”，不是预测。</li>
+    <li><b>不做事：</b>不把三个口径相加；不把安全/质量预算算进来；不把“AI 治理”整体当 TAM；不用单点 CAGR 外推五年。</li>
+  </ul>
+
+  <h2>A.5 局限</h2>
+  <ul>
+    <li><b>无付款证据：</b>截至 2026-10-19，未找到任何客户为 agentkernel 付款的证据；报告不写“0 个买家”，只写“未找到付款证据”。</li>
+    <li><b>无真人外部验收：</b>唯一验收的真人部分 NOT_RUN；严格口径 FAIL。任何“30 分钟接上”都是目标，不是已证事实。</li>
+    <li><b>法规未逐条核：</b>EU AI Act、GB/T 47746、电商法的适用需要法律意见；报告只做技术映射，不做合规结论。</li>
+    <li><b>市场数据口径不一：</b>不同研究机构对“LLM 可观测性/AI 治理/AI TRiSM”的定义不同；报告用区间与假设，不用单点。</li>
+    <li><b>竞品价格会变：</b>公开页价格随套餐/地区/时间变动；报告只用作“价格锚”，不用于报价。</li>
+    <li><b>单作者偏差：</b>报告由作者撰写，可能存在“高估技术、低估销售”的偏差；用外部访谈与设计伙伴校正。</li>
+  </ul>
+
+  <h2>A.6 边界与声明</h2>
+  <p>
+    本报告是市场进入研究，不是投资建议、不是法律意见、不是合规认证、不是销售材料。
+    它不构成对任何产品性能、合规性、安全性的保证。
+    报告不包含任何口令、密钥、客户隐私或未公开的第三方数据；不写入 8797 / 8799 真流量账；不修改内核判据表。
+  </p>
+
+  <h2>A.7 复现</h2>
+  <p>
+    报告源文件为同目录 <span class="mono">报告.html</span>（由 <span class="mono">src/</span> 分段拼装），
+    PDF 由 Microsoft Edge headless 的 <span class="mono">--print-to-pdf</span> 生成；页眉页脚由 Edge 默认模板提供（日期、标题、URL、页码）。
+    构建脚本、文件哈希、页数与字数见同目录 <span class="mono">README.md</span> 与 <span class="mono">MANIFEST.txt</span>。
+    所有图表为内联 SVG，不依赖外部图片或网络字体；中文使用系统字体 Microsoft YaHei / Noto Sans SC。
+  </p>
+
+  <h2>A.8 什么会推翻本报告</h2>
+  <ul>
+    <li>10 次访谈中出现 ≥3 个真实触发且有预算的买方；</li>
+    <li>一个非作者真人在 30 分钟内通过干净臂；</li>
+    <li>一家设计伙伴愿意为试点付 ≥3k 美元；</li>
+    <li>或相反：第 60 天仍无干净臂、10 次访谈无触发——说明切口错了，应换对象/细分。</li>
+  </ul>
+</section>
+
+<!-- ================= APPENDIX B ================= -->
+<section class="chapter appendix" id="appB">
+  <div class="chap-kicker">Appendix B</div>
+  <h1><span class="num">B</span>数据表</h1>
+
+  <h2>B.1 市场规模输入与计算</h2>
+  <table class="tbl">
+    <thead><tr><th style="width:24%">输入</th><th style="width:16%">数值</th><th style="width:14%">等级</th><th>计算 / 备注</th></tr></thead>
+    <tbody>
+      <tr><td>LLM 可观测性 2026</td><td class="num">26.9 亿美元</td><td><span class="tag tag-d">D</span></td><td>Business Research Company 口径（二手转引）</td></tr>
+      <tr><td>证据/审计子层占比（可观测性）</td><td class="num">8–12%</td><td><span class="tag tag-c">C</span></td><td>26.9 × 8% = 2.152；× 12% = 3.228（亿）</td></tr>
+      <tr><td>AI TRiSM 2026</td><td class="num">30.9 亿美元</td><td><span class="tag tag-d">D</span></td><td>MarketsandMarkets 口径（二手转引）</td></tr>
+      <tr><td>证据/审计子层占比（TRiSM）</td><td class="num">5–8%</td><td><span class="tag tag-c">C</span></td><td>30.9 × 5% = 1.545；× 8% = 2.472（亿）</td></tr>
+      <tr><td>AI 治理 2025 / CAGR</td><td class="num">3.4 亿 / 28.8%</td><td><span class="tag tag-d">D</span></td><td>2026 估算 3.4 × 1.288 = 4.379（亿）</td></tr>
+      <tr><td>技术证据层占比（治理）</td><td class="num">25–35%</td><td><span class="tag tag-c">C</span></td><td>4.379 × 25% = 1.095；× 35% = 1.533（亿）</td></tr>
+      <tr class="em-row"><td>SAM 取用</td><td class="num">1.6–3.0 亿美元</td><td><span class="tag tag-c">C</span></td><td>前两路交集为主；第三路作下界校验</td></tr>
+      <tr><td>SOM（3 年）</td><td class="num">0.8–6 百万美元</td><td><span class="tag tag-c">C</span></td><td>1.6–3.0 亿 × 0.5–2%</td></tr>
+    </tbody>
+  </table>
+
+  <h2>B.2 敏感性全表（千美元）</h2>
+  <table class="tbl">
+    <thead><tr><th style="width:16%">ARPU \ 账户</th><th class="num">20</th><th class="num">50</th><th class="num">100</th><th class="num">200</th><th class="num">400</th></tr></thead>
+    <tbody>
+      <tr><td>5,000</td><td class="num">100</td><td class="num">250</td><td class="num">500</td><td class="num">1,000</td><td class="num">2,000</td></tr>
+      <tr><td>10,000</td><td class="num">200</td><td class="num">500</td><td class="num">1,000</td><td class="num">2,000</td><td class="num">4,000</td></tr>
+      <tr class="em-row"><td>15,000</td><td class="num">300</td><td class="num">750</td><td class="num">1,500</td><td class="num">3,000</td><td class="num">6,000</td></tr>
+      <tr><td>30,000</td><td class="num">600</td><td class="num">1,500</td><td class="num">3,000</td><td class="num">6,000</td><td class="num">12,000</td></tr>
+    </tbody>
+  </table>
+  <p class="small">绿色行（1.5 万 × 100–200）是基准情景的核心区间；6,000 千美元接近 SOM 上限，不能当常态。</p>
+
+  <h2>B.3 证据状态矩阵</h2>
+  <table class="tbl">
+    <thead><tr><th style="width:26%">主张</th><th style="width:12%">状态</th><th style="width:12%">等级</th><th>原始件 / 备注</th></tr></thead>
+    <tbody>
+      <tr><td>49 格契约机械一致</td><td class="ok">已硬证</td><td><span class="tag tag-a">A</span></td><td><span class="mono">keys=48 cells=49 rows=48 drift=0</span></td></tr>
+      <tr><td>慢闸分类 / 对照</td><td class="ok">已硬证</td><td><span class="tag tag-a">A</span></td><td>80 根；空针/坏针 0；独立复算 80/80；CTRL 红</td></tr>
+      <tr><td>原子拒收 / 链完整</td><td class="ok">已硬证</td><td><span class="tag tag-a">A</span></td><td>外部 6 发/294 条；整本 490 条；无半发</td></tr>
+      <tr><td>4 次当面拒收</td><td class="ok">已硬证</td><td><span class="tag tag-a">A</span></td><td>一次 session；可指名格位</td></tr>
+      <tr><td>6 次调用收口</td><td class="mid">单源</td><td><span class="tag tag-b">B</span></td><td>外部评估口述；未独立复算</td></tr>
+      <tr><td>计数 KPI</td><td class="no">半边</td><td><span class="tag tag-x">X</span></td><td>计数已修；点名未修</td></tr>
+      <tr><td>拒收归因</td><td class="no">未成立</td><td><span class="tag tag-x">X</span></td><td>#48：5/8</td></tr>
+      <tr><td>缺席表达</td><td class="no">未成立</td><td><span class="tag tag-x">X</span></td><td>G1：字符串/裸整数格无缺席写法</td></tr>
+      <tr><td>真人外部验收</td><td class="no">不可核</td><td><span class="tag tag-x">X</span></td><td>NOT_RUN；严格 FAIL</td></tr>
+      <tr><td>交付凭据 ↔ 二进制</td><td class="no">未成立</td><td><span class="tag tag-x">X</span></td><td>时间/字节不一致</td></tr>
+    </tbody>
+  </table>
+
+  <h2>B.4 财务情景算术</h2>
+  <table class="tbl">
+    <thead><tr><th style="width:20%">情景</th><th style="width:26%">收入</th><th style="width:26%">现金成本</th><th>净现金流</th></tr></thead>
+    <tbody>
+      <tr><td>保守</td><td>0 / 96 / 240</td><td>10 / 20 / 30</td><td>-10 / 76 / 210</td></tr>
+      <tr><td>基准</td><td>12 / 225 / 810</td><td>15 / 30 / 60</td><td>-3 / 195 / 750</td></tr>
+      <tr><td>乐观</td><td>75 / 720 / 2,400</td><td>20 / 50 / 120</td><td>55 / 670 / 2,280</td></tr>
+    </tbody>
+  </table>
+  <p class="small">
+    算术：收入 = 账户数 × ARPU；净现金流 = 收入 − 现金成本。单位千美元。
+    不含税、汇率、坏账、法律赔偿、作者机会成本；不构成预测。
+  </p>
+</section>
+
+<!-- ================= APPENDIX C ================= -->
+<section class="chapter appendix" id="appC">
+  <div class="chap-kicker">Appendix C</div>
+  <h1><span class="num">C</span>参考文献</h1>
+
+  <p class="small">
+    以下资料访问日均为 2026-10-19。外部资料为 D 级；内部资料为 A/B 级。付费研究报告只列出版方、报告主题与口径，不列深链；
+    法规与标准以官方原文为准，本报告不做法律解释。
+  </p>
+
+  <h2>C.1 法规、标准与安全</h2>
+  <div class="ref"><span class="n">[1]</span> OWASP Foundation. <i>OWASP MCP Top 10</i>, MCP08: Lack of Audit and Telemetry. https://owasp.org/www-project-mcp-top-10/ <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[2]</span> European Union. <i>Regulation (EU) 2024/1689 (AI Act)</i>, Article 12: Record-keeping. https://eur-lex.europa.eu/eli/reg/2024/1689/oj <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[3]</span> Artificial Intelligence Act (tracker). Article 12. https://artificialintelligenceact.eu/article/12/ <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[4]</span> 全国标准信息公共服务平台. GB/T 47746—2026（2026-09-01 实施）. https://openstd.samr.gov.cn/ <span class="tag tag-d">D</span>（标准原文未逐条核，适用范围以原文为准）</div>
+  <div class="ref"><span class="n">[5]</span> 中国人大网. 《中华人民共和国电子商务法》第 48 条. http://www.npc.gov.cn/ <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[6]</span> NIST NVD. CVE-2026-27825 / CVE-2026-27826. https://nvd.nist.gov/vuln/detail/CVE-2026-27825 <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[7]</span> Gartner. “Over 40% of agentic AI projects will be canceled by end of 2027.” Gartner Newsroom. https://www.gartner.com/en/newsroom <span class="tag tag-d">D</span>（官方页访问受限，读数转引二级来源）</div>
+
+  <h2>C.2 市场与采用</h2>
+  <div class="ref"><span class="n">[8]</span> Business Research Company. <i>LLM Observability Market</i>（2026 口径，二手转引）. <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[9]</span> MarketsandMarkets. <i>AI TRiSM Market</i>（2026–2031 口径，二手转引）. <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[10]</span> Research and Markets / Mordor Intelligence. <i>AI Governance Market</i>（2025–2030 口径，二手转引）. <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[11]</span> QYResearch. <i>AI Observability Platforms Market</i>（2025–2032 口径，二手转引）. <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[12]</span> Stacklok. MCP adoption survey（公开摘要转引）. <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[13]</span> LangChain. <i>State of AI Agents</i>（公开摘要转引）. <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[14]</span> Model Context Protocol. https://modelcontextprotocol.io/ <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[15]</span> OpenTelemetry. GenAI semantic conventions. https://opentelemetry.io/docs/specs/semconv/gen-ai/ <span class="tag tag-d">D</span></div>
+
+  <h2>C.3 竞品定价与技术</h2>
+  <div class="ref"><span class="n">[16]</span> LangSmith pricing. https://www.langchain.com/pricing <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[17]</span> Langfuse pricing. https://langfuse.com/pricing <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[18]</span> Braintrust pricing. https://www.braintrust.dev/pricing <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[19]</span> Datadog pricing. https://www.datadoghq.com/pricing/ <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[20]</span> Helicone pricing. https://www.helicone.ai/pricing <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[21]</span> Portkey pricing. https://portkey.ai/pricing <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[22]</span> Weights &amp; Biases pricing. https://wandb.ai/pricing <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[23]</span> TrueFoundry pricing. https://www.truefoundry.com/pricing <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[24]</span> AWS. CloudTrail log file validation. https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-log-file-validation-intro.html <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[25]</span> Microsoft Azure. Confidential Ledger. https://azure.microsoft.com/en-us/products/confidential-ledger <span class="tag tag-d">D</span></div>
+
+  <h2>C.4 内部资料</h2>
+  <div class="ref"><span class="n">[26]</span> 《产品定位（v1 封板用）》. 内部文件，2026-10-13 起封板；含 48 键/49 格、边界三条、唯一验收、15 条缺口. <span class="tag tag-a">A</span> / <span class="tag tag-b">B</span></div>
+  <div class="ref"><span class="n">[27]</span> 《可验证记账层的可行边界——技术可行性、外部叙事与市场位置的合并研究》. 内部报告，2026-10-19. <span class="tag tag-a">A</span> / <span class="tag tag-b">B</span></div>
+  <div class="ref"><span class="n">[28]</span> 《封板轮-整轮-1016-032847.txt》. 78 根针/整轮跑；退出码 0；空针/坏针 0；对照成立. <span class="tag tag-a">A</span></div>
+  <div class="ref"><span class="n">[29]</span> 《外部评估-主页圈-aec6dd94-对账-1018.md》. 外部 6 发/294 条；整本 490 条；逐发指纹对上. <span class="tag tag-a">A</span></div>
+  <div class="ref"><span class="n">[30]</span> 《收尾-现场与未闭合-1018.txt》. 未闭合项、KPI 计数半边、A1 提示注入实测. <span class="tag tag-a">A</span> / <span class="tag tag-b">B</span></div>
+  <div class="ref"><span class="n">[31]</span> 《agent-第二支-续跑臂.md》《挤历史-判生死.md》. 续跑/跨发边界；真实故障实例 0 次. <span class="tag tag-b">B</span></div>
+  <div class="ref"><span class="n">[32]</span> <span class="mono">tasks/audit/to_dataset.py</span>. 训练数据对 2/4 实测. <span class="tag tag-a">A</span></div>
+  <div class="ref"><span class="n">[33]</span> 《26 策略引擎闭环》. <span class="mono">../策略引擎闭环-1019/报告.md</span>、<span class="mono">MANIFEST.txt</span>. 26 声明 / 20 分支 / 1 恒等 / 5 元策略；7/7 离线合成；真实靶场 NOT_RUN. <span class="tag tag-a">A</span> / <span class="tag tag-x">X</span></div>
+
+  <div class="callout neutral">
+    <div class="t">引用规则</div>
+    <p>引用外部数据时必须带“来源 + 访问日 + 等级”；引用内部数据时必须带原始件路径。不要把 D 级市场数据写成“实测”，也不要把 X 级缺口写成“0”。</p>
+  </div>
+</section>
+
+<!-- ================= APPENDIX D ================= -->
+<section class="chapter appendix" id="appD">
+  <div class="chap-kicker">Appendix D</div>
+  <h1><span class="num">D</span>术语表</h1>
+
+  <table class="tbl">
+    <thead><tr><th style="width:22%">术语</th><th>含义（本报告口径）</th></tr></thead>
+    <tbody>
+      <tr><td>49 格 / 48 键</td><td>一次往来拆成 49 个格位、48 个唯一键名（输入侧 20 + 输出侧 29，<span class="mono">call</span> 两侧同名）；判据表冻结。</td></tr>
+      <tr><td>档位 / Basis</td><td>0 未标、1 measured、2 relayed、3 estimated、4 model_says；5 是落账时由缺席翻译出来的，不手填。</td></tr>
+      <tr><td>Absent</td><td>“没量到”的显式写法：<span class="mono">Absent=true, Basis=0, N=0</span>，并写 <span class="mono">Why</span>；“没量到”不是 0。</td></tr>
+      <tr><td>原子拒收</td><td>任一格不自洽 ⇒ 整发拒收、两侧都不写、拒收另计一格。</td></tr>
+      <tr><td>哈希链</td><td>每条记录带前序哈希；<span class="mono">verify</span> 逐条比对原像；tamper-evident，但无签名时不是不可伪造。</td></tr>
+      <tr><td>三态</td><td>自洽 / 不符 / 核不了；缺尾不许读成自洽。</td></tr>
+      <tr><td>拒收归因</td><td>能机核地指名“哪一格拦的”；#48 当前 5/8。</td></tr>
+      <tr><td>G1</td><td>字符串格与一批裸整数格没有“缺席”写法；#66 只修了 <span class="mono">Cuts</span> 一族。</td></tr>
+      <tr><td>#48 / #66</td><td>两个验收探针编号：#48 验拒收能否指名格位（当前 5/8）；#66 验“没量到”是否被写成 0（只修了 <span class="mono">Cuts</span> 一族）。</td></tr>
+      <tr><td><span class="mono">declare_reader</span></td><td>内核的工具之一：调用方须声明自己能读哪些格桶；双臂验收中“六桶全 0”被拒收，是严格口径 FAIL 的直接原因。</td></tr>
+      <tr><td><span class="mono">sk-</span></td><td>形如 OpenAI 密钥前缀的敏感串；干净臂要求账本中出现 0 次。</td></tr>
+      <tr><td>双臂盲测</td><td>同一套 8 题分别由纯模型、模型 + 内核作答；结果 8/8 对 6/8，用于证明内核不是能力增强层。</td></tr>
+      <tr><td>唯一 KPI</td><td>闸门拦了几次、拦在哪一格、拒的是哪一路；当前计数半边已修，点名半边未修。</td></tr>
+      <tr><td>MCP</td><td>Model Context Protocol；MCP08 指“缺乏审计与遥测”。</td></tr>
+      <tr><td>审计层不是防线</td><td>内核只记账，不挡提示注入、不做访问控制、不替代 WAF/网关。</td></tr>
+      <tr><td>TAM / SAM / SOM</td><td>总可寻址市场 / 可服务市场 / 三年可获取市场；本报告 SAM 为证据/审计子层，SOM 为上限。</td></tr>
+      <tr><td>ARPU</td><td>每账户年收入；本报告建议 1.2–3 万美元。</td></tr>
+      <tr><td>ACV</td><td>年度合同价值；与 ARPU 在单产品场景下近似。</td></tr>
+      <tr><td>LOI</td><td>意向书；不是合同，但能证明预算与决策人存在。</td></tr>
+      <tr><td>设计伙伴</td><td>愿意在早期共同定义产品、提供真实场景与反馈的客户；通常给折扣或免费试点。</td></tr>
+      <tr><td>干净臂</td><td>外部调用方在不背判据的情况下接入，账上出现 ≥1 次可指名拒收、链自洽、无 <span class="mono">sk-</span>、调用方模型代码 0 改动。</td></tr>
+      <tr><td>坏臂 / 对照</td><td>故意做坏的一发，用来证明闸门会红；全绿之前必须先证明尺子会红。</td></tr>
+      <tr><td>收口</td><td>一发完整往来落账并给出三态结论；计价单位。</td></tr>
+      <tr><td>冻结 C</td><td>停止产品/销售叙事，保留开源、报告、判据与证据 corpus，作为研究资产。</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ================= APPENDIX E ================= -->
+<section class="chapter appendix" id="appE">
+  <div class="chap-kicker">Appendix E</div>
+  <h1><span class="num">E</span>对外材料草稿</h1>
+
+  <p class="small">
+    以下草稿用于 Phase 0 的对外沟通。它刻意先写边界，再写价值；不要把边界删掉，否则会吸引错误买方，增加无效 POC。
+  </p>
+
+  <h2>E.1 30 秒版本</h2>
+  <div class="callout">
+    <p><b>agentkernel 是一颗给 Agent 记账的闸门。</b>它把一次调用拆成 49 格，逐格要求“值 + 出处”；说不清谁算的，整发拒收。
+    它不挡攻击、不做合规认证、不让模型更聪明；它只保证一件事：出了事，你能拿出“当时到底记了什么、哪一格被拦”的账。
+    目标是开源版 30 分钟接上；这一点仍在找第一个非作者真人验证。私有化版在 VPC 内跑。</p>
+  </div>
+
+  <h2>E.2 3 分钟版本</h2>
+  <p>
+    “多代理系统最危险的不是模型答错，而是上游一个没依据的数字被下游当证据写进结论。
+    我们的做法是给每一句话上税：一次调用拆成 49 格，每格必须说清‘值是多少、谁算的、怎么知道的’；
+    任何一格不自洽，整发拒收，坏数据一条都不写。账本用哈希链串起来，可以逐条验。
+    它不跑代码、不联网、不调度、不执行工具；它只做记账与拒收。
+    它也不是防线：不挡提示注入，不做访问控制；如果你要阻断，应该用网关/WAF。
+    我们今天能证明的是：80 根慢闸跑过、外部 6 发/294 条账、一次 session 当面拒了 4 次不实装配。
+    我们还没证明的是：一个没参与过项目的人能在 30 分钟内接上——这是接下来 60 天要跑的外部干净臂。
+    如果你正在做多代理生产系统、又背了合规或外包交付责任，愿意用 30 分钟做一次干净臂，欢迎联系我们；不需要你付费，也不需要你改模型代码。”
+  </p>
+
+  <h2>E.3 边界声明（必须放在第一屏）</h2>
+  <table class="tbl">
+    <thead><tr><th style="width:24%">问题</th><th>回答</th></tr></thead>
+    <tbody>
+      <tr><td>能挡提示注入吗？</td><td><b>不能。</b>审计层不是防线；需要阻断请用网关/WAF/DLP。</td></tr>
+      <tr><td>能保证合规吗？</td><td><b>不能。</b>只提供技术附件；合规结论需要法律/合规团队判断。</td></tr>
+      <tr><td>能让 Agent 更准吗？</td><td><b>不能。</b>盲测 8/8 vs 6/8；它管报账，不管答题。</td></tr>
+      <tr><td>能跨进程记忆吗？</td><td><b>不能。</b>账上只有数与指纹，没有原文；跨发一致性不在范围。</td></tr>
+      <tr><td>能并发多写吗？</td><td><b>不能。</b>单实例、串行是 v1 现状。</td></tr>
+    </tbody>
+  </table>
+
+  <h2>E.4 FAQ</h2>
+  <p><b>Q1：和 Langfuse/Datadog 有什么区别？</b><br>
+  A：它们记录“发生了什么”，我们判断“这句话能不能收、哪一格拦的”。可以两个都用，用 trace ID 关联。</p>
+
+  <p><b>Q2：为什么要 49 格，字段太多？</b><br>
+  A：49 格不是字段堆，而是把一句人话拆成可反驳的几件事：谁说的、怎么知道的、量到了没有、出处是什么。字段多是为了让“说不清”有地方暴露。</p>
+
+  <p><b>Q3：哈希链能证明内容是真的吗？</b><br>
+  A：不能。它只能证明记录没被改过；内容真假要靠出处与对质物。没有签名时，它也不是不可伪造。</p>
+
+  <p><b>Q4：为什么现在不卖？</b><br>
+  A：因为“可复核”必须由外部调用方证明。真人干净臂、拒收归因 8/8、交付凭据对齐，这三件没过之前，卖它是不负责任的。</p>
+
+  <p><b>Q5：什么时候能买？</b><br>
+  A：Gate 1–3 过后开放私有化许可；现在可以申请设计伙伴或干净臂，不收费。</p>
+
+  <h2>E.5 行动号召（CTA）</h2>
+  <div class="callout">
+    <div class="t">我们想要的不是“买”，是“试”</div>
+    <p>如果你有一个多代理生产系统，愿意让一个工程师用 30 分钟接一次干净臂：
+    我们会提供接入脚本、49 格表、一发故意做坏的数据；你只需要看它是否整发拒收、是否能指名格位。
+    不需要付费，不需要改模型代码，不需要装新依赖。失败也算结果——我们会把失败写进公开记录。</p>
+  </div>
+
+  <h2>E.6 不要说的话</h2>
+  <ul>
+    <li>“更可信的 Agent”“让 Agent 不幻觉”“AI 治理平台”。</li>
+    <li>“能挡提示注入”“能保证合规”“符合 EU AI Act”。</li>
+    <li>“零误报”“所有格都能表达没量到”“每次都能机核格位”。</li>
+    <li>“已经有客户买单”“市场验证过”（在未找到付款证据前）。</li>
+  </ul>
+
+  <div class="endnote">
+    对外材料草稿为作者撰写（C）；发布前需按第 6 章证据状态复核，删除任何超出 A/B 级证据的表述。
+  </div>
+</section>
+
+<!-- ================= BACK COVER ================= -->
+<section class="chapter" style="page-break-before:always">
+  <div style="box-sizing:border-box; height:255mm; display:flex; flex-direction:column; justify-content:center; border-top:3px solid #0b1f33; border-bottom:3px solid #0b1f33; padding:18mm 10mm;">
+    <div class="chap-kicker" style="text-align:center">End of Report</div>
+    <div style="font-size:24pt; line-height:1.5; color:#0b1f33; font-weight:700; text-align:center; margin:8mm 0;">
+      先让它被外部复核，<br>再让它被市场购买。
+    </div>
+    <div style="font-size:10pt; color:#5b6b7f; text-align:center; line-height:1.9;">
+      agentkernel 市场进入研究 · 2026-10-19<br>
+      外部资料访问日 2026-10-19 · 内部证据截至 2026-10-19 22:00<br>
+      本报告不是投资建议、法律意见、合规认证或销售材料
+    </div>
+    <div style="margin-top:18mm; font-size:8.5pt; color:#94a3b8; text-align:center;">
+      证据分级 A / B / C / D / X · X 不塌成 0 · 未找到付款证据不写成 0 个买家
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

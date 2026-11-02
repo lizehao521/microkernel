@@ -1,0 +1,48 @@
+{
+ "hist_note": "本会话 3 发（数据/会话-web-o2tihg.jsonl）",
+ "history": [
+  "第 1 发 · 跑了 13/13 步 · findings 10 · 未决 2 · 指纹 34bad706594c08f2 · 结束=跑完问",
+  "第 2 发 · 跑了 13/13 步 · findings 13 · 未决 1 · 指纹 34bad706594c08f2 · 结束=跑完问",
+  "第 3 发 · 跑了 13/13 步 · findings 10 · 未决 2 · 指纹 34bad706594c08f2 · 结束=跑完问"
+ ],
+ "how": "脚本设 #code/#q/#stack 的值后真调 #go.click()（与点按钮同一条 submit 路径）；不是键盘输入",
+ "turns": [
+  {
+   "band_head": "第 1 发跑完： 问题路由=优化（优化 命中 1 个词（最早在第 6 个字）；词表共 24 个词，按命中个数投票，这是关键词规则不是模型理解）｜先看上面挪到最前的那几处建议（都是 ",
+   "done": true,
+   "first_cards": [
+    "criticalhandle-dropped-errorsestimated",
+    "minorreplace-print-with-loggerestimated",
+    "criticaldup-name-same-scopemeasured L9-24 load"
+   ],
+   "q": "这段能怎么优化？",
+   "step4": "go:ast(long-function,dup-name-same-scope,dup-func-name,ignore-error,empty-err-block,print-as-log,deep-nesting,unused-import(maybe)) +通用(todo,hardcoded"
+  },
+  {
+   "band_head": "第 2 发跑完： 问题路由=调试（调试 命中 3 个词（最早在第 1 个字）；词表共 24 个词，按命中个数投票，这是关键词规则不是模型理解）｜栈帧挪到最前（帧→行号一律 esti",
+   "done": true,
+   "first_cards": [
+    "majorerror-headermeasured",
+    "criticalstack-frameestimated L16-16 /tmp/demo/",
+    "criticalstack-frameestimated L31-31 /tmp/demo/"
+   ],
+   "q": "为什么偶尔返回空？",
+   "step4": "go:ast(long-function,dup-name-same-scope,dup-func-name,ignore-error,empty-err-block,print-as-log,deep-nesting,unused-import(maybe)) +通用(todo,hardcoded"
+  },
+  {
+   "band_head": "第 3 发跑完： 问题路由=解释（解释 命中 2 个词（最早在第 1 个字）；词表共 24 个词，按命中个数投票，这是关键词规则不是模型理解）｜按解析出的结构说：判为 go、函数 ",
+   "done": true,
+   "first_cards": [
+    "criticaldup-name-same-scopemeasured L9-24 load",
+    "criticalignore-errormeasured L10-10",
+    "minorprint-as-logmeasured L17-17"
+   ],
+   "q": "解释一下这段在干什么",
+   "step4": "go:ast(long-function,dup-name-same-scope,dup-func-name,ignore-error,empty-err-block,print-as-log,deep-nesting,unused-import(maybe)) +通用(todo,hardcoded"
+  }
+ ],
+ "更正_1": "这份里每发的 step4 字段抓错了对象：选择器用的是 `textContent.indexOf('analyze')`，而第 ③ 步的名字是 select-analyzers，也含 'analyze' ⇒ 抓到的是第 ③ 步的文本。下面 step4_真名 那一项是按 .tool 文本精确等于 'analyze' 重取的（第 3 发）。原文留着不删 —— 抓错这件事本身也是读数。",
+ "step4_真名": "findings 9 条（measured 7 / estimated 2）；栈帧 0 个、落进贴入范围 0 个；问题路由=解释（解释 命中 2 个词（最早在第 1 个字）；词表共 24 个词，按命中个数投票，这是关键词规则不是模型理解）",
+ "band_第3发_全文": "第 3 发跑完： 问题路由=解释（解释 命中 2 个词（最早在第 1 个字）；词表共 24 个词，按命中个数投票，这是关键词规则不是模型理解）｜按解析出的结构说：判为 go、函数 ",
+ "结论": "三种问题三张不同的第一卡：优化⇒handle-dropped-errors/replace-print-with-logger 在前；调试(+贴栈)⇒error-header/stack-frame L16/L31 在前；解释⇒保持原序（解释不重排，只换结论带）。三发都是 13/13 步、结束=跑完、同一指纹 34bad706594c08f2、findings 10/13/10。"
+}

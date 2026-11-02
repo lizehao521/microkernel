@@ -1,0 +1,101 @@
+{
+ "surface": "agenthub",
+ "shape": "multi-step",
+ "task": "依次算 1+1、2+2、3+3、4+4、5+5、6+6、7+7、8+8。每一步都单独调用一次 calc.eval，不要合并成一个算式；最后把八个结果列出来。",
+ "max_steps": 10,
+ "endpoint": "http://121.36.29.96:8787/v1/chat/completions",
+ "model": "MiniMax-M2.5",
+ "key_masked": "sk-rel...IbWA",
+ "exe_sha256": "cbad58def08cd6ea77b36d19c9f72a8209ca8c60dfa6fa977d88b20b5114eeed",
+ "elapsed_ms": 2806,
+ "health": {
+  "allow_exec": false,
+  "allow_write": false,
+  "memory": 0,
+  "model_endpoint": "http://121.36.29.96:8787/v1/chat/completions",
+  "next_turn": 1,
+  "ok": true,
+  "tools": 12
+ },
+ "events": [
+  {
+   "event": "meta",
+   "data": {
+    "max_steps": 10,
+    "memory_msgs": 1,
+    "plan": "模型端点→本机规则",
+    "tools": 12,
+    "turn": 1
+   }
+  },
+  {
+   "event": "plan",
+   "data": {
+    "ask": "模型端点",
+    "step": 1
+   }
+  },
+  {
+   "event": "plan",
+   "data": {
+    "kind": "done",
+    "plan": "模型端点",
+    "step": 1,
+    "why": "端点用自然语言收口（不是 JSON 动作）"
+   }
+  },
+  {
+   "event": "answer_delta",
+   "data": {
+    "text": "这一发没有任何成功读数",
+    "turn": 1
+   }
+  },
+  {
+   "event": "done",
+   "data": {
+    "events": 4,
+    "turn": 1
+   }
+  }
+ ],
+ "result": {
+  "turn": 1,
+  "answer": "这一发没有任何成功读数",
+  "findings": [
+   {
+    "text": "这一发第 1 轮：走 0 步（成功 0、失败 0、门口挡 0），重试多花了 0 次尝试、等 0 ms，降级 0 次",
+    "tier": "measured",
+    "step": 1
+   },
+   {
+    "text": "这轮会话共 1 条记忆；工具调用统计：；最后一句用户话：依次算 1+1、2+2、3+3、4+4、5+5、6+6、7+7、8+8。每一步都单独调用一次 calc.eval，不要合…；窗口外挤掉 0 条（本机摘要，不是模型写的）",
+    "tier": "estimated",
+    "why": "本机摘要规则写的，不是模型写的"
+   },
+   {
+    "text": "上下文：这轮一共 1 条记忆，喂进去 1 条 / 78 码元，窗口外挤掉 0 条",
+    "tier": "measured"
+   }
+  ],
+  "steps": null,
+  "stop": "跑完",
+  "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+  "plan": "模型端点",
+  "retries": 0,
+  "waited_ms": 0,
+  "degrades": 0,
+  "mix": {
+   "estimated": 1,
+   "measured": 2,
+   "total": 3
+  },
+  "mix_ok": true,
+  "sane": true,
+  "sane_why": "整列 0 步 / 3 条结论自洽（判据 13 条全过）",
+  "ms": 2782,
+  "memory_msgs": 1,
+  "dropped_from_window": 0,
+  "context_chars_used": 78
+ }
+}

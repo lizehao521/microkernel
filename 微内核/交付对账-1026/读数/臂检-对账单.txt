@@ -1,0 +1,37 @@
+臂检-对账单 · 2026-10-26 01:52:18
+临时根目录 C:\Users\Admin\AppData\Local\Temp\duizhang-arms-zxo1spal
+工具 C:\Users\Admin\Desktop\微内核\交付对账-1026\工具\对账单.py
+
+好交付 干净对照：rc=0 status=ACCEPTED claims=8 evidence=—
+真端点 干净对照：rc=3 status=NOT-ACCEPTED-UNVERIFIED claims=9 evidence=agentd:GREEN,journal:GREEN,pgagent:ABSENT
+
+A1    给 calc.py 末尾追加一行注释                     PASS  rc=2 status=NOT-ACCEPTED-MISMATCH
+A2    把第 2 行 if not xs: 换成同长度的 if not ys:    PASS  rc=2 status=NOT-ACCEPTED-MISMATCH
+A3    删掉测试日志                                 PASS  rc=3 status=NOT-ACCEPTED-UNVERIFIED
+A4    把日志末行 exit_code=0 改成 exit_code=2       PASS  rc=2 status=NOT-ACCEPTED-MISMATCH
+A5    把声称已删的临时文件放回去                          PASS  rc=2 status=NOT-ACCEPTED-MISMATCH
+A6    声明里加一条本件不认识的核对类型                       PASS  rc=3 status=NOT-ACCEPTED-UNVERIFIED
+A7    把 pgagent 自报的 trace_sane 改成 false      PASS  rc=2 status=NOT-ACCEPTED-MISMATCH
+A8    事件层：给已收口的那一发补一条不带理由的拒绝                 PASS  rc=2 status=NOT-ACCEPTED-MISMATCH
+A9    账本第 2 条改一个字的 claim（seal 应该对不上）         PASS  rc=2 status=NOT-ACCEPTED-MISMATCH
+A10   账本第 2 条改 prev_hash（seal 与链接都该断）        PASS  rc=2 status=NOT-ACCEPTED-MISMATCH
+A11   账本第 2 条 seq 重号（seal 与序号都该断）            PASS  rc=2 status=NOT-ACCEPTED-MISMATCH
+A12   账本删掉第 3 条（条数、链接、序号、49 格分组都该断）          PASS  rc=2 status=NOT-ACCEPTED-MISMATCH
+A13   把钉住的证据指纹改错一位                           PASS  rc=2 status=NOT-ACCEPTED-MISMATCH
+A14   把声明清空（没有可核的东西不能算过）                     PASS  rc=3 status=NOT-ACCEPTED-UNVERIFIED
+A15   C1 删掉 evidence_class（缺省按自报）            PASS  rc=3 status=NOT-ACCEPTED-UNVERIFIED
+A16   C2 的 value 改成空串（空串会恒真）                 PASS  rc=3 status=NOT-ACCEPTED-UNVERIFIED
+A17   声明里加一个本件不认识的证据源                        PASS  rc=3 status=NOT-ACCEPTED-UNVERIFIED
+A18   日志 exit_code=0 之后追一段崩溃栈                PASS  rc=3 status=NOT-ACCEPTED-UNVERIFIED
+A19   agentd 事件文件清空（0 条事件不是绿）                PASS  rc=3 status=NOT-ACCEPTED-UNVERIFIED
+A20   内核账本清空（0 条账不是绿）                        PASS  rc=3 status=NOT-ACCEPTED-UNVERIFIED
+A21   声明不是合法 JSON（本件自己报错 rc=1）               PASS  rc=1（本件自己报错，无回执）
+A22   两条声明同号（编号有歧义，rc=1）                     PASS  rc=1（本件自己报错，无回执）
+A23   把 agentd 钉住的指纹改错                       PASS  rc=2 status=NOT-ACCEPTED-MISMATCH
+A24   把内核账本钉住的指纹改错                           PASS  rc=2 status=NOT-ACCEPTED-MISMATCH
+A-neg 假期望对照：干净的树却期望 C1 红                     FAIL-AS-EXPECTED
+      期望(故意写错) claims=C1:MISMATCH
+      实得            (empty)
+
+summary: arms=24 pass=24 fail=0 neg_control_biting=True
+conclusion: ALL-ARMS-BITE

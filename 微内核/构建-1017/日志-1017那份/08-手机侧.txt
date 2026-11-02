@@ -1,0 +1,33 @@
+=== check-mobile-environment（原样） ===
+Mobile Use environment (win32/x64)
+
+NEEDS-SETUP: Android Emulator
+  ✗ Android SDK root: C:\Users\Admin\AppData\Local\Android\Sdk is missing or unusable
+  ✗ Android Platform-Tools adb: C:\Users\Admin\AppData\Local\Android\Sdk\platform-tools\adb.exe is missing or unusable
+  ✗ Android Emulator: C:\Users\Admin\AppData\Local\Android\Sdk\emulator\emulator.exe is missing or unusable
+  ✗ Emulator controller proto: C:\Users\Admin\AppData\Local\Android\Sdk\emulator\lib\emulator_controller.proto is missing or unusable
+  ✗ Android Build-Tools aapt: C:\Users\Admin\AppData\Local\Android\Sdk\build-tools\<version>\aapt.exe
+  ✗ Android Virtual Device: Cannot list AVDs until Android Emulator is installed
+  ✗ JDK 17 or newer: spawnSync C:\Program Files\Android\Android Studio\jbr\bin\java.exe ENOENT
+
+NEEDS-SETUP: HarmonyOS DevEco Previewer and HDC
+  ✗ DevEco Studio home: C:\Program Files\Huawei\DevEco Studio is missing or unusable
+  ✗ DevEco Hvigor wrapper: C:\Program Files\Huawei\DevEco Studio\tools\hvigor\bin\hvigorw.bat is missing or unusable
+  ✗ DevEco bundled Node.js: C:\Program Files\Huawei\DevEco Studio\tools\node\node.exe is missing or unusable
+  ✗ OpenHarmony SDK: C:\Program Files\Huawei\DevEco Studio\sdk\default\openharmony is missing or unusable
+  ✗ DevEco Previewer binary: C:\Program Files\Huawei\DevEco Studio\sdk\default\openharmony\previewer\common\bin\Previewer.exe is missing or unusable
+  ✗ HMS Previewer runtime: C:\Program Files\Huawei\DevEco Studio\sdk\default\hms\previewer is missing or unusable
+  ✓ Windows command processor: C:\Windows\system32\cmd.exe
+  ! HarmonyOS Device Connector: No HDC executable found in HarmonyOS/OpenHarmony SDK toolchains or PATH; Previewer remains available
+  ✗ Previewer phone configuration: No explicit, project, or DevEco fallback phone configuration was found
+  ✓ Host runtime mode: DevEco Previewer plus optional HDC targets
+
+UNSUPPORTED: iOS Simulator
+  ✗ macOS host: Unsupported host: win32
+
+=== list_targets（原样） ===
+{"schemaVersion":1,"ok":true,"command":"list_targets","data":[]}
+
+=== 工作区移动工程入口标记搜索 ===
+0
+（上一行为命中数）

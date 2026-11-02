@@ -1,0 +1,69 @@
+CALLS: A=60 B=10 total=70
+
+input:call                     total= 70 absent=  0 empty=  0 filled= 70  filled>=70
+input:parts                    total= 70 absent=  0 empty=  0 filled= 70  filled>=70
+input:part_totals              total= 70 absent=  0 empty=  0 filled= 70  filled>=70
+input:content_bytes            total= 70 absent=  0 empty=  0 filled= 70  filled>=70
+input:tokens                   total= 70 absent= 10 empty=  0 filled= 60  filled>=60
+input:call_bytes_ceiling       total= 70 absent=  0 empty=  0 filled= 70  filled>=70
+input:transport_slack_pct      total= 70 absent=  0 empty=  0 filled= 70  filled>=70
+input:content_ceiling          total= 70 absent=  0 empty=  0 filled= 70  filled>=70
+input:effective_ceiling        total= 70 absent=  0 empty=  0 filled= 70  filled>=70
+input:clamp_rounds             total= 70 absent=  0 empty=  0 filled= 70  filled>=70
+input:leftover_pct             total= 70 absent=  0 empty=  0 filled= 70  filled>=70
+input:fixed_overhead           total= 70 absent= 10 empty=  0 filled= 60  filled>=60
+input:shares                   total= 70 absent=  0 empty=  0 filled= 70  filled>=70
+input:notice_sent              total= 70 absent=  0 empty=  0 filled= 70  filled>=70
+input:notice_trimmed           total= 70 absent=  0 empty=  0 filled= 70  filled>=70
+input:notice_why               total= 70 absent=  0 empty=  0 filled= 70  filled>=70
+input:notice_text              total= 70 absent=  0 empty= 58 filled= 12  filled>=12
+input:folded                   total= 70 absent=  0 empty= 70 filled=  0  NEVER-FILLED
+     -> subtype=EMPTY(为空,空数组/空串)
+     -> A.absentLines(first5)=[] A.emptyLines(first5)=[19,68,117,166,215]
+     -> B.absentLines(first5)=[] B.emptyLines(first5)=[19,68,117,166,215]
+     -> A.count(absent+empty)=60/60  B.count=10/10
+input:clipped                  total= 70 absent=  0 empty= 70 filled=  0  NEVER-FILLED
+     -> subtype=EMPTY(为空,空数组/空串)
+     -> A.absentLines(first5)=[] A.emptyLines(first5)=[20,69,118,167,216]
+     -> B.absentLines(first5)=[] B.emptyLines(first5)=[20,69,118,167,216]
+     -> A.count(absent+empty)=60/60  B.count=10/10
+input:dropped                  total= 70 absent=  0 empty= 64 filled=  6  filled>=6
+output:call                    total= 70 absent=  0 empty=  0 filled= 70  filled>=70
+output:streaming               total= 70 absent=  0 empty=  0 filled= 70  filled>=70
+output:finish                  total= 70 absent=  0 empty= 36 filled= 34  filled>=34
+output:finish_said             total= 70 absent=  0 empty=  0 filled= 70  filled>=70
+output:endpoint_model          total= 70 absent=  0 empty= 47 filled= 23  filled>=23
+output:endpoint_model_said     total= 70 absent=  0 empty=  0 filled= 70  filled>=70
+output:wire_format             total= 70 absent=  0 empty= 36 filled= 34  filled>=34
+output:wire_format_said        total= 70 absent=  0 empty=  0 filled= 70  filled>=70
+output:model_says_bytes        total= 70 absent=  0 empty=  0 filled= 70  filled>=70
+output:model_says_kept         total= 70 absent=  0 empty=  0 filled= 70  filled>=70
+output:model_says_clipped      total= 70 absent=  0 empty=  0 filled= 70  filled>=70
+output:model_says_sha256       total= 70 absent=  0 empty=  0 filled= 70  filled>=70
+output:usage_in                total= 70 absent= 36 empty=  0 filled= 34  filled>=34
+output:usage_out               total= 70 absent= 36 empty=  0 filled= 34  filled>=34
+output:wire_bytes_out          total= 70 absent= 34 empty=  0 filled= 36  filled>=36
+output:wire_bytes_in           total= 70 absent= 34 empty=  0 filled= 36  filled>=36
+output:chunks                  total= 70 absent= 55 empty=  0 filled= 15  filled>=15
+output:first_byte_ms           total= 70 absent= 55 empty=  0 filled= 15  filled>=15
+output:max_gap_ms              total= 70 absent= 55 empty=  0 filled= 15  filled>=15
+output:tool_calls              total= 70 absent=  0 empty=  0 filled= 70  filled>=70
+output:malformed_actions       total= 70 absent=  0 empty=  0 filled= 70  filled>=70
+output:malformed_streak        total= 70 absent=  0 empty=  0 filled= 70  filled>=70
+output:fail_kind               total= 70 absent=  0 empty= 69 filled=  1  filled>=1
+output:fail_detail             total= 70 absent=  0 empty= 69 filled=  1  filled>=1
+output:fail_status             total= 70 absent= 70 empty=  0 filled=  0  NEVER-FILLED
+     -> subtype=ABSENT(缺席,basis=5)
+     -> A.absentLines(first5)=[46,95,144,193,242] A.emptyLines(first5)=[]
+     -> B.absentLines(first5)=[46,95,144,193,242] B.emptyLines(first5)=[]
+     -> A.count(absent+empty)=60/60  B.count=10/10
+output:retry_after_ms          total= 70 absent= 70 empty=  0 filled=  0  NEVER-FILLED
+     -> subtype=ABSENT(缺席,basis=5)
+     -> A.absentLines(first5)=[47,96,145,194,243] A.emptyLines(first5)=[]
+     -> B.absentLines(first5)=[47,96,145,194,243] B.emptyLines(first5)=[]
+     -> A.count(absent+empty)=60/60  B.count=10/10
+output:downgrade               total= 70 absent=  0 empty=  0 filled= 70  filled>=70
+output:sent                    total= 70 absent=  0 empty=  0 filled= 70  filled>=70
+output:cost_countable          total= 70 absent=  0 empty=  0 filled= 70  filled>=70
+
+NEVER-FILLED CELLS (4): input:folded, input:clipped, output:fail_status, output:retry_after_ms

@@ -1,0 +1,1025 @@
+/* 微核台 v2 · 单文件应用逻辑：只读证据、确定性对话、记忆、收/退与回执 */
+'use strict';
+
+const S = {
+  data: null,
+  selected: null,
+  filter: 'all',
+  view: 'operate',
+  fatal: '',
+  visibleIds: [],
+  drawer: { open: false, tab: null, claim: null },
+  dec: { action: null, deliveryId: null, busy: false },
+  chatBusy: false,
+  kernelTimer: null,
+  lastFocused: null,
+  chatEmptyHTML: '',
+  lastDetailId: null,
+};
+
+const $ = (sel, root = document) => root.querySelector(sel);
+const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+const h = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const nl2br = (v) => h(v).replace(/\n/g, '<br>');
+const fmt = (n) => (n === null || n === undefined || Number.isNaN(Number(n)) ? '—' : String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','));
+const shortHash = (s, n = 12) => (s ? String(s).slice(0, n) + '…' : '—');
+
+const VERDICT = {
+  ACCEPTED: { cls: 'ok', short: '可收', long: '全部相符，可收' },
+  'NOT-ACCEPTED-MISMATCH': { cls: 'bad', short: '不能收', long: '不能收 · 有不符' },
+  'NOT-ACCEPTED-UNVERIFIED': { cls: 'warn', short: '核不了', long: '核不了 · 证据缺席' },
+};
+const CLAIM_STATE = {
+  MATCH: { cls: 'ok', label: '相符' },
+  MISMATCH: { cls: 'bad', label: '不符' },
+  ABSENT: { cls: 'absent', label: '核不了' },
+};
+const TIER = {
+  measured: { cls: 'measured', label: '有依据' },
+  absent: { cls: 'absent', label: '核不了' },
+  refused: { cls: 'refused', label: '答不了' },
+};
+const ACTION = {
+  accept: { label: '收下', cls: 'ok' },
+  reject: { label: '退回', cls: 'bad' },
+  hold: { label: '挂起', cls: 'warn' },
+};
+const EV_LABEL = {
+  'pgagent-13-step': 'pgagent 13 步', 'agentd-events': 'agentd 事件', 'kernel-49-cells': '内核 49 格',
+  'delivery-claims': '交付声明', 'raw-sse': 'pgagent 原始 SSE', 'raw-source': '源文件',
+};
+const TAB_LABEL = { claims: '声明', steps: '13 步轨迹', events: '事件', cells: '49 格', source: '来源' };
+
+async function api(path, opts = {}) {
+  const init = Object.assign({}, opts);
+  if (init.body) {
+    init.headers = Object.assign({ 'Content-Type': 'application/json' }, init.headers || {});
+  }
+  const res = await fetch(path, init);
+  const text = await res.text();
+  let data;
+  try { data = JSON.parse(text); } catch (e) { throw new Error('本地服务返回的不是 JSON（HTTP ' + res.status + '）'); }
+  if (!res.ok) {
+    const err = new Error(data.why || data.error || ('HTTP ' + res.status));
+    err.payload = data;
+    err.status = res.status;
+    throw err;
+  }
+  return data;
+}
+
+function memory() { return (S.data && S.data.memory) || {}; }
+function deliveries() { return (S.data && S.data.evidence && S.data.evidence.deliveries) || []; }
+function bundles() { return (S.data && S.data.bundles) || {}; }
+function deliveryById(id) { return deliveries().find((d) => d.id === id) || null; }
+function decisionOf(id) { return (memory().decisions || []).find((x) => x.delivery_id === id) || null; }
+function currentDelivery() { return deliveryById(S.selected) || deliveries()[0] || null; }
+function verdict(v) { return VERDICT[v] || { cls: 'unk', short: v || '—', long: v || '—' }; }
+function claimState(v) { return CLAIM_STATE[v] || { cls: 'unk', label: v || '—' }; }
+
+/* ---------------- boot ---------------- */
+
+async function boot() {
+  S.chatEmptyHTML = $('#chatEmpty').outerHTML;
+  bindGlobal();
+  setView('operate');
+  try {
+    S.data = await api('/api/state');
+    S.selected = sortedDeliveries()[0] || null;
+    renderAll();
+    loadChatHistory();
+    if (S.data.kernel.state === 'running') pollKernel();
+  } catch (e) {
+    showFatal(e.message || String(e));
+  }
+}
+
+function showFatal(why) {
+  S.fatal = why;
+  $('#fatalHost').innerHTML = '<div class="fatal-banner"><b>本地服务没有回应。</b> ' + h(why) +
+    '<br>请用 <span class="mono">启动-微核台.cmd</span> 打开；直接双击 HTML 只能看到壳，读不到证据。</div>';
+  $('#queueList').innerHTML = '<div class="queue-loading">读不到证据：' + h(why) + '</div>';
+  $('#detailWrap').innerHTML = '<div class="state-box error"><div class="state-icon">!</div><h3>读不到本机证据</h3><p>' +
+    h(why) + '</p><p class="mono" style="font-size:10px">先跑 工具-本地服务.py --no-open，再用浏览器打开它打印的地址。</p>' +
+    '<button class="btn" data-reload style="margin-top:6px">重试</button></div>';
+  $('#chatInput').disabled = true;
+  $('#chatSend').disabled = true;
+  $('#chatInput').placeholder = '本地服务未连接';
+}
+
+/* ---------------- shell ---------------- */
+
+function kernelBits() {
+  const k = (S.data && S.data.kernel) || { state: 'idle' };
+  if (k.state === 'done') {
+    const red = Number(k.rc) !== 0 || Number(k.checks_bad) > 0;
+    return {
+      cls: red ? 'is-error' : '', dot: red ? 'bad' : 'ok',
+      label: red ? ('kcheck 红 · ✗' + fmt(k.checks_bad)) : ('kcheck ✓' + fmt(k.checks_ok)),
+      status: red ? ('rc=' + fmt(k.rc) + ' · ✗' + fmt(k.checks_bad)) : ('✓' + fmt(k.checks_ok) + ' / ✗' + fmt(k.checks_bad) + ' / —' + fmt(k.unknown_lines)),
+      text: red ? ('kcheck 红：rc=' + fmt(k.rc) + '，✗ ' + fmt(k.checks_bad) + ' 条；读数在 ' + k.readout) : ('kcheck 跑完：rc=0，✓ ' + fmt(k.checks_ok) + ' 条、✗ ' + fmt(k.checks_bad) + ' 条、— ' + fmt(k.unknown_lines) + ' 条'),
+    };
+  }
+  if (k.state === 'running') return { cls: 'is-running', dot: 'run', label: '内核快闸 跑着', status: '跑着 · 还没有结果', text: '内核快闸正在跑；现在没有结果，不写成通过。' };
+  if (k.state === 'error') return { cls: 'is-error', dot: 'bad', label: '内核快闸 核不了', status: '核不了', text: '内核快闸没跑成：' + (k.why || '原因未记录') };
+  return { cls: 'is-idle', dot: 'off', label: '内核快闸 没开始', status: '没开始', text: '内核快闸还没开始；读数不可用。' };
+}
+
+function renderShell() {
+  if (!S.data) return;
+  const srv = S.data.server;
+  const ev = S.data.evidence;
+  const mem = memory();
+  const bh = (srv.html_sha256 || '').slice(0, 8);
+  $('#titleServer').textContent = '127.0.0.1:' + srv.port;
+  $('#titleBuild').textContent = 'build ' + bh;
+  $('#footBuild').textContent = 'build ' + bh;
+  $('#statusBuild').textContent = 'build ' + bh;
+  $('#statusBoot').textContent = 'boot ' + srv.boot_id;
+  $('#navQueueCount').textContent = fmt(ev.stats.deliveries);
+  $('#navChatCount').textContent = fmt((mem.dialogue || []).length);
+  $('#navMemoryCount').textContent = fmt((mem.decisions || []).length);
+  const pg = bundles().pgagent, ag = bundles().agentd, kn = bundles().kernel;
+  $('#srcPg').textContent = pg ? (pg.counts.steps + ' 步 · 真跑') : '—';
+  $('#srcAgentd').textContent = ag ? (ag.counts.events + ' 条 · ' + ag.counts.runs + ' run') : '—';
+  $('#srcKernel').textContent = kn ? (kn.block.rows + ' 格 · 样例') : '—';
+  $('#statusClaims').textContent = ev.stats.claims + ' 条声明 · ' + ev.stats.counts.MATCH + ' 相符 / ' + ev.stats.counts.MISMATCH + ' 不符 / ' + ev.stats.counts.ABSENT + ' 核不了';
+  const kb = kernelBits();
+  const pill = $('#kernelPill');
+  pill.className = 'kernel-pill ' + kb.cls;
+  $('#kernelText').textContent = kb.label;
+  $('#srcGate').textContent = kb.status;
+  $('#srcDotGate').className = 'dot ' + kb.dot;
+  const sk = $('#statusKernel');
+  sk.className = 'kernel-mini ' + kb.cls;
+  sk.innerHTML = '<i></i>内核快闸 ' + h(kb.status);
+}
+
+function renderAll() {
+  renderShell();
+  renderQueue();
+  renderDetail();
+  renderMemory();
+  renderChatRail();
+}
+
+/* ---------------- queue ---------------- */
+
+const VERDICT_ORDER = { 'NOT-ACCEPTED-MISMATCH': 0, 'NOT-ACCEPTED-UNVERIFIED': 1, ACCEPTED: 2 };
+
+function sortedDeliveries() {
+  return deliveries().slice().sort((a, b) => {
+    const ha = decisionOf(a.id) ? 1 : 0;
+    const hb = decisionOf(b.id) ? 1 : 0;
+    if (ha !== hb) return ha - hb;
+    const oa = VERDICT_ORDER[a.verdict] == null ? 9 : VERDICT_ORDER[a.verdict];
+    const ob = VERDICT_ORDER[b.verdict] == null ? 9 : VERDICT_ORDER[b.verdict];
+    if (oa !== ob) return oa - ob;
+    return a.id.localeCompare(b.id);
+  });
+}
+
+function renderQueue() {
+  if (!S.data) return;
+  const all = deliveries();
+  const counts = { all: all.length, MISMATCH: 0, ABSENT: 0, MATCH: 0 };
+  all.forEach((d) => { const v = d.verdict === 'ACCEPTED' ? 'MATCH' : d.verdict === 'NOT-ACCEPTED-MISMATCH' ? 'MISMATCH' : 'ABSENT'; counts[v] += 1; });
+  $('#queueCount').textContent = fmt(counts.all);
+  $('#qfAll').textContent = fmt(counts.all);
+  $('#qfBad').textContent = fmt(counts.MISMATCH);
+  $('#qfAbsent').textContent = fmt(counts.ABSENT);
+  $('#qfOk').textContent = fmt(counts.MATCH);
+  $$('#queueFilters .qf').forEach((b) => {
+    const on = b.dataset.filter === S.filter;
+    b.classList.toggle('is-on', on);
+    b.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
+  const visible = sortedDeliveries().filter((d) => {
+    if (S.filter === 'all') return true;
+    const v = d.verdict === 'ACCEPTED' ? 'MATCH' : d.verdict === 'NOT-ACCEPTED-MISMATCH' ? 'MISMATCH' : 'ABSENT';
+    return v === S.filter;
+  });
+  S.visibleIds = visible.map((d) => d.id);
+  if (visible.length && !visible.some((d) => d.id === S.selected)) S.selected = visible[0].id;
+  if (!visible.length) {
+    $('#queueList').innerHTML = '<div class="empty-inline">这个筛选下没有交付。<br>切回「全部」看三单。</div>';
+  } else {
+    $('#queueList').innerHTML = visible.map((d) => {
+      const dec = decisionOf(d.id);
+      const v = verdict(d.verdict);
+      const badge = dec
+        ? '<span class="badge ' + (ACTION[dec.action] || {}).cls + '">已' + h(dec.action_label) + '</span>'
+        : '<span class="badge ' + v.cls + '">' + h(v.short) + '</span>';
+      const bars = d.claims.map((c) => '<i class="' + c.verdict + '" title="' + h(c.id + ' ' + c.text + ' · ' + claimState(c.verdict).label) + '"></i>').join('');
+      return '<button class="q-item' + (d.id === S.selected ? ' is-on' : '') + (dec ? ' is-handled' : '') + '" data-id="' + h(d.id) + '" aria-pressed="' + (d.id === S.selected) + '">' +
+        '<div class="q-top"><span class="q-id">' + h(d.id) + '</span>' + badge + '</div>' +
+        '<div class="q-title">' + h(d.title) + '</div>' +
+        '<div class="q-sub">' + h(d.agent) + ' · ' + d.claims.length + ' 条声明</div>' +
+        '<div class="q-bars" aria-hidden="true">' + bars + '</div>' +
+        '<div class="q-foot"><span>' + d.counts.MATCH + ' 相符 · ' + d.counts.MISMATCH + ' 不符 · ' + d.counts.ABSENT + ' 核不了</span><span class="' + (dec ? 'q-handled' : '') + '">' + (dec ? '已处理' : '待处理') + '</span></div>' +
+        '</button>';
+    }).join('');
+  }
+  const handled = all.filter((d) => decisionOf(d.id)).length;
+  $('#queueFoot').textContent = '已处理 ' + handled + ' 单 · 待处理 ' + (all.length - handled) + ' 单。判定规则：任一不符整单退回；核不了只能挂起 / 退回；全相符才可收。';
+}
+
+/* ---------------- detail ---------------- */
+
+function bannerWhy(d) {
+  if (d.verdict === 'NOT-ACCEPTED-MISMATCH') return '有 ' + d.counts.MISMATCH + ' 条声明与盘上证据不符；按规则整单不能收。退回不改变声明真假。';
+  if (d.verdict === 'NOT-ACCEPTED-UNVERIFIED') return '有 ' + d.counts.ABSENT + ' 条证据缺席；核不了不是通过，只能挂起或退回。';
+  return d.counts.MATCH + ' 条声明全部相符；可以收，也可以因为流程原因退回。';
+}
+
+function evidenceAvailable(d, kind) {
+  if (kind === 'source') return true;
+  if (kind === 'steps') return d.evidence_profile === 'pgagent';
+  if (kind === 'events') return d.evidence_profile === 'agentd';
+  if (kind === 'cells') return d.evidence_profile === 'kernel';
+  return false;
+}
+
+function offWhy(d, kind) {
+  if (kind === 'steps') return '本单不是 pgagent 运行，没有 13 步轨迹。';
+  if (kind === 'events') return d.evidence_profile === 'pgagent' ? '本发没有 agentd 事件落盘；续传证据在 D-1026-03。' : '本单不是 agentd 运行。';
+  if (kind === 'cells') return d.evidence_profile === 'pgagent' ? '本发账文件随 TEMP 清理；逐格样本见 D-1026-02。' : '本单没有内核账本。';
+  return '本单没有这类证据。';
+}
+
+function evItem(d, kind, title, sub, dot, stateText, stateCls) {
+  const ok = evidenceAvailable(d, kind);
+  const inner = '<span class="e-dot ' + (ok ? dot : 'off') + '"></span><span class="e-body"><b>' + h(title) + '</b><small>' + h(ok ? sub : offWhy(d, kind)) + '</small></span><span class="e-state ' + (ok ? stateCls : 'off') + '">' + h(ok ? stateText : '缺席') + '</span>';
+  if (!ok) return '<div class="evidence-item is-off" title="' + h(offWhy(d, kind)) + '">' + inner + '</div>';
+  return '<button class="evidence-item" data-open-drawer="' + kind + '">' + inner + '</button>';
+}
+
+function renderDetail() {
+  if (!S.data) return;
+  const d = currentDelivery();
+  if (!d) {
+    $('#detailWrap').innerHTML = '<div class="state-box"><h3>队列是空的</h3><p>本机证据包没有交付单。</p></div>';
+    return;
+  }
+  const dec = decisionOf(d.id);
+  const v = verdict(d.verdict);
+  const allowed = d.allowed || [];
+  const deny = [];
+  if (!allowed.includes('accept')) deny.push('收下不可用：' + (d.counts.MISMATCH ? d.counts.MISMATCH + ' 条不符' : d.counts.ABSENT + ' 条核不了') + '。');
+  if (!allowed.includes('hold')) deny.push(d.verdict === 'ACCEPTED' ? '挂起不可用：全部相符，没有需要挂起的缺席。' : '挂起不可用：有不符时只能退回。');
+  const claims = d.claims.map((c) => {
+    const cs = claimState(c.verdict);
+    return '<tr data-claim="' + h(c.id) + '" tabindex="0" aria-label="' + h(c.text + '，' + cs.label) + '">' +
+      '<td><span class="verdict ' + cs.cls + '"><span class="dot"></span>' + h(cs.label) + '</span></td>' +
+      '<td class="claim-main"><div class="claim-text">' + h(c.text) + '</div><div class="claim-why">' + h(c.why) + '</div></td>' +
+      '<td class="claim-basis"><span class="basis-chip ' + h(c.basis) + '">' + h(c.basis) + '</span></td>' +
+      '<td><button class="row-open" data-open-claim="' + h(c.id) + '">看证据</button></td></tr>';
+  }).join('');
+
+  const actionHtml = dec ? (
+    '<div class="decision-state ' + (dec.action === 'reject' ? 'bad' : dec.action === 'hold' ? 'warn' : '') + '">' +
+      '<div class="ds-main"><b>已' + h(dec.action_label) + ' · ' + h(String(dec.at).slice(0, 16).replace('T', ' ')) + '</b><span>' + nl2br(dec.reason || '（未填写理由）') + '</span></div></div>' +
+    '<div class="receipt-card"><div class="rc-label">回执 · 可离线打开、可转发</div>' +
+      '<div class="rc-path">' + h(dec.receipt.file) + '</div>' +
+      '<div class="rc-label">' + fmt(dec.receipt.bytes) + ' B · sha256 ' + h(shortHash(dec.receipt.sha256)) + '</div>' +
+      '<div class="receipt-actions"><a class="btn sm" href="' + h(dec.receipt.url) + '" target="_blank" rel="noopener">打开回执</a><button class="btn sm" data-copy="' + h(dec.receipt.file) + '">复制路径</button></div></div>'
+  ) : (
+    '<div class="decision-actions">' +
+      '<button class="btn primary" data-action="accept"' + (allowed.includes('accept') ? '' : ' disabled title="' + h(deny[0] || '不能收') + '"') + '>收下</button>' +
+      '<button class="btn warn" data-action="hold"' + (allowed.includes('hold') ? '' : ' disabled title="' + h(deny.find((x) => x.startsWith('挂起')) || '不能挂起') + '"') + '>挂起</button>' +
+      '<button class="btn danger" data-action="reject">退回</button>' +
+    '</div>' +
+    (deny.length ? '<ul class="deny-why">' + deny.map((x) => '<li>' + h(x) + '</li>').join('') + '</ul>' : '') +
+    '<p class="decision-note">收 / 退不改变声明真假；决定写进本机记忆，并生成一张可转发回执。</p>'
+  );
+
+  const kb = kernelBits();
+  const k = S.data.kernel;
+  const kfacts = k.state === 'done'
+    ? '<dl class="kv"><dt>退出码</dt><dd>' + fmt(k.rc) + '</dd><dt>✓ / ✗ / —</dt><dd>' + fmt(k.checks_ok) + ' / ' + fmt(k.checks_bad) + ' / ' + fmt(k.unknown_lines) + '</dd><dt>exe sha256</dt><dd title="' + h(k.exe_sha256) + '">' + h(shortHash(k.exe_sha256, 16)) + '</dd><dt>耗时</dt><dd>' + fmt(k.elapsed_ms) + ' ms</dd><dt>读数</dt><dd>' + h(k.readout) + '</dd></dl>'
+    : '<dl class="kv"><dt>退出码</dt><dd>—</dd><dt>计数</dt><dd>—</dd><dt>exe sha256</dt><dd>—</dd><dt>读数</dt><dd>' + h(k.readout) + '</dd></dl>';
+
+  $('#detailWrap').innerHTML =
+    '<div class="detail-head">' +
+      '<div class="crumbs"><button data-nav="operate">交付队列</button><span>/</span><span class="mono">' + h(d.id) + '</span><span class="spacer"></span><span class="kbd-hint">J / K 换单 · Esc 关抽屉</span></div>' +
+      '<div class="detail-title-row"><div><h1>' + h(d.title) + '</h1>' +
+        '<div class="detail-meta"><span>' + h(d.id) + '</span><span class="dot-sep">·</span><span>' + h(d.agent) + '</span><span class="dot-sep">·</span><span>提交 ' + h(d.submitted_at) + '</span><span class="dot-sep">·</span><span class="mono">' + h(d.subtitle) + '</span></div>' +
+      '</div></div>' +
+    '</div>' +
+    '<div class="status-banner ' + v.cls + '"><div class="s-icon">' + (d.verdict === 'ACCEPTED' ? '✓' : d.verdict === 'NOT-ACCEPTED-MISMATCH' ? '!' : '?') + '</div>' +
+      '<div class="s-body"><div class="s-line"><b>' + h(v.long) + '</b><span class="s-code">' + h(d.verdict) + '</span>' + (dec ? '<span class="badge ' + (ACTION[dec.action] || {}).cls + '">已' + h(dec.action_label) + '</span>' : '') + '</div>' +
+      '<p class="s-why">' + h(bannerWhy(d)) + '</p>' +
+      '<div class="counter-row"><span class="count-pill ok"><b>' + d.counts.MATCH + '</b> 相符</span><span class="count-pill bad"><b>' + d.counts.MISMATCH + '</b> 不符</span><span class="count-pill warn"><b>' + d.counts.ABSENT + '</b> 核不了</span></div></div></div>' +
+    '<div class="detail-grid"><div>' +
+      '<section class="panel"><div class="section-head"><h2>逐条声明</h2><span class="count">' + d.claims.length + '</span><span class="tools"><span class="kbd-hint">点一行看判定与证据</span></span></div>' +
+        '<table class="claim-table"><thead><tr><th>判定</th><th>声明</th><th>依据档</th><th></th></tr></thead><tbody>' + claims + '</tbody></table></section>' +
+      '<section class="panel" style="margin-top:14px"><div class="section-head"><h2>这份交付的边界</h2><span class="tools">不替证据说话</span></div><ul class="notes-list">' +
+        (d.notes || []).map((x) => '<li>' + h(x) + '</li>').join('') +
+        '<li>收下不改变声明真假；核不了绝不写成通过。</li></ul></section>' +
+    '</div><aside class="rail">' +
+      '<div class="panel rail-card"><div class="section-head"><h3>判定动作</h3></div><div class="rail-body">' + actionHtml + '</div>' +
+        '<div class="foot-note">' + h(d.verdict === 'NOT-ACCEPTED-MISMATCH' ? '有不符：退回可用，收下禁用。' : d.verdict === 'NOT-ACCEPTED-UNVERIFIED' ? '有缺席：挂起 / 退回可用，收下禁用。' : '全相符：收下 / 退回都可用。') + '</div></div>' +
+      '<div class="panel rail-card"><div class="section-head"><h3>证据抽屉</h3><span class="tools">只读</span></div><div class="rail-body"><div class="evidence-list">' +
+        evItem(d, 'steps', '13 步轨迹', '步数、依据档、收口读数', 'ok', '打开', 'ok') +
+        evItem(d, 'events', '事件 14 条', '两条 run、可续游标', 'ok', '打开', 'ok') +
+        evItem(d, 'cells', '49 格样本', '首块逐格、哈希与链接', 'warn', '打开', 'warn') +
+        evItem(d, 'source', '来源与哈希', '文件、sha256、非同发提示', 'off', '打开', 'off') +
+      '</div></div></div>' +
+      '<div class="panel rail-card" id="kernelCard"><div class="section-head"><h3>启动微内核 · 快闸</h3><span class="tools"><button class="btn sm" data-kernel-open>读数</button></span></div><div class="rail-body">' +
+        '<div class="kernel-line"><span class="k-dot ' + kb.dot + '"></span><span>' + h(kb.text) + '</span></div>' + kfacts +
+        '<button class="btn sm" data-kernel-retry style="margin-top:9px"' + (k.state === 'running' ? ' disabled' : '') + '>重跑快闸</button>' +
+      '</div></div>' +
+    '</aside></div>';
+
+  if (S.lastDetailId !== d.id) {
+    S.lastDetailId = d.id;
+    $('#detailWrap').scrollTop = 0;
+  }
+}
+
+/* ---------------- memory ---------------- */
+
+function renderMemory() {
+  if (!S.data) return;
+  const mem = memory();
+  const decs = (mem.decisions || []).slice().reverse();
+  const dlg = (mem.dialogue || []).slice().reverse();
+  $('#memDecCount').textContent = fmt(decs.length);
+  $('#memDecNote').textContent = decs.length ? ('最近 ' + String(decs[0].at).slice(0, 16).replace('T', ' ')) : '还没有决定';
+  $('#memDecisions').innerHTML = decs.length ? '<div class="dec-list">' + decs.map((x) => {
+    const ac = ACTION[x.action] || { cls: 'unk', label: x.action_label };
+    const rc = x.receipt || {};
+    return '<div class="dec-item"><div class="dec-mark ' + ac.cls + '"></div><div class="dec-main">' +
+      '<div class="dec-title"><span class="badge ' + ac.cls + '">' + h(ac.label) + '</span><span>' + h(x.delivery_title) + '</span></div>' +
+      '<div class="dec-reason">' + nl2br(x.reason || '（未填写理由）') + '</div>' +
+      '<div class="dec-meta">' + h(x.at) + ' · ' + h(x.delivery_id) + ' · ' + h(x.verdict_label || x.verdict) + ' · 证据 sha ' + h(shortHash(x.evidence_hash)) + '</div>' +
+      (rc.file ? '<div class="dec-actions"><a class="btn sm" href="' + h(rc.url) + '" target="_blank" rel="noopener">打开回执</a><button class="btn sm" data-copy="' + h(rc.file) + '">复制路径</button></div>' : '') +
+      '</div></div>';
+  }).join('') + '</div>' : '<div class="empty-inline">还没有决定。<br>去操作模式，处理一单后它会出现在这里。</div>';
+
+  $('#memDlgCount').textContent = fmt(dlg.length);
+  $('#memDialogue').innerHTML = dlg.length ? dlg.slice(0, 20).map((x) => {
+    const t = TIER[x.tier] || TIER.refused;
+    return '<div class="dlg-row"><div class="dlg-q">' + h(x.q) + '<div class="dlg-meta">' + h(String(x.at || '').slice(0, 16).replace('T', ' ')) + '</div></div>' +
+      '<div class="dlg-a"><span class="tier-badge ' + t.cls + '">' + h(t.label) + '</span> <b>' + h(x.title) + '</b><div class="dt">' + nl2br(x.text) + '</div>' +
+      ((x.refs || []).length ? '<div class="dlg-meta">引用：' + h((x.refs || []).join(' / ')) + '</div>' : '') + '</div></div>';
+  }).join('') : '<div class="empty-inline">还没有对话。<br>去对话模式问一句要核的事。</div>';
+
+  const prefs = mem.preferences || {};
+  const reasons = prefs.reasons || [];
+  $('#reasonList').innerHTML = reasons.length ? reasons.map((r) => '<div class="reason-row"><span class="rr-text">' + h(r) + '</span><button data-del-reason="' + h(r) + '" aria-label="删除理由" title="删除这条理由">×</button></div>').join('') : '<div class="empty-inline">还没有理由模板。</div>';
+  $('#operatorName').value = prefs.operator_name || '本机操作者';
+  const sw = $('#requireReason');
+  const on = prefs.require_reason !== false;
+  sw.classList.toggle('off', !on);
+  sw.setAttribute('aria-checked', on ? 'true' : 'false');
+  sw.title = on ? '当前：必须写理由；点击关闭' : '当前：可以不写理由；点击打开';
+
+  const meta = S.data.memory_meta || {};
+  const note = mem.load_note ? '<dt>注意</dt><dd>' + h(mem.load_note) + '</dd>' : '';
+  $('#memoryMeta').innerHTML = '<dt>位置</dt><dd>' + h(meta.file || '—') + '</dd>' +
+    '<dt>大小</dt><dd>' + fmt(meta.bytes) + ' B</dd>' +
+    '<dt>sha256</dt><dd title="' + h(meta.sha256) + '">' + h(shortHash(meta.sha256)) + '</dd>' +
+    '<dt>决定</dt><dd>' + fmt((mem.decisions || []).length) + '</dd>' +
+    '<dt>对话</dt><dd>' + fmt((mem.dialogue || []).length) + '</dd>' + note;
+}
+
+function renderChatRail() {
+  if (!S.data) return;
+  const mem = memory();
+  const decs = (mem.decisions || []).slice(-2).reverse();
+  const el = $('#chatMemory');
+  if (!decs.length) {
+    el.innerHTML = '<span class="empty-inline">还没有决定</span>';
+    return;
+  }
+  el.innerHTML = '<div class="mem-mini"><b>' + fmt((mem.decisions || []).length) + '</b> 条决定 · <b>' + fmt((mem.dialogue || []).length) + '</b> 条对话</div>' +
+    decs.map((x) => '<div class="mm-row"><b>' + h(x.delivery_id) + ' ' + h(x.action_label) + '</b><br><span style="color:var(--ink-3)">' + h(String(x.reason || '').slice(0, 44)) + '</span></div>').join('');
+}
+
+/* ---------------- chat ---------------- */
+
+function refChip(r) {
+  if (!r) return '';
+  if (r.kind === 'claim') {
+    return '<button class="ref-chip" data-ref-kind="claim" data-ref-delivery="' + h(r.delivery) + '" data-ref-claim="' + h(r.claim) + '" title="打开 ' + h(r.claim) + '">' + h(r.label || r.claim) + '</button>';
+  }
+  if (r.kind === 'evidence') {
+    return '<button class="ref-chip" data-ref-kind="evidence" data-ref-ev="' + h(r.ev) + '" data-ref-locator="' + h(r.locator) + '">' + h(r.label || r.ev) + '</button>';
+  }
+  if (r.kind === 'memory') return '<button class="ref-chip" data-ref-kind="memory">' + h(r.label || '本机记忆') + '</button>';
+  if (r.kind === 'kernel') return '<button class="ref-chip" data-ref-kind="kernel">' + h(r.label || '内核快闸') + '</button>';
+  return '<span class="ref-chip">' + h(r.label || '') + '</span>';
+}
+
+function answerHTML(a) {
+  const t = TIER[a.tier] || TIER.refused;
+  return '<div class="msg-meta"><span class="tier-badge ' + t.cls + '">' + h(t.label) + '</span><span class="msg-title">' + h(a.title || '') + '</span><span>' + h(String(a.at || '').slice(11, 16)) + '</span></div>' +
+    '<div class="msg-text">' + nl2br(a.text || '') + '</div>' +
+    ((a.refs || []).length ? '<div class="refs">' + a.refs.map(refChip).join('') + '</div>' : '') +
+    '<div class="msg-foot">本地规则 · 0 次模型调用</div>';
+}
+
+function appendAnswer(a) {
+  const el = document.createElement('div');
+  el.className = 'msg assistant';
+  el.innerHTML = answerHTML(a);
+  $('#chatLog').appendChild(el);
+  $('#chatLog').scrollTop = $('#chatLog').scrollHeight;
+}
+
+function appendUser(q) {
+  const el = document.createElement('div');
+  el.className = 'msg user';
+  el.innerHTML = '<div class="msg-text">' + nl2br(q) + '</div>';
+  $('#chatLog').appendChild(el);
+}
+
+function appendPending() {
+  const el = document.createElement('div');
+  el.className = 'msg assistant pending';
+  el.id = 'chatPending';
+  el.innerHTML = '<div class="msg-meta"><span class="tier-badge refused">本地查证</span></div><div class="msg-text"><span class="typing"><i></i><i></i><i></i></span> 正在本机证据里找…</div>';
+  $('#chatLog').appendChild(el);
+  $('#chatLog').scrollTop = $('#chatLog').scrollHeight;
+  return el;
+}
+
+function loadChatHistory() {
+  const dlg = (memory().dialogue || []).slice(-8);
+  if (!dlg.length) return;
+  const empty = $('#chatEmpty');
+  if (empty) empty.remove();
+  dlg.forEach((x) => {
+    appendUser(x.q);
+    appendAnswer({ tier: x.tier, title: x.title, text: x.text, at: x.at, refs: (x.refs || []).map((label) => ({ kind: 'label', label })) });
+  });
+}
+
+async function sendQuestion(q) {
+  const text = String(q || '').trim();
+  if (!text || S.chatBusy) return;
+  if (S.view !== 'dialogue') setView('dialogue');
+  const empty = $('#chatEmpty');
+  if (empty) empty.remove();
+  appendUser(text);
+  const pending = appendPending();
+  S.chatBusy = true;
+  $('#chatSend').disabled = true;
+  $('#chatInput').value = '';
+  $('#chatInput').style.height = 'auto';
+  try {
+    const resp = await api('/api/dialogue', { method: 'POST', body: JSON.stringify({ q: text }) });
+    pending.remove();
+    appendAnswer(resp.answer);
+    if (S.data) {
+      if (!S.data.memory.dialogue) S.data.memory.dialogue = [];
+      S.data.memory.dialogue.push({ at: resp.answer.at, q: text, tier: resp.answer.tier, title: resp.answer.title, text: resp.answer.text, refs: (resp.answer.refs || []).map((r) => r.label) });
+      if (S.data.memory.dialogue.length > 80) S.data.memory.dialogue = S.data.memory.dialogue.slice(-80);
+      S.data.memory_meta = resp.memory_meta;
+    }
+    renderShell();
+    renderChatRail();
+    renderMemory();
+  } catch (e) {
+    pending.remove();
+    appendAnswer({ tier: 'refused', title: '本地服务没有回应', text: '这次没有拿到答案：' + (e.message || e) + '。这不是证据结论，也不写成通过。', at: new Date().toISOString(), refs: [] });
+  } finally {
+    S.chatBusy = false;
+    $('#chatSend').disabled = false;
+    $('#chatInput').focus();
+  }
+}
+
+/* ---------------- drawer ---------------- */
+
+function tabsFor(d) {
+  const arr = [d.default_tab || 'claims', 'claims', 'source'];
+  return Array.from(new Set(arr));
+}
+
+function openDrawer(tab, claimId, deliveryId) {
+  if (deliveryId) S.selected = deliveryId;
+  const d = currentDelivery();
+  if (!d) return;
+  const allowed = tabsFor(d);
+  if (!allowed.includes(tab)) tab = 'claims';
+  S.lastFocused = document.activeElement;
+  S.drawer = { open: true, tab, claim: claimId || null };
+  renderQueue();
+  renderDetail();
+  renderDrawer();
+  $('#overlay').classList.add('is-open');
+  $('#drawer').classList.add('is-open');
+  $('#drawer').setAttribute('aria-hidden', 'false');
+  $('#drawerClose').focus();
+}
+
+function closeDrawer() {
+  S.drawer.open = false;
+  S.drawer.claim = null;
+  $('#overlay').classList.remove('is-open');
+  $('#drawer').classList.remove('is-open');
+  $('#drawer').setAttribute('aria-hidden', 'true');
+  if (S.lastFocused && S.lastFocused.focus) S.lastFocused.focus();
+}
+
+function renderDrawer() {
+  const d = currentDelivery();
+  if (!d || !S.drawer.open) return;
+  const tabs = tabsFor(d);
+  const tab = tabs.includes(S.drawer.tab) ? S.drawer.tab : 'claims';
+  S.drawer.tab = tab;
+  const focus = S.drawer.claim ? d.claims.find((c) => c.id === S.drawer.claim) : null;
+  $('#drawerKicker').textContent = 'EVIDENCE / ' + d.id;
+  $('#drawerTitle').textContent = d.title;
+  $('#drawerSub').textContent = d.id + ' · ' + d.subtitle + ' · 只读';
+  $('#drawer').classList.toggle('wide', tab === 'cells' || tab === 'events');
+  $('#drawerTabs').innerHTML = tabs.map((t) => {
+    const label = t === 'events' ? ('事件 ' + (bundles().agentd ? bundles().agentd.counts.events : '—')) : t === 'cells' ? '49 格' : TAB_LABEL[t];
+    return '<button class="drawer-tab' + (t === tab ? ' is-on' : '') + '" role="tab" aria-selected="' + (t === tab) + '" data-tab="' + t + '">' + h(label) + '</button>';
+  }).join('');
+  const focusHtml = focus ? '<div class="focus-claim"><div class="fc-head"><span class="verdict ' + claimState(focus.verdict).cls + '"><span class="dot"></span>' + h(claimState(focus.verdict).label) + '</span><span class="mono" style="font-size:10px;color:var(--ink-3)">' + h(focus.id) + '</span><span class="basis-chip ' + h(focus.basis) + '">' + h(focus.basis) + '</span></div>' +
+    '<div class="fc-text">' + h(focus.text) + '</div><div class="fc-why">' + h(focus.why) + '</div></div>' : '';
+  let body = '';
+  if (tab === 'claims') body = drawClaims(d, focus);
+  else if (tab === 'steps') body = drawSteps(d);
+  else if (tab === 'events') body = drawEvents(d);
+  else if (tab === 'cells') body = drawCells(d);
+  else body = drawSource(d);
+  $('#drawerBody').innerHTML = focusHtml + body;
+  if (focus) $('#drawerBody').scrollTop = 0;
+  bindDrawerDynamic();
+}
+
+function drawClaims(d, focus) {
+  return '<div class="step-list">' + d.claims.map((c) => {
+    const cs = claimState(c.verdict);
+    return '<div class="step-row" style="grid-template-columns:74px minmax(0,1fr)"' + (focus && focus.id === c.id ? ' id="focusClaim"' : '') + '>' +
+      '<div><span class="verdict ' + cs.cls + '"><span class="dot"></span>' + h(cs.label) + '</span><div class="basis-chip ' + h(c.basis) + '" style="margin-top:4px">' + h(c.basis) + '</div></div>' +
+      '<div><div class="claim-text">' + h(c.id) + ' · ' + h(c.text) + '</div><div class="step-out" style="margin-top:3px">' + h(c.why) + '</div>' +
+      '<div class="claim-ev">' + (c.refs || []).map((r) => '<span class="ref-chip">' + h(r.label || r.locator || r.ev || '') + '</span>').join('') + '</div></div></div>';
+  }).join('') + '</div>';
+}
+
+function drawSteps(d) {
+  const pg = bundles().pgagent;
+  if (!pg) return '<div class="absent-box"><div class="a-title">没有轨迹证据</div><p>本机证据包没有 pgagent 读数。</p></div>';
+  const s = pg.sanity || {};
+  const ex = pg.execution || {};
+  const pills = [
+    '<span class="count-pill ' + (s.trace_sane ? 'ok' : 'bad') + '">整列自洽 ' + h(s.trace_sane ? 'true' : 'false') + '</span>',
+    '<span class="count-pill ' + (s.chain_sane ? 'ok' : 'bad') + '">链自洽 ' + h(s.chain_sane ? 'true' : 'false') + '</span>',
+    '<span class="count-pill ' + (ex.code_executed === false ? 'ok' : 'bad') + '">执行代码 ' + h(ex.code_executed === false ? 'false' : String(ex.code_executed)) + '</span>',
+    '<span class="count-pill warn">网关 ' + h(ex.gateway_fake ? '假端点' : '未知') + '</span>',
+  ].join('');
+  const steps = (pg.steps || []).map((st) => '<div class="step-row"><div class="step-no">' + st.step + '</div><div class="step-name" title="' + h(st.name) + '">' + h(st.name) + '</div><div class="step-ms">' + fmt(st.ms) + 'ms</div><div class="step-out"><span class="basis-chip ' + h(st.basis) + '">' + h(st.basis) + '</span> ' + h(st.out) + '</div></div>').join('');
+  const g = pg.gateway || {};
+  return '<div class="sanity">' + pills + '</div>' +
+    '<div class="note" style="font-size:10.5px;color:var(--ink-3);line-height:1.6">' + h(s.trace_sane_why || '') + '<br>' + h(s.chain_why || '') + '</div>' +
+    '<div class="step-list" style="margin-top:10px">' + steps + '</div>' +
+    '<div class="gateway-box"><b>网关：' + h(ex.gateway_fake ? '本机假端点 · 真实模型 0 次' : '真实端点') + '</b>' +
+      '<p>' + h(g.model || '') + '</p><dl class="kv"><dt>base_url</dt><dd>' + h(g.base_url || '—') + '</dd><dt>帧 / 首字节</dt><dd>' + fmt(g.chunks) + ' 帧 / ' + fmt(g.first_byte_ms) + ' ms</dd><dt>收 / 发</dt><dd>' + fmt(g.bytes_in) + ' B / ' + fmt(g.bytes_out) + ' B</dd><dt>收尾</dt><dd>' + h(g.finish || '—') + '</dd><dt>端点原话</dt><dd>' + h(g.text || '') + '</dd></dl></div>' +
+    '<div class="gateway-box" style="border-color:var(--line);background:var(--surface-2)"><b style="color:var(--ink)">账本读数</b>' +
+      '<p>' + h((pg.ledger || {}).record_call || '—') + '</p><p>' + h((pg.ledger || {}).tally || '') + '</p><p>' + h((pg.ledger || {}).verify || '') + '</p>' +
+      '<p>KPI 账本决定：' + fmt(pg.ledger && pg.ledger.kpi_ledger_decided) + ' · ' + h((pg.ledger || {}).kpi_why || '') + '</p></div>' +
+    '<p class="drawer-note">来源：' + h(pg.source.file) + ' · sha256 <span class="mono">' + h(pg.source.sha256) + '</span> · exe <span class="mono">' + h(pg.source.exe_sha256) + '</span></p>';
+}
+
+function drawEvents(d) {
+  const ag = bundles().agentd;
+  if (!ag) return '<div class="absent-box"><div class="a-title">没有事件证据</div><p>本机证据包没有 agentd 事件。</p></div>';
+  const runs = (ag.runs || []).map((r) => {
+    const evs = (ag.events || []).filter((e) => e.run === r.run);
+    const rows = evs.map((e) => '<tr><td class="mono">T' + e.turn + ' / #' + e.seq + '</td><td class="mono">' + h(e.kind) + '</td><td><span class="state-chip ' + h(e.state) + '">' + h(e.state) + '</span></td><td class="mono">' + h(String(e.ts).slice(11, 23)) + '</td><td class="mono">' + fmt(e.elapsed_ms) + 'ms</td><td class="event-why">' + h(e.why || '') + '</td></tr>').join('');
+    return '<div class="event-run"><div class="event-run-head"><b>' + h(r.run) + '</b><span>session ' + h(r.session) + '</span><span>' + fmt(r.events) + ' 条</span>' +
+      '<span>可续 ' + h(r.accept && r.accept.resumable ? 'true' : 'false') + '</span><span>turn 收口 ' + h(r.turn_settle && r.turn_settle.kind || '—') + '</span><span>run 收口 ' + h(r.run_settle && r.run_settle.stop || '—') + '</span></div>' +
+      '<table class="event-table"><thead><tr><th>序号</th><th>kind</th><th>state</th><th>时间</th><th>elapsed</th><th>why</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+  }).join('');
+  const c = ag.counts || {};
+  return '<div class="sanity"><span class="count-pill ok">事件 ' + fmt(c.events) + '</span><span class="count-pill ok">run ' + fmt(c.runs) + '</span><span class="count-pill ok">turn 收口 ' + fmt(c.turns_settled) + '</span><span class="count-pill ok">run 收口 ' + fmt(c.runs_settled) + '</span><span class="count-pill warn">seq 按每发 turn</span></div>' +
+    runs + '<p class="drawer-note">' + (ag.scope_notes || []).map((x) => h(x)).join('<br>') + '</p>' +
+    '<p class="drawer-note">来源：' + h(ag.source.file) + ' · sha256 <span class="mono">' + h(ag.source.sha256) + '</span></p>';
+}
+
+function drawCells(d) {
+  const kn = bundles().kernel;
+  if (!kn) return '<div class="absent-box"><div class="a-title">没有 49 格样本</div><p>本机证据包没有内核样例账。</p></div>';
+  const c = kn.checks || {};
+  const bm = kn.basis_mix || {};
+  const order = ['measured', 'relayed', 'estimated', 'model_says', 'absent'];
+  const total = order.reduce((n, k) => n + (Number(bm[k]) || 0), 0);
+  const pct = (n) => (total > 0 ? (Number(n) || 0) / total * 100 : 0);
+  const bar = order.map((k, i) => '<i class="b' + (i + 1) + '" style="width:' + pct(bm[k]) + '%" title="' + h(k + ' ' + (bm[k] || 0)) + '"></i>').join('');
+  const legend = order.map((k, i) => '<span><i class="b' + (i + 1) + '"></i>' + h(k) + ' ' + fmt(bm[k] || 0) + '</span>').join('');
+  const rows = (kn.rows || []).map((r) => '<tr class="cell-row" data-search="' + h((r.kind + ' ' + r.payload_preview).toLowerCase()) + '"><td class="mono">' + r.seq + '</td><td class="cell-kind">' + h(r.kind) + '</td><td><span class="basis-chip ' + h(r.basis_label) + '">' + h(r.basis_label) + '</span></td><td class="mono">' + h(r.claim) + '</td><td class="cell-payload" title="' + h(r.payload_preview) + '">' + h(r.payload_preview) + '</td><td class="mono" title="' + h(r.hash) + '">' + h(shortHash(r.payload_sha256, 10)) + ' ' + (r.payload_hash_ok ? '✓' : '✗') + '</td></tr>').join('');
+  return '<div class="sanity"><span class="count-pill ok">载荷哈希 ' + fmt(c.payload_hash_ok) + '/' + fmt(c.unique_kinds) + '</span><span class="count-pill ok">块内链接 ' + fmt(c.block_links_ok) + '/' + fmt(c.block_links_total) + '</span><span class="count-pill ok">整账链接 ' + fmt(c.global_links_ok) + '/' + fmt(c.global_links_total) + '</span><span class="count-pill warn">整账 ' + fmt(c.all_rows) + ' 条 = ' + fmt(c.blocks) + ' 块</span></div>' +
+    '<div class="basis-bar" aria-hidden="true">' + bar + '</div><div class="basis-legend">' + legend + '</div>' +
+    '<div class="cell-tools"><div class="search"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="7" cy="7" r="4.2"/><path d="m10.2 10.2 3 3"/></svg><input id="cellFilter" placeholder="筛 kind / 载荷…" aria-label="筛 49 格"></div><span class="kbd-hint" id="cellFilterCount">' + fmt(kn.rows.length) + ' 行</span></div>' +
+    '<table class="cell-table"><thead><tr><th>seq</th><th>kind</th><th>依据档</th><th>claim</th><th>载荷（截断）</th><th>载荷哈希</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+    '<p class="drawer-note">' + (kn.scope_notes || []).map((x) => h(x)).join('<br>') + '</p>' +
+    '<p class="drawer-note">来源：' + h(kn.source.file) + ' · sha256 <span class="mono">' + h(kn.source.sha256) + '</span></p>';
+}
+
+function drawSource(d) {
+  const idx = bundles().index;
+  if (!idx) return '<div class="empty-inline">没有证据索引</div>';
+  const files = (idx.files || []).map((f) => '<tr><td>' + h(EV_LABEL[f.kind] || f.kind) + '</td><td class="mono">' + h(f.file || f.name || '—') + '</td><td class="mono">' + fmt(f.bytes) + ' B</td><td class="mono" title="' + h(f.sha256) + '">' + h(shortHash(f.sha256, 16)) + '</td></tr>').join('');
+  return '<div class="gateway-box"><b>分源提示：三者不是同一次执行</b><p>' + (idx.not_same_run || []).map((x) => h(x)).join('<br>') + '</p></div>' +
+    '<table class="file-table" style="margin-top:12px"><thead><tr><th>类型</th><th>文件</th><th>字节</th><th>sha256</th></tr></thead><tbody>' + files + '</tbody></table>' +
+    '<p class="drawer-note">本单备注：</p><ul class="notes-list">' + (d.notes || []).map((x) => '<li>' + h(x) + '</li>').join('') + '</ul>' +
+    '<p class="drawer-note">证据包在 <span class="mono">证据/</span>；所有内容只读，UI 不提供改写 / 执行入口。</p>';
+}
+
+function bindDrawerDynamic() {
+  const f = $('#cellFilter');
+  if (f) {
+    f.addEventListener('input', () => {
+      const q = f.value.trim().toLowerCase();
+      let n = 0;
+      $$('#drawerBody .cell-row').forEach((tr) => {
+        const hit = !q || (tr.dataset.search || '').includes(q);
+        tr.style.display = hit ? '' : 'none';
+        if (hit) n += 1;
+      });
+      const c = $('#cellFilterCount');
+      if (c) c.textContent = n + ' 行';
+    });
+  }
+}
+
+/* ---------------- kernel ---------------- */
+
+function openKernelModal() {
+  if (!S.data) return;
+  S.lastFocused = document.activeElement;
+  renderKernelModal();
+  $('#modalKernel').classList.add('is-open');
+  $('#modalKernel').setAttribute('aria-hidden', 'false');
+  $('#modalKernel').querySelector('[data-close-modal]').focus();
+}
+
+function renderKernelModal() {
+  if (!S.data) return;
+  const k = S.data.kernel;
+  const b = kernelBits();
+  const stateLabel = { idle: '没开始', running: '跑着', done: '跑完', error: '核不了' }[k.state] || k.state;
+  const facts = '<dl class="kernel-facts">' +
+    '<dt>状态</dt><dd>' + h(stateLabel) + '</dd>' +
+    '<dt>退出码</dt><dd>' + (k.state === 'done' ? fmt(k.rc) : '—') + '</dd>' +
+    '<dt>✓ / ✗ / —</dt><dd>' + (k.state === 'done' ? (fmt(k.checks_ok) + ' / ' + fmt(k.checks_bad) + ' / ' + fmt(k.unknown_lines)) : '—') + '</dd>' +
+    '<dt>exe sha256</dt><dd>' + h(k.exe_sha256 || '—') + '</dd>' +
+    '<dt>exe 字节</dt><dd>' + fmt(k.exe_bytes) + '</dd>' +
+    '<dt>耗时</dt><dd>' + (k.elapsed_ms == null ? '—' : fmt(k.elapsed_ms) + ' ms') + '</dd>' +
+    '<dt>命令</dt><dd>' + h(k.cmd || '—') + '</dd>' +
+    '<dt>目录</dt><dd>' + h(k.cwd || '—') + '</dd>' +
+    '<dt>读数</dt><dd>' + h(k.readout || '—') + '</dd>' +
+    '<dt>说明</dt><dd>' + h(k.why || '—') + '</dd></dl>';
+  const tail = (k.tail || []).length ? '<div class="kernel-tail"><pre>' + h((k.tail || []).join('\n')) + '</pre></div>' : '<p class="modal-hint">还没有输出行。</p>';
+  $('#kernelModalBody').innerHTML = facts + tail + '<p class="modal-hint">这是只读自检；不跑交付代码，不写 8797 / 8799。读数落 <span class="mono">' + h(k.readout) + '</span>。</p>';
+  $('#btnKernelRetry').disabled = k.state === 'running';
+}
+
+async function retryKernel() {
+  try {
+    const resp = await api('/api/kernel/rebuild', { method: 'POST', body: '{}' });
+    if (S.data) S.data.kernel = resp.kernel;
+    renderShell();
+    renderKernelModal();
+    pollKernel();
+    toast('内核快闸已重跑');
+  } catch (e) {
+    toast('重跑失败：' + (e.message || e), true);
+  }
+}
+
+function pollKernel() {
+  if (S.kernelTimer) clearInterval(S.kernelTimer);
+  S.kernelTimer = setInterval(async () => {
+    try {
+      const k = await api('/api/kernel');
+      if (!S.data) return;
+      S.data.kernel = k;
+      renderShell();
+      if (S.view === 'operate' && !$('.modal.is-open')) renderDetail();
+      if ($('#modalKernel').classList.contains('is-open')) renderKernelModal();
+      if (k.state !== 'running') {
+        clearInterval(S.kernelTimer);
+        S.kernelTimer = null;
+        if (k.state === 'error') toast('内核快闸核不了：' + (k.why || ''), true);
+      }
+    } catch (e) { /* 保持上一读数；不把网络错误写成红或绿 */ }
+  }, 900);
+}
+
+/* ---------------- decisions ---------------- */
+
+function openDecision(action) {
+  const d = currentDelivery();
+  if (!d || decisionOf(d.id)) return;
+  if (!(d.allowed || []).includes(action)) { toast('这单不能' + (ACTION[action] || {}).label, true); return; }
+  S.dec = { action, deliveryId: d.id, busy: false };
+  const act = ACTION[action];
+  $('#decTitle').textContent = act.label + '这单？';
+  $('#decSub').textContent = d.id + ' · ' + d.title;
+  $('#decFacts').innerHTML = '<span class="count-pill ' + verdict(d.verdict).cls + '">' + h(verdict(d.verdict).long) + '</span>' +
+    '<span class="count-pill ok"><b>' + d.counts.MATCH + '</b> 相符</span><span class="count-pill bad"><b>' + d.counts.MISMATCH + '</b> 不符</span><span class="count-pill warn"><b>' + d.counts.ABSENT + '</b> 核不了</span>';
+  const reasons = (memory().preferences || {}).reasons || [];
+  const chips = action === 'accept' ? '' : reasons.map((r) => '<button class="reason-chip" data-reason-chip="' + h(r) + '">' + h(r) + '</button>').join('');
+  $('#decReasons').innerHTML = chips;
+  $('#decReasonLabel').textContent = action === 'accept' ? '备注（可选，会写进回执）' : '理由（写进回执与记忆）';
+  $('#decReason').placeholder = action === 'accept' ? '可选：为什么收下' : '至少 4 个字；可以从上面选一条';
+  $('#decReason').value = '';
+  const hints = {
+    reject: '退回不等于宣判代码差，只说明声明的盘上证据不成立；回执会逐条列出。',
+    hold: '挂起表示证据缺席、暂不判；核不了不会被写成通过。',
+    accept: '收下不改变声明真假；回执会记下这次判断。',
+  };
+  $('#decHint').textContent = hints[action] + ' 决定会写进本机记忆并生成一张可转发回执；本页不能撤回。';
+  $('#decHint').className = 'modal-hint';
+  const btn = $('#decConfirm');
+  btn.className = 'btn ' + (action === 'accept' ? 'primary' : action === 'hold' ? 'warn' : 'danger');
+  btn.textContent = act.label;
+  btn.disabled = false;
+  $('#modalDecision').classList.add('is-open');
+  $('#modalDecision').setAttribute('aria-hidden', 'false');
+  setTimeout(() => { if (action === 'accept') btn.focus(); else $('#decReason').focus(); }, 40);
+}
+
+async function confirmDecision() {
+  if (S.dec.busy) return;
+  const d = deliveryById(S.dec.deliveryId);
+  if (!d) return;
+  const action = S.dec.action;
+  const reason = $('#decReason').value.trim();
+  const requireReason = (memory().preferences || {}).require_reason !== false;
+  if (action !== 'accept' && requireReason && reason.length < 4) {
+    $('#decHint').textContent = '退回 / 挂起至少写 4 个字，或从上面的模板选一条。';
+    $('#decHint').className = 'modal-hint error';
+    $('#decReason').focus();
+    return;
+  }
+  S.dec.busy = true;
+  const btn = $('#decConfirm');
+  const old = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = '写入中…';
+  try {
+    const resp = await api('/api/decision', { method: 'POST', body: JSON.stringify({ delivery_id: d.id, action, reason }) });
+    S.data.memory = resp.memory;
+    S.data.memory_meta = resp.memory_meta;
+    closeModal('modalDecision');
+    renderAll();
+    toast('已' + (ACTION[action] || {}).label + '；回执 ' + fmt(resp.receipt.bytes) + ' B 已落盘');
+  } catch (e) {
+    if (e.status === 409 && e.payload && e.payload.error === 'ALREADY_DECIDED') {
+      closeModal('modalDecision');
+      try { S.data = await api('/api/state'); } catch (e2) { /* 保留旧状态 */ }
+      renderAll();
+      toast('这单已经处理过了', true);
+    } else {
+      $('#decHint').textContent = '没有写进去：' + (e.message || e) + '。本单仍未处理。';
+      $('#decHint').className = 'modal-hint error';
+      toast('决定未写入：' + (e.message || e), true);
+    }
+  } finally {
+    S.dec.busy = false;
+    btn.disabled = false;
+    btn.textContent = old;
+  }
+}
+
+/* ---------------- memory actions ---------------- */
+
+async function savePreference(payload) {
+  try {
+    const resp = await api('/api/memory/preferences', { method: 'POST', body: JSON.stringify(payload) });
+    if (S.data) {
+      S.data.memory.preferences = resp.preferences;
+      renderMemory();
+    }
+    toast('偏好已写进本机记忆');
+  } catch (e) { toast('偏好未保存：' + (e.message || e), true); }
+}
+
+async function addReason(text) {
+  const t = String(text || '').trim();
+  if (t.length < 4) { toast('理由至少 4 个字', true); return false; }
+  try {
+    const resp = await api('/api/memory/reason', { method: 'POST', body: JSON.stringify({ text: t }) });
+    if (S.data) S.data.memory.preferences.reasons = resp.reasons;
+    renderMemory();
+    toast('理由模板已加入');
+    return true;
+  } catch (e) { toast('没有加入：' + (e.message || e), true); return false; }
+}
+
+async function deleteReason(text) {
+  try {
+    const resp = await api('/api/memory/reason/delete', { method: 'POST', body: JSON.stringify({ text }) });
+    if (S.data) S.data.memory.preferences.reasons = resp.reasons;
+    renderMemory();
+    toast('理由模板已删除');
+  } catch (e) { toast('没有删除：' + (e.message || e), true); }
+}
+
+async function clearMemory() {
+  const btn = $('#btnConfirmClear');
+  btn.disabled = true;
+  btn.textContent = '清空中…';
+  try {
+    const resp = await api('/api/memory/clear', { method: 'POST', body: JSON.stringify({ confirm: 'CLEAR' }) });
+    S.data.memory = resp.memory;
+    S.data.memory_meta = resp.meta;
+    closeModal('modalClear');
+    $('#chatLog').innerHTML = S.chatEmptyHTML;
+    renderAll();
+    toast('记忆已清空；回执文件仍在 回执/');
+  } catch (e) {
+    $('#clearHint').textContent = '没有清空：' + (e.message || e);
+    $('#clearHint').className = 'modal-hint error';
+    toast('清空失败：' + (e.message || e), true);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '确认清空';
+  }
+}
+
+/* ---------------- navigation / modals ---------------- */
+
+function setView(view) {
+  S.view = view;
+  $$('.screen').forEach((el) => el.classList.toggle('is-active', el.id === 'view-' + view));
+  $$('.mode-btn').forEach((b) => {
+    const on = b.dataset.mode === view;
+    b.classList.toggle('is-on', on);
+    b.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
+  $$('.nav-item[data-nav]').forEach((b) => {
+    const on = b.dataset.nav === view;
+    if (on) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+  });
+  if (view === 'operate') renderDetail();
+  if (view === 'memory') renderMemory();
+  if (view === 'dialogue') setTimeout(() => { if (!$('#chatInput').disabled) $('#chatInput').focus(); }, 40);
+}
+
+function openModal(id) {
+  S.lastFocused = document.activeElement;
+  const m = $('#' + id);
+  m.classList.add('is-open');
+  m.setAttribute('aria-hidden', 'false');
+}
+
+function closeModal(id) {
+  const m = $('#' + id);
+  if (!m) return;
+  m.classList.remove('is-open');
+  m.setAttribute('aria-hidden', 'true');
+  if (id === 'modalDecision') { S.dec.action = null; S.dec.busy = false; }
+  if (S.lastFocused && S.lastFocused.focus) S.lastFocused.focus();
+}
+
+function closeTop() {
+  const open = $$('.modal.is-open')[0];
+  if (open) { closeModal(open.id); return; }
+  if (S.drawer.open) closeDrawer();
+}
+
+function toast(msg, bad) {
+  const el = document.createElement('div');
+  el.className = 'toast' + (bad ? ' bad' : '');
+  el.innerHTML = '<span>' + h(msg) + '</span>';
+  $('#toasts').appendChild(el);
+  setTimeout(() => el.remove(), 4200);
+}
+
+async function copyText(t) {
+  try {
+    await navigator.clipboard.writeText(t);
+    toast('已复制：' + String(t).slice(0, 60));
+  } catch (e) {
+    const ta = document.createElement('textarea');
+    ta.value = t;
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); toast('已复制路径'); } catch (e2) { toast('复制失败，请手动选中', true); }
+    ta.remove();
+  }
+}
+
+function openEvidenceRef(ev) {
+  const map = { pgagent: 'D-1026-01', agentd: 'D-1026-03', kernel: 'D-1026-02' };
+  const tab = { pgagent: 'steps', agentd: 'events', kernel: 'cells', index: 'source' }[ev] || 'source';
+  const did = map[ev] || S.selected;
+  S.selected = did;
+  S.filter = 'all';
+  setView('operate');
+  renderQueue();
+  openDrawer(tab, null, did);
+}
+
+/* ---------------- events ---------------- */
+
+function bindGlobal() {
+  document.addEventListener('click', (e) => {
+    const t = e.target;
+    const nav = t.closest('[data-nav]');
+    if (nav) { e.preventDefault(); closeTop(); setView(nav.dataset.nav); return; }
+    const mode = t.closest('[data-mode]');
+    if (mode) { setView(mode.dataset.mode); return; }
+    const filter = t.closest('[data-filter]');
+    if (filter) { S.filter = filter.dataset.filter; renderQueue(); renderDetail(); return; }
+    const qitem = t.closest('[data-id]');
+    if (qitem) { S.selected = qitem.dataset.id; renderQueue(); renderDetail(); return; }
+    const openClaim = t.closest('[data-open-claim]');
+    if (openClaim) { e.stopPropagation(); openDrawer('claims', openClaim.dataset.openClaim); return; }
+    const claimRow = t.closest('tr[data-claim]');
+    if (claimRow) { openDrawer('claims', claimRow.dataset.claim); return; }
+    const openDrawerBtn = t.closest('[data-open-drawer]');
+    if (openDrawerBtn) { openDrawer(openDrawerBtn.dataset.openDrawer, null); return; }
+    const tab = t.closest('[data-tab]');
+    if (tab) { S.drawer.tab = tab.dataset.tab; S.drawer.claim = null; renderDrawer(); return; }
+    const action = t.closest('[data-action]');
+    if (action) { openDecision(action.dataset.action); return; }
+    const ask = t.closest('[data-ask]');
+    if (ask) { e.preventDefault(); sendQuestion(ask.dataset.ask); return; }
+    const reasonChip = t.closest('[data-reason-chip]');
+    if (reasonChip) { $('#decReason').value = reasonChip.dataset.reasonChip; $('#decReason').focus(); return; }
+    const delReason = t.closest('[data-del-reason]');
+    if (delReason) { deleteReason(delReason.dataset.delReason); return; }
+    const copy = t.closest('[data-copy]');
+    if (copy) { copyText(copy.dataset.copy); return; }
+    const ref = t.closest('[data-ref-kind]');
+    if (ref) {
+      const kind = ref.dataset.refKind;
+      if (kind === 'claim') { S.selected = ref.dataset.refDelivery; S.filter = 'all'; setView('operate'); renderQueue(); openDrawer('claims', ref.dataset.refClaim); }
+      else if (kind === 'evidence') openEvidenceRef(ref.dataset.refEv);
+      else if (kind === 'memory') setView('memory');
+      else if (kind === 'kernel') openKernelModal();
+      return;
+    }
+    if (t.closest('[data-kernel-open]') || t.closest('#kernelPill')) { openKernelModal(); return; }
+    if (t.closest('[data-kernel-retry]')) { retryKernel(); return; }
+    if (t.closest('[data-reload]')) { location.reload(); return; }
+    if (t.closest('#btnMemory')) { closeTop(); setView('memory'); return; }
+    if (t.closest('#btnExportMemory') || t.closest('#btnExportMemory2')) { window.location.assign('/api/memory/export'); return; }
+    if (t.closest('#btnClearMemory')) { openModal('modalClear'); $('#clearHint').textContent = '当前 ' + ((memory().decisions || []).length) + ' 条决定、' + ((memory().dialogue || []).length) + ' 条对话。'; $('#clearHint').className = 'modal-hint'; return; }
+    if (t.closest('#btnConfirmClear')) { clearMemory(); return; }
+    if (t.closest('#decConfirm')) { confirmDecision(); return; }
+    if (t.closest('#btnKernelRetry')) { retryKernel(); return; }
+    if (t.closest('#requireReason')) { savePreference({ require_reason: (memory().preferences || {}).require_reason === false }); return; }
+    const closeBtn = t.closest('[data-close-modal]');
+    if (closeBtn) { closeModal(closeBtn.dataset.closeModal); return; }
+    if (t.id === 'overlay') { closeDrawer(); return; }
+    if (t.id === 'drawerClose') { closeDrawer(); return; }
+    if (t.classList && t.classList.contains('modal')) { closeModal(t.id); return; }
+  });
+
+  $('#chatForm').addEventListener('submit', (e) => { e.preventDefault(); sendQuestion($('#chatInput').value); });
+  $('#chatInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); $('#chatForm').requestSubmit(); }
+  });
+  $('#chatInput').addEventListener('input', () => {
+    const ta = $('#chatInput');
+    ta.style.height = 'auto';
+    ta.style.height = Math.min(140, ta.scrollHeight) + 'px';
+  });
+  $('#reasonForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const ok = await addReason($('#reasonInput').value);
+    if (ok) $('#reasonInput').value = '';
+  });
+  $('#operatorName').addEventListener('change', () => savePreference({ operator_name: $('#operatorName').value }));
+  $('#operatorName').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } });
+  $('#drawer').addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { closeTop(); return; }
+    if (e.altKey && !e.ctrlKey && !e.metaKey) {
+      const k = e.key.toLowerCase();
+      if (k === 'o') { e.preventDefault(); closeTop(); setView('operate'); }
+      if (k === 'd') { e.preventDefault(); closeTop(); setView('dialogue'); }
+      if (k === 'm') { e.preventDefault(); closeTop(); setView('memory'); }
+    }
+    const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
+    if (S.view === 'dialogue' && e.key === '/' && !typing) { e.preventDefault(); $('#chatInput').focus(); }
+    if (S.view === 'operate' && !typing && !S.dec.action && !$('.modal.is-open')) {
+      if (e.key === 'j' || e.key === 'k') {
+        const ids = S.visibleIds.length ? S.visibleIds : sortedDeliveries().map((d) => d.id);
+        if (!ids.length) return;
+        const i = Math.max(0, ids.indexOf(S.selected));
+        const next = e.key === 'j' ? Math.min(ids.length - 1, i + 1) : Math.max(0, i - 1);
+        S.selected = ids[next];
+        renderQueue(); renderDetail();
+      }
+      if (e.key === 'Enter' && document.activeElement.matches('tr[data-claim]')) {
+        e.preventDefault();
+        openDrawer('claims', document.activeElement.dataset.claim);
+      }
+    }
+  });
+  $$('.modal').forEach((m) => m.setAttribute('aria-hidden', 'true'));
+}
+
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+else boot();

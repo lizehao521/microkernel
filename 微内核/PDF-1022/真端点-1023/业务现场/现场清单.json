@@ -1,0 +1,99 @@
+{
+ "files": [
+  {
+   "path": "人事/入职材料/体检报告.txt",
+   "bytes": 46,
+   "sha256": "ac63e09203c649f897bec198c5d437e4fe70fa38e0c201e5696f30ba431d0e66"
+  },
+  {
+   "path": "人事/入职材料/学历证明.txt",
+   "bytes": 52,
+   "sha256": "7136e75adfe54eed3a6dcf5d043d6862a8464eabeeb199289eda00d3527dbe54"
+  },
+  {
+   "path": "人事/入职材料/身份证复印件.txt",
+   "bytes": 43,
+   "sha256": "846ab639ff9bf5466a0b36a19897e19923711f41809bc52cd230be2d06206197"
+  },
+  {
+   "path": "人事/入职清单.txt",
+   "bytes": 134,
+   "sha256": "bea4c41f2b234ebd183ca08985953e9c54e3560b0f01d8df94eb42e4543361f0"
+  },
+  {
+   "path": "发布/CHANGELOG.md",
+   "bytes": 80,
+   "sha256": "eb9e71a5011ce25afc7cf2e91f2d14019037b46c0fd2795bef3f420d118c86b1"
+  },
+  {
+   "path": "发布/VERSION.txt",
+   "bytes": 6,
+   "sha256": "6d850e3ac42d0dd06bfdcce9151c1e6b40f4cf5272778f63eececea27c78f0b6"
+  },
+  {
+   "path": "客户/客户名单.csv",
+   "bytes": 257,
+   "sha256": "c16ccac0594f3f0ec477e13032019031ab2f364365e7abae287bb6a75bcbcdde"
+  },
+  {
+   "path": "客户/投诉.csv",
+   "bytes": 190,
+   "sha256": "5752be187b597a1c4800621c65e88e1985e933dec7acfe72876c411be6bc4bfc"
+  },
+  {
+   "path": "库存/库存.csv",
+   "bytes": 82,
+   "sha256": "a2f88291e9e2209f1ecd955a0ff05aa8348697617532f755958452b4d8388367"
+  },
+  {
+   "path": "报表/4月营收-财务部.txt",
+   "bytes": 75,
+   "sha256": "c5ef1fe2fc819eb8e9b4e2ddb8be784865f2c04a9c27802d81d4a2f3dae97fb6"
+  },
+  {
+   "path": "报表/4月营收-销售部.txt",
+   "bytes": 75,
+   "sha256": "171aba8c28f990b3e0d8d9c310fb87c38d37db42a70296efc2a723e3d4060887"
+  },
+  {
+   "path": "财务/发票-2026-031.txt",
+   "bytes": 190,
+   "sha256": "035c9047c74817e94a4a9eebe1011a07688c649c242b2d41b46f2273b1408358"
+  },
+  {
+   "path": "财务/报价/A-云杉科技.txt",
+   "bytes": 197,
+   "sha256": "588899f6cf6eca0346420797d51affe69cf1de211f95e576324d0f1e837bf248"
+  },
+  {
+   "path": "财务/报价/B-北辰云服.txt",
+   "bytes": 197,
+   "sha256": "14c2d9685cc400a95fa75d64f10fb57f426149fbccd858ef4ca91809fe06f9ed"
+  },
+  {
+   "path": "财务/报价/C-海岳数据.txt",
+   "bytes": 197,
+   "sha256": "9ae67430157d2bfe68317291cc14f5b4ba3572de2817d1dfc03f72c12632a970"
+  },
+  {
+   "path": "财务/预算-2026-Q3.txt",
+   "bytes": 127,
+   "sha256": "0c86abc09276f06d8b9264715c14cf9b5fd1ab69822d8a649c4250adc26363b1"
+  },
+  {
+   "path": "运维/SLA.md",
+   "bytes": 251,
+   "sha256": "a2b4bf8eb561a7fa2e13be4e96dc71337e060e0e6c24e4641088317f42ebda94"
+  },
+  {
+   "path": "运维/app.log",
+   "bytes": 492,
+   "sha256": "ccedcbd8e87f2d894bf0f9d3e202f1ba7f65a0c5199b88b5fe05c457ef9ef310"
+  },
+  {
+   "path": "运维/incident-0412.txt",
+   "bytes": 140,
+   "sha256": "e468578c29f5d943f5ab510a30c92aae3fed69c53be80cbae7ac9268ef18f828"
+  }
+ ]
+}

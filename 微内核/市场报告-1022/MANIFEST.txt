@@ -1,0 +1,18 @@
+REPORT MANIFEST
+built_at=2026-10-22 16:20:26
+html=报告.html
+pdf=agentkernel-市场进入研究-v3-1022.pdf
+pdf_pages=29
+pdf_bytes=1264017
+html_bytes=88326
+pdf_sha256=292b2e337539a0da53c201c4e11457b58b479e0fd4db7b1223617cd555780f34
+html_sha256=e31d120dde5213d6b7cb7057b9a9cbfe07a72fc6ce90e1e09caa1993d83d43df
+cjk_chars_extracted=12060
+toc_keys_expected=28
+toc_keys_filled=28
+body_start_page=4
+edge=C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+render=Microsoft Edge headless via CDP Page.printToPDF, custom footer, no URL
+extract=pdftotext -enc UTF-8
+missing_keys=0
+secret_pattern=0

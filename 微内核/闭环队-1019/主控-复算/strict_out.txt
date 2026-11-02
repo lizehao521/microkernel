@@ -1,0 +1,50 @@
+kinds: 49
+
+L1018 never-really-filled: 11
+  model_input:clamp_rounds
+  model_input:notice_trimmed
+  model_output:downgrade
+  model_output:fail_detail
+  model_output:fail_kind
+  model_output:fail_status
+  model_output:malformed_actions
+  model_output:malformed_streak
+  model_output:model_says_clipped
+  model_output:retry_after_ms
+  model_output:tool_calls
+
+L8799 never-really-filled: 26
+  model_input:clamp_rounds
+  model_input:content_bytes
+  model_input:fixed_overhead
+  model_input:leftover_pct
+  model_input:notice_sent
+  model_input:notice_trimmed
+  model_input:tokens
+  model_output:chunks
+  model_output:cost_countable
+  model_output:downgrade
+  model_output:endpoint_model
+  model_output:endpoint_model_said
+  model_output:fail_status
+  model_output:finish
+  model_output:finish_said
+  model_output:first_byte_ms
+  model_output:max_gap_ms
+  model_output:model_says_clipped
+  model_output:retry_after_ms
+  model_output:streaming
+  model_output:usage_in
+  model_output:usage_out
+  model_output:wire_bytes_in
+  model_output:wire_bytes_out
+  model_output:wire_format
+  model_output:wire_format_said
+
+BOTH never-really-filled: 6
+  model_input:clamp_rounds
+  model_input:notice_trimmed
+  model_output:downgrade
+  model_output:fail_status
+  model_output:model_says_clipped
+  model_output:retry_after_ms

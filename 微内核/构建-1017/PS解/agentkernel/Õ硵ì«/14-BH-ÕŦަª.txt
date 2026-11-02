@@ -1,0 +1,14 @@
+=== Better Harness 跑动台账（版本 0.2.20，node 走 Qoder 自带 Electron）===
+1) harness evidence-bundle --depth normal --language zh → 退出码 1，status=failed
+   incompleteLanes/unavailableLanes = [projectHarness]，requiredLanes = 三条全必填
+   sessionEvidence=available 但 eligibleSessions=0；agentCustomize=available 且项目侧资产计数全 0
+2) 单点诊断 owner（契约允许，只为诊断具名不可用道）：core-change-watch project-profile → 退出码 1
+   原文：project-profile failed: Error: git rev-parse --show-toplevel failed: fatal: not a git repository (or any of the parent directories): .git
+   ⇒ 根因：本仓库按作者规矩不是 git 仓库（回滚靠 .hermess-snapshots 快照点）；未执行 git init
+3) harness analyze --format json → 退出码 0，出中性证据简报（非结论件）
+   简报自印：Source roots: 0 of 5 enabled roots exist; 7 roots were discovered；analyzed 0 of 0 eligible sessions；confidence Low
+4) harness checkup --phase scan --json → 退出码 0
+   summary.statusCounts={} findings 条数 0；cleanup.eligible=false reason=runtime-evidence-unavailable
+   coverage.sources 7 条全部 exists=false；eligibleSessions 0 / minimumSessions 5 / runtimeAvailable false
+5) 按 SKILL.md Step 1+2：normal 深度遇必填道 unavailable 必须停，不许用诊断输出替换 bundle，也不许手写报告件
+   ⇒ 恢复条件二选一：(a) 仓库成为 git 工作树（与作者规矩冲突，未做）；(b) 你明确点名 quick 深度并接受「该道不可用」明标

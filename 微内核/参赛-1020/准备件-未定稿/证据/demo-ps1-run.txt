@@ -1,0 +1,27 @@
+
+== 1/4 start the read-only audit service on http://127.0.0.1:8788
+[PASS] service listening -- pid=14808
+
+== 2/4 GET /v1/verify (chain + preimage)
+{"checked":100,"entries":100,"no_preimage":[],"state":"green","text":"✓ 链自洽（共 100 条，其中 100 条比对过原像）"}
+[PASS] verify.state -- state=green
+[PASS] verify.checked -- checked=100 entries=100
+
+== 3/4 GET /v1/read_back + POST /v1/read_back
+[PASS] read_back.cells -- cells=20 measured=18 estimated=2
+[PASS] read_back.absent -- absent=0
+[PASS] POST is refused -- HTTP 405
+  body: {"error":"这个服务只读：没有任何写入口（record/check 请走本机 stdio 外壳 kernel.record_call）"}
+
+== 4/4 a tampered ledger must not load
+kaudit.exe : 2026/10/20 15:46:27 kaudit: 这份账本不肯被载入（链不符或字节不对）：kernel: 读回来的账本链不符，拒绝载入：第 50 条整格指纹重算不符（某格被改）want=8525405fe2
+36 got=91ea34da8d57
+所在位置 C:\Users\Admin\Desktop\微内核\参赛-1020\准备件-未定稿\02-环境与安装\demo.ps1:106 字符: 14
++ ... tamperOut = & $kaudit -journal $badLedger -listen "127.0.0.1:$($Port  ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (2026/10/20 15:4...ot=91ea34da8d57:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+[PASS] tampered ledger refused -- rc=1
+[PASS] refusal names record 50 -- looked for '50' in refusal text
+
+RESULT: all expected readings matched.

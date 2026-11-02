@@ -1,0 +1,9 @@
+dry=False refreshed=4
+nodes refreshed=4, refs total=28
+  ev.bus -> 微内核/微内核/cmd/agentd/events.go:373 | 微内核/微内核/cmd/agentd/events.go:288 | 微内核/微内核/cmd/agentd/loop.go:129
+  ev.log -> 微内核/微内核/cmd/agentd/events.go:94 | 微内核/微内核/cmd/agentd/events.go:257 | 微内核/微内核/cmd/agentd/events.go:288
+  host.hooks -> 微内核/微内核/cmd/agentd/loop.go:129 | 微内核/微内核/cmd/agentd/loop.go:184 | 微内核/微内核/cmd/agentd/loop.go:199 | 微内核/微内核/cmd/agentd/loop.go:206 | 微内核/微内核/cmd/agentd/loop.go:224 | 微内核/微内核/cmd/agentd/loop.go:246 | 微内核/微内核/cmd/agentd/loop.go:636
+  host.eventTests -> 微内核/微内核/cmd/agentd/events_test.go:22 | 微内核/微内核/cmd/agentd/events_test.go:144 | 微内核/微内核/cmd/agentd/events_test.go:184 | 微内核/微内核/cmd/agentd/events_test.go:326 | 微内核/微内核/cmd/agentd/events_test.go:347 | 微内核/微内核/cmd/agentd/events_test.go:388
+  host.eventFlags -> 微内核/微内核/cmd/agentd/main.go:40 | 微内核/微内核/cmd/agentd/main.go:41 | 微内核/微内核/cmd/agentd/main.go:125 | 微内核/微内核/cmd/agentd/main.go:144
+  ev.accept -> 微内核/微内核/cmd/agentd/events.go:397 | 微内核/微内核/cmd/agentd/events.go:171 | 微内核/微内核/cmd/agentd/loop.go:161
+  ev.sse -> 研究-协同工作-1022.md | 微内核/微内核/cmd/agentd/fakesrv.go:117-134

@@ -1,0 +1,150 @@
+<!-- ================= COVER ================= -->
+<section class="cover">
+  <div class="grid"></div>
+  <div class="glow"></div>
+  <div class="glow2"></div>
+  <div class="inner">
+    <div class="kicker">Agentkernel · Market Entry Review · V2</div>
+    <h1>可验证记账内核<br><span class="thin">怎样面对市场</span></h1>
+    <div class="sub">
+      从“卖账本”改为“卖可复核的二次修改证据”。<br>
+      先研究出版，再开源证据适配层；企业私有化条件触发；托管按次不做。
+    </div>
+    <div class="object">
+      研究对象：agentkernel v1（48 键 / 49 格，判据表冻结） · 重评日期 2026-10-20
+    </div>
+    <div class="verdict">
+      <div class="lab">重评结论</div>
+      <div class="txt">D + A 先行；B 等 Gate 1.5 与 Gate 2；C 不做；E 可选。<br>不过 Gate 1.5，就冻结为研究资产，不进入商业交付。</div>
+    </div>
+    <table class="stats">
+      <tr>
+        <td><div class="v">5</div><div class="l">道 Go / No-Go 闸<br>新增 R/N 双臂闸</div></td>
+        <td><div class="v">1.0–2.0 亿</div><div class="l">美元 SAM<br>较 v1 下调（C 级假设）</div></td>
+        <td><div class="v">0.5–4.0 百万</div><div class="l">美元三年 SOM<br>按 1.5–3 万美元 ARPU</div></td>
+        <td><div class="v">NOT_RUN</div><div class="l">R/N 双臂<br>不能写成“闭环已通”</div></td>
+      </tr>
+    </table>
+  </div>
+  <div class="foot">
+    这是一份重评，不是 v1 的复述。市场数据沿用 v1，结论、门槛、定价与财务基准已重算。<br>
+    证据分级 A/B/C/D/X；X 不塌成 0；未找到付款证据，不写成“0 个买家”。
+  </div>
+</section>
+
+<!-- ================= READING GUIDE ================= -->
+<section class="chapter">
+  <div class="chap-kicker">Reading Guide</div>
+  <h1>这份重评怎么读</h1>
+
+  <p class="lede">
+    v1 回答的是“五条路先走哪条”。v2 回答的是“在上一轮研究证明账本本身不构成闭环之后，这条路还成不成立、要不要改”。
+  </p>
+
+  <h2>一句话结论</h2>
+  <div class="callout">
+    <div class="t">D + A 先行，但 A 的交付物变了</div>
+    <p>
+      研究出版（D）仍然第一，因为“执行记录能否支撑二次修改”这个类别还没有被外部复核过。
+      开源（A）仍然第二，但开源的不是“又一个账本”，而是<strong>证据适配层</strong>：把账本、产物原像、行为/判据版本与外部验证器装进一个可复核的证据包。
+      企业私有化（B）只在 Gate 1.5（R/N 双臂）与 Gate 2（LOI + 安全审查）都通过后触发；托管按次（C）不做；竞赛/生态（E）可选。
+    </p>
+  </div>
+
+  <h2>三条边界，先写在前面</h2>
+  <table class="tbl">
+    <thead><tr><th style="width:24%">边界</th><th>含义</th><th style="width:30%">不允许的读法</th></tr></thead>
+    <tbody>
+      <tr><td><b>审计层不是防线</b></td><td>agentkernel 记录、读回、验链；不拦截、不调度、不联网、不执行工具。</td><td>“上了内核就挡住了提示注入 / 工具滥用。”</td></tr>
+      <tr><td><b>记录完整 ≠ 内容为真</b></td><td>哈希链证明账未改；不证明账里的内容可信、出处可靠。</td><td>“verify 通过，所以结论可信。”</td></tr>
+      <tr><td><b>闭环尚未实证</b></td><td>R/N 双臂与两条反臂都未跑；严格双臂判据仍是 FAIL。</td><td>“看记录再改已经证明有效 / 闭环已通。”</td></tr>
+    </tbody>
+  </table>
+
+  <h2>证据分级：五种状态，不许塌成一种</h2>
+  <table class="tbl">
+    <thead><tr><th style="width:10%">等级</th><th style="width:36%">定义</th><th>本报告怎么用</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag tag-a">A</span></td><td>工具自印 + 独立复算，或双源逐字对上</td><td>可直接支撑技术可信度与验收判断</td></tr>
+      <tr><td><span class="tag tag-b">B</span></td><td>单一来源自印，未被本报告独立复算</td><td>作为线索，标注“单源”</td></tr>
+      <tr><td><span class="tag tag-c">C</span></td><td>作者复算 / 规划假设，无原始件</td><td>用于数量级、情景与设计，不读成调查结论</td></tr>
+      <tr><td><span class="tag tag-d">D</span></td><td>外部公开资料，注明访问日</td><td>用于背景、法规、竞品与价格锚</td></tr>
+      <tr><td><span class="tag tag-x">X</span></td><td>不可核 / 未验证</td><td>写“不知道 / 未跑”，不塌成 0</td></tr>
+    </tbody>
+  </table>
+
+  <h2>与 v1 的关系</h2>
+  <p>
+    v1 的市场规模、竞品价格锚、法规背景仍然可用；v2 不重复铺陈，只改三件事：
+    <b>产品叙事</b>（从账本改为证据包）、<b>进入门槛</b>（新增 Gate 1.5）、<b>规模与财务</b>（因“功能而非平台”下调）。
+    如果你只读一页，读第 0 章的“变了什么”表。
+  </p>
+</section>
+
+<!-- ================= TOC ================= -->
+<section class="toc-page">
+  <h1 class="toc-title">目录</h1>
+  <table class="toc">
+    <tr class="l1"><td><span class="tn">00</span>重评摘要与建议</td><td class="pg" data-key="exec"></td></tr>
+    <tr class="l1"><td><span class="tn">01</span>为什么要重评</td><td class="pg" data-key="ch1"></td></tr>
+    <tr class="l2"><td>1.1 v1 的结论与它的前提</td><td class="pg" data-key="s1-1"></td></tr>
+    <tr class="l2"><td>1.2 变了什么：从账本到证据包</td><td class="pg" data-key="s1-2"></td></tr>
+    <tr class="l2"><td>1.3 重评问题与判据</td><td class="pg" data-key="s1-3"></td></tr>
+    <tr class="l1"><td><span class="tn">02</span>市场与定位</td><td class="pg" data-key="ch2"></td></tr>
+    <tr class="l2"><td>2.1 市场边界：记账层不是可观测性</td><td class="pg" data-key="s2-1"></td></tr>
+    <tr class="l2"><td>2.2 规模重算：为什么下调 SAM</td><td class="pg" data-key="s2-2"></td></tr>
+    <tr class="l2"><td>2.3 买家与预算科目</td><td class="pg" data-key="s2-3"></td></tr>
+    <tr class="l1"><td><span class="tn">03</span>需求与反需求</td><td class="pg" data-key="ch3"></td></tr>
+    <tr class="l1"><td><span class="tn">04</span>竞争格局：功能，还是平台</td><td class="pg" data-key="ch4"></td></tr>
+    <tr class="l1"><td><span class="tn">05</span>产品证据现状</td><td class="pg" data-key="ch5"></td></tr>
+    <tr class="l1"><td><span class="tn">06</span>五条进入方式重评</td><td class="pg" data-key="ch6"></td></tr>
+    <tr class="l2"><td>选项 A：开源证据适配层</td><td class="pg" data-key="s6-a"></td></tr>
+    <tr class="l2"><td>选项 B：企业私有化</td><td class="pg" data-key="s6-b"></td></tr>
+    <tr class="l2"><td>选项 C：托管按次</td><td class="pg" data-key="s6-c"></td></tr>
+    <tr class="l2"><td>选项 D：研究出版 / 标准</td><td class="pg" data-key="s6-d"></td></tr>
+    <tr class="l2"><td>选项 E：竞赛 / 生态</td><td class="pg" data-key="s6-e"></td></tr>
+    <tr class="l1"><td><span class="tn">07</span>推荐路线与五道闸</td><td class="pg" data-key="ch7"></td></tr>
+    <tr class="l2"><td>7.3 五道闸：Go / No-Go</td><td class="pg" data-key="s7-2"></td></tr>
+    <tr class="l1"><td><span class="tn">08</span>定价与单位经济</td><td class="pg" data-key="ch8"></td></tr>
+    <tr class="l1"><td><span class="tn">09</span>风险登记与红队</td><td class="pg" data-key="ch9"></td></tr>
+    <tr class="l1"><td><span class="tn">10</span>实施路线图（26 周）</td><td class="pg" data-key="ch10"></td></tr>
+    <tr class="l1"><td><span class="tn">11</span>财务情景</td><td class="pg" data-key="ch11"></td></tr>
+    <tr class="l1"><td><span class="tn">12</span>结论</td><td class="pg" data-key="ch12"></td></tr>
+    <tr class="l1"><td><span class="tn">A</span>方法与证据分级</td><td class="pg" data-key="appA"></td></tr>
+    <tr class="l1"><td><span class="tn">B</span>数据表</td><td class="pg" data-key="appB"></td></tr>
+    <tr class="l1"><td><span class="tn">C</span>参考文献</td><td class="pg" data-key="appC"></td></tr>
+    <tr class="l1"><td><span class="tn">D</span>术语与对外材料草稿</td><td class="pg" data-key="appD"></td></tr>
+  </table>
+
+  <h2 style="margin-top:8mm">图表索引</h2>
+  <table class="toc">
+    <tr class="l2"><td>图 1 修订后的市场层级</td><td class="pg" data-key="fig1"></td></tr>
+    <tr class="l2"><td>图 2 证据层的价值链位置</td><td class="pg" data-key="fig2"></td></tr>
+    <tr class="l2"><td>图 3 竞争定位：追踪深度 × 证据强度</td><td class="pg" data-key="fig3"></td></tr>
+    <tr class="l2"><td>图 4 证据阶梯</td><td class="pg" data-key="fig4"></td></tr>
+    <tr class="l2"><td>图 5 五条进入方式矩阵</td><td class="pg" data-key="fig5"></td></tr>
+    <tr class="l2"><td>图 6 决策树：D → A → 1.5 → B</td><td class="pg" data-key="fig6"></td></tr>
+    <tr class="l2"><td>图 7 风险热图</td><td class="pg" data-key="fig7"></td></tr>
+    <tr class="l2"><td>图 8 26 周路线</td><td class="pg" data-key="fig8"></td></tr>
+    <tr class="l2"><td>图 9 三情景收入</td><td class="pg" data-key="fig9"></td></tr>
+    <tr class="l2"><td>表 1 v1 与 v2 的差异</td><td class="pg" data-key="tab1"></td></tr>
+    <tr class="l2"><td>表 2 市场边界</td><td class="pg" data-key="tab2"></td></tr>
+    <tr class="l2"><td>表 3 规模三路交叉</td><td class="pg" data-key="tab3"></td></tr>
+    <tr class="l2"><td>表 4 买家与预算</td><td class="pg" data-key="tab4"></td></tr>
+    <tr class="l2"><td>表 5 五类玩家</td><td class="pg" data-key="tab5"></td></tr>
+    <tr class="l2"><td>表 6 能说 / 不能说</td><td class="pg" data-key="tab6"></td></tr>
+    <tr class="l2"><td>表 7 五条进入方式对比</td><td class="pg" data-key="tab7"></td></tr>
+    <tr class="l2"><td>表 8 五道闸</td><td class="pg" data-key="tab8"></td></tr>
+    <tr class="l2"><td>表 9 定价梯子</td><td class="pg" data-key="tab9"></td></tr>
+    <tr class="l2"><td>表 10 风险登记</td><td class="pg" data-key="tab10"></td></tr>
+    <tr class="l2"><td>表 11 财务情景</td><td class="pg" data-key="tab11"></td></tr>
+  </table>
+
+  <div class="callout neutral" style="margin-top:6mm">
+    <div class="t">图表读法</div>
+    <p class="small">
+      图先看轴与范围，再看点位；表先看口径与分母，再看数字。所有 C 级数字都是规划假设，不是调查结论；
+      所有 X 级缺口写“未跑 / 不知道”，不写成 0。图 7 的风险等级用于排序，不是概率估计。
+    </p>
+  </div>
+</section>

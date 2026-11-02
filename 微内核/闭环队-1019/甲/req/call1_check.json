@@ -1,0 +1,44 @@
+{"jsonrpc":"2.0","id":10,"method":"tools/call","params":{"name":"kernel.check_call","arguments":{
+"session":"jia-audit-1019",
+"actor":"调用方甲(闭环队-1019)",
+"input":{
+ "Call":1,
+ "Order":["system","user"],
+ "Parts":[{"Kind":"system","Parts":1,"Bytes":12000},{"Kind":"user","Parts":1,"Bytes":6800}],
+ "ContentBytes":18800,
+ "Tokens":{"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"分词器在对端；这一侧连 content_bytes 都只是估算，估 token 没有依据"},
+ "Budget":{
+  "CallBytesCeiling":200000,
+  "TransportSlackPct":15,
+  "ContentCeiling":170000,
+  "Shares":{"system":20,"user":20},
+  "LeftoverPct":60,
+  "FixedOverhead":{"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"骨架字节要装配器数，模型这一侧数不到"},
+  "EffectiveCeiling":170000,
+  "ClampRounds":0
+ },
+ "Cuts":[],
+ "Notice":{"Sent":false,"Trimmed":false,"Why":"这一发没有裁剪记录，没有要发的知情通知。另声明：ContentBytes 与 Parts.Bytes 是裸整数、结构上不能表达缺席，账上的 18800 是我对提示词字节的估算，不是实测。","Text":""}
+},
+"output":{
+ "Call":1,
+ "Streaming":false,
+ "Finish":{"Reason":"","Said":false},
+ "Model":"",
+ "ModelSaid":false,
+ "WireFormat":"",
+ "WireFormatSaid":false,
+ "Says":{"Bytes":304,"Kept":304,"SHA256":"34217ba95153ce29e18a0d558d059898badc400c109f1f051a948233292f7265"},
+ "UsageIn":{"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"分词器在对端，外壳没把 usage 递到这一侧"},
+ "UsageOut":{"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"分词器在对端，外壳没把 usage 递到这一侧"},
+ "WireBytesOut":{"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"请求体字节由外壳编码后数，不在这一侧可见面上"},
+ "WireBytesIn":{"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"通道字节是传输层数的，不在这一侧可见面上"},
+ "Chunks":{"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"按非流式记，结构上没有分帧数"},
+ "FirstByteMs":{"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"按非流式记，结构上没有首帧等待"},
+ "MaxGapMs":{"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"按非流式记，结构上没有帧间静默"},
+ "ToolCalls":6,
+ "Malformed":0,
+ "MalformedStreak":0,
+ "Failure":{"Kind":"","Detail":"","Status":{"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"没故障，也没有对端响应可抄状态码"},"RetryAfterMs":{"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"没故障，对端也没说要等多久"},"Downgrade":false}
+}
+}}}

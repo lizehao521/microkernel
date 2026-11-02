@@ -1,0 +1,43 @@
+# SIGINT 这两次尝试：都没验成 OS 那一层（本机 Windows），原因查清了
+
+## 第一次（无延迟）
+
+命令：`agentd --script full --max-turns 200 --journal-out /tmp/sigint.jsonl` 后台起，随后 `kill -INT $pid`。
+读数：`kill` 回 0、`wait` 报 rc=130，但输出里跑完的是它自己那条结束原因（`按 POLICY 主动停`），
+落盘 442 行（441 条 + 1 行表头 = 9 发 × 49 格）。
+第一反应是「9 发在 0.05 秒里跑完了，信号来晚了」——所以补了第二次。
+
+## 第二次（每发之间真等 700ms）
+
+加了 `--shot-delay` 这一档（真端点本来就慢，这不算造需求）后再试：
+
+```
+agentd --script full --max-turns 20 --shot-delay 700ms --journal-out /tmp/sig2.jsonl &
+sleep 1.6 ; kill -INT $pid ; wait $pid   → rc=130
+```
+
+预期是停在第 2~3 发之间；**实际仍然是 9 发全跑完、441 条、结束原因「按账停」**。
+按 700ms × 9 发 ≈ 6.3 秒，`kill` 明明在 1.6 秒就发了。
+
+## 结论与机制
+
+**这台机器上 `kill -INT` 送不到 Go 原生进程**。Git Bash 的 `kill` 对 Windows 进程没有 POSIX 信号语义：
+它照样回 0、`wait` 照样按 128+2 报 130，但进程那头什么都没收到，一路跑到自然结束。
+所以 rc=130 是 shell 的记法，**不是**宿主走了打断分支的证据 —— 这一条以前我会误当成证据。
+
+真按 Ctrl-C 走的是 Windows 控制台事件（`GenerateConsoleCtrlEvent`），从这个 shell 里没法投给一个独立子进程；
+要验它得在人家的终端里手动按，那不归本轮（也不提议让你动手）。
+
+## 那么「打断也交账」这条现在靠什么撑着
+
+两根针，都是进程内的、可复跑的：
+
+- `TestInterruptStillHandsOverTheLedger` —— 第 3 发之后关 abort 通道 ⇒ 停、收口照跑、落 `3×49=147` 条、
+  文件读回 `Mismatch=""` 且条数一致、`exitOf(stopAbort)=6`。
+- `TestAbortDuringDelayReturnsImmediately`（新）—— 延迟设 30 秒、abort 一开始就关 ⇒ **立刻**返回（<1s），
+  不等满延迟，且账上一条都没写。这一根钉的是「等待之中也听得见打断」。
+
+`--shot-delay` 这档留着：接真端点时它本来就是需要的，也是等哪天能验 OS 信号时的现成条件。
+
+**报数口径**：`go test ./cmd/agentd` 28 根针全过；OS 级 SIGINT = **NOT_VERIFIED（原因：Git Bash 不向 Windows 进程投信号）**，
+不写进"已验证"那一堆，也不写 0。

@@ -1,0 +1,195 @@
+{
+  "generated_at": "2026-10-26T05:58:34+08:00",
+  "bridge": "C:\\Users\\Admin\\Desktop\\微内核\\交付对账-1026\\设计-桌面端-v2\\模型桥.py",
+  "bridge_sha256": "121ce6486e63a1393531e2e04bf10eec30dac5695e7c87aab1ad655669341d51",
+  "fake_upstream": "127.0.0.1 random port",
+  "key_source": "env only; sentinel not real; not printed",
+  "checks": [
+    {
+      "name": "unconfigured state",
+      "ok": true,
+      "detail": "unconfigured"
+    },
+    {
+      "name": "unconfigured explain 503",
+      "ok": true,
+      "detail": "(503, {'ok': False, 'error': 'NO_ENDPOINT', 'why': '模型桥未配置端点：设置 WEIHETAI_MODEL_BASE_URL / WEIHETAI_MODEL 后重启', 'call_made': False, 'calls': 0})"
+    },
+    {
+      "name": "unconfigured no call",
+      "ok": true,
+      "detail": "{'ok': False, 'error': 'NO_ENDPOINT', 'why': '模型桥未配置端点：设置 WEIHETAI_MODEL_BASE_URL / WEIHETAI_MODEL 后重启', 'call_made': False, 'calls': 0}"
+    },
+    {
+      "name": "health has no key value",
+      "ok": true,
+      "detail": "sentinel check"
+    },
+    {
+      "name": "ready state",
+      "ok": true,
+      "detail": "{'ok': True, 'service': 'weihetai-model-bridge', 'version': '0.1.0', 'boot_id': '940f50', 'started_at': '2026-10-26T05:58:32+08:00', 'state': 'ready', 'provider': 'openai-compatible', 'model': 'fake-model-1', 'base_host': 'http://127.0.0.1:50955', 'key_present': True, 'timeout_s': 5.0, 'max_tokens': 700, 'boundary': '只发问题 + 去标识证据摘要；不发记忆、操作者、文件路径、sha256、回执、口令', 'calls': 0, 'last_error': '', 'last_ms': None, 'last_upstream_status': None, 'why': ''}"
+    },
+    {
+      "name": "key present flag only",
+      "ok": true,
+      "detail": "{'ok': True, 'service': 'weihetai-model-bridge', 'version': '0.1.0', 'boot_id': '940f50', 'started_at': '2026-10-26T05:58:32+08:00', 'state': 'ready', 'provider': 'openai-compatible', 'model': 'fake-model-1', 'base_host': 'http://127.0.0.1:50955', 'key_present': True, 'timeout_s': 5.0, 'max_tokens': 700, 'boundary': '只发问题 + 去标识证据摘要；不发记忆、操作者、文件路径、sha256、回执、口令', 'calls': 0, 'last_error': '', 'last_ms': None, 'last_upstream_status': None, 'why': ''}"
+    },
+    {
+      "name": "base_host hides path",
+      "ok": true,
+      "detail": "http://127.0.0.1:50955"
+    },
+    {
+      "name": "ok explain 200",
+      "ok": true,
+      "detail": "(200, {'ok': True, 'title': '模型转述', 'text': 'D1-C1 不符：13 步里没有测试步。', 'refs': [{'kind': 'claim', 'id': 'D1-C1', 'label': 'D1-C1 测试通过'}], 'model': 'fake-model-1', 'provider': 'openai-compatible', 'ms': 28, 'usage': {'prompt_tokens': 100, 'completion_tokens': 20, 'total_tokens': 120}, 'call_made': True, 'calls': 1, 'boundary': '只发问题 + 去标识证据摘要；不发记忆、操作者、文件路径、sha256、回执、口令'})"
+    },
+    {
+      "name": "tier is not model-chosen",
+      "ok": true,
+      "detail": "dict_keys(['ok', 'title', 'text', 'refs', 'model', 'provider', 'ms', 'usage', 'call_made', 'calls', 'boundary'])"
+    },
+    {
+      "name": "valid refs only",
+      "ok": true,
+      "detail": "[{'kind': 'claim', 'id': 'D1-C1', 'label': 'D1-C1 测试通过'}]"
+    },
+    {
+      "name": "usage kept",
+      "ok": true,
+      "detail": "{'prompt_tokens': 100, 'completion_tokens': 20, 'total_tokens': 120}"
+    },
+    {
+      "name": "upstream auth header",
+      "ok": true,
+      "detail": "auth header mismatch"
+    },
+    {
+      "name": "upstream path appended",
+      "ok": true,
+      "detail": "/v1/chat/completions"
+    },
+    {
+      "name": "upstream body no memory key",
+      "ok": true,
+      "detail": "forbidden key in body"
+    },
+    {
+      "name": "upstream body no local path",
+      "ok": true,
+      "detail": "path in body"
+    },
+    {
+      "name": "upstream body has question",
+      "ok": true,
+      "detail": "question missing"
+    },
+    {
+      "name": "calls counted",
+      "ok": true,
+      "detail": "1"
+    },
+    {
+      "name": "missing bridge header 403",
+      "ok": true,
+      "detail": "(403, {'ok': False, 'error': 'BRIDGE_HEADER_REQUIRED', 'why': '缺少 X-Weihetai-Bridge: 1'})"
+    },
+    {
+      "name": "origin rejected",
+      "ok": true,
+      "detail": "(403, {'ok': False, 'error': 'ORIGIN_REJECTED', 'why': '模型桥只接受本机服务调用，不接受浏览器跨源请求'})"
+    },
+    {
+      "name": "digest memory key 400",
+      "ok": true,
+      "detail": "(400, {'ok': False, 'error': 'BAD_DIGEST', 'why': '摘要含未允许的顶层字段：memory', 'call_made': False})"
+    },
+    {
+      "name": "digest local path 400",
+      "ok": true,
+      "detail": "(400, {'ok': False, 'error': 'BAD_DIGEST', 'why': '摘要含疑似本机路径 / 口令字样：C:\\\\', 'call_made': False})"
+    },
+    {
+      "name": "digest hash key 400",
+      "ok": true,
+      "detail": "(400, {'ok': False, 'error': 'BAD_DIGEST', 'why': '声明含未允许字段：sha256', 'call_made': False})"
+    },
+    {
+      "name": "digest literal hash 400",
+      "ok": true,
+      "detail": "(400, {'ok': False, 'error': 'BAD_DIGEST', 'why': '摘要含疑似哈希值（40-64 位十六进制）', 'call_made': False})"
+    },
+    {
+      "name": "algorithm word sha256 allowed",
+      "ok": true,
+      "detail": "(200, {'ok': True, 'title': '模型转述', 'text': 'D1-C1 不符：13 步里没有测试步。', 'refs': [{'kind': 'claim', 'id': 'D1-C1', 'label': 'D1-C1 测试通过'}], 'model': 'fake-model-1', 'provider': 'openai-compatible', 'ms': 2, 'usage': {'prompt_tokens': 100, 'completion_tokens': 20, 'total_tokens': 120}, 'call_made': True, 'calls': 2, 'boundary': '只发问题 + 去标识证据摘要；不发记忆、操作者、文件路径、sha256、回执、口令'})"
+    },
+    {
+      "name": "question too long 400",
+      "ok": true,
+      "detail": "(400, {'ok': False, 'error': 'BAD_QUESTION', 'why': '问题需为 1..500 字'})"
+    },
+    {
+      "name": "upstream 500 mapped",
+      "ok": true,
+      "detail": "(502, {'ok': False, 'error': 'UPSTREAM_500', 'why': '端点返回 HTTP 500：{\"error\":\"boom\",\"key\":\"***\"}', 'call_made': True, 'calls': 3, 'upstream_status': 500})"
+    },
+    {
+      "name": "upstream error redacts key",
+      "ok": true,
+      "detail": "端点返回 HTTP 500：{\"error\":\"boom\",\"key\":\"***\"}"
+    },
+    {
+      "name": "upstream failure call_made",
+      "ok": true,
+      "detail": "{'ok': False, 'error': 'UPSTREAM_500', 'why': '端点返回 HTTP 500：{\"error\":\"boom\",\"key\":\"***\"}', 'call_made': True, 'calls': 3, 'upstream_status': 500}"
+    },
+    {
+      "name": "bad response mapped",
+      "ok": true,
+      "detail": "(502, {'ok': False, 'error': 'BAD_RESPONSE', 'why': '端点回了非 OpenAI 兼容的响应或空 choices', 'call_made': True, 'calls': 4, 'upstream_status': 200})"
+    },
+    {
+      "name": "plain text accepted",
+      "ok": true,
+      "detail": "{'ok': True, 'title': '模型解释', 'text': 'D1-C1 不符：13 步里没有测试步。', 'refs': [{'kind': 'claim', 'id': 'D1-C1', 'label': 'D1-C1 测试通过'}], 'model': 'fake-model-1', 'provider': 'openai-compatible', 'ms': 18, 'usage': {'total_tokens': 12}, 'call_made': True, 'calls': 5, 'boundary': '只发问题 + 去标识证据摘要；不发记忆、操作者、文件路径、sha256、回执、口令'}"
+    },
+    {
+      "name": "timeout mapped 504",
+      "ok": true,
+      "detail": "(504, {'ok': False, 'error': 'TIMEOUT', 'why': '端点 1s 内没有回应', 'call_made': True, 'calls': 1}, 1.0)"
+    },
+    {
+      "name": "timeout honored ~1s",
+      "ok": true,
+      "detail": "1.05"
+    },
+    {
+      "name": "timeout call_made",
+      "ok": true,
+      "detail": "{'ok': False, 'error': 'TIMEOUT', 'why': '端点 1s 内没有回应', 'call_made': True, 'calls': 1}"
+    },
+    {
+      "name": "log has no key",
+      "ok": true,
+      "detail": "sentinel in log"
+    },
+    {
+      "name": "log has no question text",
+      "ok": true,
+      "detail": "question in log"
+    },
+    {
+      "name": "log has calls",
+      "ok": true,
+      "detail": "no explain event"
+    }
+  ],
+  "counts": {
+    "total": 36,
+    "pass": 36,
+    "fail": 0
+  },
+  "verdict": "PASS"
+}

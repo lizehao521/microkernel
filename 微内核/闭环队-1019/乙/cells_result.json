@@ -1,0 +1,3414 @@
+{
+ "files": {
+  "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+   "lines": 2941,
+   "header": 1,
+   "gateLines": 0,
+   "badLines": 0,
+   "entries": 2940,
+   "sessions": [
+    "mount-check",
+    "客服靶场",
+    "客服靶场-无依据",
+    "客服靶场-替身抖装配",
+    "客服靶场-替身抖装配-无依据",
+    "客服靶场-替身抖装配2",
+    "客服靶场-替身抖装配2-无依据",
+    "客服靶场-真流量",
+    "客服靶场-真流量-无依据",
+    "考题-自检",
+    "考题-B",
+    "考题2-B"
+   ],
+   "shots": 120,
+   "basisHist": {
+    "1": 2213,
+    "2": 188,
+    "3": 124,
+    "4": 60,
+    "5": 355
+   }
+  },
+  "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+   "lines": 491,
+   "header": 1,
+   "gateLines": 0,
+   "badLines": 0,
+   "entries": 490,
+   "sessions": [
+    "9ff63c40-273c-4185-9a49-c11248bec807",
+    "ai-home-2026-10-18"
+   ],
+   "shots": 20,
+   "basisHist": {
+    "1": 350,
+    "2": 20,
+    "4": 10,
+    "5": 110
+   }
+  }
+ },
+ "cells": [
+  {
+   "side": "input",
+   "key": "call",
+   "kind": "model_input:call",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 1,
+       "basis": 1,
+       "claim": "1",
+       "payload": "1"
+      },
+      {
+       "seq": 50,
+       "basis": 1,
+       "claim": "2",
+       "payload": "2"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 10,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 1,
+       "basis": 1,
+       "claim": "1",
+       "payload": "1"
+      },
+      {
+       "seq": 50,
+       "basis": 1,
+       "claim": "2",
+       "payload": "2"
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "input",
+   "key": "parts",
+   "kind": "model_input:parts",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 2,
+       "basis": 1,
+       "claim": "1 段：system",
+       "payload": "[\"system\"]"
+      },
+      {
+       "seq": 51,
+       "basis": 1,
+       "claim": "1 段：system",
+       "payload": "[\"system\"]"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 10,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 2,
+       "basis": 1,
+       "claim": "6 段：system skill memory history toolspec user",
+       "payload": "[\"system\",\"skill\",\"memory\",\"history\",\"toolspec\",\"user\"]"
+      },
+      {
+       "seq": 51,
+       "basis": 1,
+       "claim": "6 段：system skill memory history toolspec user",
+       "payload": "[\"system\",\"skill\",\"memory\",\"history\",\"toolspec\",\"user\"]"
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "input",
+   "key": "part_totals",
+   "kind": "model_input:part_totals",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 3,
+       "basis": 1,
+       "claim": "1 类共 64 字节：system=1",
+       "payload": "[{\"Kind\":\"system\",\"Parts\":1,\"Bytes\":64}]"
+      },
+      {
+       "seq": 52,
+       "basis": 1,
+       "claim": "1 类共 64 字节：system=1",
+       "payload": "[{\"Kind\":\"system\",\"Parts\":1,\"Bytes\":64}]"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 10,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 3,
+       "basis": 1,
+       "claim": "6 类共 0 字节：system=1 skill=1 memory=1 history=1 toolspec=1 use",
+       "payload": "[{\"Kind\":\"system\",\"Parts\":1,\"Bytes\":0},{\"Kind\":\"skill\",\"Parts\":1,\"Bytes\":0},{\"Ki"
+      },
+      {
+       "seq": 52,
+       "basis": 1,
+       "claim": "6 类共 0 字节：system=1 skill=1 memory=1 history=1 toolspec=1 use",
+       "payload": "[{\"Kind\":\"system\",\"Parts\":1,\"Bytes\":0},{\"Kind\":\"skill\",\"Parts\":1,\"Bytes\":0},{\"Ki"
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "input",
+   "key": "content_bytes",
+   "kind": "model_input:content_bytes",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 4,
+       "basis": 1,
+       "claim": "64",
+       "payload": "64"
+      },
+      {
+       "seq": 53,
+       "basis": 1,
+       "claim": "64",
+       "payload": "64"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 10,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 4,
+       "basis": 1,
+       "claim": "0",
+       "payload": "0"
+      },
+      {
+       "seq": 53,
+       "basis": 1,
+       "claim": "0",
+       "payload": "0"
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "input",
+   "key": "tokens",
+   "kind": "model_input:tokens",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "3": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 5,
+       "basis": 3,
+       "claim": "≈42（这是估算，不是测量）：估的是挂载验收用的合成演示值，不是真实测量",
+       "payload": "{\"N\":42,\"Basis\":3,\"Source\":\"挂载验收用的合成演示值，不是真实测量\",\"Absent\":false,\"Refused\":false,\""
+      },
+      {
+       "seq": 54,
+       "basis": 3,
+       "claim": "≈42（这是估算，不是测量）：估的是挂载验收用的合成演示值，不是真实测量",
+       "payload": "{\"N\":42,\"Basis\":3,\"Source\":\"挂载验收用的合成演示值，不是真实测量\",\"Absent\":false,\"Refused\":false,\""
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "5": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 0,
+     "samples": [
+      {
+       "seq": 5,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：分词器在对端；且这一侧连 content_bytes 都没量到，估一个数没有依据",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"分词器在对端；且这一侧连 c"
+      },
+      {
+       "seq": 54,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：分词器在对端；且这一侧连 content_bytes 都没量到，估一个数没有依据",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"分词器在对端；且这一侧连 c"
+      },
+      {
+       "seq": 103,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：分词器在对端；且这一侧连 content_bytes 都没量到，估一个数没有依据",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"分词器在对端；且这一侧连 c"
+      }
+     ],
+     "samplesFilled": []
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "input",
+   "key": "call_bytes_ceiling",
+   "kind": "model_input:call_bytes_ceiling",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 6,
+       "basis": 1,
+       "claim": "8000",
+       "payload": "8000"
+      },
+      {
+       "seq": 55,
+       "basis": 1,
+       "claim": "8000",
+       "payload": "8000"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 10,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 6,
+       "basis": 1,
+       "claim": "200000",
+       "payload": "200000"
+      },
+      {
+       "seq": 55,
+       "basis": 1,
+       "claim": "200000",
+       "payload": "200000"
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "input",
+   "key": "transport_slack_pct",
+   "kind": "model_input:transport_slack_pct",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 7,
+       "basis": 1,
+       "claim": "10",
+       "payload": "10"
+      },
+      {
+       "seq": 56,
+       "basis": 1,
+       "claim": "10",
+       "payload": "10"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 10,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 7,
+       "basis": 1,
+       "claim": "15",
+       "payload": "15"
+      },
+      {
+       "seq": 56,
+       "basis": 1,
+       "claim": "15",
+       "payload": "15"
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "input",
+   "key": "content_ceiling",
+   "kind": "model_input:content_ceiling",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 8,
+       "basis": 1,
+       "claim": "7200",
+       "payload": "7200"
+      },
+      {
+       "seq": 57,
+       "basis": 1,
+       "claim": "7200",
+       "payload": "7200"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 10,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 8,
+       "basis": 1,
+       "claim": "170000",
+       "payload": "170000"
+      },
+      {
+       "seq": 57,
+       "basis": 1,
+       "claim": "170000",
+       "payload": "170000"
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "input",
+   "key": "effective_ceiling",
+   "kind": "model_input:effective_ceiling",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 9,
+       "basis": 1,
+       "claim": "7200",
+       "payload": "7200"
+      },
+      {
+       "seq": 58,
+       "basis": 1,
+       "claim": "7200",
+       "payload": "7200"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 10,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 9,
+       "basis": 1,
+       "claim": "170000",
+       "payload": "170000"
+      },
+      {
+       "seq": 58,
+       "basis": 1,
+       "claim": "170000",
+       "payload": "170000"
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "input",
+   "key": "clamp_rounds",
+   "kind": "model_input:clamp_rounds",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 10,
+       "basis": 1,
+       "claim": "0",
+       "payload": "0"
+      },
+      {
+       "seq": 59,
+       "basis": 1,
+       "claim": "0",
+       "payload": "0"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 10,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 10,
+       "basis": 1,
+       "claim": "0",
+       "payload": "0"
+      },
+      {
+       "seq": 59,
+       "basis": 1,
+       "claim": "0",
+       "payload": "0"
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "input",
+   "key": "leftover_pct",
+   "kind": "model_input:leftover_pct",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 11,
+       "basis": 1,
+       "claim": "0",
+       "payload": "0"
+      },
+      {
+       "seq": 60,
+       "basis": 1,
+       "claim": "0",
+       "payload": "0"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 10,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 11,
+       "basis": 1,
+       "claim": "0",
+       "payload": "0"
+      },
+      {
+       "seq": 60,
+       "basis": 1,
+       "claim": "0",
+       "payload": "0"
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "input",
+   "key": "fixed_overhead",
+   "kind": "model_input:fixed_overhead",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "3": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 12,
+       "basis": 3,
+       "claim": "≈37（这是估算，不是测量）：估的是挂载验收用的合成演示值，不是真实测量",
+       "payload": "{\"N\":37,\"Basis\":3,\"Source\":\"挂载验收用的合成演示值，不是真实测量\",\"Absent\":false,\"Refused\":false,\""
+      },
+      {
+       "seq": 61,
+       "basis": 3,
+       "claim": "≈37（这是估算，不是测量）：估的是挂载验收用的合成演示值，不是真实测量",
+       "payload": "{\"N\":37,\"Basis\":3,\"Source\":\"挂载验收用的合成演示值，不是真实测量\",\"Absent\":false,\"Refused\":false,\""
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "5": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 0,
+     "samples": [
+      {
+       "seq": 12,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：骨架字节要装配器数，模型这一侧数不到",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"骨架字节要装配器数，模型这一"
+      },
+      {
+       "seq": 61,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：骨架字节要装配器数，模型这一侧数不到",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"骨架字节要装配器数，模型这一"
+      },
+      {
+       "seq": 110,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：骨架字节要装配器数，模型这一侧数不到",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"骨架字节要装配器数，模型这一"
+      }
+     ],
+     "samplesFilled": []
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "input",
+   "key": "shares",
+   "kind": "model_input:shares",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 13,
+       "basis": 1,
+       "claim": "system=100",
+       "payload": "[\"system=100\"]"
+      },
+      {
+       "seq": 62,
+       "basis": 1,
+       "claim": "system=100",
+       "payload": "[\"system=100\"]"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 10,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 13,
+       "basis": 1,
+       "claim": "history=30 memory=10 skill=10 system=20 toolspec=10 user=20",
+       "payload": "[\"history=30\",\"memory=10\",\"skill=10\",\"system=20\",\"toolspec=10\",\"user=20\"]"
+      },
+      {
+       "seq": 62,
+       "basis": 1,
+       "claim": "history=30 memory=10 skill=10 system=20 toolspec=10 user=20",
+       "payload": "[\"history=30\",\"memory=10\",\"skill=10\",\"system=20\",\"toolspec=10\",\"user=20\"]"
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "input",
+   "key": "notice_sent",
+   "kind": "model_input:notice_sent",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 14,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      },
+      {
+       "seq": 63,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 10,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 14,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      },
+      {
+       "seq": 63,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "input",
+   "key": "notice_trimmed",
+   "kind": "model_input:notice_trimmed",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 15,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      },
+      {
+       "seq": 64,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 10,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 15,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      },
+      {
+       "seq": 64,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "input",
+   "key": "notice_why",
+   "kind": "model_input:notice_why",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 16,
+       "basis": 1,
+       "claim": "合成演示：没折叠没裁尾，所以没发提示",
+       "payload": "\"合成演示：没折叠没裁尾，所以没发提示\""
+      },
+      {
+       "seq": 65,
+       "basis": 1,
+       "claim": "合成演示：没折叠没裁尾，所以没发提示",
+       "payload": "\"合成演示：没折叠没裁尾，所以没发提示\""
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 10,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 16,
+       "basis": 1,
+       "claim": "这一发没有裁剪记录，也就没有要发的知情通知",
+       "payload": "\"这一发没有裁剪记录，也就没有要发的知情通知\""
+      },
+      {
+       "seq": 65,
+       "basis": 1,
+       "claim": "这一发没有裁剪记录，也就没有要发的知情通知",
+       "payload": "\"这一发没有裁剪记录，也就没有要发的知情通知\""
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "input",
+   "key": "notice_text",
+   "kind": "model_input:notice_text",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 54,
+     "filled": 6,
+     "samples": [
+      {
+       "seq": 17,
+       "basis": 1,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      },
+      {
+       "seq": 66,
+       "basis": 1,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      },
+      {
+       "seq": 115,
+       "basis": 1,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      }
+     ],
+     "samplesFilled": [
+      {
+       "seq": 409,
+       "basis": 1,
+       "claim": "（历史 2 轮已折叠，折叠表见 cuts）",
+       "payload": "\"（历史 2 轮已折叠，折叠表见 cuts）\""
+      },
+      {
+       "seq": 458,
+       "basis": 1,
+       "claim": "（历史 3 轮已折叠，折叠表见 cuts）",
+       "payload": "\"（历史 3 轮已折叠，折叠表见 cuts）\""
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 4,
+     "filled": 6,
+     "samples": [
+      {
+       "seq": 17,
+       "basis": 1,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      },
+      {
+       "seq": 66,
+       "basis": 1,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      },
+      {
+       "seq": 115,
+       "basis": 1,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      }
+     ],
+     "samplesFilled": [
+      {
+       "seq": 213,
+       "basis": 1,
+       "claim": "整圈合并发：本发把主页生产+渲染验收+内核探型合为一条，未按轮拆分。输入侧 content_bytes / part_t",
+       "payload": "\"整圈合并发：本发把主页生产+渲染验收+内核探型合为一条，未按轮拆分。输入侧 content_bytes / part_totals / budget 六格是裸"
+      },
+      {
+       "seq": 262,
+       "basis": 1,
+       "claim": "形状更正知情：第 1 发把 malformed_actions / malformed_streak 落成 measur",
+       "payload": "\"形状更正知情：第 1 发把 malformed_actions / malformed_streak 落成 measured 0——因为我没把这两格整块给，默"
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "input",
+   "key": "folded",
+   "kind": "model_input:folded",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 18,
+       "basis": 1,
+       "claim": "0 段（裁剪表是空的）",
+       "payload": "[]"
+      },
+      {
+       "seq": 67,
+       "basis": 1,
+       "claim": "0 段（裁剪表是空的）",
+       "payload": "[]"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 10,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 18,
+       "basis": 1,
+       "claim": "0 段（裁剪表是空的）",
+       "payload": "[]"
+      },
+      {
+       "seq": 67,
+       "basis": 1,
+       "claim": "0 段（裁剪表是空的）",
+       "payload": "[]"
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "input",
+   "key": "clipped",
+   "kind": "model_input:clipped",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 19,
+       "basis": 1,
+       "claim": "0 段（裁剪表是空的）",
+       "payload": "[]"
+      },
+      {
+       "seq": 68,
+       "basis": 1,
+       "claim": "0 段（裁剪表是空的）",
+       "payload": "[]"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 10,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 19,
+       "basis": 1,
+       "claim": "0 段（裁剪表是空的）",
+       "payload": "[]"
+      },
+      {
+       "seq": 68,
+       "basis": 1,
+       "claim": "0 段（裁剪表是空的）",
+       "payload": "[]"
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "input",
+   "key": "dropped",
+   "kind": "model_input:dropped",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 20,
+       "basis": 1,
+       "claim": "0 段（裁剪表是空的）",
+       "payload": "[]"
+      },
+      {
+       "seq": 69,
+       "basis": 1,
+       "claim": "0 段（裁剪表是空的）",
+       "payload": "[]"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 10,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 20,
+       "basis": 1,
+       "claim": "0 段（裁剪表是空的）",
+       "payload": "[]"
+      },
+      {
+       "seq": 69,
+       "basis": 1,
+       "claim": "0 段（裁剪表是空的）",
+       "payload": "[]"
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "output",
+   "key": "call",
+   "kind": "model_output:call",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 21,
+       "basis": 1,
+       "claim": "1",
+       "payload": "1"
+      },
+      {
+       "seq": 70,
+       "basis": 1,
+       "claim": "2",
+       "payload": "2"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 10,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 21,
+       "basis": 1,
+       "claim": "1",
+       "payload": "1"
+      },
+      {
+       "seq": 70,
+       "basis": 1,
+       "claim": "2",
+       "payload": "2"
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "output",
+   "key": "streaming",
+   "kind": "model_output:streaming",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 22,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      },
+      {
+       "seq": 71,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 10,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 22,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      },
+      {
+       "seq": 71,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "output",
+   "key": "finish",
+   "kind": "model_output:finish",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "2": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 26,
+     "filled": 34,
+     "samples": [
+      {
+       "seq": 23,
+       "basis": 2,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      },
+      {
+       "seq": 72,
+       "basis": 2,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      },
+      {
+       "seq": 1787,
+       "basis": 2,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      }
+     ],
+     "samplesFilled": [
+      {
+       "seq": 121,
+       "basis": 2,
+       "claim": "stop",
+       "payload": "\"stop\""
+      },
+      {
+       "seq": 170,
+       "basis": 2,
+       "claim": "stop",
+       "payload": "\"stop\""
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "2": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 10,
+     "filled": 0,
+     "samples": [
+      {
+       "seq": 23,
+       "basis": 2,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      },
+      {
+       "seq": 72,
+       "basis": 2,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      },
+      {
+       "seq": 121,
+       "basis": 2,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      }
+     ],
+     "samplesFilled": []
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "output",
+   "key": "finish_said",
+   "kind": "model_output:finish_said",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 24,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      },
+      {
+       "seq": 73,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 10,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 24,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      },
+      {
+       "seq": 73,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "output",
+   "key": "endpoint_model",
+   "kind": "model_output:endpoint_model",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "4": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 37,
+     "filled": 23,
+     "samples": [
+      {
+       "seq": 25,
+       "basis": 4,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      },
+      {
+       "seq": 74,
+       "basis": 4,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      },
+      {
+       "seq": 613,
+       "basis": 4,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      }
+     ],
+     "samplesFilled": [
+      {
+       "seq": 123,
+       "basis": 4,
+       "claim": "cs-flash",
+       "payload": "\"cs-flash\""
+      },
+      {
+       "seq": 172,
+       "basis": 4,
+       "claim": "cs-flash",
+       "payload": "\"cs-flash\""
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "4": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 10,
+     "filled": 0,
+     "samples": [
+      {
+       "seq": 25,
+       "basis": 4,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      },
+      {
+       "seq": 74,
+       "basis": 4,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      },
+      {
+       "seq": 123,
+       "basis": 4,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      }
+     ],
+     "samplesFilled": []
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "output",
+   "key": "endpoint_model_said",
+   "kind": "model_output:endpoint_model_said",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 26,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      },
+      {
+       "seq": 75,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 10,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 26,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      },
+      {
+       "seq": 75,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "output",
+   "key": "wire_format",
+   "kind": "model_output:wire_format",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "2": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 26,
+     "filled": 34,
+     "samples": [
+      {
+       "seq": 27,
+       "basis": 2,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      },
+      {
+       "seq": 76,
+       "basis": 2,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      },
+      {
+       "seq": 1791,
+       "basis": 2,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      }
+     ],
+     "samplesFilled": [
+      {
+       "seq": 125,
+       "basis": 2,
+       "claim": "chat.completion",
+       "payload": "\"chat.completion\""
+      },
+      {
+       "seq": 174,
+       "basis": 2,
+       "claim": "chat.completion.chunk",
+       "payload": "\"chat.completion.chunk\""
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "2": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 10,
+     "filled": 0,
+     "samples": [
+      {
+       "seq": 27,
+       "basis": 2,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      },
+      {
+       "seq": 76,
+       "basis": 2,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      },
+      {
+       "seq": 125,
+       "basis": 2,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      }
+     ],
+     "samplesFilled": []
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "output",
+   "key": "wire_format_said",
+   "kind": "model_output:wire_format_said",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 28,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      },
+      {
+       "seq": 77,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 10,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 28,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      },
+      {
+       "seq": 77,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "output",
+   "key": "model_says_bytes",
+   "kind": "model_output:model_says_bytes",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 29,
+       "basis": 1,
+       "claim": "55",
+       "payload": "55"
+      },
+      {
+       "seq": 78,
+       "basis": 1,
+       "claim": "55",
+       "payload": "55"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 10,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 29,
+       "basis": 1,
+       "claim": "16622",
+       "payload": "16622"
+      },
+      {
+       "seq": 78,
+       "basis": 1,
+       "claim": "23743",
+       "payload": "23743"
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "output",
+   "key": "model_says_kept",
+   "kind": "model_output:model_says_kept",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 30,
+       "basis": 1,
+       "claim": "55",
+       "payload": "55"
+      },
+      {
+       "seq": 79,
+       "basis": 1,
+       "claim": "55",
+       "payload": "55"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 10,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 30,
+       "basis": 1,
+       "claim": "16622",
+       "payload": "16622"
+      },
+      {
+       "seq": 79,
+       "basis": 1,
+       "claim": "23743",
+       "payload": "23743"
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "output",
+   "key": "model_says_clipped",
+   "kind": "model_output:model_says_clipped",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 31,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      },
+      {
+       "seq": 80,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 10,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 31,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      },
+      {
+       "seq": 80,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "output",
+   "key": "model_says_sha256",
+   "kind": "model_output:model_says_sha256",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 32,
+       "basis": 1,
+       "claim": "8b0f208ea5ee315a619e9202e7609acf8c357a22367f2894034479b49e51",
+       "payload": "\"8b0f208ea5ee315a619e9202e7609acf8c357a22367f2894034479b49e5127f5\""
+      },
+      {
+       "seq": 81,
+       "basis": 1,
+       "claim": "8b0f208ea5ee315a619e9202e7609acf8c357a22367f2894034479b49e51",
+       "payload": "\"8b0f208ea5ee315a619e9202e7609acf8c357a22367f2894034479b49e5127f5\""
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 10,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 32,
+       "basis": 1,
+       "claim": "9deda46e1c36f47da8de9bae75c3b441a587c05b3f77d07ebdb7975a8c9e",
+       "payload": "\"9deda46e1c36f47da8de9bae75c3b441a587c05b3f77d07ebdb7975a8c9ee1b7\""
+      },
+      {
+       "seq": 81,
+       "basis": 1,
+       "claim": "a5f257eb991912128bbd86bd28084e924b663bd134dfeec2bbbe1c4e22d8",
+       "payload": "\"a5f257eb991912128bbd86bd28084e924b663bd134dfeec2bbbe1c4e22d82813\""
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "output",
+   "key": "usage_in",
+   "kind": "model_output:usage_in",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "2": 34,
+      "5": 26
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 34,
+     "samples": [
+      {
+       "seq": 33,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：合成演示：没有端点，没人报 usage",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"合成演示：没有端点，没人报 "
+      },
+      {
+       "seq": 82,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：合成演示：没有端点，没人报 usage",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"合成演示：没有端点，没人报 "
+      },
+      {
+       "seq": 1797,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：我是答题方，没有对端分词可转述",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"我是答题方，没有对端分词可转"
+      }
+     ],
+     "samplesFilled": [
+      {
+       "seq": 131,
+       "basis": 2,
+       "claim": "393（转述自 对端 usage.prompt_tokens（cs-flash 自报））",
+       "payload": "{\"N\":393,\"Basis\":2,\"Source\":\"对端 usage.prompt_tokens（cs-flash 自报）\",\"Absent\":false"
+      },
+      {
+       "seq": 180,
+       "basis": 2,
+       "claim": "0（转述自 对端 usage.prompt_tokens（cs-flash 自报））",
+       "payload": "{\"N\":0,\"Basis\":2,\"Source\":\"对端 usage.prompt_tokens（cs-flash 自报）\",\"Absent\":false,\""
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "5": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 0,
+     "samples": [
+      {
+       "seq": 33,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：分词器在对端，这一趟外壳没把 usage 递到我这一侧",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"分词器在对端，这一趟外壳没把"
+      },
+      {
+       "seq": 82,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：分词器在对端，这一趟外壳没把 usage 递到我这一侧",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"分词器在对端，这一趟外壳没把"
+      },
+      {
+       "seq": 131,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：分词器在对端，这一趟外壳没把 usage 递到我这一侧",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"分词器在对端，这一趟外壳没把"
+      }
+     ],
+     "samplesFilled": []
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "output",
+   "key": "usage_out",
+   "kind": "model_output:usage_out",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "2": 34,
+      "5": 26
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 34,
+     "samples": [
+      {
+       "seq": 34,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：合成演示：没有端点，没人报 usage",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"合成演示：没有端点，没人报 "
+      },
+      {
+       "seq": 83,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：合成演示：没有端点，没人报 usage",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"合成演示：没有端点，没人报 "
+      },
+      {
+       "seq": 1798,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：我是答题方，没有对端分词可转述",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"我是答题方，没有对端分词可转"
+      }
+     ],
+     "samplesFilled": [
+      {
+       "seq": 132,
+       "basis": 2,
+       "claim": "35（转述自 对端 usage.completion_tokens（cs-flash 自报））",
+       "payload": "{\"N\":35,\"Basis\":2,\"Source\":\"对端 usage.completion_tokens（cs-flash 自报）\",\"Absent\":fa"
+      },
+      {
+       "seq": 181,
+       "basis": 2,
+       "claim": "0（转述自 对端 usage.completion_tokens（cs-flash 自报））",
+       "payload": "{\"N\":0,\"Basis\":2,\"Source\":\"对端 usage.completion_tokens（cs-flash 自报）\",\"Absent\":fal"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "5": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 0,
+     "samples": [
+      {
+       "seq": 34,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：分词器在对端，这一趟外壳没把 usage 递到我这一侧",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"分词器在对端，这一趟外壳没把"
+      },
+      {
+       "seq": 83,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：分词器在对端，这一趟外壳没把 usage 递到我这一侧",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"分词器在对端，这一趟外壳没把"
+      },
+      {
+       "seq": 132,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：分词器在对端，这一趟外壳没把 usage 递到我这一侧",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"分词器在对端，这一趟外壳没把"
+      }
+     ],
+     "samplesFilled": []
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "output",
+   "key": "wire_bytes_out",
+   "kind": "model_output:wire_bytes_out",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 34,
+      "3": 2,
+      "5": 24
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 36,
+     "samples": [
+      {
+       "seq": 1799,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：这一发没有过网络的请求体：我是答题方，不是调用方",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"这一发没有过网络的请求体：我"
+      },
+      {
+       "seq": 1848,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：这一发没有过网络的请求体：我是答题方，不是调用方",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"这一发没有过网络的请求体：我"
+      },
+      {
+       "seq": 1897,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：这一发没有过网络的请求体：我是答题方，不是调用方",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"这一发没有过网络的请求体：我"
+      }
+     ],
+     "samplesFilled": [
+      {
+       "seq": 35,
+       "basis": 3,
+       "claim": "≈210（这是估算，不是测量）：估的是挂载验收用的合成演示值，不是真实测量",
+       "payload": "{\"N\":210,\"Basis\":3,\"Source\":\"挂载验收用的合成演示值，不是真实测量\",\"Absent\":false,\"Refused\":false,"
+      },
+      {
+       "seq": 84,
+       "basis": 3,
+       "claim": "≈210（这是估算，不是测量）：估的是挂载验收用的合成演示值，不是真实测量",
+       "payload": "{\"N\":210,\"Basis\":3,\"Source\":\"挂载验收用的合成演示值，不是真实测量\",\"Absent\":false,\"Refused\":false,"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "5": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 0,
+     "samples": [
+      {
+       "seq": 35,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：请求体字节是编码后数的，不在这次调用的可见面上",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"请求体字节是编码后数的，不在"
+      },
+      {
+       "seq": 84,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：请求体字节是编码后数的，不在这次调用的可见面上",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"请求体字节是编码后数的，不在"
+      },
+      {
+       "seq": 133,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：请求体字节是编码后数的，不在这次调用的可见面上",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"请求体字节是编码后数的，不在"
+      }
+     ],
+     "samplesFilled": []
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "output",
+   "key": "wire_bytes_in",
+   "kind": "model_output:wire_bytes_in",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 34,
+      "3": 2,
+      "5": 24
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 36,
+     "samples": [
+      {
+       "seq": 1800,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：这一发没有从通道上数字节：题面就在本地文件里，没走网络",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"这一发没有从通道上数字节：题"
+      },
+      {
+       "seq": 1849,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：这一发没有从通道上数字节：题面就在本地文件里，没走网络",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"这一发没有从通道上数字节：题"
+      },
+      {
+       "seq": 1898,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：这一发没有从通道上数字节：题面就在本地文件里，没走网络",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"这一发没有从通道上数字节：题"
+      }
+     ],
+     "samplesFilled": [
+      {
+       "seq": 36,
+       "basis": 3,
+       "claim": "≈640（这是估算，不是测量）：估的是挂载验收用的合成演示值，不是真实测量",
+       "payload": "{\"N\":640,\"Basis\":3,\"Source\":\"挂载验收用的合成演示值，不是真实测量\",\"Absent\":false,\"Refused\":false,"
+      },
+      {
+       "seq": 85,
+       "basis": 3,
+       "claim": "≈640（这是估算，不是测量）：估的是挂载验收用的合成演示值，不是真实测量",
+       "payload": "{\"N\":640,\"Basis\":3,\"Source\":\"挂载验收用的合成演示值，不是真实测量\",\"Absent\":false,\"Refused\":false,"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "5": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 0,
+     "samples": [
+      {
+       "seq": 36,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：通道字节是传输层数的，不在这次调用的可见面上",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"通道字节是传输层数的，不在这"
+      },
+      {
+       "seq": 85,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：通道字节是传输层数的，不在这次调用的可见面上",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"通道字节是传输层数的，不在这"
+      },
+      {
+       "seq": 134,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：通道字节是传输层数的，不在这次调用的可见面上",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"通道字节是传输层数的，不在这"
+      }
+     ],
+     "samplesFilled": []
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "output",
+   "key": "chunks",
+   "kind": "model_output:chunks",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 15,
+      "5": 45
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 15,
+     "samples": [
+      {
+       "seq": 37,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：合成演示：Streaming=false，结构上没有分帧可数",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"合成演示：Streaming"
+      },
+      {
+       "seq": 86,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：合成演示：Streaming=false，结构上没有分帧可数",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"合成演示：Streaming"
+      },
+      {
+       "seq": 135,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：这一发不是流式的，结构上没有分帧",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"这一发不是流式的，结构上没有"
+      }
+     ],
+     "samplesFilled": [
+      {
+       "seq": 184,
+       "basis": 1,
+       "claim": "12",
+       "payload": "{\"N\":12,\"Basis\":1,\"Source\":\"\",\"Absent\":false,\"Refused\":false,\"Why\":\"\"}"
+      },
+      {
+       "seq": 282,
+       "basis": 1,
+       "claim": "11",
+       "payload": "{\"N\":11,\"Basis\":1,\"Source\":\"\",\"Absent\":false,\"Refused\":false,\"Why\":\"\"}"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "5": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 0,
+     "samples": [
+      {
+       "seq": 37,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：按非流式记，结构上没有分帧数",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"按非流式记，结构上没有分帧数"
+      },
+      {
+       "seq": 86,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：按非流式记，结构上没有分帧数",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"按非流式记，结构上没有分帧数"
+      },
+      {
+       "seq": 135,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：按非流式记，结构上没有分帧数",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"按非流式记，结构上没有分帧数"
+      }
+     ],
+     "samplesFilled": []
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "output",
+   "key": "first_byte_ms",
+   "kind": "model_output:first_byte_ms",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 15,
+      "5": 45
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 15,
+     "samples": [
+      {
+       "seq": 38,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：合成演示：非流式，没有首字节时刻",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"合成演示：非流式，没有首字节"
+      },
+      {
+       "seq": 87,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：合成演示：非流式，没有首字节时刻",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"合成演示：非流式，没有首字节"
+      },
+      {
+       "seq": 136,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：这一发不是流式的，没有首帧这件事",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"这一发不是流式的，没有首帧这"
+      }
+     ],
+     "samplesFilled": [
+      {
+       "seq": 185,
+       "basis": 1,
+       "claim": "205",
+       "payload": "{\"N\":205,\"Basis\":1,\"Source\":\"\",\"Absent\":false,\"Refused\":false,\"Why\":\"\"}"
+      },
+      {
+       "seq": 283,
+       "basis": 1,
+       "claim": "205",
+       "payload": "{\"N\":205,\"Basis\":1,\"Source\":\"\",\"Absent\":false,\"Refused\":false,\"Why\":\"\"}"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "5": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 0,
+     "samples": [
+      {
+       "seq": 38,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：按非流式记，结构上没有首帧等待",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"按非流式记，结构上没有首帧等"
+      },
+      {
+       "seq": 87,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：按非流式记，结构上没有首帧等待",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"按非流式记，结构上没有首帧等"
+      },
+      {
+       "seq": 136,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：按非流式记，结构上没有首帧等待",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"按非流式记，结构上没有首帧等"
+      }
+     ],
+     "samplesFilled": []
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "output",
+   "key": "max_gap_ms",
+   "kind": "model_output:max_gap_ms",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 15,
+      "5": 45
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 15,
+     "samples": [
+      {
+       "seq": 39,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：合成演示：非流式，没有帧间间隙",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"合成演示：非流式，没有帧间间"
+      },
+      {
+       "seq": 88,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：合成演示：非流式，没有帧间间隙",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"合成演示：非流式，没有帧间间"
+      },
+      {
+       "seq": 137,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：这一发不是流式的，没有帧间",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"这一发不是流式的，没有帧间\""
+      }
+     ],
+     "samplesFilled": [
+      {
+       "seq": 186,
+       "basis": 1,
+       "claim": "0",
+       "payload": "{\"N\":0,\"Basis\":1,\"Source\":\"\",\"Absent\":false,\"Refused\":false,\"Why\":\"\"}"
+      },
+      {
+       "seq": 284,
+       "basis": 1,
+       "claim": "0",
+       "payload": "{\"N\":0,\"Basis\":1,\"Source\":\"\",\"Absent\":false,\"Refused\":false,\"Why\":\"\"}"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "5": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 0,
+     "samples": [
+      {
+       "seq": 39,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：按非流式记，结构上没有帧间静默",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"按非流式记，结构上没有帧间静"
+      },
+      {
+       "seq": 88,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：按非流式记，结构上没有帧间静默",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"按非流式记，结构上没有帧间静"
+      },
+      {
+       "seq": 137,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：按非流式记，结构上没有帧间静默",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"按非流式记，结构上没有帧间静"
+      }
+     ],
+     "samplesFilled": []
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "output",
+   "key": "tool_calls",
+   "kind": "model_output:tool_calls",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 40,
+       "basis": 1,
+       "claim": "0",
+       "payload": "0"
+      },
+      {
+       "seq": 89,
+       "basis": 1,
+       "claim": "0",
+       "payload": "0"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 10,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 40,
+       "basis": 1,
+       "claim": "28",
+       "payload": "28"
+      },
+      {
+       "seq": 89,
+       "basis": 1,
+       "claim": "19",
+       "payload": "19"
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "output",
+   "key": "malformed_actions",
+   "kind": "model_output:malformed_actions",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 41,
+       "basis": 1,
+       "claim": "0",
+       "payload": "0"
+      },
+      {
+       "seq": 90,
+       "basis": 1,
+       "claim": "0",
+       "payload": "0"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 10,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 41,
+       "basis": 1,
+       "claim": "1",
+       "payload": "1"
+      },
+      {
+       "seq": 90,
+       "basis": 1,
+       "claim": "0",
+       "payload": "0"
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "output",
+   "key": "malformed_streak",
+   "kind": "model_output:malformed_streak",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 42,
+       "basis": 1,
+       "claim": "0",
+       "payload": "0"
+      },
+      {
+       "seq": 91,
+       "basis": 1,
+       "claim": "0",
+       "payload": "0"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 10,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 42,
+       "basis": 1,
+       "claim": "1",
+       "payload": "1"
+      },
+      {
+       "seq": 91,
+       "basis": 1,
+       "claim": "0",
+       "payload": "0"
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "output",
+   "key": "fail_kind",
+   "kind": "model_output:fail_kind",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 60,
+     "filled": 0,
+     "samples": [
+      {
+       "seq": 43,
+       "basis": 1,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      },
+      {
+       "seq": 92,
+       "basis": 1,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      },
+      {
+       "seq": 141,
+       "basis": 1,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      }
+     ],
+     "samplesFilled": []
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 9,
+     "filled": 1,
+     "samples": [
+      {
+       "seq": 43,
+       "basis": 1,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      },
+      {
+       "seq": 92,
+       "basis": 1,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      },
+      {
+       "seq": 141,
+       "basis": 1,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      }
+     ],
+     "samplesFilled": [
+      {
+       "seq": 239,
+       "basis": 1,
+       "claim": "transport",
+       "payload": "\"transport\""
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "output",
+   "key": "fail_detail",
+   "kind": "model_output:fail_detail",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 60,
+     "filled": 0,
+     "samples": [
+      {
+       "seq": 44,
+       "basis": 1,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      },
+      {
+       "seq": 93,
+       "basis": 1,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      },
+      {
+       "seq": 142,
+       "basis": 1,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      }
+     ],
+     "samplesFilled": []
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 9,
+     "filled": 1,
+     "samples": [
+      {
+       "seq": 44,
+       "basis": 1,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      },
+      {
+       "seq": 93,
+       "basis": 1,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      },
+      {
+       "seq": 142,
+       "basis": 1,
+       "claim": "（这一格是空的）",
+       "payload": "\"\""
+      }
+     ],
+     "samplesFilled": [
+      {
+       "seq": 240,
+       "basis": 1,
+       "claim": "browser-use take_screenshot 返回 NATIVE_BROWSER_VIEWPORT_UNAVA",
+       "payload": "\"browser-use take_screenshot 返回 NATIVE_BROWSER_VIEWPORT_UNAVAILABLE：应用内浏览器 surfa"
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "output",
+   "key": "fail_status",
+   "kind": "model_output:fail_status",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "5": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 0,
+     "samples": [
+      {
+       "seq": 45,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：合成演示：没有对端，没收到 HTTP 响应",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"合成演示：没有对端，没收到 "
+      },
+      {
+       "seq": 94,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：合成演示：没有对端，没收到 HTTP 响应",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"合成演示：没有对端，没收到 "
+      },
+      {
+       "seq": 143,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：这一发没故障，也就没有要记的状态码",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"这一发没故障，也就没有要记的"
+      }
+     ],
+     "samplesFilled": []
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "5": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 0,
+     "samples": [
+      {
+       "seq": 45,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：没故障，也没有对端响应可抄状态码",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"没故障，也没有对端响应可抄状"
+      },
+      {
+       "seq": 94,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：没故障，也没有对端响应可抄状态码",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"没故障，也没有对端响应可抄状"
+      },
+      {
+       "seq": 143,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：没故障，也没有对端响应可抄状态码",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"没故障，也没有对端响应可抄状"
+      }
+     ],
+     "samplesFilled": []
+    }
+   },
+   "everFilled": false,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "output",
+   "key": "retry_after_ms",
+   "kind": "model_output:retry_after_ms",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "5": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 0,
+     "samples": [
+      {
+       "seq": 46,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：合成演示：没故障，没有重试等待",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"合成演示：没故障，没有重试等"
+      },
+      {
+       "seq": 95,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：合成演示：没故障，没有重试等待",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"合成演示：没故障，没有重试等"
+      },
+      {
+       "seq": 144,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：这一发没断，也就没有要等多久",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"这一发没断，也就没有要等多久"
+      }
+     ],
+     "samplesFilled": []
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "5": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 0,
+     "samples": [
+      {
+       "seq": 46,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：没故障，对端也没说要等多久",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"没故障，对端也没说要等多久\""
+      },
+      {
+       "seq": 95,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：没故障，对端也没说要等多久",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"没故障，对端也没说要等多久\""
+      },
+      {
+       "seq": 144,
+       "basis": 5,
+       "claim": "—（没量到，不是 0）：没故障，对端也没说要等多久",
+       "payload": "{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"没故障，对端也没说要等多久\""
+      }
+     ],
+     "samplesFilled": []
+    }
+   },
+   "everFilled": false,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "output",
+   "key": "downgrade",
+   "kind": "model_output:downgrade",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 47,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      },
+      {
+       "seq": 96,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 10,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 47,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      },
+      {
+       "seq": 96,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "output",
+   "key": "sent",
+   "kind": "model_output:sent",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 48,
+       "basis": 1,
+       "claim": "发出去了",
+       "payload": "\"发出去了\""
+      },
+      {
+       "seq": 97,
+       "basis": 1,
+       "claim": "发出去了",
+       "payload": "\"发出去了\""
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 10,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 48,
+       "basis": 1,
+       "claim": "不知道发没发出去（没数到，不是 0）",
+       "payload": "\"不知道发没发出去（没数到，不是 0）\""
+      },
+      {
+       "seq": 97,
+       "basis": 1,
+       "claim": "不知道发没发出去（没数到，不是 0）",
+       "payload": "\"不知道发没发出去（没数到，不是 0）\""
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  },
+  {
+   "side": "output",
+   "key": "cost_countable",
+   "kind": "model_output:cost_countable",
+   "perFile": {
+    "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl": {
+     "entries": 60,
+     "basis": {
+      "1": 60
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 60,
+     "emptyStrPayload": 0,
+     "filled": 60,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 49,
+       "basis": 1,
+       "claim": "是",
+       "payload": "true"
+      },
+      {
+       "seq": 98,
+       "basis": 1,
+       "claim": "是",
+       "payload": "true"
+      }
+     ]
+    },
+    "C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl": {
+     "entries": 10,
+     "basis": {
+      "1": 10
+     },
+     "nullPayload": 0,
+     "emptyPayload": 0,
+     "nonEmptyPayload": 10,
+     "emptyStrPayload": 0,
+     "filled": 10,
+     "samples": [],
+     "samplesFilled": [
+      {
+       "seq": 49,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      },
+      {
+       "seq": 98,
+       "basis": 1,
+       "claim": "否",
+       "payload": "false"
+      }
+     ]
+    }
+   },
+   "everFilled": true,
+   "everPresentAsEntry": true
+  }
+ ],
+ "extraKinds": {}
+}

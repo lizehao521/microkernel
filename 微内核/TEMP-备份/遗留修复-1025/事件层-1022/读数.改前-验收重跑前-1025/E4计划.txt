@@ -1,0 +1,25 @@
+{
+ "id": "E4",
+ "title": "SSE 投送 + id / Last-Event-ID 重放",
+ "covers": [
+  5,
+  14
+ ],
+ "tasks": [
+  "宿主新增只监听 127.0.0.1 随机空闲端口的 HTTP 层（复用 fakesrv.go:107-135 的 Hijacker/Flusher 形状，绝不复用 8797/8799）",
+  "每帧写 event: + data: + id: <session>:<turn>:<seq>，id 直接取自 E1 落盘那条，不许另算",
+  "重连时读 Last-Event-ID，从 E1 的 JSONL 里该 seq 之后重放；重放幂等，客户端可按 seq 去重",
+  "没有事件日志可读时，turn_accepted 里如实写 resumable:false —— 界面与文档都按「不可续、只能重发」措辞",
+  "测试：curl 两段（第一段中途断开，第二段带 Last-Event-ID 重连），断言接续无重复无空洞",
+  "反臂：删掉 id 帧头 ⇒ 续传针必须红；把 resumable 谎成 true 又不落日志 ⇒ 另一臂必须红"
+ ],
+ "executionFit": "fits-one-run",
+ "demoBoundary": "断开重连拿到的是接续的 seq 序列；不可续那一形在回执里明写 resumable:false",
+ "scopeNotes": "只投送 E1 已经落盘的事件，界面层不在这一发。",
+ "blockedBy": [
+  "E1",
+  "E2"
+ ],
+ "techGuidance": "SSE 帧头与正文分两次 flush，代理缓冲用 X-Accel-Buffering: no（AgentHub 已有先例），但心跳/半开那一族本轮不做，如实记未测。",
+ "status": "Planned"
+}

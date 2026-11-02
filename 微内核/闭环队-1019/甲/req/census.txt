@@ -1,0 +1,65 @@
+### LEDGER A  distinctCalls=60 distinctSessions=12
+-- model_output:sent lines(first8)=[49,98,147,196,245,294,343,392]
+   x36  发出去了 ||payload="发出去了"
+   x24  不知道发没发出去（没数到，不是 0） ||payload="不知道发没发出去（没数到，不是 0）"
+-- model_output:fail_kind lines(first8)=[44,93,142,191,240,289,338,387]
+   x60  （这一格是空的） ||payload=""
+-- model_output:fail_detail lines(first8)=[45,94,143,192,241,290,339,388]
+   x60  （这一格是空的） ||payload=""
+-- model_input:dropped lines(first8)=[21,70,119,168,217,266,315,364]
+   x54  0 段（裁剪表是空的） ||payload=[]
+   x1  2 段：history/坐席备注一段：最后一次整段随第 6 发发出，第 7 发超额度时整段挤出（连桩也没发） history/坐席备注一段：最后一次整段随第 6 发发出，第 7 发超额度时整段挤出（连桩也没发） ||payload=[{"Kind":"history","Ref":"坐席备注一段：最后一次整段随第 6 发发出，第 7 发超额度时整段挤出（连桩也没发）","RefCall":6,"Role":"user","Squeeze":"dropped-whole
+   x1  3 段：history/坐席备注一段：最后一次整段随第 7 发发出，第 8 发超额度时整段挤出（连桩也没发） history/坐席备注一段：最后一次整段随第 7 发发出，第 8 发超额度时整段挤出（连桩也没发） history/坐席备注一段：最后一次整段随第 7 发发出，第 8 发超额度时整段挤出（连桩也没发） ||payload=[{"Kind":"history","Ref":"坐席备注一段：最后一次整段随第 7 发发出，第 8 发超额度时整段挤出（连桩也没发）","RefCall":7,"Role":"user","Squeeze":"dropped-whole
+   x2  2 段：history/坐席备注一段：整段随第 6 发挤出（连桩也没发） history/坐席备注一段：整段随第 6 发挤出（连桩也没发） ||payload=[{"Kind":"history","Ref":"坐席备注一段：整段随第 6 发挤出（连桩也没发）","RefCall":6,"Role":"assistant","Squeeze":"dropped-whole","FromBytes"
+   x2  3 段：history/坐席备注一段：整段随第 7 发挤出（连桩也没发） history/坐席备注一段：整段随第 7 发挤出（连桩也没发） history/坐席备注一段：整段随第 7 发挤出（连桩也没发） ||payload=[{"Kind":"history","Ref":"坐席备注一段：整段随第 7 发挤出（连桩也没发）","RefCall":7,"Role":"assistant","Squeeze":"dropped-whole","FromBytes"
+-- model_input:notice_text lines(first8)=[18,67,116,165,214,263,312,361]
+   x54  （这一格是空的） ||payload=""
+   x1  （历史 2 轮已折叠，折叠表见 cuts） ||payload="（历史 2 轮已折叠，折叠表见 cuts）"
+   x1  （历史 3 轮已折叠，折叠表见 cuts） ||payload="（历史 3 轮已折叠，折叠表见 cuts）"
+   x2  （历史 2 轮整段未发送，折叠表见 cuts） ||payload="（历史 2 轮整段未发送，折叠表见 cuts）"
+   x2  （历史 3 轮整段未发送，折叠表见 cuts） ||payload="（历史 3 轮整段未发送，折叠表见 cuts）"
+-- model_output:cost_countable lines(first8)=[50,99,148,197,246,295,344,393]
+   x36  是 ||payload=true
+   x24  否 ||payload=false
+-- model_output:downgrade lines(first8)=[48,97,146,195,244,293,342,391]
+   x60  否 ||payload=false
+-- model_output:tool_calls lines(first8)=[41,90,139,188,237,286,335,384]
+   x60  0 ||payload=0
+-- model_output:malformed_actions lines(first8)=[42,91,140,189,238,287,336,385]
+   x60  0 ||payload=0
+### LEDGER B  distinctCalls=10 distinctSessions=2
+-- model_output:sent lines(first8)=[49,98,147,196,245,294,343,392]
+   x10  不知道发没发出去（没数到，不是 0） ||payload="不知道发没发出去（没数到，不是 0）"
+-- model_output:fail_kind lines(first8)=[44,93,142,191,240,289,338,387]
+   x9  （这一格是空的） ||payload=""
+   x1  transport ||payload="transport"
+-- model_output:fail_detail lines(first8)=[45,94,143,192,241,290,339,388]
+   x9  （这一格是空的） ||payload=""
+   x1  browser-use take_screenshot 返回 NATIVE_BROWSER_VIEWPORT_UNAVAILABLE：应用内浏览器 surface 隐藏（visibilityState=hidden，1000ms 内无正 viewport），像素层没取到图；结构验收改用 a11y snapshot + evaluate_script 代偿。另：一次 click 因弹层盖住目标被拒（页面状态，不是参数形状） ||payload="browser-use take_screenshot 返回 NATIVE_BROWSER_VIEWPORT_UNAVAILABLE：应用内浏览器 surface 隐藏（visibilityState=hidden，1000ms 内无正 
+-- model_input:dropped lines(first8)=[21,70,119,168,217,266,315,364]
+   x10  0 段（裁剪表是空的） ||payload=[]
+-- model_input:notice_text lines(first8)=[18,67,116,165,214,263,312,361]
+   x4  （这一格是空的） ||payload=""
+   x1  整圈合并发：本发把主页生产+渲染验收+内核探型合为一条，未按轮拆分。输入侧 content_bytes / part_totals / budget 六格是裸整数，结构上不能表达缺席，账上的 0 是「没量到」不是「量到 0」；shares 与两级额度是策略数（我定的额度，不是端点给的）。 ||payload="整圈合并发：本发把主页生产+渲染验收+内核探型合为一条，未按轮拆分。输入侧 content_bytes / part_totals / budget 六格是裸整数，结构上不能表达缺席，账上的 0 是「没量到」不是「量到 0」；shares
+   x1  形状更正知情：第 1 发把 malformed_actions / malformed_streak 落成 measured 0——因为我没把这两格整块给，默认零值被当成实测，这是假绿。本发起改记自己这一发的真实数：1 次（declare_reader 键名带了侧前缀被拒）。整圈形状错共 3 次：click 多带一个参数、check_call 顶层多带 chunks 键、本发这一条；前两处在第 1 发地上账上是 0，不回改（append-only）。 ||payload="形状更正知情：第 1 发把 malformed_actions / malformed_streak 落成 measured 0——因为我没把这两格整块给，默认零值被当成实测，这是假绿。本发起改记自己这一发的真实数：1 次（declare
+   x1  收口一发姿势实测：本发不交预检税（同一份判据已由前两发验过 2/2），共 6 次调用：写文档 1 + 量字节 1 + 落账 1 + 读回 1 + verify 1 + tally 1。model_says_bytes 这格仍无 owner 位：本发记的是「内核MCP评估-优缺点与总结.md」的实测字节 7676，不是聊天消息的序列化字节。输入侧 content_bytes=0 / part_totals 6 行全 0 / 两级额度与 shares 仍是裸整数与策略数，说不出缺席。 ||payload="收口一发姿势实测：本发不交预检税（同一份判据已由前两发验过 2/2），共 6 次调用：写文档 1 + 量字节 1 + 落账 1 + 读回 1 + verify 1 + tally 1。model_says_bytes 这格仍无 owner
+   x1  第 4 发=本评估文档加「建议清单 S1-S6 + 填账形状速查」后的当前版（16,804 字节）；第 3 发那份 7,676 字节的指纹 2271f19a… 不回改（append-only），它对应的是当时那份内容。本发同样不交预检税（同一份判据已 3/3 验过）：5 次调用——量字节 1 + 落账 1 + 读回 1 + verify 1 + tally 1。model_says_bytes 这格仍无 owner 位：记的是文档实测字节，不是聊天消息序列化字节。输入侧 content_bytes=0 / part_totals 6 行全 0 / 两级额度与 shares 依旧是裸整数与策略数。 ||payload="第 4 发=本评估文档加「建议清单 S1-S6 + 填账形状速查」后的当前版（16,804 字节）；第 3 发那份 7,676 字节的指纹 2271f19a… 不回改（append-only），它对应的是当时那份内容。本发同样不交预检税（
+   x1  修正发：文档把 343+49 算成 391（实为 392），且第 4 发的指纹 54f239b6… 对应的是修正前那份 16,804 字节。本发落的是当前版 17,040 字节 ee2adeb2…，旧发不回改。本发链上共 6 次调用：改文档 2 + 量字节 1 + 落账 1 + verify 1 + tally 1（含落账之后的两件）。这类「正文里写着将来才成立的数」自己就是一个形状风险：落不进账时那句就是假话，而账上没有任何一格能拦它——建议归到 S2 同一族（文档里的数字没有 owner 位）。 ||payload="修正发：文档把 343+49 算成 391（实为 392），且第 4 发的指纹 54f239b6… 对应的是修正前那份 16,804 字节。本发落的是当前版 17,040 字节 ee2adeb2…，旧发不回改。本发链上共 6 次调用：改文
+   x1  本发把 S2 那条「文档里的数字没有 owner 位」写进正文（+692 字节，17,732）。代价当场自现：第四节那句「5 发 = 245 格 / 链 441 条」从本发起变成过期快照，现值是 6 发 = 294 格 / 490 条——这就是为什么同一节末尾要加硬规矩：引用账上的数之前先 verify/tally，文档里的一律当快照。本发 4 次调用：改文档 1 + 量字节 1 + 落账 1 + verify 1。 ||payload="本发把 S2 那条「文档里的数字没有 owner 位」写进正文（+692 字节，17,732）。代价当场自现：第四节那句「5 发 = 245 格 / 链 441 条」从本发起变成过期快照，现值是 6 发 = 294 格 / 490 条——
+-- model_output:cost_countable lines(first8)=[50,99,148,197,246,295,344,393]
+   x10  否 ||payload=false
+-- model_output:downgrade lines(first8)=[48,97,146,195,244,293,342,391]
+   x10  否 ||payload=false
+-- model_output:tool_calls lines(first8)=[41,90,139,188,237,286,335,384]
+   x1  28 ||payload=28
+   x1  19 ||payload=19
+   x1  11 ||payload=11
+   x1  26 ||payload=26
+   x1  77 ||payload=77
+   x1  25 ||payload=25
+   x2  6 ||payload=6
+   x1  5 ||payload=5
+   x1  4 ||payload=4
+-- model_output:malformed_actions lines(first8)=[42,91,140,189,238,287,336,385]
+   x3  1 ||payload=1
+   x7  0 ||payload=0

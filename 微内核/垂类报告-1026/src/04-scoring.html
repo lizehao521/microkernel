@@ -1,0 +1,298 @@
+<!-- ================= CH 4-6 SCORING ================= -->
+<section class="chapter">
+  <div class="chap-kicker">Chapter 4 · The Ruler</div>
+  <h1 id="ch4" data-key="ch4"><span class="num">4</span>评分尺：为什么是这五维，以及它凭什么不能被手改</h1>
+
+  <p class="lede">四个候选垂直不是靠叙事排出来的。五维、权重、每格的分数与凭据全写在一个 JSON 里，
+  出分与核对用的是<strong>同一个实现</strong>（<code>工具/模型.py</code>）——否则「渲染出来的总分」与「重算出来的总分」相等
+  只是巧合。这条纪律来自上一族的教训：交叉等式有一边只有「写的那件」知道时，先把两边搬进同一个只读件。</p>
+
+  <h2>4.1 五维各自在问什么，权重为什么这么分</h2>
+  <p><span class="st st-ok" data-state="有据">有据</span><span class="chip chip-disk" data-chip="disk">盘上</span>
+  权重的取法不是「哪个最重要」，而是<strong>「哪一维最缺证据、因而最该被看清楚」</strong>。
+  这一点必须先说破，因为它是一个真实的自利陷阱：</p>
+  <div class="callout danger">
+    <div class="t">如果按「底盘已经造好什么」来排权重，守现状那一维会直接胜出</div>
+    <p>D1+D2+D3 三项都是「本件已经会做的事」；把它们合计到 0.68，V3（软件交付声明复核，即守住现在的方向）
+    就会以技术对齐度的名义被冠「胜出」。那不是判断，是给自家存量找台阶。
+    所以本件把<strong>最缺证据的那一维 D4（2026 付费语境）设成最高权重 0.30</strong>，
+    并把这段取法写进 <code>数据/评分表.json</code> 的 <code>weight_rationale</code>，让读者可以审它而不是猜它。</p>
+  </div>
+  <table class="tbl avoid">
+    <tr><th>维</th><th>它在问什么</th><th class="num">权重</th><th>方向</th><th>为什么不是别的数</th></tr>
+    <tr><td>D1</td><td>这一垂类的交付物里，今天有多少能被现有 13 种核对类型直接钉住，多少必须等新类型</td>
+      <td class="num">0.15</td><td>越高越好</td>
+      <td data-scan="not_run">「接得快不快」是 0/1 未量的门，不许计分；可数的只有「已被现有类型覆盖的比例」</td></tr>
+    <tr><td>D2</td><td>「这句话算不算数」由谁说了算，本件能不能拿到那个真值</td>
+      <td class="num">0.28</td><td>越高越好</td>
+      <td data-scan="term">没有真值供方的裁决是表演；这一维同时是同分时的第一顺位比较维</td></tr>
+    <tr><td>D3</td><td>这一垂类天然的记账单位，装不装得下内核冻结的「一格一行」</td>
+      <td class="num">0.12</td><td>越高越好</td>
+      <td>装不下就是要动判据表——那是单独的决定，不在本报告的授权范围内，所以只给小权重</td></tr>
+    <tr class="em-row"><td>D4</td><td data-scan="term">2026 年有没有<strong>可指认的</strong>买方文件或真实价盘，把这一垂类要买的东西写成条款</td>
+      <td class="num">0.30</td><td>越高越好</td>
+      <td>最高权重给了最缺证据的一维：只有核级外部件能算分，「这类东西当然要买」这种推定不算</td></tr>
+    <tr><td>D5</td><td>这一车道 2026 年已被平台方 / 机构级件占住多少</td>
+      <td class="num">0.15</td><td>反向（分数越高＝挤压越重＝越差）</td>
+      <td>反向维必须显式声明；它是同分时的第二顺位比较维</td></tr>
+  </table>
+
+  <h2>4.2 「未判定」不是 0，也不进分母——于是尺子长出了一个病理</h2>
+  <p><span class="st st-ok" data-state="有据">有据</span><span class="chip chip-disk" data-chip="disk">盘上</span>
+  本族有一条硬规矩：<code>unknown</code> 不许折成 0。落到算法上是不进分子也不进分母，
+  按「已知维的权重和」归一。这条规矩单独看是对的（缺依据不罚分也不加分），
+  <strong>但它有一个副作用：在一维上「没证据」恰好躲开了「没证据所以打低分」的罚。</strong></p>
+  <p>第一次算就撞上了：<span class="chip chip-disk" data-chip="disk">盘上</span>
+  <strong>只有 3/5 维有依据的 V4 排到了原始第一</strong>（加权好度 0.756），
+  把五维全有依据的 V1（0.740）压在下面。这不是数据错了，是这台机器的病理被真实数据照出来了。</p>
+  <div class="callout warn">
+    <div class="t">处理办法是改尺子，不是改格子</div>
+    <p><span class="st st-ok" data-state="有据">有据</span><span class="chip chip-disk" data-chip="disk">盘上</span>
+    在 <code>数据/评分表.json</code> 里加一条<strong>胜出资格线</strong>（<code>win_rule.min_known_dims = 4</code>）：
+    原始名次照原样印（不藏），但<strong>只有达到 4/5 维有依据的候选才允许被冠「胜出」</strong>；
+    <span data-scan="term">若没有任何候选达标，脚本判 <code>rc=3</code> 而不是「取一个最接近的」。</span><span data-scan="not_run">
+    这一条是本件自己第一次算的时候逼出来的，不是事后为结果找的补丁——它把「依据薄」这件事从脚注升成一个会挡住判定的机械条件。</span></p>
+  </div>
+
+  <h2>4.3 每格的凭据要能回盘核，否则那个数字不算数</h2>
+  <table class="tbl avoid">
+    <tr><th>凭据种类</th><th>核对方式（脚本实际做的动作）</th><th>核不过时</th></tr>
+    <tr class="em-row"><td><code>disk</code> 盘上</td><td>文件存在 → 行号在实测行数内 → 引文（去空白后）确实在那一行或紧邻行</td>
+      <td>整格判红，格子不许出分</td></tr>
+    <tr><td><code>public</code> 公开件</td><td>指向的引用号必须是<strong>核</strong>级，且带 url + quote + checked_at 三样</td>
+      <td>判红：快照级数字不许进正文，这条同样管打分</td></tr>
+    <tr><td><code>estimate</code> 假设</td><td>必须同时带 <code>assumption</code> 与 <code>falsifier</code>（能把自己证伪）</td>
+      <td>判红：不许用「估计」当挡箭牌</td></tr>
+    <tr><td><code>relayed</code> 转述</td><td>词表里有这一档，但本件<strong>一次都没用</strong></td>
+      <td><span data-scan="census">评分表里没有 relayed 凭据（计数由核对件自印）</span></td></tr>
+  </table>
+  <p class="small">也就是说：想给某一维填一个好看的数，必须先有一条能回盘核或能复跑的依据。<strong>这不是防错，是防自利。</strong></p>
+
+  <h2>4.4 十四道核对 + 两道引用闸，各自挡什么</h2>
+  <table class="tbl avoid">
+    <tr><th>道</th><th>判据</th><th>挡住的错法</th></tr>
+    <tr><td>K1</td><td>权重合计 = 1</td><td>总分不可解释</td></tr>
+    <tr><td>K2</td><td>结构齐：4 垂类 × 5 维、不缺格不增格</td><td>偷偷删一个候选或加一个候选来挪名次</td></tr>
+    <tr><td>K3</td><td>格值合法：整数或字符串 <code>unknown</code></td><td>把 <code>unknown</code> 写成 0、写成 true、写成 null</td></tr>
+    <tr><td>K4</td><td>未判定格必须带理由，且不挂凭据</td><td>挂着凭据却说「没依据」，或空着却不说什么</td></tr>
+    <tr><td>K5</td><td>数字格必须有凭据 + rationale</td><td>裸分数</td></tr>
+    <tr><td>K6</td><td>凭据可核（盘上行号 / 核级 / 证伪阈值）</td><td>用取不到的来源给数字当依据</td></tr>
+    <tr><td>K7</td><td>不许「整维全未判定却带权重」</td><td>用一维空名目撑权重</td></tr>
+    <tr><td>K8</td><td>撞车核对：每候选自报撞哪条已关闭方向 + 差异可证伪</td><td>复推已被自己关掉的方向</td></tr>
+    <tr><td>K9</td><td>赢家由重算得出</td><td>手写赢家</td></tr>
+    <tr><td>K10</td><td>生成块逐字比对（同一实现重渲染）</td><td>手改 HTML 里的总分——<strong>会点名差在第几个字</strong></td></tr>
+    <tr><td>K11</td><td>第 7 章章名必须含脚本赢家名称</td><td>赢家变了而产品章没跟着重写</td></tr>
+    <tr><td>K12</td><td>页脚日期 = <code>decided_at</code></td><td>过期日期当本轮判定</td></tr>
+    <tr><td>D1</td><td>引用双向无孤儿 + 每条 <code>path:line</code> 解析且那行非空</td><td data-scan="term">引不存在的号、留没人引的号、指到空行</td></tr>
+    <tr><td>D3</td><td data-scan="term">缺席句子必须自报是哪一种「没有」</td><td data-scan="term">把定向检索没够着写成市场不存在</td></tr>
+  </table>
+  <p class="small"><span class="st st-no" data-state="取不到">取不到</span><span class="chip chip-未" data-chip="未">未量</span>
+  <strong>本报告自己的一个缺口：这十四道 + 两道闸的「分辨力」尚未用反臂验过。</strong>
+  <span data-scan="term">臂检件（<code>工具/臂检-文档.py</code>）计划要故意写错十二种地方——删凭据、权重改成 0.98、静默删一个垂类、
+  把 <code>unknown</code> 折成 0、把 disk 路径指向不存在的文件、只改 HTML 里一个总分、手写赢家、
+  整维全 <code>unknown</code> 却带权重、把第 7 章章名改成非赢家、插一个悬空引用号、
+  插一句没标 <code>data-scan</code> 的「没有取到」、把页脚日期改到 <code>decided_at</code> 之外，
+  外加一根「把某个候选的有依据维压到资格线以下 ⇒ 赢家必须换到次位」。</span>
+  <strong>在它跑绿之前，本件不说「这把尺子会红」</strong>（波 2 未起的一半，<code data-src="方法与分母-1026.md:17">口径件 §一</code>）。</p>
+</section>
+
+<section class="chapter">
+  <div class="chap-kicker">Chapter 5 · Score, Computed</div>
+  <h1 id="ch5" data-key="ch5"><span class="num">5</span>评分结果：本块由脚本生成，手改会被判红</h1>
+
+  <p class="lede">下面这一块<strong>不是人写的</strong>。它由 <code>工具/出表.py</code> 从 <code>数据/评分表.json</code> 生成，
+  <code>工具/文档核对.py</code> 每次核对时用同一个实现重渲染并逐字比对（K10）。
+  灰格是「未判定」，不是 0；未判定既不进分子也不进分母。</p>
+
+  <!-- GEN:SCORE START ｜ 本块由 工具/出表.py 生成，手改会被 工具/文档核对.py 判红 -->
+<svg viewBox="0 0 636 254" width="100%" role="img" aria-label="四个候选垂直在五个计分维上的热矩阵，灰格为未判定">
+<g font-family="system-ui,Microsoft YaHei" font-size="10.5" fill="#0b1f33">
+<text x="198" y="22" text-anchor="middle" font-weight="700">D1</text>
+<text x="198" y="35" text-anchor="middle" font-size="9">接入门上可数的东西</text>
+<text x="262" y="22" text-anchor="middle" font-weight="700">D2</text>
+<text x="262" y="35" text-anchor="middle" font-size="9">语义真值来源</text>
+<text x="326" y="22" text-anchor="middle" font-weight="700">D3</text>
+<text x="326" y="35" text-anchor="middle" font-size="9">记账粒度兼容</text>
+<text x="390" y="22" text-anchor="middle" font-weight="700">D4</text>
+<text x="390" y="35" text-anchor="middle" font-size="9">2026 付费语境</text>
+<text x="454" y="22" text-anchor="middle" font-weight="700">D5↓</text>
+<text x="454" y="35" text-anchor="middle" font-size="9">平台挤压风险</text>
+<text x="160" y="64" text-anchor="end">V1 甲方 AI 项目验收 </text>
+<rect x="168" y="44" width="60" height="32" fill="#bfe3cd" stroke="#c7d3df"/>
+<text x="198" y="64" text-anchor="middle" font-weight="700" fill="#0b1f33">3</text>
+<rect x="232" y="44" width="60" height="32" fill="#8fd0ae" stroke="#c7d3df"/>
+<text x="262" y="64" text-anchor="middle" font-weight="700" fill="#0b1f33">4</text>
+<rect x="296" y="44" width="60" height="32" fill="#8fd0ae" stroke="#c7d3df"/>
+<text x="326" y="64" text-anchor="middle" font-weight="700" fill="#0b1f33">4</text>
+<rect x="360" y="44" width="60" height="32" fill="#8fd0ae" stroke="#c7d3df"/>
+<text x="390" y="64" text-anchor="middle" font-weight="700" fill="#0b1f33">4</text>
+<rect x="424" y="44" width="60" height="32" fill="#bfe3cd" stroke="#c7d3df"/>
+<text x="454" y="64" text-anchor="middle" font-weight="700" fill="#0b1f33">2</text>
+<text x="496" y="64" font-size="9.5" fill="#5b6b7f">5/5 维有依据</text>
+<text x="160" y="100" text-anchor="end">V2 财务·税务 Agent</text>
+<rect x="168" y="80" width="60" height="32" fill="#f2e2b8" stroke="#c7d3df"/>
+<text x="198" y="100" text-anchor="middle" font-weight="700" fill="#0b1f33">2</text>
+<rect x="232" y="80" width="60" height="32" fill="#bfe3cd" stroke="#c7d3df"/>
+<text x="262" y="100" text-anchor="middle" font-weight="700" fill="#0b1f33">3</text>
+<rect x="296" y="80" width="60" height="32" fill="#f2e2b8" stroke="#c7d3df"/>
+<text x="326" y="100" text-anchor="middle" font-weight="700" fill="#0b1f33">2</text>
+<rect x="360" y="80" width="60" height="32" fill="#e2e8f0" stroke="#c7d3df"/>
+<text x="390" y="100" text-anchor="middle" font-weight="400" fill="#0b1f33">未</text>
+<rect x="424" y="80" width="60" height="32" fill="#f3c3c3" stroke="#c7d3df"/>
+<text x="454" y="100" text-anchor="middle" font-weight="700" fill="#0b1f33">4</text>
+<text x="496" y="100" font-size="9.5" fill="#5b6b7f">4/5 维有依据</text>
+<text x="160" y="136" text-anchor="end">V3 软件交付声明复核（守现</text>
+<rect x="168" y="116" width="60" height="32" fill="#8fd0ae" stroke="#c7d3df"/>
+<text x="198" y="136" text-anchor="middle" font-weight="700" fill="#0b1f33">5</text>
+<rect x="232" y="116" width="60" height="32" fill="#8fd0ae" stroke="#c7d3df"/>
+<text x="262" y="136" text-anchor="middle" font-weight="700" fill="#0b1f33">5</text>
+<rect x="296" y="116" width="60" height="32" fill="#8fd0ae" stroke="#c7d3df"/>
+<text x="326" y="136" text-anchor="middle" font-weight="700" fill="#0b1f33">5</text>
+<rect x="360" y="116" width="60" height="32" fill="#f2e2b8" stroke="#c7d3df"/>
+<text x="390" y="136" text-anchor="middle" font-weight="700" fill="#0b1f33">2</text>
+<rect x="424" y="116" width="60" height="32" fill="#f3c3c3" stroke="#c7d3df"/>
+<text x="454" y="136" text-anchor="middle" font-weight="700" fill="#0b1f33">5</text>
+<text x="496" y="136" font-size="9.5" fill="#5b6b7f">5/5 维有依据</text>
+<text x="160" y="172" text-anchor="end">V4 数据标注供应商交付验收</text>
+<rect x="168" y="152" width="60" height="32" fill="#8fd0ae" stroke="#c7d3df"/>
+<text x="198" y="172" text-anchor="middle" font-weight="700" fill="#0b1f33">4</text>
+<rect x="232" y="152" width="60" height="32" fill="#8fd0ae" stroke="#c7d3df"/>
+<text x="262" y="172" text-anchor="middle" font-weight="700" fill="#0b1f33">4</text>
+<rect x="296" y="152" width="60" height="32" fill="#bfe3cd" stroke="#c7d3df"/>
+<text x="326" y="172" text-anchor="middle" font-weight="700" fill="#0b1f33">3</text>
+<rect x="360" y="152" width="60" height="32" fill="#e2e8f0" stroke="#c7d3df"/>
+<text x="390" y="172" text-anchor="middle" font-weight="400" fill="#0b1f33">未</text>
+<rect x="424" y="152" width="60" height="32" fill="#e2e8f0" stroke="#c7d3df"/>
+<text x="454" y="172" text-anchor="middle" font-weight="400" fill="#0b1f33">未</text>
+<text x="496" y="172" font-size="9.5" fill="#5b6b7f">3/5 维有依据</text>
+<text x="168" y="202" font-size="9" fill="#5b6b7f">色深＝这一维上占优（原始分 0–5；带↓的维反向）；灰格「未」＝未判定，不进总分也不当 0。</text>
+<text x="168" y="220" font-size="9.5" font-weight="700" fill="#0b6b34">脚本重算赢家：V1</text>
+</g>
+</svg>
+
+<table class="tbl" id="fig3"><caption>图 3 的数据层：每格原始分（<b>未</b>＝未判定）、加权好度、以及这一行的权重只由几维已知分撑起。</caption><tr><th>垂类</th><th class="num">D1</th><th class="num">D2</th><th class="num">D3</th><th class="num">D4</th><th class="num">D5↓</th><th class="num">加权好度</th><th class="num">已知权重和</th><th>未判定维</th></tr>
+<tr><td><strong>V4</strong> 数据标注供应商交付验收</td><td class="num">4</td><td class="num">4</td><td class="num">3</td><td class="num">未</td><td class="num">未</td><td class="num"><strong>0.756</strong></td><td class="num">0.55</td><td>D4、D5</td></tr>
+<tr><td><strong>V1</strong> 甲方 AI 项目验收 / 终验收货裁决</td><td class="num">3</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">2</td><td class="num"><strong>0.740</strong></td><td class="num">1.00</td><td>—</td></tr>
+<tr><td><strong>V3</strong> 软件交付声明复核（守现状 · 方向 B）</td><td class="num">5</td><td class="num">5</td><td class="num">5</td><td class="num">2</td><td class="num">5</td><td class="num"><strong>0.670</strong></td><td class="num">1.00</td><td>—</td></tr>
+<tr><td><strong>V2</strong> 财务·税务 Agent 输出的签字前复核</td><td class="num">2</td><td class="num">3</td><td class="num">2</td><td class="num">未</td><td class="num">4</td><td class="num"><strong>0.437</strong></td><td class="num">0.70</td><td>D4</td></tr>
+</table>
+
+<p class="figsrc">图 3 · 评分热矩阵。<strong>本块由 工具/出表.py 从 数据/评分表.json 生成</strong>；手改这段 HTML 会被 工具/文档核对.py 判红。灰格是「未判定」，不是 0。</p>
+<p class="small">赢家由脚本重算：同分先比 D2（语义真值来源），再比 D5（平台挤压风险，反向）；仍同分则判 rc=3，<strong>不造赢家</strong>。</p>
+<p class="small">重算赢家：<strong>V1</strong> ｜ 名次 V4 → V1 → V3 → V2</p>
+<p class="small">胜出资格线：<strong>≥4 维有依据</strong>。原因不是严谨，是这台机器的一个病理：unknown 既不进分子也不进分母，归一化会<strong>把缺依据抬成高分</strong>——在一维上「没证据」恰好躲开了「没证据所以分低」的罚。所以下面这行同时给两个东西：<em>原始名次照原样印（不藏）</em>，但只有达标者能冠「胜出」。</p>
+<p class="small">原始排名第一：<strong>V4</strong>（3/5 维有依据） ｜ 有资格胜出者：V1、V3、V2 ｜ <strong>不得冠「胜出」</strong>：V4（缺 D4、D5）</p>
+<table class="tbl"><tr><th>扰动</th><th>赢家</th><th>与基准一致？</th></tr>
+<tr><td>D1 权重 +20%</td><td>V1</td><td>一致</td></tr>
+<tr><td>D1 权重 -20%</td><td>V1</td><td>一致</td></tr>
+<tr><td>D2 权重 +20%</td><td>V1</td><td>一致</td></tr>
+<tr><td>D2 权重 -20%</td><td>V1</td><td>一致</td></tr>
+<tr><td>D3 权重 +20%</td><td>V1</td><td>一致</td></tr>
+<tr><td>D3 权重 -20%</td><td>V1</td><td>一致</td></tr>
+<tr><td>D4 权重 +20%</td><td>V1</td><td>一致</td></tr>
+<tr><td>D4 权重 -20%</td><td>V1</td><td>一致</td></tr>
+<tr><td>D5 权重 +20%</td><td>V1</td><td>一致</td></tr>
+<tr><td>D5 权重 -20%</td><td>V1</td><td>一致</td></tr>
+</table>
+<p class="small">⇒ 本轮所有单维 ±20% 扰动都不翻赢家。<strong>这不等于结论稳</strong>——扰动只动权重，不动格子本身；格子里的 unknown 若下一轮补上依据，名次可能整体重排。</p>
+<!-- GEN:SCORE END -->
+
+  <h2>5.1 怎么读这一块</h2>
+  <table class="tbl avoid">
+    <tr><th>看到什么</th><th>它意味着什么</th><th>因此能说什么 / 不能说什么</th></tr>
+    <tr><td>两个名次：原始第一与「胜出」不是同一个候选</td>
+      <td>原始第一那一行依据薄（3/5 维），被胜出资格线挡住</td>
+      <td class="ok">能说「它现在分最高」；<span class="no">不能说「它是最优方向」</span>——薄依据本身是本轮最重要的发现之一</td></tr>
+    <tr class="warn-row"><td>加权好度 0.740 对 0.756，差 0.016</td><td>两个数在 ±20% 单维权重扰动下不翻赢家</td>
+      <td class="ok">能说「名次对权重扰动不敏感」；<span class="no">不能说「结论稳」</span>——扰动只动权重，不动格子；
+      格子里那三个未判定一旦补上依据，名次可能整体重排</td></tr>
+    <tr><td>某一行的「已知权重和」小于 1.00</td><td>那一行有几维根本没依据</td>
+      <td class="ok">必须原样印出来，不许用归一化把它藏成「全维优秀」</td></tr>
+    <tr><td>D5 带↓</td><td>反向维：分数越高＝平台挤压越重＝对本件越差</td>
+      <td class="ok">颜色深浅一律表示「好不好」，不表示「高不高」</td></tr>
+  </table>
+  <p class="small"><span data-scan="targeted">敏感性本轮只动权重、没动格子，所以它回答的是「权重我是不是手抖了」，
+  不回答「数据是不是还缺很多」——后一问的答案在第 2 章和第 5 章那三个未判定格里。</span></p>
+</section>
+
+<section class="chapter">
+  <div class="chap-kicker">Chapter 6 · Collision Check</div>
+  <h1 id="ch6" data-key="ch6"><span class="num">6</span>撞车核对：每个候选必须自报撞了哪条已关闭方向</h1>
+
+  <p class="lede">库里已经判死过一批方向。一份新报告若把它们换个名字再推一遍，它就是废纸。
+  所以本件把关闭方向做成<strong>机器可读的唯一真值源</strong>（<code>数据/已关闭方向登记.json</code>），
+  核对道 K8 逐条检查：每个候选必须点名撞到哪一条（<code>closed_collision</code>），
+  且差异说明必须含一个<strong>可证伪条件</strong>——<span data-scan="census">条数由脚本现数并自印，本正文不写死</span>。</p>
+
+  <figure data-key="fig4">
+    <div class="pad">
+      <svg viewBox="0 0 660 260" role="img" aria-label="已关闭方向与四个候选垂直的撞车地图：四个候选各自指向登记表里的一条关闭方向，并标出差异说明是否含可证伪条件">
+        <g font-family="system-ui,Microsoft YaHei" font-size="9.4" fill="#0b1f33">
+          <text x="8" y="16" font-weight="700" fill="#0f766e">左：登记表（关闭方向）｜ 右：本轮四个候选 ｜ 线：谁撞了哪条</text>
+          <g fill="#334155">
+            <rect x="8" y="30" width="196" height="18" fill="#f8fafc" stroke="#d9e2ec"/><text x="14" y="43">C1 承诺记账（电商 / 悟空线）</text>
+            <rect x="8" y="52" width="196" height="18" fill="#f8fafc" stroke="#d9e2ec"/><text x="14" y="65">C2 MCP 鉴权 / 网关 / 控制面</text>
+            <rect x="8" y="74" width="196" height="18" fill="#f8fafc" stroke="#d9e2ec"/><text x="14" y="87">C3 通用审计日志</text>
+            <rect x="8" y="96" width="196" height="18" fill="#f8fafc" stroke="#d9e2ec"/><text x="14" y="109">C4 Agent trace / 可观测性</text>
+            <rect x="8" y="118" width="196" height="18" fill="#f8fafc" stroke="#d9e2ec"/><text x="14" y="131">C5 评测平台 / SIEM / 合规认证</text>
+            <rect x="8" y="140" width="196" height="18" fill="#f8fafc" stroke="#d9e2ec"/><text x="14" y="153">C6 财务 GRC 单点账本件</text>
+            <rect x="8" y="162" width="196" height="18" fill="#f8fafc" stroke="#d9e2ec"/><text x="14" y="175">C7 托管按次 + 规模回升叙事</text>
+            <rect x="8" y="184" width="196" height="18" fill="#f8fafc" stroke="#d9e2ec"/><text x="14" y="197">C8 常驻记账（整圈挂）</text>
+            <rect x="8" y="206" width="196" height="18" fill="#fef3c7" stroke="#fcd34d"/><text x="14" y="219">C9 把证据包本身当商品</text>
+          </g>
+          <g>
+            <rect x="440" y="40" width="212" height="34" fill="#f0fdfa" stroke="#14b8a6"/>
+            <text x="448" y="54" font-weight="700">V1 甲方 AI 项目验收裁决</text>
+            <text x="448" y="67" fill="#475569">撞 C9 ｜ 差异：交付对象是挂尾款的裁决，不是包</text>
+            <rect x="440" y="86" width="212" height="34" fill="#fff8ed" stroke="#b45309"/>
+            <text x="448" y="100" font-weight="700">V2 财务·税务签字前复核</text>
+            <text x="448" y="113" fill="#475569">撞 C6 ｜ 差异：不申请那个坑位，只做签字前一道</text>
+            <rect x="440" y="132" width="212" height="34" fill="#eef4f8" stroke="#c7d3df"/>
+            <text x="448" y="146" font-weight="700">V3 软件交付声明复核（守现状）</text>
+            <text x="448" y="159" fill="#475569">撞 C3 ｜ 差异：只做「说法-出处」差异层</text>
+            <rect x="440" y="178" width="212" height="34" fill="#fdf2f2" stroke="#b91c1c"/>
+            <text x="448" y="192" font-weight="700">V4 数据标注供应商交付验收</text>
+            <text x="448" y="205" fill="#475569">撞 C1 ｜ 差异：记账单位是一批交付+一次抽检</text>
+          </g>
+          <g stroke="#0f766e" stroke-width="1.2" fill="none">
+            <path d="M440 57 H204 V215 H204"/>
+          </g>
+          <g stroke="#b45309" stroke-width="1.2" fill="none"><path d="M440 103 H218 V149 H204"/></g>
+          <g stroke="#64748b" stroke-width="1.2" fill="none"><path d="M440 149 H230 V83 H204"/></g>
+          <g stroke="#b91c1c" stroke-width="1.2" fill="none"><path d="M440 195 H242 V39 H204"/></g>
+          <text x="8" y="240" font-size="8.8" fill="#5b6b7f">四条线全部命中登记表里的既有 id（K8 机械核对）；四条差异说明都含「若 X 则本差异不成立」的可证伪条件——缺该形状即判 rc=3，不静默放行。</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>图 4 · 撞车地图</b>。数据层就是下面这张表；<span data-scan="census">登记表里未被任何候选撞到的条目由核对件现数并列出，本件不称它们「已解决」——它们只是没被本轮候选撞上。</span></figcaption>
+  </figure>
+
+  <table class="tbl avoid">
+    <tr><th>候选</th><th>撞到</th><th>差异（要点）</th><th>可证伪条件：什么一读出来，本差异就废</th></tr>
+    <tr class="em-row"><td>V1</td><td>C9</td>
+      <td>C9 关的是「把证据包当商品单卖」。V1 卖的不是包，是一张<strong>挂尾款的收货裁决</strong>：
+        买方为「这一笔该不该付」付钱，不为拿到一份文件付钱。</td>
+      <td><strong>若</strong>出现愿意单买一份包、既不挂裁决也不挂尾款的具名买方，<strong>则</strong>本差异不成立，C9 回到台面上。</td></tr>
+    <tr class="warn-row"><td>V2</td><td>C6</td>
+      <td>C6 的原话是「预算存在、坑位在平台内，不是单点账本件」。V2 <strong>不申请那个坑位</strong>：
+        它只做签字前那一道复核回执，真值取自既有制度文本，且要求交付方自己把产物落盘。</td>
+      <td><strong>若</strong>下一轮取到的买方文件把这个复核写成 GRC 平台里的一个内置模块来采购，<strong>则</strong>V2 与 C6 同形，本差异不成立。</td></tr>
+    <tr><td>V3</td><td>C3</td>
+      <td>C3 关的是通用审计日志，但同一行留着「只能做『说法-出处』差异层」这句。V3 <strong>就是</strong>那个差异层：
+        收口那一次核一份声明，不接、不存、不查询交付事件流。</td>
+      <td><strong>若</strong> V3 的形态变成需要接收并存储全量交付事件（即成为日志后端），<strong>则</strong>本差异不成立；
+        桌面端设计稿另有一条独立的降级条件：<code data-src="交付对账-1026/设计-桌面端/spark-output/frame/duizhang-desktop.md:94">队列频率低于每周 3 次时把方向 B 降级为方向 A</code>。</td></tr>
+    <tr><td>V4</td><td>C1</td>
+      <td>C1 关的是「按承诺逐条记账」，理由是记账单位不对（需要会在承诺发生时发事件的宿主）。
+        V4 的记账单位不是承诺事件流，是<strong>一批交付 + 一次抽检裁决</strong>，宿主是采购方本来就有的验收动作。</td>
+      <td><strong>若</strong>标注验收实际需要逐条承诺事件（而非按批抽检），<strong>则</strong>V4 退化成 C1，本差异不成立。</td></tr>
+  </table>
+
+  <div class="callout">
+    <div class="t">这一章存在的意义，是让「换个名字复推」变成一件会被机械挡住的事</div>
+    <p data-scan="term"><span class="st st-ok" data-state="有据">有据</span><span class="chip chip-disk" data-chip="disk">盘上</span>
+    关闭方向不是观点，是登记件里的行；撞车不是修辞，是 JSON 里的一个字段名。
+    缺字段、指向不存在的 id、差异说明为空、<strong>差异不可证伪</strong>——四种都判 <code>rc=3</code>，
+    而不是「算了让它过」。上一族的自否证（把定向检索没够着写成市场不存在）就是这么被做成 guard 的。</p>
+  </div>
+</section>

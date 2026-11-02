@@ -1,0 +1,10 @@
+{"arm": "D1 游标丢 run 轴（退回 session:turn:seq）", "file": "cmd/agentd/sse.go", "test": "^TestReplayTwiceGivesSameSequence$|^TestCursorCarriesRunAxis$", "control_rc": 0, "mutant_rc": 1, "mutant_build_broken": false, "verdict": "BIT", "note": ""}
+{"arm": "D2 坏游标当首连（跳过续传判断）", "file": "cmd/agentd/sse.go", "test": "^TestBadCursorIsNotTreatedAsHead$|^TestReplayJudgeAndHandlerAgreeOnBadCursor$", "control_rc": 0, "mutant_rc": 1, "mutant_build_broken": false, "verdict": "BIT", "note": ""}
+{"arm": "D3 游标那条被重播（log[idx:]）", "file": "cmd/agentd/sse.go", "test": "^TestReplayTwiceGivesSameSequence$", "control_rc": 0, "mutant_rc": 1, "mutant_build_broken": false, "verdict": "BIT", "note": ""}
+{"arm": "D4 resumable 恒 false（约定冒充度量）", "file": "cmd/agentd/events.go", "test": "^TestReceiptPayloadIsHonest$|^TestResumableIsMeasuredNotAssumed$", "control_rc": 0, "mutant_rc": 1, "mutant_build_broken": false, "verdict": "BIT", "note": ""}
+{"arm": "D5 内存模式冒充可续", "file": "cmd/agentd/events.go", "test": "^TestResumableIsMeasuredNotAssumed$", "control_rc": 0, "mutant_rc": 1, "mutant_build_broken": false, "verdict": "BIT", "note": ""}
+{"arm": "D6 resumable=true 却接不上不判", "file": "cmd/agentd/sse.go", "test": "^TestReplayArmsCatchEachBadShape$", "control_rc": 0, "mutant_rc": 1, "mutant_build_broken": false, "verdict": "BIT", "note": ""}
+{"arm": "D7 同身份多条不判（hits>2）", "file": "cmd/agentd/sse.go", "test": "^TestReplayArmsCatchEachBadShape$", "control_rc": 0, "mutant_rc": 1, "mutant_build_broken": false, "verdict": "BIT", "note": ""}
+{"arm": "D8 帧不写 id 行", "file": "cmd/agentd/sse.go", "test": "^TestServedFramesAreLogRows$|^TestReplayTwiceGivesSameSequence$", "control_rc": 0, "mutant_rc": 1, "mutant_build_broken": false, "verdict": "BIT", "note": ""}
+{"arm": "D9 不分路径都播事件（mux 摘掉）", "file": "cmd/agentd/sse.go", "test": "^TestOtherPathGives404$", "control_rc": 0, "mutant_rc": 1, "mutant_build_broken": false, "verdict": "BIT", "note": ""}
+{"arm": "D10 尾部按 seq 定序（旧写法）", "file": "cmd/agentd/sse.go", "test": "^TestCrossRunReplayKeepsLogOrder$", "control_rc": 0, "mutant_rc": 1, "mutant_build_broken": false, "verdict": "BIT", "note": ""}

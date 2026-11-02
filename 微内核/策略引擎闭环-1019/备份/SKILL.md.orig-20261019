@@ -1,0 +1,128 @@
+---
+name: celue-mulu-26
+description: "26 条认知策略在漏洞挖掘场景的实例化目录，从 evolution_enhancer.py 第 69-96 行的 COGNITIVE_STRATEGIES 与第 476-578 行的 _apply_transform 直接抽取。核心能力：目录与实现分离审计（26 条声明 vs 20 条有分支 vs 1 条恒等 vs 5 条元策略）、注释与实现不符点定位、随机分支的复现性陷阱、可迁移的策略记账法。用途：想知道某套策略目录里哪些真能用，或要把策略目录搬到别的进化型 Agent 时。触发词：26策略、策略目录、哪些策略真能用、策略实现审计、恒等返回、context_switch、随机种子不可复现、策略记账。注意：出处为代码抽取，非实战验证；宿主引擎在 Qoder 内真实执行 0 次；仅限授权靶场与自有资产。"
+when_to_use: "想知道某套策略目录里哪些策略真有实现，或要把策略目录搬到别的进化型 Agent 时"
+---
+
+# 26 认知策略目录 · 漏洞场景实例化
+
+## 出处与边界（先读这段）
+
+| 项 | 值 |
+|---|---|
+| 目录来源 | `loudong-wajue-jinhua-yinqing/evolution_enhancer.py:69-96`（`COGNITIVE_STRATEGIES`，26 条） |
+| 实现来源 | 同文件 `:476-578`（`_apply_transform`，20 个 `if strat ==` 分支 + `:578 return p`） |
+| 文件规模 | 1883 行 |
+| 随机源 | `:159` `random.Random(seed if seed is not None else int(time.time()))` |
+| **证据等级** | **代码抽取，非实战验证。宿主引擎在 Qoder 内真实执行 0 次。** |
+| 授权边界 | 仅限自有资产或已获授权的靶场 |
+
+本技能不教你怎么挖洞，只教你**怎么核一套策略目录到底有多少条真能用**——用这份 26 条目录当标本。
+
+## 一 · 三态记账（不许塌成一态）
+
+| 态 | 机械判据 | 实测数 |
+|---|---|---|
+| 目录声明 | `:69-96` 内 `{"id":` 行数 | **26** |
+| 有实现分支 | `grep -c 'if strat =='` | **20** |
+| 元策略（设计上只调度、不变换） | `"kind": "meta"` 行数 | **5** |
+| **声明 transform 却无分支** | 落到 `:578 return p` 恒等返回 | **1 = `context_switch`** |
+
+20 + 5 + 1 = 26。三态互斥、加总闭合。
+
+`context_switch` 全仓 `grep -rn context_switch --include=*.py` 只命中 **1 处**，就是目录声明行 `:83` 本身——目录里有它，任何 `.py` 里都没有它的实现。调用它等于原样返回 payload，且**不报错**。
+
+## 二 · 26 条目录 · 每条实现到底做了什么
+
+| id | 名 | 类 | kind | 分支 | 实现的实际动作（读代码得出） |
+|---|---|---|---|---|---|
+| `analogy` | 类比思维 | 发散 | transform | `:479` | 按 `vuln_type` 取 5 个固定模板之一（sqli/xss_reflected/ssrf/cmdi/lfi）；**类型未命中 → 原样返回** |
+| `morphology` | 形态矩阵 | 重组 | meta | — | 无分支，只参与调度 |
+| `s_substitute` | SCAMPER-替换 | 变异 | transform | `:497` | 5 字符表编码：`'` `"` 空格 `<` `>` → %27 %22 %20 %3c %3e |
+| `s_combine` | SCAMPER-组合 | 重组 | transform | `:510` | `p + "/*!" + p + "*/"`，自我拼接 |
+| `s_adapt` | SCAMPER-适配 | 变异 | transform | `:512` | 尾部追加 `" -- "` |
+| `s_modify` | SCAMPER-变形 | 变异 | transform | `:488` | 每字母 40% 概率翻大小写（`rng.random()`）+ 空格换 `/**/` |
+| `s_put` | SCAMPER-他用 | 重组 | transform | `:515` | 3 变体 `rng.choice` 选一（加 dummy 参数 / 加 `?x=` / 补 `AND 1=1`） |
+| `s_eliminate` | SCAMPER-精简 | 变异 | transform | `:501` | 删所有空白 + 删 `/**/` |
+| `s_reverse` | SCAMPER-逆序 | 变异 | transform | `:523` | `p[::-1]` 全串反转 |
+| `reverse_eng` | 逆向工程 | 推理 | transform | `:525` | 追加固定 `EXTRACTVALUE` 报错注入串 |
+| `first_principle` | 第一性原理 | 推理 | transform | `:527` | 正则剥掉注释；剥空则返回字面 `"1"` |
+| `boundary` | 极限测试 | 边界 | transform | `:531` | 尾部追加 200 个 `'` |
+| `redundancy` | 冗余编码 | 变异 | transform | `:507` | 空格翻倍 + `(` 后插 NUL（`chr(0)`） |
+| `context_switch` | 上下文切换 | 重组 | **transform** | **无** | **恒等返回（声明未实现）** |
+| `combinatorial` | 组合爆炸 | 重组 | meta | — | 无分支，只参与调度 |
+| `negative_space` | 负空间 | 推理 | transform | `:533` | 仅把 `<` `>` 换成 `%3C` `%3E` |
+| `proto_downgrade` | 协议降级 | 边界 | transform | `:536` | 仅 `https://` → `http://` |
+| `temporal` | 时间维度 | 边界 | transform | `:538` | 4 个 SLEEP 变体 `rng.choice` 选一 |
+| `enc_tunnel` | 编码隧道 | 变异 | transform | `:504` | 逐字符 `%xx`，**一次**编码 |
+| `chunked` | 分块传输 | 重组 | transform | `:547` | 4 个拆分变体 `rng.choice` 选一（`/*SPLIT*/` / 换行 / 每 5 字符断行） |
+| `polymorphism` | 多态 | 变异 | transform | `:557` | 仅替换**大写** `OR`→`oR`、`SELECT`→`SeLeCt` |
+| `metacognition` | 元认知 | 元 | meta | — | 无分支，只参与调度 |
+| `grafting` | 嫁接 | 重组 | transform | `:559` | 3 变体 `rng.choice` 选一，**只吃一条 payload** |
+| `mutation_memory` | 变异记忆 | 元 | meta | — | 无分支，只参与调度 |
+| `adversarial` | 对抗样本 | 变异 | transform | `:568` | 零宽字符（U+200B/200C/200D）+ 注释插入，4 变体 `rng.choice` 选一 |
+| `convergence` | 收敛 | 元 | meta | — | 无分支，只参与调度 |
+
+类分布：变异 9 / 重组 7 / 边界 3 / 推理 3 / 元 3 / 发散 1。
+
+## 三 · 注释或 desc 与实现不符的 5 处
+
+判据：**以代码为准，不以注释为准**。
+
+| 位置 | 声称 | 实现 |
+|---|---|---|
+| `:504` | 注释写「二次编码」 | 只做一次 `%xx`；要二次得再调一轮 |
+| `:78` + `:523` | desc「从报错逆推关键语法」 | `p[::-1]` 纯字符串反转，**不读任何报错** |
+| `:79` + `:525` | desc「由报错信息反构注入点语法」 | 追加一条**固定**报错注入串，不解析报错内容 |
+| `:85` + `:533` | desc「判定被过滤什么 → 反求其补集」 | 只把尖括号换成 `%3C`/`%3E`，没有任何过滤探测 |
+| `:92` + `:559` | desc「把两条成功载荷的子结构嫁接」 | 函数签名只有一条 `p`；代码注释自认「如果没有第二载荷，执行随机插入」——**从未真的嫁接两条** |
+
+另有两处静默失效：`polymorphism` 只匹配大写，小写 `or`/`select` 一动不动（`:557-558`）；`analogy` 遇到 5 类之外的 `vuln_type` 直接原样返回（`:487`）。
+
+## 四 · 复现性陷阱
+
+1. `:159` 默认用墙钟当种子 → **同一输入两轮结果不同**。想比较策略效果，先固定 `seed`。
+2. `:1539` `random.Random(rng_seed or int(time.time()*1000) % (2**31))` → 传 `rng_seed=0` 因 falsy 被丢弃，静默退回时间种子。
+3. 20 个分支里 **6 个**走 `rng.choice`/`rng.random`（`s_modify` `s_put` `temporal` `chunked` `grafting` `adversarial`）→ 单次调用的产出不可归因，必须多次采样才谈得上"这条策略有效"。
+4. 未命中分支走 `:578 return p`，**返回类型与成功时完全一致** → 调用方无法区分"策略生效但没变化"与"策略根本没实现"。
+
+## 五 · 可迁移的做法（把这套记账法搬到别处）
+
+| # | 做法 | 为什么 |
+|---|---|---|
+| 1 | **目录与实现分离审计**：先数目录条目，再数 dispatch 分支，差额即"声明未实现"清单 | 判据机械可数（`grep -c 'if strat =='`），不靠印象；本标本一数就抓出 `context_switch` |
+| 2 | **恒等返回必须显式报错**：把 `return p` 改成返回 `(payload, applied: bool)` | 静默成功会让"没实现"伪装成"没效果"，污染适应度统计 |
+| 3 | **每条策略可单独调用并打印前后 payload** | 6 个随机分支的效果必须能与噪声区分 |
+| 4 | **元策略与变换策略分开记账** | meta 5 条不参与变换，算进"可用手法数"就是虚增 |
+| 5 | **先验种子，再验策略** | 种子不固定时，策略优劣的结论不可复现，等于散文 |
+| 6 | **注释与 desc 只当线索，实现才是口径** | 本标本 5 处不符，全部只能靠读分支代码发现 |
+
+## 六 · 反模式
+
+- 把「目录 26 条」说成「26 种可用手法」——实测可用 20、恒等 1、元策略 5。
+- 拿注释当实现（见第三节）。
+- 不固定 seed 就比较策略适应度。
+- 把未命中分支的静默恒等，当作"这条策略无效"的证据——那是**没实现**，不是没效果。
+- 把"技能已装载"读成"引擎能跑"：本目录所属引擎在 Qoder 内真实执行 0 次。
+
+## 七 · 与其他技能的关系
+
+| 关系 | 技能 |
+|---|---|
+| 上游（26 策略的认知通用版） | `进化策略引擎` |
+| 宿主（本目录所在插件） | `loudong-wajue-jinhua-yinqing` |
+| 分支扩展（SCAMPER 变体走树而非线性排名） | `ji-liulanqi-shuxing-jinhua` |
+| 验收（import 闭合 + 离线单测） | `luodi-ji-yanzheng-bihuan` |
+| 入口路由 | `hermes-rukou` |
+
+## 附 · 数怎么来的（可自印，不必信我）
+
+```bash
+cd loudong-wajue-jinhua-yinqing
+grep -c 'if strat ==' evolution_enhancer.py            # 20
+awk 'NR>=69&&NR<=96&&/{"id":/' evolution_enhancer.py | wc -l        # 26
+awk 'NR>=69&&NR<=96&&/"kind": "meta"/' evolution_enhancer.py | wc -l # 5
+awk 'NR>=476&&NR<=578&&/rng\.(choice|random)/' evolution_enhancer.py | wc -l  # 6
+grep -rn context_switch --include=*.py . | wc -l       # 1（仅目录声明行 :83）
+wc -l evolution_enhancer.py                            # 1883
+```

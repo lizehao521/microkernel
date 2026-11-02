@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>交付对账单 · 示例-编程-好交付</title><style>
+body{font-family:Consolas,'Courier New',monospace;background:#f6f6f4;color:#1b1b1b;margin:0;padding:24px;line-height:1.55}
+h1{font-size:22px;margin:0 0 4px}h2{font-size:16px;margin:26px 0 8px;border-bottom:1px solid #ccc;padding-bottom:4px}
+h3{font-size:14px;margin:16px 0 6px}
+.meta{color:#666;font-size:12px}
+.banner{margin:16px 0;padding:12px 16px;border-radius:6px;font-size:15px;font-weight:bold;border:1px solid #999}
+.banner.ok{background:#e6f4ea;border-color:#2e7d32;color:#1b5e20}
+.banner.bad{background:#fdecea;border-color:#c62828;color:#8e1b1b}
+.banner.warn{background:#fff8e1;border-color:#f9a825;color:#7a5b00}
+.banner small{display:block;font-weight:normal;margin-top:4px;font-size:12px}
+table{border-collapse:collapse;width:100%;margin:6px 0 14px;font-size:12px}
+th,td{border:1px solid #ccc;padding:5px 7px;text-align:left;vertical-align:top}
+th{background:#ebebe8}
+td.ok{color:#1b5e20}td.bad{color:#b71c1c;font-weight:bold}td.warn{color:#7a5b00}td.info{color:#0d47a1}
+.tag{display:inline-block;padding:0 5px;border-radius:3px;font-size:11px;border:1px solid #aaa}
+.tag.disk{background:#e8eefc}.tag.self{background:#fce8f4}
+ul{margin:4px 0 12px 20px;padding:0}li{margin:2px 0}
+.foot{margin-top:28px;border-top:1px solid #bbb;padding-top:8px;color:#555;font-size:11px}
+.num{font-weight:bold}
+</style></head><body>
+<h1>交付对账单</h1>
+<div class="meta">会话 示例-编程-好交付 ｜ 生成 2026-10-25T17:52:17Z ｜ 交付方 编程 Agent（示例，人工扮演）</div>
+<div class="banner ok">ACCEPTED<small>8 条声明全部由盘上证据复核通过，证据源无红，无仅凭自报的项</small></div>
+<p>声明 <span class='num'>8</span> 条：MATCH <span class='num'>8</span> ｜ MISMATCH <span class='num'>0</span> ｜ ABSENT <span class='num'>0</span> ｜ 盘上 8 / 自报 0</p>
+<h2>逐条声明</h2>
+<table><tr><th>编号</th><th>声明</th><th>期望</th><th>盘上实际</th><th>判定</th><th>依据档</th><th>来源</th></tr>
+<tr class="claim" data-claim="C1"><td>C1</td><td>file_sha256<br><span class="meta">交付说改完的就是这份文件</span></td><td>e5e1efde571cacada4c34b445da538a217fe097b47cd866e446bfdfec7e4f640</td><td>e5e1efde571cacada4c34b445da538a217fe097b47cd866e446bfdfec7e4f640</td><td class="ok">MATCH</td><td>measured</td><td><span class="tag disk">盘上</span></td></tr>
+<tr class="claim" data-claim="C2"><td>C2</td><td>file_contains<br><span class="meta">空列表先拦下</span></td><td>if not xs:</td><td>    if not xs:</td><td class="ok">MATCH</td><td>measured</td><td><span class="tag disk">盘上</span></td></tr>
+<tr class="claim" data-claim="C3"><td>C3</td><td>log_exit<br><span class="meta">三个单测应当全过</span></td><td>0</td><td>exit_code=0</td><td class="ok">MATCH</td><td>measured</td><td><span class="tag disk">盘上</span></td></tr>
+<tr class="claim" data-claim="C4"><td>C4</td><td>log_contains<br><span class="meta">unittest 全过时末行是 OK</span></td><td>OK</td><td>出现 1 次</td><td class="ok">MATCH</td><td>measured</td><td><span class="tag disk">盘上</span></td></tr>
+<tr class="claim" data-claim="C5"><td>C5</td><td>file_absent<br><span class="meta">交付说调试用的临时文件已删</span></td><td>—</td><td>不存在</td><td class="ok">MATCH</td><td>measured</td><td><span class="tag disk">盘上</span></td></tr>
+<tr class="claim" data-claim="C6"><td>C6</td><td>file_bytes<br><span class="meta">报给下游的字节数</span></td><td>99</td><td>99 字节</td><td class="ok">MATCH</td><td>measured</td><td><span class="tag disk">盘上</span></td></tr>
+<tr class="claim" data-claim="C7"><td>C7</td><td>file_lines<br><span class="meta">报给下游的行数</span></td><td>4</td><td>4 行</td><td class="ok">MATCH</td><td>measured</td><td><span class="tag disk">盘上</span></td></tr>
+<tr class="claim" data-claim="C8"><td>C8</td><td>log_contains<br><span class="meta">三个用例都跑了</span></td><td>Ran 3 tests</td><td>出现 1 次</td><td class="ok">MATCH</td><td>measured</td><td><span class="tag disk">盘上</span></td></tr></table>
+
+<h2>这张单子证明不了什么</h2><ul><li>本件只读盘上文件：不执行被交付的代码，不联网，不改任何输入。</li><li>核对的是「声明 vs 盘上证据」是否一致，不判断代码或结论本身对不对。</li><li>证据怎么产生的，本件证不了：日志与文件可能是事后补的，本件只核它们与声明是否对得上。</li><li>交付方自报的读数（trace_sane / KPI / chain_sane 等）记为 relayed，本件不重算。</li><li>内核账本只核 seal / 链接 / 序号 / payload / 49 格分组这些可复算的形状，不核每格内容对不对。</li><li>ACCEPTED 只代表「每条声明都由盘上证据复核通过，且没有仅凭自报的项」；不代表代码正确或测试充分。</li></ul>
+<div class="foot">工具 sha256 7994b6660cd80d62e21b5b6cc4eda8ef7f3077d57ed7ab66fdb451212f10fa9f ｜ spec sha256 8f51989c0c6f255c89060ff7fa5fe9a317e5ad2c87c01a338a28b220c92e3057 ｜ 工具版本 1.0<br>landing check: 8/8 rows OK</div>
+</body></html>

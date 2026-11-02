@@ -1,0 +1,12 @@
+build rc=0 exe=C:\Users\Admin\AppData\Local\Temp\E1-冒烟-12400\agentd-e1.exe sha256=e814e90dc5ed
+PASS S0 跑的是哪一份 build | exe=agentd-e1.exe sha256_12=e814e90dc5ed build_rc=0
+PASS S1 stdout 不受事件层影响 | rc_on=0 rc_off=0 stdout_equal=True on_bytes=2440 off_bytes=2441 events_in_stdout=False
+PASS S2 append-only 跨进程 | first_run=20 after_second=40 seq_regressions=0 run_started=2
+PASS S3 撞车守卫保住账本 | journal_is_file=True journal_bytes=148177 rc=0 stderr_has_collision_note=True nested_events_written=False
+PASS S4 横幅三态各说各的 | 内存态=True 没开态=True 落盘态=True file_line=['agentd: 事件层 20 条 → C:\\Users\\Admin\\AppData\\Local\\Temp\\E1-冒烟-12400\\s4.events.jsonl']
+PASS S5 六态退出码未改 | real=2 turns=3 capped=5 script=0 bad_resume=2
+PASS S6 收口事件形状 | state=settled stop=跑完：端点剧本走到最后一发 progress={'done': 6, 'total': 6, 'limit': 20} evidence=measured turn=0 step_field=absent
+INFO 真实流出处档分布 {'measured': 20}；带 why 的 0/20
+
+steps 7, passed 7
+readings: C:\Users\Admin\Desktop\微内核\事件层-1022\读数\冒烟-E1.jsonl

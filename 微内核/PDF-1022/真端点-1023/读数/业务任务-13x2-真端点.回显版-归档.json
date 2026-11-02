@@ -1,0 +1,1944 @@
+{
+ "surface": "agenthub",
+ "set": "business-13",
+ "shape": "13 tasks x 2 passes, fresh session per task",
+ "fixture": "PDF-1022/真端点-1023/业务现场",
+ "fixture_files": 21,
+ "endpoint": "http://121.36.29.96:8787/v1/chat/completions",
+ "model": "MiniMax-M2.5",
+ "key_masked": "sk-rel...IbWA",
+ "port": 51134,
+ "passes_declared": 2,
+ "started": "2026-10-23T13:10:09+08:00",
+ "health": {
+  "allow_exec": false,
+  "allow_write": false,
+  "memory": 0,
+  "model_endpoint": "http://121.36.29.96:8787/v1/chat/completions",
+  "next_turn": 1,
+  "ok": true,
+  "tools": 12
+ },
+ "exe": {
+  "sha256": "7f001318b7c4c73d8e1312edd208943dc708ee7a9bacc80cec4cacb7968b4754",
+  "bytes": 12066304
+ },
+ "runs": [
+  {
+   "id": "B01",
+   "name": "发票合计",
+   "pass": 1,
+   "ok": true,
+   "model_ok": true,
+   "misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 3,
+   "tools": [
+    "fs.read",
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture/财务/发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\财务\\发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\财务\\发票-2026-031.txt ｜ 读到 190 字节（UTF-8 码元 112 个）；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\财务\\发票-2026-031.txt ｜ 读到 190 字节（UTF-8 码元 112 个）；calc.eval：1280 * 1.06 = 1356.8000000000002 ｜ 试了 1 次 ｜ 0ms",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 15956.1,
+   "err": null,
+   "at": "2026-10-23T13:10:26+08:00"
+  },
+  {
+   "id": "B02",
+   "name": "预算超支",
+   "pass": 1,
+   "ok": true,
+   "model_ok": true,
+   "misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture/财务/预算-2026-Q3.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\财务\\预算-2026-Q3.txt ｜ 读到 127 字节（UTF-8 码元 79 个）；calc.eval：21800+15600+9400+4700-50000 = 1500 ｜ 试了 1 次 ｜ 0ms",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 6876.9,
+   "err": null,
+   "at": "2026-10-23T13:10:33+08:00"
+  },
+  {
+   "id": "B03",
+   "name": "报价比价",
+   "pass": 1,
+   "ok": false,
+   "model_ok": false,
+   "misses": [
+    "number:17200"
+   ],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 4,
+   "tools": [
+    "fs.list",
+    "fs.read",
+    "fs.read",
+    "fs.read"
+   ],
+   "classes": [
+    "ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.list",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\财务\\报价",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\财务\\报价\\A-云杉科技.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\财务\\报价\\B-北辰云服.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\财务\\报价\\C-海岳数据.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "fs.list：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\财务\\报价 ｜ 目录下共 3 条 ｜ 这里最大的文件是 A-云杉科技.txt（197 字节）；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\财务\\报价\\A-云杉科技.txt ｜ 读到 197 字节（UTF-8 码元 126 个）；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\财务\\报价\\B-北辰云服.txt ｜ 读到 197 字节（UTF-8 码元 126 个）；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hu",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 11960.3,
+   "err": null,
+   "at": "2026-10-23T13:10:45+08:00"
+  },
+  {
+   "id": "B04",
+   "name": "日志统计",
+   "pass": 1,
+   "ok": false,
+   "model_ok": false,
+   "misses": [
+    "stats:运维/app.log",
+    "number:12",
+    "number:2",
+    "text:空"
+   ],
+   "stop": "跑完",
+   "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture/运维/app.log",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\运维\\app.log ｜ 读到 492 字节（UTF-8 码元 492 个）",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 4584.0,
+   "err": null,
+   "at": "2026-10-23T13:10:50+08:00"
+  },
+  {
+   "id": "B05",
+   "name": "健康巡检",
+   "pass": 1,
+   "ok": false,
+   "model_ok": false,
+   "misses": [
+    "number:12",
+    "text:true"
+   ],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "http.get"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "relayed"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "http.get",
+     "class": "ok",
+     "path": "http://127.0.0.1:51134/api/health",
+     "provenance": "model_says",
+     "evidence": "relayed"
+    }
+   ],
+   "answer_head": "http.get：HTTP 200 200 OK ｜ 151 字节 ｜ 1ms",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 3758.8,
+   "err": null,
+   "at": "2026-10-23T13:10:54+08:00"
+  },
+  {
+   "id": "B06",
+   "name": "故障时长",
+   "pass": 1,
+   "ok": false,
+   "model_ok": false,
+   "misses": [
+    "number:45",
+    "text:分"
+   ],
+   "stop": "跑完",
+   "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "bad_args"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "absent"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture/运维/incident-0412.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "bad_args",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "absent"
+    }
+   ],
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\运维\\incident-0412.txt ｜ 读到 140 字节（UTF-8 码元 82 个）",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 6288.5,
+   "err": null,
+   "at": "2026-10-23T13:11:00+08:00"
+  },
+  {
+   "id": "B07",
+   "name": "SLA 判定",
+   "pass": 1,
+   "ok": false,
+   "model_ok": false,
+   "misses": [
+    "text:违约"
+   ],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 3,
+   "tools": [
+    "fs.read",
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture/运维/SLA.md",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\运维\\incident-0412.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\运维\\SLA.md ｜ 读到 251 字节（UTF-8 码元 133 个）；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\运维\\incident-0412.txt ｜ 读到 140 字节（UTF-8 码元 82 个）；calc.eval：(43200-45)/43200*100 = 99.89583333333333 ｜ 试了 1 次 ｜ 0ms",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 12623.5,
+   "err": null,
+   "at": "2026-10-23T13:11:13+08:00"
+  },
+  {
+   "id": "B08",
+   "name": "入职材料缺项",
+   "pass": 1,
+   "ok": false,
+   "model_ok": false,
+   "misses": [
+    "text:离职证明"
+   ],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "fs.list"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\人事\\入职清单.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.list",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\人事\\入职材料",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\人事\\入职清单.txt ｜ 读到 134 字节（UTF-8 码元 58 个）；fs.list：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\人事\\入职材料 ｜ 目录下共 3 条 ｜ 这里最大的文件是 学历证明.txt（52 字节）",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 9037.8,
+   "err": null,
+   "at": "2026-10-23T13:11:22+08:00"
+  },
+  {
+   "id": "B09",
+   "name": "投诉最大金额",
+   "pass": 1,
+   "ok": false,
+   "model_ok": false,
+   "misses": [
+    "number:8800",
+    "text:t-1042"
+   ],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture/客户/投诉.csv",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\客户\\投诉.csv ｜ 读到 190 字节（UTF-8 码元 112 个）",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 5884.0,
+   "err": null,
+   "at": "2026-10-23T13:11:29+08:00"
+  },
+  {
+   "id": "B10",
+   "name": "客户去重",
+   "pass": 1,
+   "ok": false,
+   "model_ok": false,
+   "misses": [
+    "number:7"
+   ],
+   "stop": "跑完",
+   "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture/客户/客户名单.csv",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\客户\\客户名单.csv ｜ 读到 257 字节（UTF-8 码元 209 个）",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 5953.0,
+   "err": null,
+   "at": "2026-10-23T13:11:35+08:00"
+  },
+  {
+   "id": "B11",
+   "name": "营收对账",
+   "pass": 1,
+   "ok": true,
+   "model_ok": true,
+   "misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 3,
+   "tools": [
+    "fs.read",
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\报表\\4月营收-销售部.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\报表\\4月营收-财务部.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\报表\\4月营收-销售部.txt ｜ 读到 75 字节（UTF-8 码元 39 个）；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\报表\\4月营收-财务部.txt ｜ 读到 75 字节（UTF-8 码元 39 个）；calc.eval：1250000-1184000 = 66000 ｜ 试了 1 次 ｜ 0ms",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 11669.8,
+   "err": null,
+   "at": "2026-10-23T13:11:47+08:00"
+  },
+  {
+   "id": "B12",
+   "name": "版本核对",
+   "pass": 1,
+   "ok": false,
+   "model_ok": false,
+   "misses": [
+    "text:不一致",
+    "text:2.4.1",
+    "text:2.4.0"
+   ],
+   "stop": "跑完",
+   "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "fs.read"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture/发布/VERSION.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture/发布/CHANGELOG.md",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\发布\\VERSION.txt ｜ 读到 6 字节（UTF-8 码元 6 个）；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\发布\\CHANGELOG.md ｜ 读到 80 字节（UTF-8 码元 48 个）",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 10528.6,
+   "err": null,
+   "at": "2026-10-23T13:11:57+08:00"
+  },
+  {
+   "id": "B13",
+   "name": "库存补货",
+   "pass": 1,
+   "ok": false,
+   "model_ok": false,
+   "misses": [
+    "text:机械键盘",
+    "text:无线鼠标",
+    "text:扩展坞"
+   ],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture/库存/库存.csv",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\库存\\库存.csv ｜ 读到 82 字节（UTF-8 码元 44 个）",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 5378.3,
+   "err": null,
+   "at": "2026-10-23T13:12:03+08:00"
+  },
+  {
+   "id": "B01",
+   "name": "发票合计",
+   "pass": 2,
+   "ok": true,
+   "model_ok": true,
+   "misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture/财务/发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\财务\\发票-2026-031.txt ｜ 读到 190 字节（UTF-8 码元 112 个）；calc.eval：1280 * 1.06 = 1356.8000000000002 ｜ 试了 1 次 ｜ 0ms",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 9318.9,
+   "err": null,
+   "at": "2026-10-23T13:12:13+08:00"
+  },
+  {
+   "id": "B02",
+   "name": "预算超支",
+   "pass": 2,
+   "ok": false,
+   "model_ok": false,
+   "misses": [
+    "number:1500"
+   ],
+   "stop": "跑完",
+   "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture/财务/预算-2026-Q3.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\财务\\预算-2026-Q3.txt ｜ 读到 127 字节（UTF-8 码元 79 个）",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 5665.1,
+   "err": null,
+   "at": "2026-10-23T13:12:18+08:00"
+  },
+  {
+   "id": "B03",
+   "name": "报价比价",
+   "pass": 2,
+   "ok": false,
+   "model_ok": false,
+   "misses": [
+    "number:17200"
+   ],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 4,
+   "tools": [
+    "fs.list",
+    "fs.read",
+    "fs.read",
+    "fs.read"
+   ],
+   "classes": [
+    "ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.list",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture/财务/报价",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\财务\\报价\\A-云杉科技.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\财务\\报价\\B-北辰云服.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\财务\\报价\\C-海岳数据.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "fs.list：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\财务\\报价 ｜ 目录下共 3 条 ｜ 这里最大的文件是 A-云杉科技.txt（197 字节）；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\财务\\报价\\A-云杉科技.txt ｜ 读到 197 字节（UTF-8 码元 126 个）；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\财务\\报价\\B-北辰云服.txt ｜ 读到 197 字节（UTF-8 码元 126 个）；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hu",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 16670.4,
+   "err": null,
+   "at": "2026-10-23T13:12:35+08:00"
+  },
+  {
+   "id": "B04",
+   "name": "日志统计",
+   "pass": 2,
+   "ok": true,
+   "model_ok": true,
+   "misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "text.stats"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture/运维/app.log",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "text.stats",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\运维\\app.log",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\运维\\app.log ｜ 读到 492 字节（UTF-8 码元 492 个）；text.stats：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\运维\\app.log ｜ 字节 492 ｜ UTF-8 码元 492 ｜ 行 12（空行 2）｜ 最长一行 67 字节，在第 4 行 ｜ 试了 1 次 ｜ 1ms",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 7077.0,
+   "err": null,
+   "at": "2026-10-23T13:12:43+08:00"
+  },
+  {
+   "id": "B05",
+   "name": "健康巡检",
+   "pass": 2,
+   "ok": false,
+   "model_ok": false,
+   "misses": [
+    "number:12",
+    "text:true"
+   ],
+   "stop": "跑完",
+   "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+   "steps": 1,
+   "tools": [
+    "http.get"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "relayed"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "http.get",
+     "class": "ok",
+     "path": "http://127.0.0.1:51134/api/health",
+     "provenance": "model_says",
+     "evidence": "relayed"
+    }
+   ],
+   "answer_head": "http.get：HTTP 200 200 OK ｜ 151 字节 ｜ 0ms",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 4985.1,
+   "err": null,
+   "at": "2026-10-23T13:12:48+08:00"
+  },
+  {
+   "id": "B06",
+   "name": "故障时长",
+   "pass": 2,
+   "ok": false,
+   "model_ok": false,
+   "misses": [
+    "text:分"
+   ],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture/运维/incident-0412.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\运维\\incident-0412.txt ｜ 读到 140 字节（UTF-8 码元 82 个）；calc.eval：45 - 0 = 45 ｜ 试了 1 次 ｜ 0ms",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 6399.3,
+   "err": null,
+   "at": "2026-10-23T13:12:54+08:00"
+  },
+  {
+   "id": "B07",
+   "name": "SLA 判定",
+   "pass": 2,
+   "ok": false,
+   "model_ok": false,
+   "misses": [
+    "number:45",
+    "text:违约",
+    "any:43.2|0.104|99.89"
+   ],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "fs.read"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\运维\\SLA.md",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\运维\\incident-0412.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\运维\\SLA.md ｜ 读到 251 字节（UTF-8 码元 133 个）；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\运维\\incident-0412.txt ｜ 读到 140 字节（UTF-8 码元 82 个）",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 10580.6,
+   "err": null,
+   "at": "2026-10-23T13:13:05+08:00"
+  },
+  {
+   "id": "B08",
+   "name": "入职材料缺项",
+   "pass": 2,
+   "ok": false,
+   "model_ok": false,
+   "misses": [
+    "text:离职证明"
+   ],
+   "stop": "跑完",
+   "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "fs.list"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture/人事/入职清单.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.list",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\人事\\入职材料",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\人事\\入职清单.txt ｜ 读到 134 字节（UTF-8 码元 58 个）；fs.list：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\人事\\入职材料 ｜ 目录下共 3 条 ｜ 这里最大的文件是 学历证明.txt（52 字节）",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 8772.7,
+   "err": null,
+   "at": "2026-10-23T13:13:14+08:00"
+  },
+  {
+   "id": "B09",
+   "name": "投诉最大金额",
+   "pass": 2,
+   "ok": false,
+   "model_ok": false,
+   "misses": [
+    "number:8800",
+    "text:t-1042"
+   ],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "text.stats"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\客户\\投诉.csv",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "text.stats",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\客户\\投诉.csv ｜ 读到 190 字节（UTF-8 码元 112 个）；text.stats：参数 text ｜ 字节 189 ｜ UTF-8 码元 111 ｜ 行 6（空行 0）｜ 最长一行 31 字节，在第 2 行 ｜ 试了 1 次 ｜ 0ms",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 7573.1,
+   "err": null,
+   "at": "2026-10-23T13:13:22+08:00"
+  },
+  {
+   "id": "B10",
+   "name": "客户去重",
+   "pass": 2,
+   "ok": false,
+   "model_ok": false,
+   "misses": [
+    "number:7"
+   ],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture/客户/客户名单.csv",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\客户\\客户名单.csv ｜ 读到 257 字节（UTF-8 码元 209 个）",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 7008.1,
+   "err": null,
+   "at": "2026-10-23T13:13:29+08:00"
+  },
+  {
+   "id": "B11",
+   "name": "营收对账",
+   "pass": 2,
+   "ok": true,
+   "model_ok": true,
+   "misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 3,
+   "tools": [
+    "fs.read",
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\报表\\4月营收-销售部.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\报表\\4月营收-财务部.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\报表\\4月营收-销售部.txt ｜ 读到 75 字节（UTF-8 码元 39 个）；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\报表\\4月营收-财务部.txt ｜ 读到 75 字节（UTF-8 码元 39 个）；calc.eval：1250000-1184000 = 66000 ｜ 试了 1 次 ｜ 0ms",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 14910.9,
+   "err": null,
+   "at": "2026-10-23T13:13:44+08:00"
+  },
+  {
+   "id": "B12",
+   "name": "版本核对",
+   "pass": 2,
+   "ok": false,
+   "model_ok": false,
+   "misses": [
+    "text:不一致",
+    "text:2.4.1",
+    "text:2.4.0"
+   ],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "fs.read"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture/发布/VERSION.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\发布\\CHANGELOG.md",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\发布\\VERSION.txt ｜ 读到 6 字节（UTF-8 码元 6 个）；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\发布\\CHANGELOG.md ｜ 读到 80 字节（UTF-8 码元 48 个）",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 6883.8,
+   "err": null,
+   "at": "2026-10-23T13:13:51+08:00"
+  },
+  {
+   "id": "B13",
+   "name": "库存补货",
+   "pass": 2,
+   "ok": false,
+   "model_ok": false,
+   "misses": [
+    "text:机械键盘",
+    "text:无线鼠标",
+    "text:扩展坞"
+   ],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture/库存/库存.csv",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\库存\\库存.csv ｜ 读到 82 字节（UTF-8 码元 44 个）",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 4767.4,
+   "err": null,
+   "at": "2026-10-23T13:13:56+08:00"
+  }
+ ],
+ "summary": {
+  "runs": 26,
+  "tasks": 13,
+  "oracle_ok": 6,
+  "model_ok": 6,
+  "tasks_both_passes": 2,
+  "tasks_any_pass": 4,
+  "by_task": {
+   "B01": {
+    "ok": 2,
+    "model_ok": 2,
+    "runs": 2,
+    "misses": []
+   },
+   "B02": {
+    "ok": 1,
+    "model_ok": 1,
+    "runs": 2,
+    "misses": [
+     {
+      "pass": 2,
+      "misses": [
+       "number:1500"
+      ]
+     }
+    ]
+   },
+   "B03": {
+    "ok": 0,
+    "model_ok": 0,
+    "runs": 2,
+    "misses": [
+     {
+      "pass": 1,
+      "misses": [
+       "number:17200"
+      ]
+     },
+     {
+      "pass": 2,
+      "misses": [
+       "number:17200"
+      ]
+     }
+    ]
+   },
+   "B04": {
+    "ok": 1,
+    "model_ok": 1,
+    "runs": 2,
+    "misses": [
+     {
+      "pass": 1,
+      "misses": [
+       "stats:运维/app.log",
+       "number:12",
+       "number:2",
+       "text:空"
+      ]
+     }
+    ]
+   },
+   "B05": {
+    "ok": 0,
+    "model_ok": 0,
+    "runs": 2,
+    "misses": [
+     {
+      "pass": 1,
+      "misses": [
+       "number:12",
+       "text:true"
+      ]
+     },
+     {
+      "pass": 2,
+      "misses": [
+       "number:12",
+       "text:true"
+      ]
+     }
+    ]
+   },
+   "B06": {
+    "ok": 0,
+    "model_ok": 0,
+    "runs": 2,
+    "misses": [
+     {
+      "pass": 1,
+      "misses": [
+       "number:45",
+       "text:分"
+      ]
+     },
+     {
+      "pass": 2,
+      "misses": [
+       "text:分"
+      ]
+     }
+    ]
+   },
+   "B07": {
+    "ok": 0,
+    "model_ok": 0,
+    "runs": 2,
+    "misses": [
+     {
+      "pass": 1,
+      "misses": [
+       "text:违约"
+      ]
+     },
+     {
+      "pass": 2,
+      "misses": [
+       "number:45",
+       "text:违约",
+       "any:43.2|0.104|99.89"
+      ]
+     }
+    ]
+   },
+   "B08": {
+    "ok": 0,
+    "model_ok": 0,
+    "runs": 2,
+    "misses": [
+     {
+      "pass": 1,
+      "misses": [
+       "text:离职证明"
+      ]
+     },
+     {
+      "pass": 2,
+      "misses": [
+       "text:离职证明"
+      ]
+     }
+    ]
+   },
+   "B09": {
+    "ok": 0,
+    "model_ok": 0,
+    "runs": 2,
+    "misses": [
+     {
+      "pass": 1,
+      "misses": [
+       "number:8800",
+       "text:t-1042"
+      ]
+     },
+     {
+      "pass": 2,
+      "misses": [
+       "number:8800",
+       "text:t-1042"
+      ]
+     }
+    ]
+   },
+   "B10": {
+    "ok": 0,
+    "model_ok": 0,
+    "runs": 2,
+    "misses": [
+     {
+      "pass": 1,
+      "misses": [
+       "number:7"
+      ]
+     },
+     {
+      "pass": 2,
+      "misses": [
+       "number:7"
+      ]
+     }
+    ]
+   },
+   "B11": {
+    "ok": 2,
+    "model_ok": 2,
+    "runs": 2,
+    "misses": []
+   },
+   "B12": {
+    "ok": 0,
+    "model_ok": 0,
+    "runs": 2,
+    "misses": [
+     {
+      "pass": 1,
+      "misses": [
+       "text:不一致",
+       "text:2.4.1",
+       "text:2.4.0"
+      ]
+     },
+     {
+      "pass": 2,
+      "misses": [
+       "text:不一致",
+       "text:2.4.1",
+       "text:2.4.0"
+      ]
+     }
+    ]
+   },
+   "B13": {
+    "ok": 0,
+    "model_ok": 0,
+    "runs": 2,
+    "misses": [
+     {
+      "pass": 1,
+      "misses": [
+       "text:机械键盘",
+       "text:无线鼠标",
+       "text:扩展坞"
+      ]
+     },
+     {
+      "pass": 2,
+      "misses": [
+       "text:机械键盘",
+       "text:无线鼠标",
+       "text:扩展坞"
+      ]
+     }
+    ]
+   }
+  },
+  "stops": {
+   "跑完": 26
+  },
+  "sane": 26,
+  "estimated_steps": 0,
+  "ms_p50": 7008.1,
+  "ms_p95": 15956.1,
+  "ms_max": 16670.4,
+  "failures": [
+   {
+    "id": "B03",
+    "pass": 1,
+    "misses": [
+     "number:17200"
+    ],
+    "stop": "跑完",
+    "tools": [
+     "fs.list",
+     "fs.read",
+     "fs.read",
+     "fs.read"
+    ],
+    "answer_head": "fs.list：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\财务\\报价 ｜ 目录下共 3 条 ｜ 这里最大的文件是 A-云杉科技.txt（197 字节）；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\财务\\报价\\A-云杉科技.txt ｜ 读到 197 字节（UTF-8 码元 126 个）；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\财务\\报价\\B-北辰云服.txt ｜ 读到 197 字节（UTF-8 码元 126 个）；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hu",
+    "err": null
+   },
+   {
+    "id": "B04",
+    "pass": 1,
+    "misses": [
+     "stats:运维/app.log",
+     "number:12",
+     "number:2",
+     "text:空"
+    ],
+    "stop": "跑完",
+    "tools": [
+     "fs.read"
+    ],
+    "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\运维\\app.log ｜ 读到 492 字节（UTF-8 码元 492 个）",
+    "err": null
+   },
+   {
+    "id": "B05",
+    "pass": 1,
+    "misses": [
+     "number:12",
+     "text:true"
+    ],
+    "stop": "跑完",
+    "tools": [
+     "http.get"
+    ],
+    "answer_head": "http.get：HTTP 200 200 OK ｜ 151 字节 ｜ 1ms",
+    "err": null
+   },
+   {
+    "id": "B06",
+    "pass": 1,
+    "misses": [
+     "number:45",
+     "text:分"
+    ],
+    "stop": "跑完",
+    "tools": [
+     "fs.read",
+     "calc.eval"
+    ],
+    "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\运维\\incident-0412.txt ｜ 读到 140 字节（UTF-8 码元 82 个）",
+    "err": null
+   },
+   {
+    "id": "B07",
+    "pass": 1,
+    "misses": [
+     "text:违约"
+    ],
+    "stop": "跑完",
+    "tools": [
+     "fs.read",
+     "fs.read",
+     "calc.eval"
+    ],
+    "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\运维\\SLA.md ｜ 读到 251 字节（UTF-8 码元 133 个）；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\运维\\incident-0412.txt ｜ 读到 140 字节（UTF-8 码元 82 个）；calc.eval：(43200-45)/43200*100 = 99.89583333333333 ｜ 试了 1 次 ｜ 0ms",
+    "err": null
+   },
+   {
+    "id": "B08",
+    "pass": 1,
+    "misses": [
+     "text:离职证明"
+    ],
+    "stop": "跑完",
+    "tools": [
+     "fs.read",
+     "fs.list"
+    ],
+    "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\人事\\入职清单.txt ｜ 读到 134 字节（UTF-8 码元 58 个）；fs.list：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\人事\\入职材料 ｜ 目录下共 3 条 ｜ 这里最大的文件是 学历证明.txt（52 字节）",
+    "err": null
+   },
+   {
+    "id": "B09",
+    "pass": 1,
+    "misses": [
+     "number:8800",
+     "text:t-1042"
+    ],
+    "stop": "跑完",
+    "tools": [
+     "fs.read"
+    ],
+    "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\客户\\投诉.csv ｜ 读到 190 字节（UTF-8 码元 112 个）",
+    "err": null
+   },
+   {
+    "id": "B10",
+    "pass": 1,
+    "misses": [
+     "number:7"
+    ],
+    "stop": "跑完",
+    "tools": [
+     "fs.read"
+    ],
+    "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\客户\\客户名单.csv ｜ 读到 257 字节（UTF-8 码元 209 个）",
+    "err": null
+   },
+   {
+    "id": "B12",
+    "pass": 1,
+    "misses": [
+     "text:不一致",
+     "text:2.4.1",
+     "text:2.4.0"
+    ],
+    "stop": "跑完",
+    "tools": [
+     "fs.read",
+     "fs.read"
+    ],
+    "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\发布\\VERSION.txt ｜ 读到 6 字节（UTF-8 码元 6 个）；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\发布\\CHANGELOG.md ｜ 读到 80 字节（UTF-8 码元 48 个）",
+    "err": null
+   },
+   {
+    "id": "B13",
+    "pass": 1,
+    "misses": [
+     "text:机械键盘",
+     "text:无线鼠标",
+     "text:扩展坞"
+    ],
+    "stop": "跑完",
+    "tools": [
+     "fs.read"
+    ],
+    "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\库存\\库存.csv ｜ 读到 82 字节（UTF-8 码元 44 个）",
+    "err": null
+   },
+   {
+    "id": "B02",
+    "pass": 2,
+    "misses": [
+     "number:1500"
+    ],
+    "stop": "跑完",
+    "tools": [
+     "fs.read"
+    ],
+    "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\财务\\预算-2026-Q3.txt ｜ 读到 127 字节（UTF-8 码元 79 个）",
+    "err": null
+   },
+   {
+    "id": "B03",
+    "pass": 2,
+    "misses": [
+     "number:17200"
+    ],
+    "stop": "跑完",
+    "tools": [
+     "fs.list",
+     "fs.read",
+     "fs.read",
+     "fs.read"
+    ],
+    "answer_head": "fs.list：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\财务\\报价 ｜ 目录下共 3 条 ｜ 这里最大的文件是 A-云杉科技.txt（197 字节）；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\财务\\报价\\A-云杉科技.txt ｜ 读到 197 字节（UTF-8 码元 126 个）；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\财务\\报价\\B-北辰云服.txt ｜ 读到 197 字节（UTF-8 码元 126 个）；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hu",
+    "err": null
+   },
+   {
+    "id": "B05",
+    "pass": 2,
+    "misses": [
+     "number:12",
+     "text:true"
+    ],
+    "stop": "跑完",
+    "tools": [
+     "http.get"
+    ],
+    "answer_head": "http.get：HTTP 200 200 OK ｜ 151 字节 ｜ 0ms",
+    "err": null
+   },
+   {
+    "id": "B06",
+    "pass": 2,
+    "misses": [
+     "text:分"
+    ],
+    "stop": "跑完",
+    "tools": [
+     "fs.read",
+     "calc.eval"
+    ],
+    "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\运维\\incident-0412.txt ｜ 读到 140 字节（UTF-8 码元 82 个）；calc.eval：45 - 0 = 45 ｜ 试了 1 次 ｜ 0ms",
+    "err": null
+   },
+   {
+    "id": "B07",
+    "pass": 2,
+    "misses": [
+     "number:45",
+     "text:违约",
+     "any:43.2|0.104|99.89"
+    ],
+    "stop": "跑完",
+    "tools": [
+     "fs.read",
+     "fs.read"
+    ],
+    "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\运维\\SLA.md ｜ 读到 251 字节（UTF-8 码元 133 个）；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\运维\\incident-0412.txt ｜ 读到 140 字节（UTF-8 码元 82 个）",
+    "err": null
+   },
+   {
+    "id": "B08",
+    "pass": 2,
+    "misses": [
+     "text:离职证明"
+    ],
+    "stop": "跑完",
+    "tools": [
+     "fs.read",
+     "fs.list"
+    ],
+    "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\人事\\入职清单.txt ｜ 读到 134 字节（UTF-8 码元 58 个）；fs.list：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\人事\\入职材料 ｜ 目录下共 3 条 ｜ 这里最大的文件是 学历证明.txt（52 字节）",
+    "err": null
+   },
+   {
+    "id": "B09",
+    "pass": 2,
+    "misses": [
+     "number:8800",
+     "text:t-1042"
+    ],
+    "stop": "跑完",
+    "tools": [
+     "fs.read",
+     "text.stats"
+    ],
+    "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\客户\\投诉.csv ｜ 读到 190 字节（UTF-8 码元 112 个）；text.stats：参数 text ｜ 字节 189 ｜ UTF-8 码元 111 ｜ 行 6（空行 0）｜ 最长一行 31 字节，在第 2 行 ｜ 试了 1 次 ｜ 0ms",
+    "err": null
+   },
+   {
+    "id": "B10",
+    "pass": 2,
+    "misses": [
+     "number:7"
+    ],
+    "stop": "跑完",
+    "tools": [
+     "fs.read"
+    ],
+    "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\客户\\客户名单.csv ｜ 读到 257 字节（UTF-8 码元 209 个）",
+    "err": null
+   },
+   {
+    "id": "B12",
+    "pass": 2,
+    "misses": [
+     "text:不一致",
+     "text:2.4.1",
+     "text:2.4.0"
+    ],
+    "stop": "跑完",
+    "tools": [
+     "fs.read",
+     "fs.read"
+    ],
+    "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\发布\\VERSION.txt ｜ 读到 6 字节（UTF-8 码元 6 个）；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\发布\\CHANGELOG.md ｜ 读到 80 字节（UTF-8 码元 48 个）",
+    "err": null
+   },
+   {
+    "id": "B13",
+    "pass": 2,
+    "misses": [
+     "text:机械键盘",
+     "text:无线鼠标",
+     "text:扩展坞"
+    ],
+    "stop": "跑完",
+    "tools": [
+     "fs.read"
+    ],
+    "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-j_v4qwbp\\fixture\\库存\\库存.csv ｜ 读到 82 字节（UTF-8 码元 44 个）",
+    "err": null
+   }
+  ]
+ },
+ "landing_ok": null,
+ "finished": "2026-10-23T13:13:57+08:00"
+}

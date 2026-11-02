@@ -1,0 +1,17 @@
+build rc 0 
+exe bytes 14317056
+exe md5 e68dec80cabe6193419c827e40ea08a0
+run rc 3
+stderr: agentd: 10s 兜底进度开：静默过 10s 补 progress_tick，total 算不出补 why_late / agentd: 事件层 14 条 → C:/Users/Admin/AppData/Local/Temp/e5load2/j.events.jsonl
+rows 14
+  progress_tick seq=2 turn=1 elapsed_ms=10089 evidence=measured progress={"done": 1, "total": 2, "limit": 2}
+    why: 静默 10001ms：这一发落了 1 条，最后一条是 "turn_accepted"；额度到 2 发为止；剧本比额度长，落点夹到额度
+  progress_tick seq=2 turn=2 elapsed_ms=22140 evidence=measured progress={"done": 2, "total": 2, "limit": 2}
+    why: 静默 10000ms：这一发落了 1 条，最后一条是 "turn_accepted"；额度到 2 发为止；剧本比额度长，落点夹到额度
+  run_settled stop=turns progress={"done": 2, "total": 2, "limit": 2}
+check-log rc 0
+  | check-log	ValidateLog	序号接续、状态与出处合规、absent 带理由；ack_limit_ms=60000	GREEN	14 条
+  | check-log	ValidateAccepts	每发第一条是回执、预算内、载荷给全；ack_limit_ms=60000	GREEN	14 条
+  | check-log	ValidateSettlement	一发恰好一结、counts 与账对得上、开了账必有 run_settled；ack_limit_ms=60000	GREEN	14 条
+  | check-log	ValidateReplay	尾游标接得上（agentd-18676:r18676-1792682652920193200:0:2）；ack_limit_ms=60000	GREEN	14 条
+  | check-log	口径	ack_limit_ms=60000	INFO	14 条日志、4 支判据

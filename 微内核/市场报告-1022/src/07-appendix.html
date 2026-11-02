@@ -1,0 +1,106 @@
+<!-- ================= APPENDICES ================= -->
+<section class="appendix pagebreak" id="appA">
+  <h1><span class="num">A</span>方法、波次与分母</h1>
+  <h2>A.1 波次账（实际用量，非计划值）</h2>
+  <table class="tbl">
+    <tr><th>波</th><th>角色</th><th>覆盖</th><th>用量</th><th>结果</th></tr>
+    <tr><td>波 1</td><td>检索子代理 ×4 并行</td><td>合规义务 / 采购实态 / 协同契约 / 人类因素 / 账本完整性 / 裁判有效性 / 市场规模 / 竞品 / GTM</td><td>每路 8 次检索 + 5 次抓取（其中两路 12–16 次调用含重试）</td><td>100 条源进册</td></tr>
+    <tr><td>波 2</td><td>引用抽查子代理 ×1</td><td>13 条高风险声明逐条回源</td><td>12 次抓取用尽（EUR-Lex 两次不可达、一份页面 404）</td><td>SUPPORTED 4 / PARTIAL 7 / UNSUPPORTED 1 / UNVERIFIED 1</td></tr>
+    <tr><td>波 2</td><td>补证子代理 ×1</td><td>GAP A 负结果方法学 / B 在位者覆盖 / C 护栏与治理目录 / D 变现与渠道</td><td>7 次检索 + 4 次抓取</td><td>新增 19 条源（100–118）；<strong>GAP D 整块未填</strong></td></tr>
+    <tr><td>波 3</td><td>—</td><td>硬洞补取（EUR-Lex 原文、LangChain 一手、Gartner 一手、UiPath 机制、Splunk/Elastic/Chronicle/Sentinel/Drata/OpenLineage）</td><td>未起</td><td>本报告不使用推测填补这些洞</td></tr>
+  </table>
+
+  <h2>A.2 100 条源的真实成色</h2>
+  <div class="metrics">
+    <div><div class="lab">被打开读完</div><div class="num">16</div><div class="tiny">其中 Tier 1 占 11</div></div>
+    <div><div class="lab">只拿到快照</div><div class="num">77</div><div class="tiny">带数字者最高 D 级</div></div>
+    <div><div class="lab">本轮没打开</div><div class="num">7</div><div class="tiny">不可引</div></div>
+    <div><div class="lab">Tier 3</div><div class="num">42</div><div class="tiny">三个相加也只到 D/C</div></div>
+  </div>
+  <p>所以本报告的<strong>规模结论一律缺席</strong>：能被排版的市场数字只有厂商定价页与官方文档（Langfuse / Datadog / Vanta / S3 Object Lock / Apple / AWS 横幅 / RFC 6962 等），
+    其余都按 D 级引用，并在正文里带上「据具名来源转述」。这是 §8 定价能对锚、而 §11 财务只能沿用旧假设的原因。</p>
+
+  <h2>A.3 被抽查推翻的两类错误（写下来防复发）</h2>
+  <ul class="avoid">
+    <li><strong>快照级数字不该进正文</strong>，即使已标「待复核」——MT-Bench 五个数、LangChain 三个数就是这么进的，随后被撤。</li>
+    <li><strong>「标注了风险」不等于「没有过界」</strong>；配套规矩：判据的红要能点名是哪个词命中的（本轮话术闸因把整列表当一段而误伤一次，已改成行级 + 相邻匹配并加反臂）。</li>
+  </ul>
+</section>
+
+<section class="appendix pagebreak" id="appB">
+  <h1><span class="num">B</span>v2 → v3 主张对照</h1>
+  <table class="tbl diff-table">
+    <tr><th>主题</th><th>v2（2026-10-20）</th><th>v3（2026-10-22）</th><th>变动性质</th></tr>
+    <tr><td>EU 记录义务时点</td><td>引用 Art.12 作为需求来源，未标时点冲突</td><td>Annex III 2027-12-02、Annex I 2028-08-02；Art.50 部分义务 2026-12-02；Art.12 无时长、6 个月在 Art.26(6)</td><td><strong>纠错</strong></td></tr>
+    <tr><td>需求挂接接口</td><td>「为 AI Act 提供技术证据」</td><td>「归属 + 连续留存 + 可分发复核」，并明写无买方要求逐调用可独立验证</td><td><strong>改口 + 承认空洞</strong></td></tr>
+    <tr><td>TAM</td><td>27–31 亿美元（LLM 可观测 26.9 亿 + AI TRiSM 30.9 亿，相邻不相加）</td><td>不采用为规模结论：同名类目 2025 基数三家差 2.6 倍且全 Tier 3；v2 那个数是 2026 口径且未标年份</td><td><strong>降级</strong></td></tr>
+    <tr><td>SAM / SOM</td><td>1.0–2.0 亿 / 0.5–400 万美元（C 级占比假设）</td><td><strong>沿用</strong>，不重猜占比；判词改为「回升前提未获证据」</td><td>沿用 + 判词</td></tr>
+    <tr><td>可防守差异</td><td>证据包规范、拒收计数、版本三元组、R/N 协议；「不是哈希链或 49 格」</td><td><strong>成立且更硬</strong>；并新增第五项：停止必须结算</td><td>加强</td></tr>
+    <tr><td>首创性</td><td>未明确引用先例</td><td>承认 Traccia（arXiv:2607.14309）与 2026-09 综述；撤一切首创暗示</td><td><strong>纠错</strong></td></tr>
+    <tr><td>竞品</td><td>五类玩家 + 价格锚</td><td>八类（新增声明防篡改的平台、合规自动化、小厂群、学术先例）；新增「机制背书」这一列，右上角为空</td><td>扩 + 收窄主张</td></tr>
+    <tr><td>定价</td><td>免费 / 1.5–3 万 / 4–8 万 / 试点 3–5 千</td><td>团队版建议降至 0.8–1.5 万；<strong>无 G3 则证据包版不得报价</strong>；免费档明确不含完整性机制</td><td>下调 + 加前置条件</td></tr>
+    <tr><td>闸</td><td>G0/G1/G1.5/G2</td><td>结构不变；G1.5 状态如实标 NOT_RUN（另一组双臂已出负结果）；<strong>新增 G3 完整性机制</strong></td><td>加一闸</td></tr>
+    <tr><td>路线排序</td><td>D + A 先行，B 条件触发，C 不做，E 可选</td><td>同，但 D 优先度上调、B 触发条件写死两条</td><td>微调</td></tr>
+  </table>
+</section>
+
+<section class="appendix pagebreak" id="appC">
+  <h1><span class="num">C</span>引用与分级登记</h1>
+  <p>完整源册不在此重复：见 <code>研究-1022/源表-波1.md</code>（100 条，号段 C1-25 / P20-41 / L40-59 / M60-92）
+    与 <code>研究-1022/DEEP_RESEARCH_证据件合规驱动-1022-v2.md</code> §13（波 2 新增 100–118）。
+    下面只登记<strong>本报告正文实际引用的 A/B 级件</strong>——正文里任何没在这些行出现的数字，都应视为 D 级或未填。</p>
+  <table class="tbl ref">
+    <tr><th>号</th><th>件</th><th>级</th><th>正文用它说什么</th></tr>
+    <tr><td>C1</td><td>Artificial Intelligence Act Explorer · Article 12 Record-Keeping</td><td>A（已读）</td><td>记录范围；<strong>不含留存时长</strong></td></tr>
+    <tr><td>C7</td><td>nist.gov · AI Risk Management Framework</td><td>A（已读）</td><td>「intended for voluntary use」；AI 600-1 日期；修订中</td></tr>
+    <tr><td>C10</td><td>iso.org · AI 标准族板块页</td><td>A（已读）</td><td>42001 可认证；正文付费 ⇒ 条款清单不可核</td></tr>
+    <tr><td>P20</td><td>A2A Protocol Specification v1.0.0</td><td>B（波 1 读，波 2 未复）</td><td>状态机与终态关闭流</td></tr>
+    <tr><td>P21</td><td>MCP 2025-06-18 · Progress</td><td>A（波 2 复核）</td><td>progress MUST increase / MUST stop after completion / SHOULD 限流</td></tr>
+    <tr><td>P22</td><td>MCP 2025-06-18 · Cancellation</td><td>B</td><td>best-effort、无回执、迟到响应属正常</td></tr>
+    <tr><td>L41</td><td>RFC 6962 Certificate Transparency</td><td>A（已读）</td><td>§7 威胁模型=发现错误签发；可接受不完全有效证书</td></tr>
+    <tr><td>L42</td><td>Apple · CT 日志计划 / CT 政策</td><td>A（已读）</td><td>「不给两方看两棵树」；仍要求一张符合 6962 的 SCT</td></tr>
+    <tr><td>L43</td><td>Mozilla bug 1969296（GoDaddy / DigiCert Yeti2025）</td><td>A（已读）</td><td>无效 SCT 由外部研究者发现；2025-07-25 结案</td></tr>
+    <tr><td>L47/L48</td><td>AWS S3 Object Lock · IBM Ceph Object Lock</td><td>A（已读）</td><td>compliance mode 不可覆盖；Cohasset 对 SEC 17a-4/CFTC/FINRA；「when correctly configured」</td></tr>
+    <tr><td>L50/L51</td><td>AWS QLDB 文档横幅 · 2018 发布帖</td><td>A/B</td><td>支持止于 2025-07-31；Aurora 不维护永久不可变记录；原始营销语</td></tr>
+    <tr><td>M77</td><td>Langfuse 定价页</td><td>A（已读）</td><td>Enterprise $2,499/月；审计日志/SCIM 档位；SSO 强制在 Teams 加购；留存 30/90 天/3 年；SOC 2 Pro+</td></tr>
+    <tr><td>M87</td><td>arXiv:2607.14309 Traccia</td><td>B（预印本）</td><td>哈希防篡改 trace 账本映射监管条文</td></tr>
+    <tr><td>[100]</td><td>arXiv:2606.06454 预注册两档消融</td><td>A（已读）</td><td>前沿模型贴天花板、预注册 +5 分不成立；小模型 +20–22 分</td></tr>
+    <tr><td>[111]</td><td>Datadog LLM Observability 文档</td><td>A（已读）</td><td>OTel GenAI 原生支持；<strong>无留存/不可变/签名/导出声明</strong></td></tr>
+    <tr><td>[112]</td><td>Vanta AI Governance 产品页</td><td>A（已读）</td><td>清单级证据；无逐调用运行时捕获</td></tr>
+    <tr><td>[113]</td><td>UiPath 控制平面页</td><td>B（原文声明）</td><td>「tamper-evident audit trail」；背书仅框架映射</td></tr>
+    <tr><td>[115]</td><td>《From Agent Traces to Trust》综述</td><td>B（摘要级）</td><td>执行溯源 = 过程级问责基础；自治度提高使行为更难验证</td></tr>
+  </table>
+</section>
+
+<section class="appendix pagebreak" id="appD">
+  <h1><span class="num">D</span>缺口、NOT_RUN 与对外措辞红线</h1>
+  <h2>D.1 未跑 / 未取到（一律不折成 0）</h2>
+  <table class="tbl">
+    <tr><th>项</th><th>状态</th><th>缺什么</th></tr>
+    <tr><td>真人 G0 访谈</td><td><span class="tag tag-x">0/10</span></td><td>约不到人；本件无渠道成本预算</td></tr>
+    <tr><td>试读交接</td><td><span class="tag tag-x">0/1</span></td><td>对方未读</td></tr>
+    <tr><td>G1 真人交付、G1.5 R/N 双臂、G2 LOI/安全审查</td><td><span class="tag tag-x">未发生</span></td><td>上游未启动</td></tr>
+    <tr><td>真模型端点长任务（&gt;10s）进度读数</td><td><span class="tag tag-x">NOT_RUN</span></td><td>未配端点；现有读数全是本机规则或假端点</td></tr>
+    <tr><td>事件层 E1–E9（实时过程可见）</td><td><span class="tag tag-x">Planned</span></td><td>代码一行未动；今天轨迹页是跑完才写</td></tr>
+    <tr><td>外部锚 / 非写方验证（L2）</td><td><span class="tag tag-x">未启动</span></td><td>G3 的对象；此前禁止使用 tamper-evident 字样</td></tr>
+    <tr><td>EUR-Lex 一手（Omnibus 原文）</td><td><span class="tag tag-x">两次不可达</span></td><td>时点判词因此只到 D 级</td></tr>
+    <tr><td>Gartner 原新闻稿 / LangChain 报告 / ISO 42001 条款 / Splunk·Elastic·Chronicle·Sentinel·Drata·OpenLineage</td><td><span class="tag tag-x">未取到</span></td><td>403 / 找不到 / 付费墙 / 检索预算耗尽</td></tr>
+    <tr><td>OSS 转化率、企业安全评审时长、试点周期、渠道效果</td><td><span class="tag tag-x">整块未填</span></td><td>无代理值可用，也不造</td></tr>
+  </table>
+
+  <h2>D.2 对外措辞红线（发布前逐条核，可用 <code>话术闸.py</code> 扫）</h2>
+  <ul class="avoid">
+    <li>不得说「符合 EU AI Act / 满足 Art.12 / 通过 42001」——本件不是合规件，也不主张符合。</li>
+    <li>不得说「业界都要求受理回执与结算」——三家规范都没有这两件，它们是我们的附加层。</li>
+    <li>不得说「防篡改 / tamper-evident」——G3 之前我们没有机制。</li>
+    <li>不得说「用了更准 / 显著降低风险」——双臂实验量不出增益；审计层不是防线，不拦截、不调度、不执行。</li>
+    <li>不得把 absent 讲成 0，也不得把快照级数字排版进正文；每个数要能指回 A/B 级件或盘上读数。</li>
+    <li>不得暗示首创——Traccia 已在 2026-07 发表；我们的位置是清晰度与可核对性。</li>
+  </ul>
+
+  <h2>D.3 与 v2 的交付差异</h2>
+  <p>v2 的 48 页 PDF 与其源件仍在 <code>市场报告-1020/</code>，不作废、不覆盖。v3 只出<strong>本文档</strong>（HTML + PDF + MANIFEST），
+    两版对照读法：想知道「为什么值得看这个件」读 v2，想知道「哪些话现在不能说」读 v3。</p>
+  <p class="endnote">本报告全部本机读数可用四条命令复跑（见 <code>AGENTS.md</code>）；两把架构尺子与话术闸的退出码语义写在 <code>事件层-1022/README.md</code> 与 <code>研究-1022/方法与分母.md</code>：
+    退出码 3 有两种成因——坏件，<strong>或臂没红</strong>；臂不红时「全过」不作数。</p>
+</section>

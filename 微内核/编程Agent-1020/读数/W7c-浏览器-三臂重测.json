@@ -1,0 +1,48 @@
+{
+  "js_auto": {
+    "cards": 8,
+    "measured_cards": 0,
+    "mix": "measured 0 / estimated 8 / model_says 0 / relayed 0 / absent 11 = 19　加总核对：对得上",
+    "rules": [
+      "var-left",
+      "loose-equality",
+      "eval-or-new-function",
+      "empty-catch",
+      "debugger-left",
+      "console-log",
+      "replace-print-with-logger",
+      "coverage-check"
+    ],
+    "shape_step": "2shapemeasured判为 javascript（嗅探推断（不是解析出来的））；真解析没过；函数 1 个、import 1 条（其中 0 条疑似没用到）｜凭什么：得分 4；命中 \\bconsole\\.\\w+\\(、^\\s*(?:export\\s+)?(?:const|let)\\s+\\w+\\s*=、\\brequire\\(['\"]、\\bvar\\s+\\w+×1｜注意：语言这一格是**推断**，函数/import 两个数",
+    "unknowns_n": 11,
+    "waited_ms": 974
+  },
+  "js_forced_python": {
+    "cards": 1,
+    "measured_cards": 0,
+    "mix": "measured 0 / estimated 1 / model_says 0 / relayed 0 / absent 11 = 12　加总核对：对得上",
+    "rules": [
+      "coverage-check"
+    ],
+    "shape_step": "2shapemeasured判为 python（用户显式选定）；真解析没过；函数 1 个、import 0 条（其中 0 条疑似没用到）｜凭什么：没嗅探（界面上选了语言，判定就不靠猜）",
+    "unknowns_n": 11,
+    "waited_ms": 989
+  },
+  "py_auto": {
+    "cards": 7,
+    "measured_cards": 0,
+    "mix": "measured 0 / estimated 7 / model_says 0 / relayed 0 / absent 11 = 18　加总核对：对得上",
+    "rules": [
+      "mutable-default-arg",
+      "bare-except",
+      "except-pass",
+      "none-compare",
+      "print-as-log",
+      "unused-import(maybe)",
+      "replace-print-with-logger"
+    ],
+    "shape_step": "2shapemeasured判为 python（嗅探推断（不是解析出来的））；真解析没过；函数 2 个、import 2 条（其中 1 条疑似没用到）｜凭什么：得分 2；命中 ^\\s*(?:from\\s+[\\w.]+\\s+)?import\\s+\\w+、\\bprint\\(×1｜注意：语言这一格是**推断**，函数/import 两个数是文本匹配数出来的",
+    "unknowns_n": 11,
+    "waited_ms": 681
+  }
+}

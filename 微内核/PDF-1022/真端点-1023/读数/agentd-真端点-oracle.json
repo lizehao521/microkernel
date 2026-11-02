@@ -1,0 +1,18 @@
+{
+  "task": "把 27、15、8、34 加起来",
+  "operands": [
+    27,
+    15,
+    8,
+    34
+  ],
+  "expected": 84,
+  "got": 84,
+  "calls": 1,
+  "calls_expected": 1,
+  "verdict": "ok",
+  "why": "模型回话里最后一个整数 = 任务各数之和（文本口径，不是执行器复算）",
+  "stop": "turns",
+  "stop_why": "",
+  "exit_code": 3
+}

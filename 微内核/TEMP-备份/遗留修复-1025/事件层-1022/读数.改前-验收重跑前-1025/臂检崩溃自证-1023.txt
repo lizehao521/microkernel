@@ -1,0 +1,14 @@
+new-atexit    rc=1   3s fired=True tree_same=True 留下的副本=- 上一份读数=105B md5同=True .part残留=False
+old-noexith   rc=1   4s fired=True tree_same=True 留下的副本=['allfam-10780'] 上一份读数=0B md5同=False .part残留=False
+prev-noatomic rc=1   3s fired=True tree_same=True 留下的副本=- 上一份读数=0B md5同=False .part残留=False
+CHECK 1/10 PASS | 新件：崩溃开关真接上线（不是恒不执行）
+CHECK 2/10 PASS | 新件：崩在变异窗口里，工作副本仍被 atexit 带走
+CHECK 3/10 PASS | 新件：真树 mtime+size 逐文件不变（臂只动 TEMP 副本）
+CHECK 4/10 PASS | 新件：崩掉后上一份读数一字未动（正式名只由 .part 替换）
+CHECK 5/10 PASS | 新件：崩掉后 读数/ 里没有 .part 半截件
+CHECK 6/10 PASS | 负对照：旧件同样的崩法必须留下副本（否则这条自证是空的）
+CHECK 7/10 PASS | 负对照：旧件也没写真树（破坏面本来就只在 TEMP）
+CHECK 8/10 PASS | 负对照：旧件把上一份读数截成 0 字节（这条牙确实是新长的）
+CHECK 9/10 PASS | 中间件（只有 atexit）：副本照样带走 ⇒ 清理与原子发布是两件事
+CHECK 10/10 PASS | 中间件（只有 atexit）：上一份读数仍被截成 0 字节 ⇒ 原子发布才是这一条的修法
+结论：0 条不过 —— 臂检件的「打断也带走 TEMP 副本」与「打断也不毁上一份读数」由新件、负对照与中间件三方钉住

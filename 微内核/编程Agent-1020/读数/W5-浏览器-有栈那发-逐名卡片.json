@@ -1,0 +1,31 @@
+{
+  "arm": "有栈（逐名卡片清单）",
+  "debug": "栈读数：贴入 276 字节 · 认出 2 帧 · 行号落进上面代码 2 帧（栈只定位、不下结论；文件名对不上就不许升 measured）",
+  "inventory": [
+    "dup-name-same-scope / measured",
+    "ignore-error / measured",
+    "print-as-log / measured",
+    "print-as-log / measured",
+    "empty-err-block / measured",
+    "print-as-log / measured",
+    "dup-func-name / measured",
+    "error-header / measured",
+    "stack-frame / estimated",
+    "stack-frame / estimated",
+    "handle-dropped-errors / estimated",
+    "replace-print-with-logger / estimated"
+  ],
+  "mix": "measured 8 / estimated 4 / model_says 0 / relayed 0 / absent 9 = 21　加总核对：对得上",
+  "n_cards": 12,
+  "unknowns": [
+    "运行时行为（这段实际会返回什么、慢在哪）absent",
+    "账上那一格「usage_in」（output 侧）a",
+    "账上那一格「usage_out」（output 侧）",
+    "账上那一格「wire_bytes_in」（outpu",
+    "账上那一格「wire_bytes_out」（outp",
+    "账上那一格「chunks」（output 侧）abs",
+    "账上那一格「first_byte_ms」（outpu",
+    "账上那一格「max_gap_ms」（output 侧",
+    "模型给的额外解释与优化建议absent为什么没量到："
+  ]
+}

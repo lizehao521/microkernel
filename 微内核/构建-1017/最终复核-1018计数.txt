@@ -1,0 +1,13 @@
+=== Info-ZIP 独立复核（10-18 计数改动之后这份）===
+    testing: agentkernel/evidence/pack-readings.txt   OK
+    testing: agentkernel/evidence/source-fingerprint.sha256   OK
+No errors detected in compressed data of agentkernel-2026-10-17-win-x64.zip.
+--- 解出来核 bin 五件 ---
+03570955a92f076862a5ff919a2b7a3ae4af48820ebfc9224aec670505ac643c *kaudit.exe
+cbe10c55601174d7bb7cc36a1e4c2d25a9a53a76e7d294a28418264e0b9c3d85 *kcheck.exe
+49b317017915a660ab047633eaf97d8bb1dfb5559a7a1d3c182b8cdd7f8c886b *kresearch.exe
+dad6e9afa1cdff0213f6254e86ef9271413fac80172b3a8a455c0e2962f9a114 *mcphttp.exe
+4f6436235b40263a9f68fcb3e7826b1b55992a3d80bf9a8fafd5818cf9999d02 *mcpkernel.exe
+--- 解包件自跑闸门 ---
+✓ 全部通过（项数由上面自己数，不抄在这里）
+kcheck 退出码=0

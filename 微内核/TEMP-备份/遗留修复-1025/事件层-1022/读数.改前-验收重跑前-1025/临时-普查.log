@@ -1,0 +1,31 @@
+TREE agentd=27 个 .go
+SCAN md=12 树=1 引用总数=58
+分档 OK=16 NOMATCH=34 OOB=0 NOFILE=0 AMBIG=0 NOID=8
+判不了的档：NOID（那句是纯散文）与 AMBIG（同名 .go 不止一棵树）—— 都不折算成好，也不折算成坏
+  坏 交接-agentd事件层-1022.md                           md行516  NOMATCH events_settle_teeth_test.go:92 agentd,run_started,run_settled || 那行=}, "却没有结算"},
+  坏 交接-agentd事件层-1022.md                           md行626  NOMATCH loop.go:146 ackAnchor || 那行=r.abortClosed = true
+  坏 交接-agentd事件层-1022.md                           md行627  NOMATCH sse.go:61 abortClosed,serveEvents || 那行=func replayTail(log []Event, idx int) []Event {
+  坏 交接-agentd事件层-1022.md                           md行628  NOMATCH events.go:540 serveEvents,replayTail,ValidateLog || 那行=if len(claims) > 0 {
+  坏 契约对照-E1E2-1022.md                              md行57   NOMATCH loop.go:146 ackAnchor,TestProductionAckLatencyIsMeasurable || 那行=r.abortClosed = true
+  坏 收口表-M5.md                                      md行15   NOMATCH events.go:194 resume,DoneBefore,resume || 那行=return fmt.Errorf("第 %d 发有 %d 条事件却没有结算 —— 半结算：循环进去了没收口", t, 
+  坏 收口表-M5.md                                      md行15   NOMATCH loop.go:187 resume,DoneBefore,resume || 那行=// 与收口同一口径 —— total 越过 limit 就是给界面画一条永远走不完进度条。
+  坏 收口表-M5.md                                      md行18   NOMATCH checklog.go:25 ValidateLog,absent || 那行=// 每一行都带上「用的是哪个上限」：只把口径印在末行的话，放宽过的 GREEN 与
+  坏 收口表-M5.md                                      md行18   NOMATCH events.go:540 ValidateLog,absent || 那行=if len(claims) > 0 {
+  坏 收口表-M5.md                                      md行56   NOMATCH events.go:746 TestM5BranchSurvey,ValidatePhaseTables,membership || 那行=if b == nil {
+  坏 收口表-M5.md                                      md行69   NOMATCH sse.go:61 serveEvents,httpGet,resumable || 那行=func replayTail(log []Event, idx int) []Event {
+  坏 收口表-M5.md                                      md行70   NOMATCH events.go:194 resume,agentd,session || 那行=return fmt.Errorf("第 %d 发有 %d 条事件却没有结算 —— 半结算：循环进去了没收口", t, 
+  坏 收口表-M5.md                                      md行70   NOMATCH loop.go:187 resume,agentd,session || 那行=// 与收口同一口径 —— total 越过 limit 就是给界面画一条永远走不完进度条。
+  坏 收口表-M5.md                                      md行71   NOMATCH loop.go:186 settle,accept,accept || 那行=// 剧本比额度长：这一趟到额度就停，预计落点不可能是 6 发（真负载抓到过：done=1/total=6/limit=
+  坏 收口表-M5.md                                      md行72   NOMATCH loop.go:768 run_settled,run_settled,settle || 那行=return ""
+  坏 收口表-M5.md                                      md行72   NOMATCH events.go:149 run_settled,run_settled,settle || 那行=if _, has := perTurn[key]; !has {
+  坏 收口表-M5.md                                      md行72   NOMATCH loop.go:756 run_settled,run_settled,settle || 那行=}
+  坏 收口表-M5.md                                      md行73   NOMATCH checklog.go:25 Succes,evidence,guessed_by_me || 那行=// 每一行都带上「用的是哪个上限」：只把口径印在末行的话，放宽过的 GREEN 与
+  坏 收口表-M5.md                                      md行73   NOMATCH events.go:528 Succes,evidence,guessed_by_me || 那行=return fmt.Errorf("第 %d 发的回执没有 ack_ms —— 针1 无从判断", t)
+  坏 收口表-M5.md                                      md行73   NOMATCH events.go:540 Succes,evidence,guessed_by_me || 那行=if len(claims) > 0 {
+  ...（其余 14 条：这条命令重跑就全印，别抄进文档）
+ARM-好 探针=agentd_test.go:17 符号=newRun -> 分档={'OK': 1, 'NOMATCH': 0, 'OOB': 0, 'NOID': 0, 'AMBIG': 0} 判动=1  OK
+ARM-坏 探针=agentd_test.go:1（那行不含 newRun）-> 分档={'OK': 0, 'NOMATCH': 0, 'OOB': 0, 'NOID': 0, 'AMBIG': 0} 判动=0  没响（尺子没牙）
+landing: C:\Users\Admin\Desktop\微内核\事件层-1022\读数\锚点普查-散文行号.txt 40 lines 6677 bytes
+landing check: OK (40/40 lines)
+rc 归因: 坏臂没响=True 好臂没响=False 一条都没判动=False 落盘不配平=False
+注意：破没破（NOMATCH/OOB 的多少）是本件的发现，不是本件的红 —— 别拿 rc=0 读成「引用都对」。

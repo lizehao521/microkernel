@@ -1,0 +1,343 @@
+// kcheck 是这个微内核的闸门：一条命令逐节把机械判据核一遍（隔离、各张账表、
+// 元数据到账本的接线……），并把每一个数自己印出来。一共几节、每节叫什么，
+// 以它自己印的为准 —— 抄进文档或注释的结构清单会漂，漂了也没有东西会红。
+//
+// 为什么要有它：这些数（几个文件、几条 import、几格、几个字段）每个 commit 都会漂，
+// 而文档里手抄一份漂了的数比没有数更有害 —— 它会让下一个人拿一个过期的读数去判断。
+// 所以规矩是：要数，就跑这一条命令，读它自己印的那几行。
+//
+// 它**不核**的一件事，写在这里而不是藏着：「判据必须能真的红」由 tasks/probe/kprobe.py 承担
+// （往临时拷贝里制造破坏，逐根要求报红）。那一条要逐根针各跑一遍 go test，所以不进这条快闸；
+// 这一条会在末尾把它该怎么跑印出来。
+package main
+
+import (
+	"errors"
+	"fmt"
+	"os"
+	"sort"
+	"strings"
+
+	"agentkernel"
+)
+
+func main() {
+	bad := 0
+	note := func(ok bool, format string, a ...any) {
+		mark := "✓"
+		if !ok {
+			mark = "✗"
+			bad++
+		}
+		fmt.Printf("%s %s\n", mark, fmt.Sprintf(format, a...))
+	}
+	unknown := func(format string, a ...any) {
+		fmt.Printf("— %s\n", fmt.Sprintf(format, a...))
+	}
+
+	fmt.Println("== 1. 与 Agent 框架的隔离（机械判，不由文档声明判）")
+	iso := kernel.SelfIsolation()
+	fmt.Printf("   %s\n", iso.String())
+	if iso.Files == 0 {
+		// import 扫描这一路不用外部工具链（go/ast 在进程内跑）：扫到 0 个文件
+		// 不是「工具链够不着」那种核得了没核，而是闸门自己站不住（源码目录没了/被挪走）。
+		// 所以它不许以「核不了」的身份溜过去 —— 计为不过，退出码非 0。
+		unknown("一个源文件都没扫到：核不了，而且核不了不许被读成合格 —— 这一次计为不过（原因：%s）", iso.DepsWhy)
+		bad++
+	} else {
+		note(iso.Isolated(), "只依赖标准库；泄漏 %d 处、测试文件里泄漏 %d 处、cgo %d 处、认不出 %d 处",
+			len(iso.Leaks), len(iso.TestLeaks), len(iso.Cgo), len(iso.Odd))
+		for _, l := range append(append(append([]string{}, iso.Leaks...), iso.TestLeaks...), iso.Odd...) {
+			fmt.Printf("     · %s\n", l)
+		}
+	}
+	if iso.Checked() {
+		note(len(iso.DepsLeaks()) == 0, "依赖闭包 %d 个包，越界 %d 个", iso.Deps, len(iso.DepsLeaks()))
+	} else {
+		// 工具链够不着不是判负。把它读成红，就是 runloop 那次「PATH 上没有 go 报了 13 项假红」。
+		unknown("依赖闭包核不了：%s", iso.DepsWhy)
+	}
+
+	fmt.Println("\n== 2. 键名表（一格一名；每个字段都得有一格替它落账）")
+	in, out := kernel.InputMeta{}, kernel.OutputMeta{}
+	inCells, outCells := in.Cells(), out.Cells()
+	inFields, outFields := kernel.FieldPaths(in), kernel.FieldPaths(out)
+	fmt.Printf("   输入侧 %d 个导出字段 / %d 格；输出侧 %d 个导出字段 / %d 格；合计 %d 格\n",
+		len(inFields), len(inCells), len(outFields), len(outCells), len(inCells)+len(outCells))
+	note(kernel.CheckCells("输入侧", in, inCells) == nil, "输入侧键名表自洽：%v", firstErr(kernel.CheckCells("输入侧", in, inCells)))
+	note(kernel.CheckCells("输出侧", out, outCells) == nil, "输出侧键名表自洽：%v", firstErr(kernel.CheckCells("输出侧", out, outCells)))
+	both := append(append([]kernel.Cell{}, inCells...), outCells...)
+	note(len(kernel.KeyCollisions(both)) == 0, "两侧合起来没有键名住两个量：%v", kernel.KeyCollisions(both))
+	// bytes_out 这一个名字要单独点名：它在证据源里装过两个量（6327 与 11570），
+	// 所以它的缺席本身就是一条判据，不只是「撞名 0 处」的一个特例。
+	note(!hasKey(both, "bytes_out"), "键名表里没有 bytes_out（那个装过两个量的名字）")
+
+	fmt.Println("\n== 3. 裁剪分档表（除「没被挤」外，每个取值恰好落进一档；表自己印在下面）")
+	note(kernel.CheckCutLists() == nil, "分档表自洽：%v", firstErr(kernel.CheckCutLists()))
+	for _, l := range kernel.CutLists {
+		fmt.Printf("     · %-8s %s：%v\n", l.Key, l.Label, l.Has)
+	}
+
+	fmt.Println("\n== 4. 读者声明表（「落了账但没人读」那一半）")
+	// 框架还没写，所以今天一个声明者都没有。这一栏**不是判定**，是一张待填的表：
+	// 报成「0 格没人读」是假绿，报成「N 格没人读所以不合格」是假红 —— 框架还没来，
+	// 它读不读无从谈起。所以它只把分母摆出来。
+	r := kernel.NewReaders()
+	unknown("输入侧：%s（框架未生产，还没有任何声明者；这一栏不是判定）", r.Report(inCells))
+	unknown("输出侧：%s（同上）", r.Report(outCells))
+
+	fmt.Println("\n== 5. 键名表全文（键名 ← 字段路径 ｜ 出处）")
+	for _, side := range []struct {
+		name  string
+		cells []kernel.Cell
+	}{{"输入侧", inCells}, {"输出侧", outCells}} {
+		fmt.Printf("   %s\n", side.name)
+		keys := make([]string, 0, len(side.cells))
+		byKey := map[string]kernel.Cell{}
+		for _, c := range side.cells {
+			keys = append(keys, c.Key)
+			byKey[c.Key] = c
+		}
+		sort.Strings(keys)
+		for _, k := range keys {
+			c := byKey[k]
+			fmt.Printf("     %-22s ← %-28s ｜ %s\n", c.Key, c.Field, c.Basis)
+		}
+	}
+
+	fmt.Println("\n== 6. 元数据到账本的接线（record.go：把每一格逐条写进那道哈希链）")
+
+	// 6.1 缺依据的写入被拒，而且拒收本身有数。
+	// Record 的 Basis 零值就是 BasisUnset（忘了填），Append 必须在门口拒掉，
+	// 且「拒了」这件事不能哑 —— Rejected() 要计上、链上一条都不落。
+	l := kernel.NewLedger()
+	_, errNoBasis := l.Append(kernel.Record{})
+	note(errors.Is(errNoBasis, kernel.ErrNoBasis) && l.Rejected() == 1 && len(l.Docs()) == 0,
+		"缺依据的写入被拒：errors.Is(ErrNoBasis)=%v、拒收计数 Rejected=%d、链上 Docs=%d 条",
+		errors.Is(errNoBasis, kernel.ErrNoBasis), l.Rejected(), len(l.Docs()))
+
+	// 6.2 basis=absent 必须带理由：没理由就拒（它与「忘了填」在账上分不开），
+	// 带理由就收。缺席这一档存在的全部理由，就是把「真缺席」与「忘了填」分开。
+	// 沿用上一条那个 l：Rejected 应再 +1（1→2），带理由的那条应落进链（Docs 0→1）。
+	_, errAbsentNoWhy := l.Append(kernel.Record{Basis: kernel.BasisAbsent, Actor: "kcheck", Kind: "probe:absent"})
+	rejectedAfterNoWhy := l.Rejected()
+	_, errAbsentWithWhy := l.Append(kernel.Record{Basis: kernel.BasisAbsent, Claim: "这一发非流式，没有首帧", Actor: "kcheck", Kind: "probe:absent"})
+	// 拒因还必须**点名理由**：只判 err != nil 的话，哪天「缺席必须带理由」这条规则被删掉、
+	// 而这条写入恰好被别的规则拒了，这一栏照样绿 —— 它守的就不再是这条规则。
+	noWhyIsAboutWhy := errAbsentNoWhy != nil && strings.Contains(errAbsentNoWhy.Error(), "理由")
+	note(noWhyIsAboutWhy && rejectedAfterNoWhy == 2 && errAbsentWithWhy == nil && len(l.Docs()) == 1,
+		"缺席无理由被拒（拒了=%v、拒因点名「理由」=%v）、带理由被收（收了=%v）：Rejected=%d、Docs=%d 条",
+		errAbsentNoWhy != nil, noWhyIsAboutWhy, errAbsentWithWhy == nil, rejectedAfterNoWhy, len(l.Docs()))
+
+	// 6.3 「哪几种出处必须带来源」的判据只有一个 owner（measure.go 里的 needsSource）。
+	// needsSource 是包内私有函数，闸门叫不到它；所以用 Append 那**一份**判据去探它：
+	// 同一档，带来源能收、不带来源被拒 ⟺ 这一档必须带来源。名单由探测得出，不写死在文案里。
+	allBasis := []kernel.Basis{
+		kernel.BasisUnset, kernel.BasisMeasured, kernel.BasisRelayed,
+		kernel.BasisEstimated, kernel.BasisModelSays, kernel.BasisAbsent,
+	}
+	requiresSource := func(b kernel.Basis) bool {
+		_, withSrc := kernel.NewLedger().Append(kernel.Record{Basis: b, Source: "来源", Claim: "理由", Actor: "kcheck", Kind: "probe:src"})
+		_, noSrc := kernel.NewLedger().Append(kernel.Record{Basis: b, Claim: "理由", Actor: "kcheck", Kind: "probe:src"})
+		return withSrc == nil && noSrc != nil
+	}
+	mustSrc := []string{}
+	srcOK := true
+	for _, b := range allBasis {
+		got := requiresSource(b)
+		want := b == kernel.BasisRelayed || b == kernel.BasisEstimated
+		if got != want {
+			srcOK = false
+		}
+		if got {
+			mustSrc = append(mustSrc, b.String())
+		}
+	}
+	note(srcOK, "「必须带来源」的档只有一份判据（经 Append 探 needsSource）：名单=%v（relayed/estimated 为真、其余各档为假）", mustSrc)
+
+	// 6.4 BasisAbsent 不许能拿去做判定；估算、模型自述、没填的也一样不能，
+	// 只有实测与转述可判。这张表由 Basis.Decidable() 逐档探出并印出来，不抄现成结论。
+	decidableTable := []struct {
+		b    kernel.Basis
+		want bool
+	}{
+		{kernel.BasisMeasured, true},
+		{kernel.BasisRelayed, true},
+		{kernel.BasisEstimated, false},
+		{kernel.BasisModelSays, false},
+		{kernel.BasisAbsent, false},
+		{kernel.BasisUnset, false},
+	}
+	decOK := !kernel.BasisAbsent.Decidable()
+	decLines := []string{}
+	for _, e := range decidableTable {
+		got := e.b.Decidable()
+		if got != e.want {
+			decOK = false
+		}
+		decLines = append(decLines, fmt.Sprintf("%s=%v", e.b, got))
+	}
+	note(decOK, "basis=absent 不可判定；逐档可判定名单：%v", decLines)
+
+	// 6.5 读回来那一半（CellsOf/Keys/AbsentKeys）也能在闸门里核，而且不依赖夹具。
+	// 为什么不需要夹具：这三个入口吃的是 []Entry，不是 InputMeta/OutputMeta ——
+	// 手工 Append 几条键名形如 <kind>:<key> 的条目，再拿 Docs() 喂进去就能跑读回判据。
+	// 它是接线的另一半（写侧是 RecordInput/RecordOutput，读侧是这三个），闸门不核就没人核。
+	rl := kernel.NewLedger()
+	rl.Append(kernel.Record{Basis: kernel.BasisMeasured, Actor: "kcheck", Step: 7, Kind: kernel.KindModelInput + ":content_bytes", Claim: "123", Payload: []byte("123")})
+	rl.Append(kernel.Record{Basis: kernel.BasisAbsent, Actor: "kcheck", Step: 7, Kind: kernel.KindModelInput + ":first_byte_ms", Claim: "这一发非流式，没有首帧"})
+	rl.Append(kernel.Record{Basis: kernel.BasisMeasured, Actor: "kcheck", Step: 7, Kind: kernel.KindModelOutput + ":wire_bytes_out", Claim: "999", Payload: []byte("999")})
+	docs := rl.Docs()
+	inKeys := kernel.Keys(docs, 7, kernel.KindModelInput)
+	inAbsent := kernel.AbsentKeys(docs, 7, kernel.KindModelInput)
+	outRecorded := kernel.CellsOf(docs, 7, kernel.KindModelOutput)
+	readOK := strings.Join(inKeys, ",") == "content_bytes,first_byte_ms" &&
+		strings.Join(inAbsent, ",") == "first_byte_ms" &&
+		len(outRecorded) == 1 && outRecorded[0].Key == "wire_bytes_out"
+	note(readOK, "读回来那一半对得上：输入侧键名=%v、其中缺席=%v、输出侧读回 %d 格（CellsOf 按 <kind>: 前缀与 step 过滤）", inKeys, inAbsent, len(outRecorded))
+
+	// 6.6 真跑 RecordInput / RecordOutput / RecordCall 那道接线本身（上面几条探的是 Append
+	// 与读回，这一条探的是元数据两侧**整发**进出账本的路）。
+	// 样例由闸门用导出的构造器就地搭出来（见 gateInputSample/gateOutputSample），
+	// 不借 _test.go 里的夹具 —— 闸门不该依赖测试文件。
+	// 样例搭错了不会假绿：第一条判据就是「样例自己过得了 Check」，过不了当场红。
+	inSample, sampleErr := gateInputSample()
+	outSample := gateOutputSample()
+	note(sampleErr == nil && inSample.Check() == nil && outSample.Check() == nil,
+		"闸门自搭的最小样例过得了两侧的 Check（预算=%v、输入侧=%v、输出侧=%v）",
+		sampleErr, inSample.Check(), outSample.Check())
+
+	wl := kernel.NewLedger()
+	n1, err1 := wl.RecordCall("kcheck", "kcheck", inSample, outSample)
+	wantN := len(inSample.Cells()) + len(outSample.Cells())
+	note(err1 == nil && n1 == wantN && wl.Rejected() == 0 && wl.Verify() == nil && len(wl.Docs()) == n1,
+		"RecordCall 整发落账：链上 %d 条（键名表两侧合计 %d 格）、拒收 %d、链自洽=%v",
+		len(wl.Docs()), wantN, wl.Rejected(), wl.Verify() == nil)
+
+	// 同一发同一侧只许记一次（record.go 里 alreadyRecorded 那道门口）。
+	// 没有它的话：链照样自洽（链只证明写下来的没被动过），而按键名扫账本的分析层
+	// 会把这一发的字节与 token 加两遍。三条路各试一次：整发重记、单侧重记 ×2。
+	_, errAgainCall := wl.RecordCall("kcheck", "kcheck", inSample, outSample)
+	_, errAgainIn := wl.RecordInput("kcheck", "kcheck", inSample)
+	_, errAgainOut := wl.RecordOutput("kcheck", "kcheck", outSample)
+	note(errAgainCall != nil && errAgainIn != nil && errAgainOut != nil &&
+		wl.Rejected() == 3 && len(wl.Docs()) == n1,
+		"同一发同一侧只许记一次：重记整发被拒=%v、重记输入侧被拒=%v、重记输出侧被拒=%v，拒收计数=%d、链上仍是 %d 条（没多出第二套）",
+		errAgainCall != nil, errAgainIn != nil, errAgainOut != nil, wl.Rejected(), len(wl.Docs()))
+
+	// Claim 永不为空：record.go 里那句「claimOf 永不交出空字符串」由这一条站岗，不靠注释 ——
+	// 空 Claim 在账上与「这一格没写」长得一样，读的人分不清「值是空串」与「没有值」。
+	emptyClaims := []string{}
+	for _, e := range wl.Docs() {
+		if strings.TrimSpace(e.Claim) == "" {
+			emptyClaims = append(emptyClaims, e.Kind)
+		}
+	}
+	note(len(emptyClaims) == 0, "落账的每一条都带一句非空的人话：链上共 %d 条，Claim 为空的 %d 条（%v）",
+		len(wl.Docs()), len(emptyClaims), emptyClaims)
+
+	// 读回来与键名表逐格对齐 —— 这次喂的是真接线记出来的账，不是手工条目。
+	inBack := strings.Join(kernel.Keys(wl.Docs(), 1, kernel.KindModelInput), ",")
+	inWant := strings.Join(sortedKeys(inSample.Cells()), ",")
+	outBack := strings.Join(kernel.Keys(wl.Docs(), 1, kernel.KindModelOutput), ",")
+	outWant := strings.Join(sortedKeys(outSample.Cells()), ",")
+	note(inBack == inWant && outBack == outWant,
+		"真接线记出来的账读回来与键名表逐格对齐：输入侧读回 %d 个键、对上=%v；输出侧读回 %d 个键、对上=%v",
+		len(kernel.Keys(wl.Docs(), 1, kernel.KindModelInput)), inBack == inWant,
+		len(kernel.Keys(wl.Docs(), 1, kernel.KindModelOutput)), outBack == outWant)
+
+	// 整发拒收、链上不留半发：Check 不过的那一发一条都不写、拒收有数；
+	// 两侧有一侧不自洽时，另一侧也不许先落进链里。
+	badIn := inSample
+	badIn.Call = 0
+	halfOut := outSample
+	halfOut.Says.SHA256 = "不是指纹"
+	bl := kernel.NewLedger()
+	_, errBadIn := bl.RecordInput("kcheck", "kcheck", badIn)
+	_, errHalf := bl.RecordCall("kcheck", "kcheck", inSample, halfOut)
+	note(errBadIn != nil && errHalf != nil && bl.Rejected() == 2 && len(bl.Docs()) == 0,
+		"Check 不过 ⇒ 整发拒收、链上不留半发：坏输入被拒=%v、一侧坏时整发被拒=%v、拒收计数=%d、链上 %d 条",
+		errBadIn != nil, errHalf != nil, bl.Rejected(), len(bl.Docs()))
+
+	// 说明性输出（不是判定）：账本上两种条目名的常量值，以及键名是怎么拼出来的。
+	unknown("账本上两种条目名：KindModelInput=%s、KindModelOutput=%s。元数据每一格各成一条账本记录，键名是 <kind>:<key>（例如 %s:call）—— 账本上那些条目名就是这么拼出来的。",
+		kernel.KindModelInput, kernel.KindModelOutput, kernel.KindModelInput)
+
+	fmt.Println("\n== 这一条快闸不核的事")
+	fmt.Println("   「判据必须能真的红」要逐根针各跑一遍，所以不进这条快闸。跑法：")
+	fmt.Println("     py -3 tasks/probe/kprobe.py <go.exe 路径> <本包目录> <临时工作目录> <报告输出路径>")
+	fmt.Println("   它往临时拷贝里逐根制造破坏，要求点名的判据接住：")
+	fmt.Println("   一类针跑 go test 并点名该红的测试，另一类针跑本闸门并要求退出码非 0。")
+	fmt.Println("   锚点命中数不是 1 处的一根算空针；拷贝编译不过算坏针（崩不算红）。")
+	fmt.Println("   针的根数与分布由它自己印，这里不抄。")
+
+	fmt.Println()
+	if bad > 0 {
+		fmt.Printf("✗ %d 项没过\n", bad)
+		os.Exit(1)
+	}
+	fmt.Println("✓ 全部通过（项数由上面自己数，不抄在这里）")
+}
+
+func firstErr(err error) string {
+	if err == nil {
+		return "无"
+	}
+	return err.Error()
+}
+
+func hasKey(cells []kernel.Cell, key string) bool {
+	for _, c := range cells {
+		if c.Key == key {
+			return true
+		}
+	}
+	return false
+}
+
+func sortedKeys(cells []kernel.Cell) []string {
+	out := make([]string, 0, len(cells))
+	for _, c := range cells {
+		out = append(out, c.Key)
+	}
+	sort.Strings(out)
+	return out
+}
+
+// gateInputSample 是闸门自搭的最小合法输入侧样例：一段题面、一份 DeriveBudget
+// 造出来的预算、token 记估算。它刻意小 —— 闸门要核的是**接线**（整发进出账本、
+// 去重、拒收有数），不是元数据的内容判据（那些住在 go test 里）。
+// 合法性由 Check() 当场判（见 6.6 第一条），不由这里的注释担保。
+func gateInputSample() (kernel.InputMeta, error) {
+	budget, err := kernel.DeriveBudget(4096, 20,
+		map[kernel.PartKind]int{kernel.KindUser: 50},
+		kernel.EstimatedOf(100, "骨架开销的粗估"))
+	if err != nil {
+		return kernel.InputMeta{}, err
+	}
+	return kernel.InputMeta{
+		Call:         1,
+		Order:        []kernel.PartKind{kernel.KindUser},
+		Parts:        []kernel.PartCount{{Kind: kernel.KindUser, Parts: 1, Bytes: 50}},
+		ContentBytes: 50,
+		Tokens:       kernel.EstimatedOf(10, "按字节粗估"),
+		Budget:       budget,
+	}, nil
+}
+
+// gateOutputSample 是最小合法输出侧样例：非流式、没故障 —— 于是流式那三格
+// 与「对端要我们等多久」都必须记成缺席而不是 0，正好把 absent 那条路也走一遍。
+func gateOutputSample() kernel.OutputMeta {
+	return kernel.OutputMeta{
+		Call:         1,
+		Says:         kernel.Says{Bytes: 10, Kept: 10, SHA256: strings.Repeat("0", 64)},
+		UsageIn:      kernel.RelayedOf(5, kernel.SourceEndpoint),
+		UsageOut:     kernel.RelayedOf(7, kernel.SourceEndpoint),
+		WireBytesIn:  kernel.MeasuredOf(100),
+		WireBytesOut: kernel.MeasuredOf(90),
+		Chunks:       kernel.AbsentBecause("这一发非流式，不分帧"),
+		FirstByteMs:  kernel.AbsentBecause("这一发非流式，没有首帧"),
+		MaxGapMs:     kernel.AbsentBecause("这一发非流式，没有帧间间隔"),
+		Failure:      kernel.Failure{RetryAfterMs: kernel.AbsentBecause("这一发没故障，对端没让等")},
+	}
+}

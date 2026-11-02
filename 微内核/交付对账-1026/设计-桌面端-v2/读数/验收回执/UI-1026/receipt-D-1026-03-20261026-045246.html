@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>交付回执 · D-1026-03</title>
+<style>
+:root{--ink:#17191e;--ink2:#4b505b;--ink3:#646974;--line:#e4e2da;--paper:#f3f2ed;--ok:#0e7a4d;--bad:#b42318;--warn:#8a5a00;--mono:"Cascadia Mono",Consolas,monospace}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 "Segoe UI","Microsoft YaHei UI",sans-serif}
+.wrap{max-width:940px;margin:28px auto;background:#fff;border:1px solid var(--line);padding:34px 38px 28px}
+.top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;border-bottom:2px solid var(--ink);padding-bottom:16px}
+.brand{font-size:18px;font-weight:700;letter-spacing:.02em} .brand span{font:10px var(--mono);letter-spacing:.18em;color:var(--ink3);margin-left:8px}
+.no{font:10.5px var(--mono);color:var(--ink3);text-align:right}
+h1{font-size:24px;margin:20px 0 4px} .sub{color:var(--ink2);font-size:12px;margin:0 0 16px}
+.verdict{border:1px solid var(--line);border-left:4px solid var(--ink);padding:12px 14px;margin:14px 0 18px;background:#faf9f5}
+.verdict.bad{border-left-color:var(--bad)} .verdict.warn{border-left-color:var(--warn)} .verdict.ok{border-left-color:var(--ok)}
+.verdict b{font-size:16px} .verdict small{display:block;color:var(--ink2);margin-top:3px}
+.meta{display:grid;grid-template-columns:repeat(4,1fr);gap:10px 18px;margin:16px 0 22px}
+.meta div{font-size:11px;color:var(--ink3)} .meta b{display:block;font-size:12px;color:var(--ink);font-weight:500;margin-top:2px}
+h2{font-size:14px;margin:24px 0 8px;border-bottom:1px solid var(--line);padding-bottom:6px}
+table{width:100%;border-collapse:collapse;font-size:11.5px}
+th{text-align:left;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);background:#faf9f5;padding:8px 9px;border-bottom:1px solid var(--line)}
+td{padding:9px;border-bottom:1px solid var(--line);vertical-align:top}
+td.mono,.mono{font-family:var(--mono);font-size:10px;word-break:break-all}
+.tag{display:inline-block;border:1px solid var(--line);border-radius:3px;padding:1px 5px;font-size:10px;white-space:nowrap}
+.tag.ok{color:var(--ok);border-color:#bfe3cd;background:#e7f4ec} .tag.bad{color:var(--bad);border-color:#f5c6c2;background:#fdeceb} .tag.warn{color:var(--warn);border-color:#ecd9a8;background:#fdf3dd}
+.reason{border:1px solid var(--line);background:#faf9f5;padding:12px 14px;font-size:13px;white-space:pre-wrap}
+.note{font-size:10.5px;color:var(--ink3);line-height:1.65;margin-top:18px;border-top:1px solid var(--line);padding-top:12px}
+.foot{display:flex;justify-content:space-between;gap:20px;margin-top:22px;font-size:10.5px;color:var(--ink3)}
+@media print{body{background:#fff}.wrap{margin:0;border:0;padding:18mm}}
+</style></head><body><div class="wrap">
+<div class="top"><div class="brand">微核台<span>LOCAL EVIDENCE DESK</span></div>
+<div class="no">回执编号 DEC-20261026-045246-8f7251<br>生成于 2026-10-26T04:52:46+08:00</div></div>
+<h1>交付回执</h1>
+<p class="sub">D-1026-03 · agentd 真事件 · 两条 run · agentd 事件层（本机）</p>
+<div class="verdict warn"><b>挂起 · 核不了 · 证据缺席</b>
+<small>任一 MISMATCH ⇒ 整单退回；有 ABSENT 且无 MISMATCH ⇒ 只能退回或挂起；全 MATCH 才可收。</small></div>
+<div class="meta">
+<div>交付单<b>D-1026-03</b></div><div>声明<b>4 相符 / 0 不符 / 1 核不了</b></div>
+<div>操作者<b>本机操作者</b></div>
+<div>证据范围<b>14 条事件 / 可续游标 / 导出副本</b></div>
+</div>
+<h2>决定理由</h2><div class="reason">证据缺席，无法判断</div>
+<h2>逐条声明</h2>
+<table><thead><tr><th>编号</th><th>声明</th><th>判定</th><th>依据档</th><th>凭什么</th></tr></thead><tbody>
+<tr class="ok"><td class="mono">D3-C1</td><td>两发 turn 都走到收口</td><td><span class="tag ok">相符</span></td><td class="mono">disk</td><td>两条 turn_settled 的 settle.kind=completed，reached 4 步、not_reached 为空。</td></tr><tr class="ok"><td class="mono">D3-C2</td><td>两条 run 各自收口</td><td><span class="tag ok">相符</span></td><td class="mono">disk</td><td>两条 run_settled：一条 stop=script（剧本走完），一条 stop=turns（轮次额度到）。</td></tr><tr class="ok"><td class="mono">D3-C3</td><td>接受后断线可续</td><td><span class="tag ok">相符</span></td><td class="mono">disk</td><td>两条 turn_accepted 的 accept.resumable 都是 true，游标写明是日志里的身份四元组。</td></tr><tr class="ok"><td class="mono">D3-C4</td><td>身份四元组齐全，可离线重放</td><td><span class="tag ok">相符</span></td><td class="mono">disk</td><td>14 条事件都带 v/session/run/turn/seq；kind/state/evidence 齐全；按文件序可重放。</td></tr><tr class="warn"><td class="mono">D3-C5</td><td>这份导出一条事件都没丢</td><td><span class="tag warn">核不了</span></td><td class="mono">absent</td><td>盘上只有导出副本，没有投送端账本或 ACK 对照；只能核到「导出的这 14 条自洽」，丢没丢核不了。</td></tr>
+</tbody></table>
+<h2>证据来源</h2>
+<table><thead><tr><th>类型</th><th>文件</th><th>字节</th><th>sha256</th></tr></thead><tbody>
+<tr><td>pgagent-13-step</td><td class="mono">pgagent-13步.json</td><td class="mono">13254 B</td><td class="mono">2d50c85bade3e386eb7009c7e6b8e07631ba2156f21d5d9f1cdc72933e358a91</td></tr><tr><td>agentd-events</td><td class="mono">agentd-事件.json</td><td class="mono">10664 B</td><td class="mono">7ffa0b4bb44a88ba316cd442ad04e209a1d9e653dccabdaef3d019a6b27c26de</td></tr><tr><td>kernel-49-cells</td><td class="mono">内核-49格.json</td><td class="mono">28739 B</td><td class="mono">d9e9486f78e0914eecb818ad894cb315d7e9f7d13450b4a9d3ae990deb1188e8</td></tr><tr><td>delivery-claims</td><td class="mono">交付.json</td><td class="mono">11591 B</td><td class="mono">822a4f3710932dc41ec96898ad2554198c185348a9a402f2dcd8f92fc88c367a</td></tr>
+</tbody></table>
+<h2>边界与读数</h2>
+<p><b>只读：</b>本单未执行交付代码，未调用真实模型，未联网，未写内核研究账 8797/8799。</p>
+<p><b>分源：</b>pgagent 13 步（desk-1026#1）、agentd 14 条（real-agentd-1 / agentd-27276）、内核 49 格（样例账）三者不是同一次执行。</p>
+<p><b>内核快闸：</b>rc=0 · ✓ 40 / ✗ 0 / — 7 · exe sha256 <span class="mono">c6e5d6dcc58c683c20da49681c32001afbe87fe8e9a275aa5cf5cd55694767ac</span> · 972 ms</p>
+<div class="note">
+本回执由本机生成，可离线打开；核不了不等于通过，收下不改变声明真假。<br>
+证据包 证据/交付.json sha256 <span class="mono">822a4f3710932dc41ec96898ad2554198c185348a9a402f2dcd8f92fc88c367a</span> · 应用构建 微核台.html sha256 <span class="mono">f26db6e535c97cc5dffc2237d2409894cf629996607787587b375e3f51ede338</span>
+</div>
+<div class="foot"><span>微核台 0.2.0-prototype · 本机 127.0.0.1</span><span>回执文件 sha256 另见 记忆/记忆.json 与 返回页</span></div>
+</div></body></html>

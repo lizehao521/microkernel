@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>收货台 Receiving Desk — 交付对账桌面端原型</title>
+<style>
+/*__STYLE__*/
+</style>
+</head>
+<body>
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="i-queue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v12H4z"/><path d="M4 13h4l2 3h4l2-3h4"/><path d="M8 21h8"/></symbol>
+  <symbol id="i-history" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-rules" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h9a2 2 0 0 1 2 2v14H8a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="M6 18H4a2 2 0 0 1 0-4h4"/><path d="M12 9l2 2 3-3"/></symbol>
+  <symbol id="i-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9.5 17h-19z"/><path d="M12 9v5M12 17.2v.1"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.8v.1"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5"/><path d="M5 20h14"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></symbol>
+  <symbol id="i-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3M13 15h4"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.4-3 7.4-7 9-4-1.6-7-4.6-7-9V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></symbol>
+  <symbol id="i-filter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16l-6 8v6l-4-2v-4z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 1.8"/></symbol>
+  <symbol id="i-database" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="7.5" ry="3"/><path d="M4.5 6v6c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3V6"/><path d="M4.5 12v6c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3v-6"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1.2 1.2"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1.2-1.2"/></symbol>
+</svg>
+
+<div class="app">
+
+  <!-- Titlebar -->
+  <header class="titlebar">
+    <div class="traffic" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="app-title">收货台 <span>Receiving Desk</span></div>
+    <div class="titlebar-center">工作区 <b>微内核 / 交付对账</b> · 证据根 <span class="mono">~/Desktop/微内核</span></div>
+    <div class="titlebar-right">
+      <span class="ro-badge"><i></i>只读模式</span>
+      <button class="icon-btn" title="设置" aria-label="设置" data-nav="settings"><svg><use href="#i-settings"/></svg></button>
+    </div>
+  </header>
+
+  <div class="shell">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="workspace">
+        <div class="workspace-mark">收</div>
+        <div class="workspace-text">
+          <b>交付对账 · 桌面端</b>
+          <small>C:\Users\Admin\Desktop\微内核</small>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="主导航">
+        <div class="nav-label">工作台</div>
+        <button class="nav-item" data-nav="queue" aria-current="page">
+          <svg><use href="#i-queue"/></svg>队列
+          <span class="count hot" id="navQueueCount">6</span>
+        </button>
+        <button class="nav-item" data-nav="history">
+          <svg><use href="#i-history"/></svg>回执历史
+          <span class="count" id="navHistoryCount">4</span>
+        </button>
+        <div class="nav-label" style="margin-top:14px">理解与配置</div>
+        <button class="nav-item" data-nav="rules">
+          <svg><use href="#i-rules"/></svg>核对规则
+        </button>
+        <button class="nav-item" data-nav="settings">
+          <svg><use href="#i-settings"/></svg>设置
+        </button>
+      </nav>
+
+      <div class="side-section">
+        <div class="nav-label">本机证据源</div>
+        <div class="source-row"><span class="dot ok"></span>pgagent 轨迹<small>13 步</small></div>
+        <div class="source-row"><span class="dot ok"></span>agentd 事件层<small>E1–E8</small></div>
+        <div class="source-row"><span class="dot ok"></span>内核账本<small>2940 条</small></div>
+        <div class="source-row"><span class="dot warn"></span>交付源码<small>1 单缺</small></div>
+      </div>
+
+      <div class="side-foot">
+        <b>只读 · 不联网 · 不跑模型</b><br>
+        不执行被交付的代码；证据不出本机。<br>
+        <span class="mono">v0.1 · prototype · 10-26</span>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main" id="main">
+
+      <!-- ============ Queue ============ -->
+      <section class="screen is-active" id="screen-queue" aria-labelledby="queueTitle">
+        <div class="screen-inner">
+          <div class="page-head">
+            <div>
+              <div class="eyebrow">Queue · 队列</div>
+              <h1 id="queueTitle">待处理交付</h1>
+              <p class="sub"><span id="queueSub">6 单 · 2 单核不了 · 最早等待 2 小时</span> <span class="kbd-hint">（样例数据：3 份实测回执 + 3 条演示占位）</span></p>
+            </div>
+            <div class="head-actions">
+              <button class="btn ghost" id="refreshBtn"><svg><use href="#i-refresh"/></svg>重新读取</button>
+              <button class="btn primary" id="importBtn"><svg><use href="#i-plus"/></svg>导入交付声明…</button>
+            </div>
+          </div>
+
+          <div class="triage" id="triage">
+            <button class="triage-card" data-filter="ok" data-kind="ok" aria-pressed="false">
+              <div class="t-label"><span class="dot" style="color:var(--ok)"></span>可收</div>
+              <div class="t-num" data-count="ok">2</div>
+              <div class="t-note">每条声明都由盘上证据复核通过</div>
+            </button>
+            <button class="triage-card" data-filter="bad" data-kind="bad" aria-pressed="false">
+              <div class="t-label"><span class="dot" style="color:var(--bad)"></span>需退</div>
+              <div class="t-num" data-count="bad">1</div>
+              <div class="t-note">声明与盘上事实不符，必须退回</div>
+            </button>
+            <button class="triage-card" data-filter="warn" data-kind="warn" aria-pressed="false">
+              <div class="t-label"><span class="dot" style="color:var(--warn)"></span>核不了</div>
+              <div class="t-num" data-count="warn">2</div>
+              <div class="t-note">证据缺席，不等于通过</div>
+            </button>
+            <button class="triage-card" data-filter="processing" data-kind="unk" aria-pressed="false">
+              <div class="t-label"><span class="dot" style="color:var(--unk)"></span>处理中</div>
+              <div class="t-num" data-count="processing">1</div>
+              <div class="t-note">正在只读核对，尚未出回执</div>
+            </button>
+          </div>
+
+          <div class="panel">
+            <div class="table-tools">
+              <div class="chips" id="queueChips">
+                <button class="chip is-on" data-filter="all">全部 <span class="n" data-chip-count="all">6</span></button>
+                <button class="chip" data-filter="ok">可收 <span class="n" data-chip-count="ok">2</span></button>
+                <button class="chip" data-filter="bad">需退 <span class="n" data-chip-count="bad">1</span></button>
+                <button class="chip" data-filter="warn">核不了 <span class="n" data-chip-count="warn">2</span></button>
+                <button class="chip" data-filter="processing">处理中 <span class="n" data-chip-count="processing">1</span></button>
+              </div>
+              <div class="search">
+                <svg><use href="#i-search"/></svg>
+                <input id="queueSearch" type="search" placeholder="搜索交付、Agent、仓库…" aria-label="搜索交付">
+                <kbd>/</kbd>
+              </div>
+            </div>
+
+            <div id="queueBody">
+              <table class="deliveries">
+                <thead>
+                  <tr>
+                    <th>交付</th>
+                    <th>来源 Agent</th>
+                    <th>声明</th>
+                    <th>判定</th>
+                    <th>证据源</th>
+                    <th>等待</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="queueRows"></tbody>
+              </table>
+            </div>
+
+            <div id="queueState" hidden></div>
+
+            <div class="table-foot">
+              <span><svg style="width:11px;height:11px;vertical-align:-1px"><use href="#i-shield"/></svg> 核对只读：不执行代码、不联网、不跑模型</span>
+              <span class="spacer"></span>
+              <span class="mono" id="queueFootCount">6 / 6 单</span>
+            </div>
+          </div>
+
+          <p class="kbd-hint" style="margin:12px 2px 0">提示：按 <span class="mono">/</span> 聚焦搜索，<span class="mono">Esc</span> 关闭抽屉；判定与依据档取自 10-26 实测回执。</p>
+        </div>
+      </section>
+
+      <!-- ============ Detail ============ -->
+      <section class="screen" id="screen-detail" aria-labelledby="detailTitle">
+        <div class="screen-inner">
+          <div class="detail-head">
+            <div class="crumbs">
+              <button data-nav="queue"><svg><use href="#i-back"/></svg>队列</button>
+              <span>/</span>
+              <span class="mono" id="crumbId">DLV-1023-0042</span>
+            </div>
+            <div class="detail-title-row">
+              <div style="flex:1;min-width:0">
+                <h1 id="detailTitle">审查 6 行 Python 并给出修法</h1>
+                <div class="detail-meta" id="detailMeta"></div>
+              </div>
+              <div class="head-actions">
+                <button class="btn ghost" id="detailBackTop"><svg><use href="#i-back"/></svg>返回队列</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="status-banner" id="statusBanner" role="status">
+            <div class="s-icon"><svg><use href="#i-alert"/></svg></div>
+            <div class="s-body">
+              <div class="s-line">
+                <b id="bannerTitle">核不了</b>
+                <span class="s-code" id="bannerCode">NOT-ACCEPTED-UNVERIFIED</span>
+                <span class="s-rc" id="bannerRc">rc 3</span>
+              </div>
+              <p class="s-why" id="bannerWhy">8 条声明只有交付方自报；源码未随交付提交，D3 无法回盘。</p>
+            </div>
+          </div>
+
+          <div class="detail-grid">
+            <div class="panel" style="min-width:0">
+              <div class="section-head">
+                <h2>声明逐条核对</h2>
+                <span class="count" id="claimCount">9 条</span>
+                <span class="badge plain" id="claimMix" style="font-size:10px">1 盘上 / 8 转述</span>
+                <div class="tools">
+                  <button class="btn sm ghost" id="expandAllBtn">全部展开</button>
+                </div>
+              </div>
+              <table class="claim-table">
+                <thead>
+                  <tr>
+                    <th style="width:92px">声明</th>
+                    <th>内容</th>
+                    <th style="width:82px">判定</th>
+                    <th style="width:70px">依据档</th>
+                    <th>证据</th>
+                  </tr>
+                </thead>
+                <tbody id="claimRows"></tbody>
+              </table>
+              <div class="table-foot">
+                <span>点任一行查看证据；缺席项会写明「为什么缺席」</span>
+                <span class="spacer"></span>
+                <span class="mono" id="claimFoot">9 / 9 行</span>
+              </div>
+            </div>
+
+            <aside class="rail" aria-label="决定与证据">
+              <div class="panel rail-card">
+                <div class="rail-body">
+                  <h3>决定 DECISION</h3>
+                  <div class="decision-actions">
+                    <button class="btn accent" id="acceptBtn"><svg><use href="#i-check"/></svg>收下这版交付</button>
+                    <button class="btn danger" id="returnBtn"><svg><use href="#i-x"/></svg>退回并写理由</button>
+                  </div>
+                  <div id="decisionState"></div>
+                  <p class="decision-note" id="decisionNote">收下 = 把决定写进回执，并保留这份核对的结论；它不改变声明的真假，也不为代码质量背书。</p>
+                </div>
+              </div>
+
+              <div class="panel rail-card">
+                <div class="rail-body">
+                  <h3>证据源 SOURCES</h3>
+                  <div class="evidence-list" id="evidenceList"></div>
+                </div>
+                <div class="foot-note">证据源判红即整单退回；缺席记 ABSENT，不折算成通过。</div>
+              </div>
+
+              <div class="panel rail-card">
+                <div class="rail-body">
+                  <h3>回执 RECEIPT</h3>
+                  <dl class="receipt-facts" id="receiptFacts"></dl>
+                  <div style="display:flex;gap:8px;margin-top:12px">
+                    <button class="btn sm" id="exportBtn" style="flex:1"><svg><use href="#i-download"/></svg>导出回执</button>
+                    <button class="btn sm ghost" id="copyBtn" aria-label="复制回执摘要">复制摘要</button>
+                  </div>
+                </div>
+                <div class="foot-note">回执钉住工具与声明指纹；只对「声明 vs 盘上证据」负责。</div>
+              </div>
+
+              <div class="panel rail-card" id="relayedCard">
+                <div class="rail-body">
+                  <h3>交付方自报 RELAYED</h3>
+                  <ul class="relayed-list" id="relayedList"></ul>
+                </div>
+                <div class="foot-note">这些值来自交付方，本件不重算；只登记，不升格为实测。</div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ History ============ -->
+      <section class="screen" id="screen-history" aria-labelledby="historyTitle">
+        <div class="screen-inner">
+          <div class="page-head">
+            <div>
+              <div class="eyebrow">Receipts · 回执历史</div>
+              <h1 id="historyTitle">回执历史</h1>
+              <p class="sub">每张回执都能离线打开、转发给第三人；这里只留判定与决定，不留信任。</p>
+            </div>
+            <div class="head-actions">
+              <button class="btn ghost"><svg><use href="#i-filter"/></svg>筛选</button>
+              <button class="btn" id="historyExport"><svg><use href="#i-download"/></svg>导出全部</button>
+            </div>
+          </div>
+
+          <div class="day-group">
+            <div class="day-head"><span class="mono">2026-10-26</span><span class="line"></span><span>今天 · 2 份回执</span></div>
+            <div class="panel">
+              <div class="history-row" data-delivery="good">
+                <span class="h-status ok"></span>
+                <div class="h-main">
+                  <div class="h-title">修复均值函数并补 3 条测试</div>
+                  <div class="h-meta">示例 Agent · 8 条声明全过 · <span class="mono">ACCEPTED</span></div>
+                </div>
+                <div class="h-decision">已收下</div>
+                <div class="h-date">01:52</div>
+              </div>
+              <div class="history-row" data-delivery="liar">
+                <span class="h-status bad"></span>
+                <div class="h-main">
+                  <div class="h-title">同一声明，盘上未改</div>
+                  <div class="h-meta">示例 Agent · 5 条不符 · <span class="mono">NOT-ACCEPTED-MISMATCH</span></div>
+                </div>
+                <div class="h-decision">已退回</div>
+                <div class="h-date">01:52</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="day-group">
+            <div class="day-head"><span class="mono">2026-10-23</span><span class="line"></span><span>真端点首次交付 · 1 份回执</span></div>
+            <div class="panel">
+              <div class="history-row" data-delivery="real">
+                <span class="h-status warn"></span>
+                <div class="h-main">
+                  <div class="h-title">审查 6 行 Python 并给出修法</div>
+                  <div class="h-meta">pgagent · 9 条声明：8 转述 / 1 缺席 · <span class="mono">UNVERIFIED</span></div>
+                </div>
+                <div class="h-decision">未决定</div>
+                <div class="h-date">10-23</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="day-group">
+            <div class="day-head"><span class="line"></span><span>更早 · 形状样例（与本交付无因果关系）</span><span class="line"></span></div>
+            <div class="panel">
+              <div class="history-row" data-delivery="journal">
+                <span class="h-status ok"></span>
+                <div class="h-main">
+                  <div class="h-title">客服靶场账本导出 · 2940 条</div>
+                  <div class="h-meta">agentd · seal 2940/2940 · 60 组 × 49 格 · <span class="mono">ACCEPTED</span></div>
+                </div>
+                <div class="h-decision">已归档</div>
+                <div class="h-date">10-23</div>
+              </div>
+            </div>
+          </div>
+
+          <p class="kbd-hint" style="margin-top:4px">历史数据取自 10-26 盘上读数；原型不修改任何回执文件。</p>
+        </div>
+      </section>
+
+      <!-- ============ Rules ============ -->
+      <section class="screen" id="screen-rules" aria-labelledby="rulesTitle">
+        <div class="screen-inner">
+          <div class="page-head">
+            <div>
+              <div class="eyebrow">Rules · 核对规则</div>
+              <h1 id="rulesTitle">三种判定，不许塌成两种</h1>
+              <p class="sub">这份应用只负责一件事：把「声明」对到「盘上证据」。不判代码对错。</p>
+            </div>
+          </div>
+
+          <div class="doc">
+            <h2>判定语义</h2>
+            <ul class="rule-list">
+              <li><span class="idx">01</span><span><b>MATCH</b> — 声明与盘上证据一致。「一致」不等于「正确」：只说明这条声明没有说谎。</span></li>
+              <li><span class="idx">02</span><span><b>MISMATCH</b> — 声明与盘上事实不符，整单必须退回；退回理由会写进回执。</span></li>
+              <li><span class="idx">03</span><span><b>ABSENT</b> — 量不到，绝不写成 0。必须写明为什么缺席（文件未随交付、行号缺失、源不可读）。</span></li>
+            </ul>
+
+            <h2>依据档</h2>
+            <ul class="rule-list">
+              <li><span class="idx">D</span><span><b>measured（实量）</b> — 本件自己从盘上读到的值。只有 <span class="mono">evidence_class = "disk"</span> 的声明才可能落到这一档。</span></li>
+              <li><span class="idx">R</span><span><b>relayed（转述）</b> — 来自交付方自己的产物或自述，本件不重算。转述通过再多，也不会把整单推成 ACCEPTED。</span></li>
+              <li><span class="idx">A</span><span><b>absent（缺席）</b> — 该有而没有。它与「本来就没这回事」分开记；后者是 VACUOUS。</span></li>
+            </ul>
+
+            <h2>整单状态</h2>
+            <ul class="rule-list">
+              <li><span class="idx">0</span><span><b>ACCEPTED</b> — 每条声明都由盘上证据复核通过，且没有仅凭自报的项。</span></li>
+              <li><span class="idx">2</span><span><b>NOT-ACCEPTED-MISMATCH</b> — 有声明与盘上事实不符，或某个证据源判红。</span></li>
+              <li><span class="idx">3</span><span><b>NOT-ACCEPTED-UNVERIFIED</b> — 有声明回不了盘、证据源核不全，或有仅凭自报的项。</span></li>
+            </ul>
+
+            <h2>声明类型（v1 支持的核对）</h2>
+            <table class="kind-table">
+              <thead><tr><th>kind</th><th>核对什么</th><th>缺席时</th></tr></thead>
+              <tbody>
+                <tr><td>file_exists / file_absent</td><td>文件在 / 不在</td><td>路径越界或不可读记 ABSENT</td></tr>
+                <tr><td>file_sha256</td><td>64 位或 16 位前缀指纹</td><td>文件缺失记 ABSENT</td></tr>
+                <tr><td>file_bytes / file_lines</td><td>字节数 / 行数</td><td>文件缺失记 ABSENT</td></tr>
+                <tr><td>file_contains</td><td>某行 / 任意行含子串</td><td>行号越界记 ABSENT</td></tr>
+                <tr><td>log_exit / log_contains</td><td>末行 exit_code=N / 日志含子串</td><td>找不到记 ABSENT，不当 0</td></tr>
+                <tr><td>json_value / json_len</td><td>JSON 某格的值与类型 / 长度</td><td>读不出记 ABSENT</td></tr>
+              </tbody>
+            </table>
+
+            <h2>边界（不可协商）</h2>
+            <ul class="rule-list">
+              <li><span class="idx">1</span><span><b>只读</b> — 不执行被交付的代码，不修改任何输入文件；输入前后 sha256 必须不变。</span></li>
+              <li><span class="idx">2</span><span><b>不联网、不跑模型</b> — 证据与代码不出本机；回执离线可开。</span></li>
+              <li><span class="idx">3</span><span><b>不判对错</b> — 只核「声明 vs 盘上证据」是否一致；证据怎么产生的，本件证不了。</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ Settings ============ -->
+      <section class="screen" id="screen-settings" aria-labelledby="settingsTitle">
+        <div class="screen-inner">
+          <div class="page-head">
+            <div>
+              <div class="eyebrow">Settings · 设置</div>
+              <h1 id="settingsTitle">本机与边界</h1>
+              <p class="sub">原型里这些开关是锁死的；真实版本也不提供关闭只读的选项。</p>
+            </div>
+          </div>
+
+          <div class="settings-grid">
+            <div class="panel setting-card">
+              <h3>证据路径</h3>
+              <p>声明里的相对路径按声明文件所在目录解析。</p>
+              <div class="setting-row"><span class="k">工作区根</span><span class="v" title="C:\Users\Admin\Desktop\微内核">C:\Users\Admin\Desktop\微内核</span></div>
+              <div class="setting-row"><span class="k">pgagent 轨迹</span><span class="v">PDF-1022\真端点-1023\读数</span></div>
+              <div class="setting-row"><span class="k">agentd 事件</span><span class="v">agentd-真端点.events.jsonl</span></div>
+              <div class="setting-row"><span class="k">内核账本</span><span class="v">构建-1017\客服靶场\导出</span></div>
+              <button class="btn sm" style="margin-top:10px">重新定位…</button>
+            </div>
+
+            <div class="panel setting-card">
+              <h3>边界开关（锁定）</h3>
+              <p>这些是产品定义，不是偏好设置。</p>
+              <div class="setting-row"><span class="k">不执行被交付代码</span><button class="switch locked" aria-label="不执行被交付代码（锁定开启）" disabled></button></div>
+              <div class="setting-row"><span class="k">不联网 / 不跑模型</span><button class="switch locked" aria-label="不联网（锁定开启）" disabled></button></div>
+              <div class="setting-row"><span class="k">输入文件只读</span><button class="switch locked" aria-label="输入文件只读（锁定开启）" disabled></button></div>
+              <div class="setting-row"><span class="k">自报读数不重算</span><button class="switch locked" aria-label="自报读数不重算（锁定开启）" disabled></button></div>
+            </div>
+
+            <div class="panel setting-card">
+              <h3>声明模板</h3>
+              <p>把模板给 Agent，让它在交付时自动生成机器可核的声明；负责人不必手写 JSON。</p>
+              <pre class="code" style="padding:10px 12px;font-size:10px;line-height:1.6">{
+  "session": "谁的哪次交付",
+  "claims": [
+    {"id": "C1", "kind": "file_sha256",
+     "path": "工作区/x.py", "value": "&lt;64 位或 16 位前缀&gt;",
+     "evidence_class": "disk", "why": "为什么核这条"}
+  ]
+}</pre>
+              <div style="display:flex;gap:8px;margin-top:10px">
+                <button class="btn sm" id="copyTemplate">复制模板</button>
+                <button class="btn sm ghost">打开规则</button>
+              </div>
+            </div>
+
+            <div class="panel setting-card">
+              <h3>关于</h3>
+              <p>收货台是「交付对账」的桌面入口：队列、分诊、收 / 退、回执。核对引擎与判据在现有 CLI 里，原型不重复实现。</p>
+              <div class="setting-row"><span class="k">版本</span><span class="v">0.1 · prototype</span></div>
+              <div class="setting-row"><span class="k">原型日期</span><span class="v">2026-10-26</span></div>
+              <div class="setting-row"><span class="k">数据</span><span class="v">3 份实测回执 + 演示占位</span></div>
+              <div class="setting-row"><span class="k">设计源</span><span class="v">Frame B · 团队收货台</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <footer class="statusbar">
+    <span><span class="dot"></span>只读 · 不联网 · 不跑模型</span>
+    <span class="mono">证据根 ~/Desktop/微内核</span>
+    <span class="spacer"></span>
+    <span class="demo" id="demoLabel">演示状态：正常</span>
+    <label class="sr-only" for="demoState">演示状态</label>
+    <select id="demoState" class="mono" style="font-size:9.5px;border:1px solid var(--line);border-radius:3px;background:var(--surface);color:var(--ink-3);height:18px;padding:0 2px">
+      <option value="normal">正常</option>
+      <option value="empty">空队列</option>
+      <option value="loading">读取中</option>
+      <option value="error">读取失败</option>
+    </select>
+    <span class="mono">v0.1 prototype · 样例数据</span>
+  </footer>
+</div>
+
+<!-- Drawer -->
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true">
+  <div class="drawer-head">
+    <div style="flex:1;min-width:0">
+      <div class="d-kicker" id="drawerKicker">D3 · file_sha256 · ABSENT</div>
+      <h2 id="drawerTitle">交付报出的源码指纹（16 位前缀）</h2>
+      <p class="d-sub" id="drawerSub">源文件/待审.py · 盘上找不到这份文件</p>
+    </div>
+    <button class="icon-btn drawer-close" id="drawerClose" aria-label="关闭证据抽屉" style="color:var(--ink-3)"><svg><use href="#i-x"/></svg></button>
+  </div>
+  <div class="drawer-tabs" role="tablist" aria-label="证据类型">
+    <button class="drawer-tab is-on" role="tab" aria-selected="true" data-pane="file">文件</button>
+    <button class="drawer-tab" role="tab" aria-selected="false" data-pane="log">日志</button>
+    <button class="drawer-tab" role="tab" aria-selected="false" data-pane="event">轨迹</button>
+    <button class="drawer-tab" role="tab" aria-selected="false" data-pane="journal">账本</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-pane is-on" id="pane-file"></div>
+    <div class="drawer-pane" id="pane-log"></div>
+    <div class="drawer-pane" id="pane-event"></div>
+    <div class="drawer-pane" id="pane-journal"></div>
+    <p class="drawer-note">抽屉只展示回执里登记过的证据；不会现场执行命令、不会读取声明以外的路径。</p>
+  </div>
+</aside>
+
+<!-- Decision modal -->
+<div class="modal" id="decisionModal" role="dialog" aria-modal="true" aria-labelledby="decisionTitle">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h2 id="decisionTitle">收下这版交付？</h2>
+      <p id="decisionSub">把决定写进回执；后续任何人都能看见当时凭什么收。</p>
+    </div>
+    <div class="modal-body">
+      <div id="acceptBody">
+        <div class="evidence-meta" style="margin-bottom:0">
+          <span>整单 <b class="mono" id="modalStatus">NOT-ACCEPTED-UNVERIFIED</b></span>
+          <span>声明 <b class="mono" id="modalClaims">9 条</b></span>
+          <span>实量 <b class="mono" id="modalMeasured">1</b> / 转述 <b class="mono" id="modalRelayed">8</b></span>
+        </div>
+        <p class="modal-hint" id="acceptHint">这单仍有声明无法回盘。收下只会记录「我知道它核不了」；历史与回执会保持核不了状态。</p>
+      </div>
+      <div id="returnBody" hidden>
+        <label class="field-label" for="reasonInput">退回理由（会写进回执，发给交付方）</label>
+        <div class="reason-chips" id="reasonChips">
+          <button class="reason-chip" type="button">声明与盘上不符</button>
+          <button class="reason-chip" type="button">声明无法回盘</button>
+          <button class="reason-chip" type="button">缺证据源</button>
+          <button class="reason-chip" type="button">测试结论已过期</button>
+          <button class="reason-chip" type="button">自报项过多</button>
+        </div>
+        <textarea class="reason-input" id="reasonInput" placeholder="写清楚哪几条不成立、需要补什么证据…"></textarea>
+        <p class="modal-hint">退单不会修改对方的工作区；它只生成一张带理由的回执。</p>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" id="modalCancel">取消</button>
+      <button class="btn accent" id="modalConfirm">确认收下</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
+
+<script>
+/*__SCRIPT__*/
+</script>
+</body>
+</html>

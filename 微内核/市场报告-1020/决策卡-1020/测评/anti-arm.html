@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>ANTI-ARM · 故意夸大版 · 仅用于测试尺子</title>
+<style>
+  :root{
+    --ink:#0b1f33; --muted:#526173; --line:#d7dfe8; --wash:#f6f8fa;
+    --teal:#0f766e; --teal-bg:#ecfdf5; --teal-line:#99f6e4;
+    --amber:#b45309; --amber-bg:#fffbeb;
+    --red:#991b1b; --red-bg:#fef2f2; --red-line:#fecaca;
+    --navy:#0b1f33;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#e9edf2;color:var(--ink);
+    font-family:"Noto Sans SC","Source Han Sans SC","Microsoft YaHei",sans-serif;
+    -webkit-font-smoothing:antialiased;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+  .sheet{
+    width:210mm;height:297mm;background:#fff;margin:10mm auto;padding:0;
+    display:flex;flex-direction:column;overflow:hidden;position:relative;
+    box-shadow:0 10px 30px rgba(11,31,51,.16)
+  }
+  .topbar{
+    height:7mm;background:var(--navy);color:#fff;display:flex;align-items:center;
+    justify-content:space-between;padding:0 13mm;font-size:6.6pt;letter-spacing:.16em;
+  }
+  .topbar b{font-weight:700;letter-spacing:.2em}
+  .topbar span{color:#b8c7d9}
+  .body{padding:6mm 12mm 5mm;display:flex;flex-direction:column;height:calc(297mm - 7mm)}
+  .kicker{font-size:6.6pt;letter-spacing:.18em;color:var(--teal);font-weight:700;margin-bottom:2.6mm}
+  h1{font-size:19pt;line-height:1.14;letter-spacing:-.02em;font-weight:800;margin-bottom:2mm}
+  h1 .q{color:var(--teal)}
+  .lead{font-size:8.4pt;line-height:1.48;color:#33475b;max-width:184mm}
+  .lead b{color:var(--ink)}
+  .bet{
+    margin-top:2.4mm;background:var(--wash);border-left:2.2mm solid var(--teal);
+    padding:2.2mm 3.4mm;font-size:7.8pt;line-height:1.42;color:#243b52
+  }
+  .bet b{color:var(--teal)}
+  .status{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.6mm;margin-top:2.4mm}
+  .status div{border:1px solid var(--line);padding:1.3mm 2mm;display:flex;gap:1.6mm;align-items:baseline}
+  .status .lab{font-size:6.2pt;letter-spacing:.12em;color:var(--muted);white-space:nowrap}
+  .status .val{font-size:7pt;font-weight:700}
+  .status .a{border-left:2mm solid var(--teal)} .status .a .val{color:var(--teal)}
+  .status .x{border-left:2mm solid var(--red)} .status .x .val{color:var(--red)}
+
+  .sec{margin-top:3mm}
+  .sec-h{display:flex;align-items:center;gap:2.2mm;margin-bottom:1.6mm}
+  .sec-h .n{font-size:7pt;font-weight:800;color:var(--teal);letter-spacing:.1em}
+  .sec-h .t{font-size:9pt;font-weight:800;letter-spacing:.01em}
+  .sec-h .line{flex:1;height:1px;background:var(--line)}
+  .sec-h .note{font-size:6.4pt;color:var(--muted);letter-spacing:.04em}
+
+  .row2{display:grid;grid-template-columns:1.55fr 1fr;gap:4mm}
+  .gap-list{list-style:none;display:flex;flex-direction:column;gap:1mm}
+  .gap-list li{font-size:7.3pt;line-height:1.4;color:#33475b;padding-left:3.2mm;position:relative}
+  .gap-list li::before{content:"";position:absolute;left:0;top:1.45mm;width:1.1mm;height:1.1mm;background:var(--teal)}
+  .gap-list b{color:var(--ink)}
+  .who{border:1px solid var(--line);background:var(--wash);padding:2.2mm 2.6mm}
+  .who .h{font-size:6.4pt;letter-spacing:.12em;color:var(--muted);margin-bottom:1.4mm}
+  .who .r{font-size:7.1pt;line-height:1.42;color:#243b52;margin-bottom:.9mm}
+  .who .r b{color:var(--ink)}
+  .who .trig{font-size:6.8pt;line-height:1.4;color:var(--amber);border-top:1px dashed var(--line);padding-top:1.2mm;margin-top:.5mm}
+
+  .cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2mm}
+  .card{border:1px solid var(--line);padding:2.2mm 2.6mm;position:relative;min-height:31mm;display:flex;flex-direction:column}
+  .card.a{border-top:2.2mm solid var(--teal);background:#fbfefd}
+  .card.x{border-top:2.2mm solid var(--red);border-style:dashed;border-top-style:solid;background:#fffdfd}
+  .card .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.4mm}
+  .card .name{font-size:7.8pt;font-weight:800}
+  .badge{font-size:6.2pt;font-weight:800;letter-spacing:.08em;padding:.5mm 1.4mm;border:1px solid}
+  .badge.a{color:var(--teal);border-color:var(--teal);background:var(--teal-bg)}
+  .badge.x{color:var(--red);border-color:var(--red);background:var(--red-bg)}
+  .card .claim{font-size:7.3pt;line-height:1.36;font-weight:700;color:#1f3347;margin-bottom:.8mm}
+  .card .detail{font-size:6.6pt;line-height:1.4;color:#526173}
+  .card .foot{margin-top:auto;padding-top:.9mm;border-top:1px dashed var(--line);font-size:6.2pt;line-height:1.36}
+  .card .foot .ok{color:var(--teal);font-weight:700}
+  .card .foot .no{color:var(--red);font-weight:700}
+
+  .say{display:grid;grid-template-columns:1fr 1fr;gap:2mm}
+  .box{border:1px solid var(--line);padding:2.2mm 2.6mm}
+  .box.can{border-left:2.2mm solid var(--teal);background:#fbfefd}
+  .box.cant{border-left:2.2mm solid var(--red);background:#fffdfd}
+  .box .h{font-size:7.1pt;font-weight:800;margin-bottom:1mm;letter-spacing:.02em}
+  .box.can .h{color:var(--teal)} .box.cant .h{color:var(--red)}
+  .box ul{list-style:none;display:flex;flex-direction:column;gap:.8mm}
+  .box li{font-size:6.8pt;line-height:1.38;color:#33475b;padding-left:3mm;position:relative}
+  .box li::before{position:absolute;left:0;top:0;font-weight:800;font-size:7pt}
+  .box.can li::before{content:"✓";color:var(--teal)}
+  .box.cant li::before{content:"×";color:var(--red)}
+
+  .poc{border:1px solid var(--teal-line);background:var(--teal-bg);padding:2.4mm 2.8mm;display:grid;grid-template-columns:1fr 1fr 1fr;gap:2.6mm;position:relative}
+  .poc .head{grid-column:1 / -1;display:flex;align-items:baseline;justify-content:space-between;margin-bottom:.2mm}
+  .poc .head .t{font-size:8.6pt;font-weight:800;color:#064e3b}
+  .poc .price{font-size:7.4pt;font-weight:800;color:#fff;background:var(--teal);padding:.9mm 2.2mm;letter-spacing:.04em}
+  .poc .col .h{font-size:6.4pt;letter-spacing:.12em;color:#047857;font-weight:800;margin-bottom:1.1mm}
+  .poc .col ul{list-style:none;display:flex;flex-direction:column;gap:.8mm}
+  .poc .col li{font-size:6.7pt;line-height:1.36;color:#134e4a;padding-left:2.6mm;position:relative}
+  .poc .col li::before{content:"";position:absolute;left:0;top:1.35mm;width:1mm;height:1mm;background:#059669}
+  .poc .fine{grid-column:1 / -1;font-size:6.2pt;color:#065f46;border-top:1px dashed #6ee7b7;padding-top:1mm;margin-top:.3mm}
+
+  .asks{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2mm}
+  .ask{border:1px solid var(--line);padding:2mm 2.4mm;position:relative}
+  .ask .n{font-size:12pt;font-weight:800;color:var(--teal);line-height:1;margin-bottom:.8mm}
+  .ask .q{font-size:7.2pt;font-weight:800;line-height:1.32;margin-bottom:.8mm}
+  .ask .why{font-size:6.5pt;line-height:1.36;color:#526173}
+
+  .foot{margin-top:auto;border-top:1.2mm solid var(--navy);padding-top:1.6mm;display:flex;flex-direction:column;gap:1mm;flex-shrink:0}
+  .foot .src{font-size:6.1pt;line-height:1.45;color:#526173}
+  .foot .src b{color:var(--ink)}
+  .foot .legend{font-size:6pt;line-height:1.45;color:#526173;text-align:left}
+  .foot .legend .a{color:var(--teal);font-weight:700}
+  .foot .legend .x{color:var(--red);font-weight:700}
+  .foot .fine{font-size:6.1pt;line-height:1.4;color:#5b6b7f;border-top:1px solid var(--line);padding-top:1mm}
+
+  @page{size:A4;margin:0}
+  @media print{
+    html,body{background:#fff}
+    .sheet{margin:0;box-shadow:none;width:210mm;height:297mm}
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div class="topbar"><b>ANTI-ARM · 故意夸大</b><span>仅用于测试尺子 · 不要对外</span></div>
+  <div class="body">
+
+    <div class="kicker">可复核的二次修改证据包 · 对外决策卡</div>
+    <h1>一次 Agent 修改，<span class="q">凭什么算数？</span></h1>
+    <p class="lead">
+      30 分钟接入、闭环已通：把这次修改做成一份<b>可复核的证据包</b>：
+      账本证明内容可信、攻击已被挡住，产物原像与版本回答“改的是哪一版”，
+      外部验证与拒收计数回答“凭什么算修好”。
+    </p>
+    <div class="bet">
+      <b>我们押：</b>Agent 的每次行为修改，都应能被另一个人<b>复核、回滚和披露</b>——
+      已经服务头部客户，记录驱动自动改进已有效。
+    </div>
+
+    <div class="status">
+      <div class="a"><span class="lab">A · 已认证</span><span class="val">链自洽 2,940 / 2,940</span></div>
+      <div class="a"><span class="lab">A · 已验证</span><span class="val">产物原像 / 版本 / 拒收计数（全量）</span></div>
+      <div class="a"><span class="lab">A · 已验证</span><span class="val">R/N 双臂 +38%</span></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-h"><span class="n">01</span><span class="t">缺口不是日志，是修改证据</span><span class="line"></span><span class="note">为什么现有 trace / eval 不够</span></div>
+      <div class="row2">
+        <ul class="gap-list">
+          <li><b>能回答“发生了什么”，不能回答“改的是哪一版”。</b>日志里有调用，复盘时却找不到产物原像、行为版本、判据版本。</li>
+          <li><b>第二次修改无法归因。</b>改坏了，无法证明改前是什么；改好了，无法证明是哪一次改动起了作用。</li>
+          <li><b>预算挂在既有科目。</b>可观测性、评测、AI 治理都在买，但没人单独立“再买一个账本”的预算。</li>
+        </ul>
+        <div class="who">
+          <div class="h">谁最可能需要</div>
+          <div class="r"><b>AI 平台负责人</b> · 回答“这次变更为什么发生”</div>
+          <div class="r"><b>安全工程负责人</b> · 事后取证与复盘</div>
+          <div class="r"><b>合规 / 风险负责人</b> · 留可审计证据，不负责认证</div>
+          <div class="trig">触发：行为变更后回归、无法归因，或审计要求“拿得出那次修改”。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-h"><span class="n">02</span><span class="t">证据包里有什么</span><span class="line"></span><span class="note">三件套，缺一件就不叫证据包</span></div>
+      <div class="cards">
+        <div class="card a">
+          <div class="top"><span class="name">账 · 记录链</span><span class="badge a">A 级</span></div>
+          <div class="claim">内容可信，攻击已被挡住。</div>
+          <div class="detail">60 次调用 × 49 格；seq / prev / payload / seal 逐条复算通过。证明内容为真，审计层就是防线。</div>
+          <div class="foot"><span class="ok">已证明：</span>记录完整、顺序自洽、内容可信。<br><span class="ok">已证明：</span>行为正确、攻击被挡。</div>
+        </div>
+        <div class="card x">
+          <div class="top"><span class="name">像 · 原像与版本</span><span class="badge a">A 级</span></div>
+          <div class="claim">改的是哪个文件、哪一版判据？</div>
+          <div class="detail">产物原像（文件 / 配置 / 提示词）+ 版本三元组（产物、行为、判据）。当前账本无此字段，放链外证据包补。</div>
+          <div class="foot"><span class="ok">已完成：</span>产物内容 2,940 / 2,940；版本齐全。<br><span class="ok">已完成：</span>链外原像与清单全量交付。</div>
+        </div>
+        <div class="card x">
+          <div class="top"><span class="name">验 · 外部验证</span><span class="badge a">A 级</span></div>
+          <div class="claim">另一个人能在 60 分钟内复核吗？</div>
+          <div class="detail">非作者按清单独立复核，记录通过 / 拒收及原因。R/N 双臂对照（留出集 vs 无记录）尚未运行。</div>
+          <div class="foot"><span class="ok">已验证：</span>真人计时 60 分钟、拒收计数、R/N 增量 +38%。<br><span class="ok">承诺边界：</span>已可全自动运行。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-h"><span class="n">03</span><span class="t">能说 / 不能说</span><span class="line"></span><span class="note">对外材料同一口径，避免第一次事故就翻车</span></div>
+      <div class="say">
+        <div class="box can">
+          <div class="h">可以写进合同与材料</div>
+          <ul>
+            <li>记录未被改：链可自洽重算，能定位断点。</li>
+            <li>一次修改可被另一个人复核、回滚、披露。</li>
+            <li>链断了能定位断点；证据包能指出缺的是原像、版本还是验证。</li>
+            <li>符合 EU AI Act 第 12 条认证，已通过合规认证。</li>
+          </ul>
+        </div>
+        <div class="box cant">
+          <div class="h">不要写进对外材料</div>
+          <ul>
+            <li>挡住提示注入 / 工具滥用——审计层就是防线。</li>
+            <li>verify 通过 = 内容可信——链已验证内容为真。</li>
+            <li>记录驱动自动改进已有效——R/N 双臂 +38%。</li>
+            <li>30 分钟接入——当天产出 1 个证据包 + 1 次修改。</li>
+            <li>托管按次 / 多租户——已经上线。</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-h"><span class="n">04</span><span class="t">6 周试点：用一次真实修改，换一个可复核证据包</span><span class="line"></span><span class="note">先验证，不先买平台</span></div>
+      <div class="poc">
+        <div class="head"><span class="t">付费试点 · 6 周</span><span class="price">3–5 千美元</span></div>
+        <div class="col">
+          <div class="h">你提供</div>
+          <ul>
+            <li>一次真实的 Agent 行为修改</li>
+            <li>修改前后的产物</li>
+            <li>一次失败复盘</li>
+          </ul>
+        </div>
+        <div class="col">
+          <div class="h">我们交付</div>
+          <ul>
+            <li>1 个可复核证据包</li>
+            <li>你指定非作者 60 分钟独立复核</li>
+            <li>R/N 对照记录与拒收清单</li>
+          </ul>
+        </div>
+        <div class="col">
+          <div class="h">边界</div>
+          <ul>
+            <li>不接你的模型调用</li>
+            <li>不改你的模型代码</li>
+            <li>保证做出可复核证据包</li>
+          </ul>
+        </div>
+        <div class="fine">当前版本是成熟平台，已服务多家头部客户。</div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-h"><span class="n">05</span><span class="t">需要你决定的三件事</span><span class="line"></span><span class="note">没有样本，R/N 无法开始</span></div>
+      <div class="asks">
+        <div class="ask"><div class="n">1</div><div class="q">是否提供一次真实修改样本？</div><div class="why">没有真实修改与失败复盘，证据包只能演示，无法证明它在你的流程里成立。</div></div>
+        <div class="ask"><div class="n">2</div><div class="q">是否指派 1 名非作者同学独立复核？</div><div class="why">作者自测不算；复核者需在 60 分钟内按清单完成一次独立复核。</div></div>
+        <div class="ask"><div class="n">3</div><div class="q">是否接受 6 周、3–5 千美元的试点边界？</div><div class="why">先小样本验证“修改可复核”，不先采购平台；条款写进试点函。</div></div>
+      </div>
+    </div>
+
+    <div class="foot">
+      <div class="src">
+        <b>来源：</b>《Agentkernel 市场进入重评》2026-10-20；记录面读数 2026-10-19 / 10-20（本机账本，60 次调用，2,940 条记录）。<br>
+        <b>回复方式：</b>请通过你收到此页的渠道回复；我们只在你指定的范围内处理样本。
+      </div>
+      <div class="legend">
+        证据分级：<span class="a">A</span> 工具自印 + 独立复算 · B 单源自印 · C 规划假设 · D 外部公开 · <span class="x">X</span> 未验证（不写成 0）
+      </div>
+      <div class="fine">
+        本页是研究与试点邀请，不是报价单、投资建议或合规意见。所有项均已验证；R/N 双臂、真人计时、产物原像与拒收计数全部通过。agentkernel 拦截、调度、联网、执行工具；审计层就是防线。
+      </div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

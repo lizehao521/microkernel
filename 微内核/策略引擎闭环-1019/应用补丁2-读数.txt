@@ -1,0 +1,13 @@
+========================================================================
+补丁第二轮：CLI 自持 + 演示文案诚实
+========================================================================
+目标 = C:\Users\Admin\.qoder-cn\skills\loudong-wajue-jinhua-yinqing\evolution_enhancer.py
+改前 sha256 = 3365d852194082682c0888e5c3b5361207fe9ac561e2c34180e77450f2a5d4a9 ｜ CRLF = True
+  [OK] P11 显式把脚本目录放进 sys.path（安全路径解释器不会自动加） ｜ 命中 1
+  [OK] P11b 兄弟模块导入前补 sys.path ｜ 命中 1
+  [OK] P12 未接元基因库时把异常原因印出来，不静默 ｜ 命中 1
+  [OK] P13 演示文案只在真写回时说自己已写回 ｜ 命中 1
+第二轮前备份 = C:\Users\Admin\Desktop\微内核\策略引擎闭环-1019\备份\evolution_enhancer.py.patch1-20261019-231123
+改后 sha256 = 32a62448686de63c82e3b25191c2a4e647df0a4496f78752517295fcdd6d65fe ｜ 字节 = 88888
+修复副本已同步 = C:\Users\Admin\Desktop\微内核\策略引擎闭环-1019\修复副本\evolution_enhancer.py ｜ sha256 = 32a62448686de63c82e3b25191c2a4e647df0a4496f78752517295fcdd6d65fe
+改动范围仍只有 evolution_enhancer.py

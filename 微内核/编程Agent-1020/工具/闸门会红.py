@@ -1,0 +1,163 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""闸门自检：证明 `go run . -selfcheck` 真的会红，而不是只会绿。
+
+为什么要有这支：验收口径写的是「selfcheck 该红的红」。一条从来不会红的判据集与"没人在看"无法区分
+（这一族在本项目点过名：恒绿的针、装饰性的判分器）。所以把"故意做坏"做成可复跑的：
+每一种坏法都对应一条**应该**红的判据，跑一次看它红不红、点名的是不是那一条。
+
+    python 工具/闸门会红.py [go.exe 路径]
+
+它只在 TEMP 复制件上动手（`微内核/TEMP-闸门/src/pgagent`，路径深度要保住 go.mod 的 replace），
+跑完删掉；**不碰工作树、不碰内核树**。任何一臂没红 ⇒ 退出码 1 并说明哪一臂是恒绿的。
+"""
+import os
+import re
+import shutil
+import subprocess
+import sys
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
+GO = sys.argv[1] if len(sys.argv) > 1 else "go"
+HERE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(HERE)                       # 编程Agent-1020\
+BASE = os.path.dirname(ROOT)                       # Desktop\微内核\
+SRC = os.path.join(ROOT, "src", "pgagent")
+MUT = os.path.join(BASE, "TEMP-闸门", "src", "pgagent")
+
+# (名字, 文件, 原串, 改成, 期望被点名的那条判据)
+ARMS = [
+    ("G1 判据被改名（脏样本该命中的那条扫不到了）", "analyze.go",
+     'Rule:     "empty-err-block",', 'Rule:     "empty-err-block-x",',
+     "脏样本命中 empty-err-block"),
+    ("G2 出处被双计（measured 顺手加进 estimated，加总必然对不上）", "schema.go",
+     "\tcase Measured:\n\t\tm.Measured++", "\tcase Measured:\n\t\tm.Measured++\n\t\tm.Estimated++",
+     "五档加总恒等"),
+    ("G3 把命中的口令值抄进读数（这一族第三次）", "langs.go",
+     "i+1, strings.ToLower(m[1]), len(m[2])),", "i+1, strings.ToLower(m[1]), m[2]),",
+     "硬编码判据命中"),
+    ("G4 栈正则做坏（一帧都认不出）", "debug.go",
+     r"goFrame  = regexp.MustCompile(`([\w./\\-]+\.go):(\d+)`)",
+     r"goFrame  = regexp.MustCompile(`(\d+)\.go`)",
+     "栈那一发认出帧"),
+    ("G5 读者报告那一路断掉（readers_report 拿不回来）", "ledger.go",
+     'rpc.call("kernel.readers_report", nil)', 'rpc.call("kernel.readers_report_x", nil)',
+     "读者声明全落账"),
+    ("G6 管路那七格退回恒缺席（假端点白开）", "ledger.go",
+     "\tif p == nil {\n\t\treturn kernel.AbsentBecause(whyAbsent)\n\t}",
+     "\tif p == nil || true {\n\t\treturn kernel.AbsentBecause(whyAbsent)\n\t}",
+     "假端点一发：管路七格翻档"),
+    ("G7 顺序不动了（只改文案不改顺序）", "intent.go",
+     '\tswitch kind {\n\tcase "优化":', '\tswitch "" {\n\tcase "优化":',
+     "第一张卡属于建议族"),
+    ("G8 路由被写死成一个值（问题输入框变装饰）", "loop.go",
+     "\tres.Intent = it.Kind", "\tres.Intent = \"审查\"",
+     "问题路由三种问题三种结论带"),
+    ("G9 早退路上又不打量了（⑨ 退回「落了账才走」那一形）", "ledger.go",
+     "		收口数(rpc, &rep) // 账没进，但那本账还在 ⇒ 第 ⑨ 步照样要交内核原话（见 收口数 的注释）",
+     "		// (臂) 这里故意不打量",
+     "超预算那一发：收口三步都在场"),
+    ("G10 收口那三步的名字被换掉（在场性又变成看不见）", "loop.go",
+     '			pend = append(pend, Step{Name: "kernel.tally", Summary: reply.Tally + ledgerScope(session), Basis: Measured, Run: true})',
+     'pend = append(pend, Step{Name: "kernel.something_else", Summary: reply.Tally, Basis: Measured, Run: true})',
+     "超预算那一发：收口三步都在场"),
+    ("G11 没读回那句把原因咽回去（冒号后面空着）", "ledger.go",
+     'rep.Reason = "预检被拒，根本没走到读回那一步：" + rep.Verdict',
+     'rep.Reason = ""',
+     "超预算那一发：收口三步都在场"),
+    ("G12 额度预告永远说\"不超\"（把尺子放大一千倍）", "loop.go",
+     "res.BudgetOver = res.PartsBytes > b.EffectiveCeiling",
+     "res.BudgetOver = res.PartsBytes > b.EffectiveCeiling*1000",
+     "① 那句预算预告与第 ⑤ 步对得上"),
+]
+
+
+def run_selfcheck():
+    env = dict(os.environ, PYTHONIOENCODING="utf-8")
+    p = subprocess.run([GO, "run", ".", "-selfcheck"], cwd=MUT, capture_output=True,
+                       text=True, encoding="utf-8", errors="replace", env=env)
+    out = (p.stdout or "") + (p.stderr or "")
+    # 两读互相印证：一条是"打出来的红行"，一条是判据集自己印的"失败项 N"。
+    # 两个数不等 ⇒ 标记口径漂了（这一版一开始就栽在这上面：它去数 `[FAIL]`，
+    # 而 reporter 打的是 `[RED]` —— 于是六臂全被误报成"恒绿"，其实是尺子的检索键错）。
+    marks = [ln.strip() for ln in out.splitlines() if ln.startswith("[RED]") or ln.startswith("[FAIL]")]
+    m = re.search(r"失败项 (\d+)", out)
+    claimed = int(m.group(1)) if m else -1
+    tail = out.strip().splitlines()[-1][:120] if out.strip() else "无输出"
+    return p.returncode, marks, claimed, tail
+
+
+def restore():
+    for f in os.listdir(SRC):
+        s = os.path.join(SRC, f)
+        d = os.path.join(MUT, f)
+        if os.path.isfile(s) and s.endswith(".go"):
+            shutil.copyfile(s, d)
+    for f in ("app.js", "index.html", "style.css"):
+        shutil.copyfile(os.path.join(SRC, "web", f), os.path.join(MUT, "web", f))
+
+
+def emit_summary(arms, bit, empty, rc_ctrl, rc_restored, bad):
+    # 要跨件传数，就传一行结构化字段，别让调用方去数散文。
+    # （上一版 验收.py 去 grep「咬住了」，而这支印的是「红了 … 对上了」⇒ 报成 咬住=0，
+    #  正是本项目点过名的那一族：检索键与实物对不上，绿被读成红、红被读成没测到。）
+    print("SUMMARY arms=%d bit=%d empty=%d control_rc=%d restored_rc=%d bad=%d"
+          % (arms, bit, empty, rc_ctrl, rc_restored, bad))
+
+
+def main():
+    if os.path.exists(os.path.join(BASE, "TEMP-闸门")):
+        shutil.rmtree(os.path.join(BASE, "TEMP-闸门"))
+    os.makedirs(os.path.join(BASE, "TEMP-闸门", "src"), exist_ok=True)
+    shutil.copytree(SRC, MUT)
+    bad = 0
+    n_bit = 0      # 咬住的臂数：注入后确实红、且红的那条正是本该点名的那条
+    n_empty = 0    # 空臂：目标串找不到，这一臂什么都没测
+    rc0, marks, claimed, tail = run_selfcheck()
+    print("对照（未做坏）：退出码=%d 红行=%d 自印失败项=%d ｜ %s" % (rc0, len(marks), claimed, tail))
+    if rc0 != 0 or marks or claimed != 0:
+        print("对照就不是干净的 ⇒ 工作树本身有问题，后面每一臂的红都不能归因给注入")
+        emit_summary(len(ARMS), 0, 0, rc0, -1, 1)
+        return 1
+    for name, f, old, new, want in ARMS:
+        restore()
+        p = os.path.join(MUT, f)
+        s = open(p, encoding="utf-8").read()
+        if old not in s:
+            print("%s：**空臂**——目标串不在 %s 里（这条什么都没测）" % (name, f))
+            n_empty += 1
+            bad += 1
+            continue
+        open(p, "w", encoding="utf-8", newline="").write(s.replace(old, new, 1))
+        rc, marks, claimed, tail = run_selfcheck()
+        hit = any(want in x for x in marks)
+        对账 = "两读一致" if claimed == len(marks) else "**两读不一致（标记口径漂了）**"
+        if rc == 0 or not marks or not hit or claimed != len(marks):
+            bad += 1
+        else:
+            n_bit += 1
+        print("%s ⇒ 退出码=%d %s ｜ 红行=%d 自印=%d %s ｜ 期望那条：%s %s" % (
+            name, rc, "红了" if (rc and marks) else "**没红**", len(marks), claimed, 对账,
+            want, "对上了" if hit else "**没对上**"))
+        for x in marks[:3]:
+            print("      " + x[:130])
+        if rc == 0:
+            print("      （这一臂是恒绿的：做坏了它也不响 —— 要么这条判据没在管这件事，要么该有条判据还没写）")
+    restore()
+    rc, marks, claimed, tail = run_selfcheck()
+    print("全部还原后复跑：退出码=%d 红行=%d 自印失败项=%d ｜ %s" % (rc, len(marks), claimed, tail))
+    if rc != 0 or claimed != 0:
+        bad += 1
+    shutil.rmtree(os.path.join(BASE, "TEMP-闸门"))
+    left = os.path.exists(os.path.join(BASE, "TEMP-闸门"))
+    if left:
+        bad += 1
+    print("TEMP 复制件残留=%d ｜ 不达标的臂数=%d" % (1 if left else 0, bad))
+    emit_summary(len(ARMS), n_bit, n_empty, rc0, rc, bad)
+    return 1 if bad else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

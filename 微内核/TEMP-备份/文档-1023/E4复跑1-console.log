@@ -1,0 +1,12 @@
+PASS S0 exe 现建（判的是这一份，不是 go run） | sha256_12=5ac171a854af build_s=1.6
+PASS S9 同一对落点连跑三趟 | 事件条数=96
+PASS S10 跨趟日志结构判据全绿（路 A/B 的 P0 现场） | 判据数=5 绿=4 红=0 rc=0 红的读数= 口径=ack_limit_ms=60000 最大ack_ms=207 rc预算100=4
+PASS S11 counts 逐块与账对得上（独立复算，不套 Go 的口径） | 有结算的发=18
+PASS S12 谎报 counts 的日志必须 RED（这条命令会红） | rc=4 红的支数=2 第一句=第 1 发的回执距入口 207ms，超上限 100ms
+PASS S13a 跑的过程中读得到、游标带 run 轴 | 地址=127.0.0.1:59521 首连条数=7 游标段数=4 游标=agentd-27372:r27372-1792689950386006000:1:3
+PASS S14 坏游标给 409（不当首连重播整本） | http_code=409 异常=
+FAIL S13b 停笔后重放两次同序列 | 状态=NOT_MEASURABLE 为什么=投送层随进程生死：进程在时日志还在长，进程停时端口已关；这条性质由 events_sse_test.go 的 TestReplayTwiceGivesSameSequence 在封板日志上钉
+PASS S15 自然跑完的一趟 -check-log 四支全绿 | 跑完rc=0 rc=0 绿的支数=4
+FAIL S16 半路被杀的日志必须 RED 且点名半结算（新牙在真二进制上响） | rc=4 红的支数=1 第一句=趟 agentd-27372|r27372-1792689950386006000 开了账（有 run_started）却没有 run_settled —— 收口那一步没走完（或被半路杀掉）
+steps 10 | passed 8 | failed 1 | 未测 1 | 读数 C:\Users\Admin\Desktop\微内核\事件层-1022\读数\E4真负载.jsonl
+landing check: OK (10/10 rows, 2119 bytes)

@@ -1,0 +1,9 @@
+{"step": "S0 跑的是哪一份 build", "ok": true, "exe": "agentd-e1.exe", "sha256_12": "3bfb7937c0bf", "build_rc": 0}
+{"step": "S1 stdout 不受事件层影响", "ok": true, "rc_on": 0, "rc_off": 0, "stdout_equal": true, "on_bytes": 2440, "off_bytes": 2441, "events_in_stdout": false}
+{"step": "S2 append-only 跨进程", "ok": true, "first_run": 32, "after_second": 64, "seq_regressions": 0, "run_started": 2}
+{"step": "S3 撞车守卫保住账本", "ok": true, "journal_is_file": true, "journal_bytes": 148232, "rc": 0, "stderr_has_collision_note": true, "nested_events_written": false}
+{"step": "S4 横幅三态各说各的", "ok": true, "内存态": true, "没开态": true, "落盘态": true, "file_line": ["agentd: 事件层 32 条 → C:\\Users\\Admin\\AppData\\Local\\Temp\\E1-冒烟-14152\\s4.events.jsonl"]}
+{"step": "S5 六态退出码未改", "ok": true, "real": 2, "turns": 3, "capped": 5, "script": 0, "bad_resume": 2}
+{"step": "S6 收口事件形状", "ok": true, "state": "settled", "stop": "script", "stop_why": "跑完：端点剧本走到最后一发", "progress": {"done": 6, "total": 6, "limit": 20}, "evidence": "measured", "turn": 0, "step_field": "absent"}
+{"step": "S7 回执先于干活", "ok": true, "有回执的发": 6, "趟身份": 1, "最大ack_ms": 43, "第一条不是回执": {}, "超上限": [], "载荷缺项": []}
+{"step": "S8 结算与相位（E3）", "ok": "跑完：端点剧本走到最后一发", "结算的发": 6, "重复": [], "没结算": [], "补步或虚报": [], "结算类别": ["completed"], "有未走到步骤的份数": 0, "run_stop": "script", "run_why": true}

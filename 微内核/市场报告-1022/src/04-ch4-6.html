@@ -1,0 +1,114 @@
+<!-- ================= CH 4-6 ================= -->
+<section class="chapter pagebreak" id="ch4">
+  <div class="chap-kicker">04 · Competition</div>
+  <h1><span class="num">04</span>竞争格局：话已被说，背书还没有</h1>
+  <p class="lede">v2 的判断是「这是功能市场不是平台市场」。v3 不改这个判断，但把「没人做运行时证据」这句话彻底删掉——
+    抽查显示：<strong>记录层已被商品化，声明层已被占用，机制层没人背书。</strong>我们的位置只能在第三层。</p>
+
+  <h2>4.1 五类玩家，按「说了什么 / 能证什么」重排</h2>
+  <svg viewBox="0 0 720 300" width="100%" role="img" aria-label="声明强度对机制背书散点图" style="margin:4mm 0 2mm">
+    <g stroke="#c9d6e2" stroke-width="1">
+      <line x1="70" y1="30" x2="70" y2="250"/><line x1="70" y1="250" x2="700" y2="250"/>
+      <line x1="70" y1="140" x2="700" y2="140" stroke-dasharray="3 4"/><line x1="385" y1="30" x2="385" y2="250" stroke-dasharray="3 4"/>
+    </g>
+    <g font-family="system-ui,Microsoft YaHei" font-size="10" fill="#4a5b6b">
+      <text x="74" y="22">机制背书（本轮核到的背书形态）</text><text x="52" y="248" text-anchor="end">无</text><text x="52" y="40" text-anchor="end">强</text>
+      <text x="70" y="268">声明强度（本轮核到的原文措辞）</text>
+      <text x="86" y="284">弱</text><text x="660" y="284">强</text>
+    </g>
+    <g font-family="system-ui,Microsoft YaHei" font-size="10.5" fill="#0b1f33">
+      <circle cx="640" cy="228" r="7" fill="#a3151e"/><text x="640" y="212" text-anchor="middle">UiPath「tamper-evident」</text><text x="640" y="245" text-anchor="middle" fill="#a3151e">背书=框架映射</text>
+      <circle cx="596" cy="214" r="6" fill="#8a6d1f"/><text x="596" y="200" text-anchor="middle">小厂群 Ed25519 声明</text>
+      <circle cx="330" cy="236" r="6" fill="#134d7a"/><text x="330" y="222" text-anchor="middle">Datadog（无完整性声明）</text>
+      <circle cx="300" cy="196" r="6" fill="#134d7a"/><text x="300" y="182" text-anchor="middle">Langfuse（SOC 2 档）</text>
+      <circle cx="250" cy="176" r="6" fill="#134d7a"/><text x="250" y="162" text-anchor="middle">Vanta 清单级</text>
+      <circle cx="150" cy="232" r="6" fill="#5a5a5a"/><text x="150" y="218" text-anchor="middle">LiteLLM 免费审计</text>
+      <circle cx="470" cy="120" r="6" fill="none" stroke="#0b6b34" stroke-width="2"/><text x="470" y="106" text-anchor="middle">Traccia（论文描述机制）</text>
+      <circle cx="120" cy="86" r="8" fill="none" stroke="#0b6b34" stroke-width="2" stroke-dasharray="4 3"/><text x="120" y="70" text-anchor="middle">本件目标位：说小、可验</text>
+    </g>
+    <text x="392" y="52" font-family="system-ui,Microsoft YaHei" font-size="10.5" fill="#a3151e">右上象限本轮一个都没核到</text>
+  </svg>
+  <table class="tbl" id="fig3">
+    <tr><th>类</th><th>代表（本轮核对到的原文）</th><th>声明强度</th><th>机制背书</th><th>对本件意味着什么</th></tr>
+    <tr><td>平台内建</td><td>ServiceNow：AI 业务 ACV 破 $1B、agent 部署九个月涨 9 倍（财报转述）；治理层要答「哪个 agent 替谁访问哪些数据、什么需批准、错误如何回滚」</td><td>高</td><td>未见运行时证据机制描述</td><td>问题清单与本件同题，<strong>坑位在平台里</strong>；别按平台叙事卖</td></tr>
+    <tr><td>可观测/评测</td><td>Datadog LLM Observability（官方文档原文：trace/span/token/eval，原生支持 OTel GenAI 语义约定）</td><td>中</td><td><strong>对留存、不可变、哈希、签名、legal hold、导出完整性不作任何声明</strong>（A 级：文档已读）</td><td>这是最直接的对照：他们记，但不为「完整性」负责</td></tr>
+    <tr><td>OSS 可观测</td><td>Langfuse（审计日志/SCIM = Enterprise $2,499/月；留存 30/90 天/3 年；SSO 强制另有 $300/月 Teams 加购；SOC 2 与 ISO 27001 在 Pro+）</td><td>中</td><td>靠 SOC 2 报告而非密码学</td><td><strong>「留更久」是被计量的商品</strong>，不是差异化；我们只能卖「留的东西能自证口径」</td></tr>
+    <tr><td>免费替代品</td><td>LiteLLM 网关页原文：「Model access control and guardrails, with an audit log on every request」「Your keys, your infra, your audit trail」</td><td>中</td><td>无完整性声明</td><td>买家<strong>不开任何付费件</strong>就能拿到逐请求审计——这是最硬的同质化威胁</td></tr>
+    <tr><td>声明防篡改</td><td>UiPath 平台页原文：「Every agent action, model invocation, prompt, response, and approver is logged in a tamper-evident audit trail … the same evidence regulators ask for」</td><td><strong>最高</strong></td><td><strong>只给控制框架映射</strong>（AIUC-1 对 EU AI Act / NIST AI RMF / MITRE ATLAS / ISO 42001 / OWASP LLM Top 10 / CSA AI Controls，季度复测）；无密钥管理、外部锚、离线验证描述</td><td>话被说完了。我们的差异必须讲成「机制讲得清 + 非写方可验」，而不是「我们也记」</td></tr>
+    <tr><td>合规自动化</td><td>Vanta AI Governance（官方页原文：AI Inventory with agents, models, risk levels；MCP 与工具映射；"real-time feed of all your agents"）</td><td>中</td><td><strong>清单级证据，无逐调用运行时捕获</strong>（A 级：页面已读）</td><td>他们占「控制」，我们占「调用」——可以互不吞并，但也要防止被他们的 bundle 顺手覆盖</td></tr>
+    <tr><td>学术先例</td><td>Traccia（arXiv:2607.14309，2026-07-15，预印本）：在 OTel 之上追加防篡改指纹与 SHA-256 内容哈希，把 trace 映射到监管要求，证据导出为受哈希保护的单份 JSON</td><td>中（自述）</td><td>机制在论文里描述，但「开源」未核到、未经评审、非监管接受方法</td><td><strong>必须先承认</strong>的最近先例；「哈希链 + 条文映射」不是我们发明的</td></tr>
+    <tr><td>小厂群</td><td>一份治理厂商目录列出一批声称 Ed25519 签名、哈希链、离线可验的逐决定收据件（该目录 self-published）</td><td>高（声明）</td><td>全部无公开背书；该目录明写不含保险类证据要求</td><td>说明「这句话正在被很多人说」；我们的窗口是<strong>说清楚怎么验</strong>，不是说得更响</td></tr>
+  </table>
+  <p class="figsrc">图 3 · 声明强度 × 机制背书。<strong>右上角（高声明 + 可验机制）本轮一个都没核到</strong>——这既是空位，也是「空位可能不存在」的另一种解释：也许买方根本不验。</p>
+
+  <div class="callout warn-row">
+    <div class="t">资本侧对照：这个细分的拉力很小</div>
+    <p>最接近本件定位的纯玩法子 AgentOps.ai 只募到 <strong>$2.6M 预种子</strong>（新闻稿，无 Series A、无 ARR 披露）；
+      相邻观测件 Observe 是 $145M B 轮、Dash0 报 $110M B 轮估值 $1B；被点名为「agent 审计/标准/保险」方向的 AIUC 报 $40M A 轮（累计 $55M）——
+      <strong>但该条只到聚合号，未一手核实，v3 不据此下结论</strong>。
+      读法：资本愿意为「控制平面 + 服务」出钱，不太愿意为「被动的单件」出钱。这与 v2 的功能市场判断一致。</p>
+  </div>
+
+  <div class="callout danger-row">
+    <div class="t">熊案三条（v3 复核后仍然成立）</div>
+    <p><strong>① 记录已免费。</strong>LiteLLM、Langfuse 自托管、Arize Phoenix 单容器都能记；OTel GenAI 语义约定已被云厂商与主流编码 agent 采纳，
+      买家开箱就有标准格式遥测。<br>
+      <strong>② 没有 SOC 2 就进不了门。</strong>本件作者侧没有任何审计件，且这一门槛与法规无关、无法用产品能力绕过。<br>
+      <strong>③ 合规件是没人读的勾选框。</strong>支撑证据有两类：本件自己的双臂实验量不出增益；
+      以及一项针对 LLM 追踪平台的公开审计——Arize Phoenix 鉴权开关默认关闭，一支<strong>无凭据</strong>的团队对着暴露端口取回整套后端，
+      含系统提示词与 9 个仍有效的第三方凭据。<strong>如果连「记录」本身都不被保护，「更多记录」就不是买方在意的质量。</strong></p>
+  </div>
+</section>
+
+<section class="chapter pagebreak" id="ch5">
+  <div class="chap-kicker">05 · Evidence Inventory</div>
+  <h1><span class="num">05</span>本机证据现状：能证的与不能证的</h1>
+
+  <table class="tbl" id="fig4">
+    <tr><th>阶梯</th><th>含义</th><th>本件现状</th><th>凭据</th></tr>
+    <tr><td>L0</td><td>我记了</td><td><span class="tag tag-a">达成</span></td><td>每发 49 格落账；同进程 30 发每发正好 49 条</td></tr>
+    <tr><td>L1</td><td>记录没被改</td><td><span class="tag tag-a">部分达成</span></td><td>核链不符即拒写（退出码 2）；`resume` 读回先核链</td></tr>
+    <tr><td>L2</td><td>别人能验我没改</td><td><span class="tag tag-x">未达成</span></td><td>缺外部锚与非写方验证器（CT 那条路的教训：日志方不能自证清白）</td></tr>
+    <tr><td>L3</td><td>记录能改写决策</td><td><span class="tag tag-a">达成且能量</span></td><td><strong>唯一 KPI：账本触发过几次决定</strong> —— pgagent 实跑 KPI=4，反臂 `-read-back=false` 掉回 <strong>0</strong></td></tr>
+    <tr><td>L4</td><td>停止也能交账</td><td><span class="tag tag-a">机械达成</span></td><td>六态退出码；SIGINT 先交账；被打断=6；跨进程发号撞车 0</td></tr>
+    <tr><td>L5</td><td>用户实时看得见过程</td><td><span class="tag tag-x">Planned</span></td><td>事件层 E1–E9 只有计划与两张 DOT；今天的轨迹页是<strong>跑完才写</strong></td></tr>
+    <tr><td>L6</td><td>有人因此少损失一次</td><td><span class="tag tag-x">NOT_RUN</span></td><td>真人 0/1、试读 0/1、G0 访谈 0/10、LOI 0、付费 0</td></tr>
+  </table>
+  <p class="figsrc">图 4 · 证据阶梯。对外只可讲到 L1+L3+L4，且必须同框讲 L2/L5/L6 未完成——把 L1 讲成 L2 就是 §4 里 UiPath 那种「有声明无机制」。</p>
+
+  <h2>5.1 四条可复跑闸（v3 重新跑过，读数在盘）</h2>
+  <div class="metrics">
+    <div><div class="lab">内核快闸</div><div class="num">rc 0</div><div class="tiny">go run ./cmd/kcheck</div></div>
+    <div><div class="lab">宿主测试</div><div class="num">ok</div><div class="tiny">go test ./cmd/agentd/ -count=1</div></div>
+    <div><div class="lab">编程 Agent</div><div class="num">7 道全过</div><div class="tiny">KPI 4 ｜ 反臂 0 ｜ 22 形 ｜ 30 发×49 条</div></div>
+    <div><div class="lab">AgentHub</div><div class="num">8 行全过</div><div class="tiny">打印所跑 exe 的 sha16</div></div>
+  </div>
+  <p>另加本轮新建的两把尺子与一道话术闸（管架构件与对外措辞，不再管市场结论）：
+    <code>ANCHOR_RC=0</code>、<code>MODEL_RC=0</code>、<code>GATE_RC=0</code>，三者都带会红的臂。</p>
+
+  <div class="callout">
+    <div class="t">为什么这些读数不许被拿来当「价值证明」</div>
+    <p>它们证明的是<strong>机械正确 + 尺子会红</strong>。而双臂实验给出的恰好是<strong>负结果</strong>：带内核 vs 不带内核，
+      在盲测考卷上量不出增益（严格口径 FAIL）。§11 会说明为什么这个负结果在方法学上站得住、以及它给本件画出的<strong>销售边界</strong>：
+      我们只能主张「口径可核、停止可交账」，不能主张「用了就更准」。</p>
+  </div>
+</section>
+
+<section class="chapter pagebreak" id="ch6">
+  <div class="chap-kicker">06 · Five Routes</div>
+  <h1><span class="num">06</span>五条进入方式重评</h1>
+  <table class="tbl" id="fig5">
+    <tr><th>路</th><th>v2 结论</th><th>v3 证据下的位移</th><th>为什么</th></tr>
+    <tr><td>A 开源证据适配层</td><td>先行</td><td><strong>仍先行，但门槛上调</strong></td><td>记录层已商品化（OTel 语义约定 + LiteLLM 免费审计），A 路的价值必须落在<strong>口径与结算语义</strong>，不是落在「有件开源」</td></tr>
+    <tr><td>D 研究出版 / 标准参与</td><td>先行</td><td><strong>更值得先做</strong></td><td>Traccia 与《From Agent Traces to Trust》综述说明这是被学术命名的缺口；<strong>先例已存在 ⇒ 用出版确立位置，比用营销确立位置便宜且可信</strong>；OTel/MCP 生态里「采样 10%、无签名」正是我们的可讲差异</td></tr>
+    <tr><td>B 企业私有化</td><td>条件触发</td><td><strong>条件更硬</strong></td><td>买方门槛三件套里两件套本件不能单独供（SOC 2、不可逆存储配置）；私有化必须先解决「谁为完整性背书」= L2 未达成</td></tr>
+    <tr><td>C 托管按次</td><td>不做</td><td>不做（不变）</td><td>留存已被 Langfuse/ LangSmith 按档位与留存期计量，托管件打不过既有计量形态</td></tr>
+    <tr><td>E 竞赛 / 生态</td><td>可选</td><td>可选（不变，且已有一条关死）</td><td>参赛线因学籍硬门已放弃；生态位仍可选但不作为主路</td></tr>
+  </table>
+  <p class="figsrc">图 5 · 五路位移。<strong>唯一变动方向：把「产品叙事」往前挪的是出版与标准，不是销售。</strong></p>
+
+  <h2>6.1 排序结论（v3）</h2>
+  <p>D（出版/标准）与 A（开源适配层）先行，<strong>A 的卖点从「有账本」改成「有口径」</strong>；
+    B 条件触发，触发条件写成可核对的两条：拿到 L2 机制（外部锚或非写方验证器）+ 有客户书面要求逐调用可独立验证；
+    C 不做；E 可选。</p>
+</section>

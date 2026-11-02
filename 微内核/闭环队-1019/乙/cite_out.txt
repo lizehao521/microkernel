@@ -1,0 +1,65 @@
+=== META ===
+L1018 {"path":"C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl","lines":2941,"header":1,"entries":2940,"bad":0,"gate":0,"basisHist":{"1":2213,"2":188,"3":124,"4":60,"5":355},"shots":60}
+L8799 {"path":"C:\\Users\\Admin\\Desktop\\店面游戏\\账本-8799-第二次快照-included.jsonl","lines":491,"header":1,"entries":490,"bad":0,"gate":0,"basisHist":{"1":350,"2":20,"4":10,"5":110},"shots":10}
+total shots = 70 (L1018 60 + L8799 10)
+total entries = 3430
+
+=== per-cell (filled=basis!=5 && payload!="" ; absent=basis5 ; emptyStr=payload=="" ) ===
+model_input:call	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=10 abs=0 emp=0]	filled
+model_input:parts	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=10 abs=0 emp=0]	filled
+model_input:part_totals	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=10 abs=0 emp=0]	filled
+model_input:content_bytes	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=10 abs=0 emp=0]	filled
+model_input:tokens	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=0 abs=10 emp=0]	filled
+model_input:call_bytes_ceiling	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=10 abs=0 emp=0]	filled
+model_input:transport_slack_pct	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=10 abs=0 emp=0]	filled
+model_input:content_ceiling	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=10 abs=0 emp=0]	filled
+model_input:effective_ceiling	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=10 abs=0 emp=0]	filled
+model_input:clamp_rounds	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=10 abs=0 emp=0]	filled
+model_input:leftover_pct	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=10 abs=0 emp=0]	filled
+model_input:fixed_overhead	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=0 abs=10 emp=0]	filled
+model_input:shares	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=10 abs=0 emp=0]	filled
+model_input:notice_sent	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=10 abs=0 emp=0]	filled
+model_input:notice_trimmed	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=10 abs=0 emp=0]	filled
+model_input:notice_why	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=10 abs=0 emp=0]	filled
+model_input:notice_text	L1018[n=60 f=6 abs=0 emp=54]	L8799[n=10 f=6 abs=0 emp=4]	filled
+model_input:folded	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=10 abs=0 emp=0]	filled
+model_input:clipped	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=10 abs=0 emp=0]	filled
+model_input:dropped	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=10 abs=0 emp=0]	filled
+model_output:call	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=10 abs=0 emp=0]	filled
+model_output:streaming	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=10 abs=0 emp=0]	filled
+model_output:finish	L1018[n=60 f=34 abs=0 emp=26]	L8799[n=10 f=0 abs=0 emp=10]	filled
+model_output:finish_said	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=10 abs=0 emp=0]	filled
+model_output:endpoint_model	L1018[n=60 f=23 abs=0 emp=37]	L8799[n=10 f=0 abs=0 emp=10]	filled
+model_output:endpoint_model_said	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=10 abs=0 emp=0]	filled
+model_output:wire_format	L1018[n=60 f=34 abs=0 emp=26]	L8799[n=10 f=0 abs=0 emp=10]	filled
+model_output:wire_format_said	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=10 abs=0 emp=0]	filled
+model_output:model_says_bytes	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=10 abs=0 emp=0]	filled
+model_output:model_says_kept	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=10 abs=0 emp=0]	filled
+model_output:model_says_clipped	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=10 abs=0 emp=0]	filled
+model_output:model_says_sha256	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=10 abs=0 emp=0]	filled
+model_output:usage_in	L1018[n=60 f=34 abs=26 emp=0]	L8799[n=10 f=0 abs=10 emp=0]	filled
+model_output:usage_out	L1018[n=60 f=34 abs=26 emp=0]	L8799[n=10 f=0 abs=10 emp=0]	filled
+model_output:wire_bytes_out	L1018[n=60 f=36 abs=24 emp=0]	L8799[n=10 f=0 abs=10 emp=0]	filled
+model_output:wire_bytes_in	L1018[n=60 f=36 abs=24 emp=0]	L8799[n=10 f=0 abs=10 emp=0]	filled
+model_output:chunks	L1018[n=60 f=15 abs=45 emp=0]	L8799[n=10 f=0 abs=10 emp=0]	filled
+model_output:first_byte_ms	L1018[n=60 f=15 abs=45 emp=0]	L8799[n=10 f=0 abs=10 emp=0]	filled
+model_output:max_gap_ms	L1018[n=60 f=15 abs=45 emp=0]	L8799[n=10 f=0 abs=10 emp=0]	filled
+model_output:tool_calls	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=10 abs=0 emp=0]	filled
+model_output:malformed_actions	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=10 abs=0 emp=0]	filled
+model_output:malformed_streak	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=10 abs=0 emp=0]	filled
+model_output:fail_kind	L1018[n=60 f=0 abs=0 emp=60]	L8799[n=10 f=1 abs=0 emp=9]	filled
+model_output:fail_detail	L1018[n=60 f=0 abs=0 emp=60]	L8799[n=10 f=1 abs=0 emp=9]	filled
+model_output:fail_status	L1018[n=60 f=0 abs=60 emp=0]	L8799[n=10 f=0 abs=10 emp=0]	NEVER_FILLED
+model_output:retry_after_ms	L1018[n=60 f=0 abs=60 emp=0]	L8799[n=10 f=0 abs=10 emp=0]	NEVER_FILLED
+model_output:downgrade	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=10 abs=0 emp=0]	filled
+model_output:sent	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=10 abs=0 emp=0]	filled
+model_output:cost_countable	L1018[n=60 f=60 abs=0 emp=0]	L8799[n=10 f=10 abs=0 emp=0]	filled
+
+=== NEVER FILLED in BOTH ledgers ===
+model_output:fail_status
+   L1018: 60 entries all absent=60 (seq 45,94,143)
+   L8799: 10 entries all absent=10 (seq 45,94,143)
+model_output:retry_after_ms
+   L1018: 60 entries all absent=60 (seq 46,95,144)
+   L8799: 10 entries all absent=10 (seq 46,95,144)
+count never-filled = 2 / 49

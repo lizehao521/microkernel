@@ -1,0 +1,4 @@
+http://127.0.0.1:64347/
+BOOT e3c700 VERSION 0.1.0
+started_at 2026-10-26T06:41:38+08:00
+state unconfigured

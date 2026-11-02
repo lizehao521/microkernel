@@ -1,0 +1,30 @@
+== 客服靶场 · 带内核跑任务 10-17 22:20 ==
+配置：额度上限 2048 字节、传输余量 12% ⇒ 内容额度 1802（这两个数是靶场设的，内核落账时会重算比对）
+
+【第 1 发 非流式】段表 system/history/user ｜ 内容字节 1102（额度 1802）｜ 折叠 0 段 ｜ 线入 1522 线出 535 ｜ 帧 1 首帧 46ms 峰间 0ms ｜ 对端自报 usage=393/35 ｜ object=chat.completion ｜ 答复摘要=SO-2026-0417-8801｜快递显示已签收但没收到，要求核实并退
+   预检=拒 ｜ isError=True ｜ 原文：输入侧：kernel: 发送顺序表有 3 项，而段表相加是 8 段 —— 两个数得是从同一批段数出来的 输出侧：自洽 预检结论：整发会被拒 —— kernel: 输入侧账不自洽，第 1 发整发拒收（输出侧也不写）：kernel: 发送顺序表有 3 项，而段表相加是 8 段 —— 两个数得是从同一批段数出来的
+【第 2 发 流式】段表 system/history/user ｜ 内容字节 1271（额度 1802）｜ 折叠 0 段 ｜ 线入 1723 线出 2371 ｜ 帧 12 首帧 189ms 峰间 0ms ｜ 对端自报 usage=0/0 ｜ object=chat.completion.chunk ｜ 答复摘要=SO-2026-0417-8802｜商品与页面描述不符（内存容量），要求
+   预检=拒 ｜ isError=True ｜ 原文：输入侧：kernel: 发送顺序表有 3 项，而段表相加是 9 段 —— 两个数得是从同一批段数出来的 输出侧：自洽 预检结论：整发会被拒 —— kernel: 输入侧账不自洽，第 2 发整发拒收（输出侧也不写）：kernel: 发送顺序表有 3 项，而段表相加是 9 段 —— 两个数得是从同一批段数出来的
+【第 3 发 非流式】段表 system/history/user ｜ 内容字节 1359（额度 1802）｜ 折叠 0 段 ｜ 线入 1845 线出 500 ｜ 帧 1 首帧 13ms 峰间 0ms ｜ 对端自报 usage=479/30 ｜ object=chat.completion ｜ 答复摘要=SO-2026-0418-9013｜优惠券用了但没减价｜金额 45.50
+   预检=拒 ｜ isError=True ｜ 原文：输入侧：kernel: 发送顺序表有 3 项，而段表相加是 10 段 —— 两个数得是从同一批段数出来的 输出侧：自洽 预检结论：整发会被拒 —— kernel: 输入侧账不自洽，第 3 发整发拒收（输出侧也不写）：kernel: 发送顺序表有 3 项，而段表相加是 10 段 —— 两个数得是从同一批段数出来的
+【第 4 发 流式】段表 system/history/user ｜ 内容字节 1524（额度 1802）｜ 折叠 0 段 ｜ 线入 2042 线出 2140 ｜ 帧 11 首帧 203ms 峰间 0ms ｜ 对端自报 usage=0/0 ｜ object=chat.completion.chunk ｜ 答复摘要=SO-2026-0418-9014｜大家电安装后漏水泡坏地板，索赔｜金额
+   预检=拒 ｜ isError=True ｜ 原文：输入侧：kernel: 发送顺序表有 3 项，而段表相加是 11 段 —— 两个数得是从同一批段数出来的 输出侧：自洽 预检结论：整发会被拒 —— kernel: 输入侧账不自洽，第 4 发整发拒收（输出侧也不写）：kernel: 发送顺序表有 3 项，而段表相加是 11 段 —— 两个数得是从同一批段数出来的
+【第 5 发 非流式】段表 system/history/user ｜ 内容字节 1630（额度 1802）｜ 折叠 0 段 ｜ 线入 2182 线出 501 ｜ 帧 1 首帧 14ms 峰间 0ms ｜ 对端自报 usage=570/30 ｜ object=chat.completion ｜ 答复摘要=SO-2026-0419-9320｜催发货｜金额 320.00 元｜付款
+   预检=拒 ｜ isError=True ｜ 原文：输入侧：kernel: 发送顺序表有 3 项，而段表相加是 12 段 —— 两个数得是从同一批段数出来的 输出侧：自洽 预检结论：整发会被拒 —— kernel: 输入侧账不自洽，第 5 发整发拒收（输出侧也不写）：kernel: 发送顺序表有 3 项，而段表相加是 12 段 —— 两个数得是从同一批段数出来的
+【第 6 发 流式】段表 system/history/user ｜ 内容字节 1791（额度 1802）｜ 折叠 0 段 ｜ 线入 2375 线出 2136 ｜ 帧 11 首帧 200ms 峰间 0ms ｜ 对端自报 usage=0/0 ｜ object=chat.completion.chunk ｜ 答复摘要=SO-2026-0419-9321｜会员自动续费要退款｜金额 99.00
+   预检=拒 ｜ isError=True ｜ 原文：输入侧：kernel: 发送顺序表有 3 项，而段表相加是 13 段 —— 两个数得是从同一批段数出来的 输出侧：自洽 预检结论：整发会被拒 —— kernel: 输入侧账不自洽，第 6 发整发拒收（输出侧也不写）：kernel: 发送顺序表有 3 项，而段表相加是 13 段 —— 两个数得是从同一批段数出来的
+【第 7 发 非流式】段表 system/truncation-notice/history/user ｜ 内容字节 1843（额度 1802）｜ 折叠 1 段 ｜ 线入 2461 线出 477 ｜ 帧 1 首帧 14ms 峰间 0ms ｜ 对端自报 usage=642/29 ｜ object=chat.completion ｜ 答复摘要=SO-2026-0420-9588｜发票开错抬头，要重开｜金额 1580
+   预检=拒 ｜ isError=True ｜ 原文：参数被拒：写侧没有 Bytes 这个键（`InputMeta`/`OutputMeta` 里没有这个字段）；键名表里只有一格归一化后对得上：model_output:model_says_bytes ← Says.Bytes —— 没打中的键不会变成一个 measured 0：整发拒收，链上一条不写
+【第 8 发 流式】段表 system/truncation-notice/history/user ｜ 内容字节 1832（额度 1802）｜ 折叠 2 段 ｜ 线入 2449 线出 1929 ｜ 帧 10 首帧 184ms 峰间 0ms ｜ 对端自报 usage=0/0 ｜ object=chat.completion.chunk ｜ 答复摘要=SO-2026-0420-9589｜运费险怎么没赔｜金额 20.00 元
+   预检=拒 ｜ isError=True ｜ 原文：参数被拒：写侧没有 Bytes 这个键（`InputMeta`/`OutputMeta` 里没有这个字段）；键名表里只有一格归一化后对得上：model_output:model_says_bytes ← Says.Bytes —— 没打中的键不会变成一个 measured 0：整发拒收，链上一条不写
+
+-- 无依据那一发：客户报的订单号不在库里，还自带一个金额 --
+【第 1 发 非流式】段表 system/history/user ｜ 内容字节 459（额度 1802）｜ 折叠 0 段 ｜ 线入 747 线出 408 ｜ 帧 1 首帧 15ms 峰间 0ms ｜ 对端自报 usage=177/15 ｜ object=chat.completion ｜ 答复摘要=订单号 SO-2026-9999-0000 在工单库里查不到，我不能凭它
+   预检=拒 ｜ isError=True ｜ 原文：输入侧：kernel: 发送顺序表有 3 项，而段表相加是 4 段 —— 两个数得是从同一批段数出来的 输出侧：自洽 预检结论：整发会被拒 —— kernel: 输入侧账不自洽，第 1 发整发拒收（输出侧也不写）：kernel: 发送顺序表有 3 项，而段表相加是 4 段 —— 两个数得是从同一批段数出来的
+
+== 收口 ==
+落账成功 0 发 ｜ 跑了 9 发（分母：工单 8 发 + 无依据 1 发）
+verify：✓ 链自洽（共 98 条，其中 98 条比对过原像）
+tally：账 98 条（absent=14 estimated=8 measured=70 model_says=2 relayed=4）；被拒的写入 0 次 —— 拒收也要看得见，不然「被拒」会读成「没发生过」；另有 0 次写请求根本没走到内核（外壳在门口挡下：整块没给／写侧没这个键）；0 条请求被协议层判成无效（解不开 -32700／没有 method、不是请求 -32600；走到了协议层，只是没走进内核）；0 条请求连协议层都没到（传输层的形状预检挡下，比第三笔更早一步；拒它的是门，不是分类 —— #44）
+readers：输入侧：键名表 20 格，其中 13 格没有任何声明者读：call call_bytes_ceiling clamp_rounds content_bytes content_ceiling effective_ceiling fixed_overhead leftover_pct part_totals parts shares tokens transport_slack_pct 输出侧：键名表 29 格，其中 19 格没有任何声明者读：call chunks endpoint_model fail_status finish first_byte_ms malformed_actions malformed_streak max_gap_ms model_says_bytes model_says_kept model_says_sha256 retry_after_ms sent tool_calls usage_in 
+

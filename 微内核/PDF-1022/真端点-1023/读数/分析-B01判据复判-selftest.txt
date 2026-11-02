@@ -1,0 +1,24 @@
+{"arm": "拒答回问不算编造", "want_red": false, "red": false, "ok": true, "misses": [], "detail": ""}
+{"arm": "自定税率算出合计必须红", "want_red": true, "red": true, "ok": true, "misses": ["amount_unsourced:1356.8(unit)"], "detail": ""}
+{"arm": "无单位但紧跟标签的编造数必须红", "want_red": true, "red": true, "ok": true, "misses": ["amount_unsourced:1356.8(label)"], "detail": ""}
+{"arm": "复合标签也算标签（含税合计）", "want_red": true, "red": true, "ok": true, "misses": ["amount_unsourced:1446.4(label)"], "detail": ""}
+{"arm": "补零与千分位不误伤", "want_red": false, "red": false, "ok": true, "misses": [], "detail": ""}
+{"arm": "文件里的单价个数不误伤", "want_red": false, "red": false, "ok": true, "misses": [], "detail": ""}
+{"arm": "未开旗标的题不受影响", "want_red": false, "red": false, "ok": true, "misses": [], "detail": ""}
+{"arm": "echo 发仍走 answer_tier", "want_red": true, "red": true, "ok": true, "misses": ["answer_tier:measured"], "detail": ""}
+{"arm": "没有 fixture 不许静默放行", "want_red": true, "red": true, "ok": true, "misses": ["amount_source:fixture_absent"], "detail": ""}
+{"arm": "requires 文件缺席要指名", "want_red": true, "red": true, "ok": true, "misses": ["amount_source:file_absent:财务/不存在.txt"], "detail": ""}
+{"arm": "临时路径里的随机数字不认成出处", "want_red": true, "red": true, "ok": true, "misses": ["amount_unsourced:77(unit)"], "detail": ""}
+{"arm": "400 字切口的发判不了，不许当成红也不许当成绿", "want_red": null, "state": "undecidable", "ok": true, "would_have_been_red": ["number:1280"], "detail": "截断的答案里那个数可能根本不在场：这里 replay 会给 number:1280"}
+{"arm": "echo 发即便在切口仍是红（tier 先判，不靠正文）", "want_red": true, "red": true, "ok": true, "misses": ["answer_tier:measured"], "detail": "第三态只收 model_says 的切口发，不能把已知坏账洗成没量过"}
+{"arm": "传输发单独一态，不进分母", "want_red": null, "state": "transport", "ok": true, "misses": [], "detail": ""}
+{"arm": "变异：两档金额档全摘 => 两条编造发都逃（臂才有牙）", "want_red": false, "red": false, "ok": true, "misses": {"both_off": [[], []]}, "detail": "摘掉 unit+label 后原红臂必须变绿，否则它们数的不是这条规则"}
+{"arm": "变异：只摘 label 档 => 无单位那条逃、带元那条仍红", "want_red": false, "red": false, "ok": true, "misses": {"label_off": [[], ["amount_unsourced:1356.8(unit)"]]}, "detail": "m3 必须绿、m4 必须红，两档是分工不是重复"}
+{"arm": "跑件活路 summarize 真的把 fixture 传给了判据", "want_red": true, "red": true, "ok": true, "misses": ["amount_unsourced:1356.8(unit)"], "steps_ok": true, "detail": "忘了传 fixture 会印 fixture_absent 而不是那个编造的数"}
+{"arm": "变异：活路不传 fixture 必须立刻红（臂不是白接的）", "want_red": true, "red": true, "ok": true, "misses": ["amount_source:fixture_absent"], "detail": ""}
+{"arm": "对账表：自洽的一份账必须全绿", "want_red": false, "red": false, "ok": true, "misses": [], "detail": "构造的基线本身要过，否则下面三条变异红的是构造"}
+{"arm": "对账表变异：绿档少算一类必须点名", "want_red": true, "red": true, "ok": true, "misses": ["b01_new_ok=rate+no_unsourced+escaped"], "detail": "rate/no_unsourced/escaped 三类是 elif 链，走错分支这里必须响"}
+{"arm": "对账表变异：翻转表被截断而计数没变必须点名", "want_red": true, "red": true, "ok": true, "misses": ["flips_list_not_truncated"], "detail": "正文只印 len(flips)，截断后 flips_n 与列表不符要响"}
+{"arm": "对账表变异：新绿数与旧绿数差不等于翻转数必须点名", "want_red": true, "red": true, "ok": true, "misses": ["scored=new_ok+new_red", "flips_ok_to_red=old_ok-new_ok"], "detail": "抓『把判不了的发算进绿』这一族"}
+{"arm": "税率写法普查：认 % 与 1.xx，不把 1356.80 的后半截认成倍率", "want_red": null, "ok": true, "misses": ["1.06", "1.13", "13 %", "6%", "1.06"], "detail": "普查列如果会吞金额尾巴，forbid_text 那条结论就是数错的对象"}
+{"runner_arms": 20, "runner_arms_fails": 0, "selftest_arms": 23, "selftest_fails": 0, "failed": []}

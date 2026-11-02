@@ -1,0 +1,133 @@
+{
+  "breakpoints": [
+    {
+      "cols": 1,
+      "expect_cols": 1,
+      "overflow_px": 0,
+      "pane_widths": [
+        321,
+        321,
+        321
+      ],
+      "width": 360
+    },
+    {
+      "cols": 2,
+      "expect_cols": 2,
+      "overflow_px": 0,
+      "pane_widths": [
+        358,
+        358,
+        729
+      ],
+      "width": 768
+    },
+    {
+      "cols": 2,
+      "expect_cols": 2,
+      "overflow_px": 0,
+      "pane_widths": [
+        486,
+        486,
+        985
+      ],
+      "width": 1024
+    },
+    {
+      "cols": 3,
+      "expect_cols": 3,
+      "overflow_px": 0,
+      "pane_widths": [
+        466,
+        355,
+        555
+      ],
+      "width": 1440
+    }
+  ],
+  "contrast": [
+    {
+      "ratio": 6.63,
+      "sel": ".b.m",
+      "size_px": "11px"
+    },
+    {
+      "ratio": 4.9,
+      "sel": ".b.e",
+      "size_px": "11px"
+    },
+    {
+      "ratio": 8.86,
+      "sel": ".b.s",
+      "size_px": "11px"
+    },
+    {
+      "ratio": 7.38,
+      "sel": ".b.r",
+      "size_px": "11px"
+    },
+    {
+      "ratio": 6.9,
+      "sel": ".b.a",
+      "size_px": "11px"
+    },
+    {
+      "ratio": 5.84,
+      "sel": ".dim",
+      "size_px": "13px"
+    },
+    {
+      "ratio": 5.84,
+      "sel": ".note",
+      "size_px": "12px"
+    },
+    {
+      "ratio": 16.59,
+      "sel": "h1",
+      "size_px": "19px"
+    }
+  ],
+  "failures": [
+    "聚焦后 outline 看不见：none 2.66667px"
+  ],
+  "focus": {
+    "document_active": true,
+    "matches_focus_visible": false,
+    "outline_color": "rgb(255, 255, 255)",
+    "outline_style": "none",
+    "outline_width": "2.66667px"
+  },
+  "headings": [
+    "H1",
+    "H2",
+    "H2",
+    "H2",
+    "H3",
+    "H3",
+    "H3",
+    "H3"
+  ],
+  "names": [
+    {
+      "id": "lang",
+      "name_len": 2,
+      "tag": "SELECT"
+    },
+    {
+      "id": "code",
+      "name_len": 26,
+      "tag": "TEXTAREA"
+    },
+    {
+      "id": "stack",
+      "name_len": 52,
+      "tag": "TEXTAREA"
+    },
+    {
+      "id": "q",
+      "name_len": 2,
+      "tag": "INPUT"
+    }
+  ],
+  "summary": "断点 4 · 对比度 8 · 可及名 4 · 标题 8 · 不达标 1"
+}

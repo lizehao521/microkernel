@@ -1,0 +1,419 @@
+import os, re, shutil, subprocess, sys, io
+
+GO, SRC, WORK, OUT = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
+
+MUT = [
+    ("m13b-份额超过100也放行", "input.go",
+     [('if sum > 100 {\n\t\treturn Budget{}, fmt.Errorf("kernel: %d 类段的份额相加是 %d，超过 100',
+       'if false && sum > 100 {\n\t\treturn Budget{}, fmt.Errorf("kernel: %d 类段的份额相加是 %d，超过 100')],
+     ["TestDeriveBudgetIsTheOnlyOwnerOfTheFormula"]),
+    ("m20-预算公式不复核", "input.go",
+     [("/ 100; b.ContentCeiling != want {", "/ 100; b.ContentCeiling != b.ContentCeiling {")],
+     ["TestHandBuiltBudgetIsRefused"]),
+    ("m21-回夹不必真收小", "input.go",
+     [("if effective >= b.EffectiveCeiling {", "if false && effective >= b.EffectiveCeiling {")],
+     ["TestClampMustActuallyShrink"]),
+    ("m22-协议也允许裁", "input.go",
+     [("case KindObserved, KindHistory, KindMemory, KindUser, KindNotice:",
+       "case KindObserved, KindHistory, KindMemory, KindUser, KindNotice, KindSystem, KindSkill, KindToolSpec:")],
+     ["TestOnlySystemIsWholeOrNothing"]),
+    ("m23-token白名单变黑名单", "output.go",
+     [("if !m.Absent && m.Basis != BasisRelayed {", "if false && !m.Absent && m.Basis != BasisRelayed {")],
+     ["TestUsageIsRelayedNotMeasured", "TestTokenTotalOnlySumsTokens"]),
+    ("m24-没数到冒充没发出去", "output.go",
+     [("return SentUnknown", "return SentNothing")],
+     ["TestSentIsThreeState"]),
+    ("m25-两个字节量又共用一个键名", "cells.go",
+     [('cell("content_bytes", "ContentBytes"', 'cell("part_totals", "ContentBytes"')],
+     ["TestPartBytesMustSumToContentBytes", "TestCallNumberStartsAtOne"]),
+    ("m26-拼错的读者声明也收", "cells.go",
+     [("if !found {", "if false && !found {")],
+     ["TestUnreadCellsAreCountedAgainstADenominator"]),
+    ("m27-框架模块前缀不匹配", "isolate.go",
+     [('if path == m || strings.HasPrefix(path, m+"/") {', 'if false && (path == m || strings.HasPrefix(path, m+"/")) {')],
+     ["TestIsolationGoesRedOnALeak", "TestClassifyImportEdgeShapes"]),
+    ("m28-cgo算成标准库", "isolate.go",
+     [('if path == "C" {', 'if false && path == "C" {')],
+     ["TestCgoIsNotCountedAsStdlib", "TestClassifyImportEdgeShapes"]),
+    ("m29-不扫子目录", "isolate.go",
+     [("if d.IsDir() {\n\t\t\treturn nil\n\t\t}", "if d.IsDir() {\n\t\t\treturn filepath.SkipDir\n\t\t}")],
+     ["TestSubdirectoriesAreScanned", "TestSelfIsolation"]),
+    ("m30-裁剪表与段表不互核", "input.go",
+     [("if k := kept[p.Kind]; k > p.Bytes {", "if k := kept[p.Kind]; false && k > p.Bytes {")],
+     ["TestCutsCannotOutliveTheirPartRow"]),
+    ("m31-通知说了却没正文也放行", "input.go",
+     [('if m.Notice.Sent && strings.TrimSpace(m.Notice.Text) == "" {',
+       'if false && m.Notice.Sent && strings.TrimSpace(m.Notice.Text) == "" {')],
+     ["TestNoticeCannotContradictItself"]),
+    ("m32-顺序表与段表个数不互核", "input.go",
+     [("if ordered[p.Kind] != p.Parts {", "if false && ordered[p.Kind] != p.Parts {")],
+     ["TestOrderMustMatchPartCounts"]),
+    ("m33-故障说法带空白也放行", "output.go",
+     [("if strings.TrimSpace(f.Detail) != f.Detail {", "if false && strings.TrimSpace(f.Detail) != f.Detail {")],
+     ["TestFailureNeedsADetailAndOnlyHTTPCarriesAStatus"]),
+    ("m34-对非流式也建议换非流式", "output.go",
+     [("if m.Failure.Downgrade && !m.Streaming {", "if false && m.Failure.Downgrade && !m.Streaming {")],
+     ["TestRetrySameAndDowngradeAreTwoQuestions"]),
+    ("m35-模型id自相矛盾也放行", "output.go",
+     [('if m.ModelSaid != (m.Model != "") {', 'if false && m.ModelSaid != (m.Model != "") {')],
+     ["TestSaidVersusEmptyString"]),
+    ("m36-连歪计数与这一发不互核", "output.go",
+     [("if m.Malformed == 0 && m.MalformedStreak != 0 {", "if false && m.Malformed == 0 && m.MalformedStreak != 0 {")],
+     ["TestMalformedCountAndStreakAreTwoQuantities"]),
+    ("m38-说话人不核", "input.go",
+     [("if !c.Role.Known() {", "if false && !c.Role.Known() {")],
+     ["TestCutNeedsRefRoleAndAFullFingerprint"]),
+    ("m39-指纹只在一侧被守", "input.go",
+     [("if len(s) != 64 {", "if false && len(s) != 64 {")],
+     ["TestCutNeedsRefRoleAndAFullFingerprint", "TestSaysFingerprintAndKeptBytes"]),
+    ("m40-空段表也放行", "input.go",
+     [("if len(m.Parts) == 0 {", "if false && len(m.Parts) == 0 {")],
+     ["TestEmptyPartsOrOrderIsRefused"]),
+    ("m41-认不出模块名也静默放过", "isolate.go",
+     [('if selfModule == "" {', 'if false && selfModule == "" {')],
+     ["TestMissingToolchainIsReportedNotFaked"]),
+    ("m42-生效额度可以大于公式额度", "input.go",
+     [("if b.EffectiveCeiling > b.ContentCeiling {", "if false && b.EffectiveCeiling > b.ContentCeiling {")],
+     ["TestHandBuiltBudgetIsRefused"]),
+    ("m18b-份额那一格不排序", "input.go",
+     [("\tsort.Strings(out)\n\treturn out\n}", "\tsort.Slice(out, func(i, j int) bool { return false })\n\treturn out\n}")],
+     ["TestCellOrderIsStable"]),
+    ("m43-反函数取整方向写反", "input.go",
+     [("return (content*100 + int64(99-b.TransportSlackPct)) / int64(100-b.TransportSlackPct), nil",
+       "return content*100 / int64(100-b.TransportSlackPct), nil")],
+     ["TestObservationShareAndItsReverseAgree"]),
+    ("m44-空键名表也算过", "cells.go",
+     [("func CheckCells(side string, v any, cells []Cell) error {\n\tif len(cells) == 0 {",
+       "func CheckCells(side string, v any, cells []Cell) error {\n\tif false && len(cells) == 0 {")],
+     ["TestCellCountCarriesADenominator"]),
+    ("m45-派生格不必写成方法", "cells.go",
+     [('if strings.HasSuffix(path, "()") {', 'if false && strings.HasSuffix(path, "()") {')],
+     ["TestDerivedCellMustBeWrittenAsAMethod"]),
+    ("m46-不可信却不是缺席也放行", "measure.go",
+     [("if m.Refused {\n\t\treturn fmt.Errorf", "if false && m.Refused {\n\t\treturn fmt.Errorf")],
+     ["TestRefusedAndAbsentCannotImpersonateEachOther"]),
+    ("m47-不可信渲染成没量到", "measure.go",
+     [("\t\tif m.Refused {\n\t\t\ts =", "\t\tif false && m.Refused {\n\t\t\ts =")],
+     ["TestDistrustedKeepsTheNumberItRefused"]),
+    ("m48-分档表漏一档也不报", "input.go",
+     [("if _, ok := seen[s]; !ok {", "if _, ok := seen[s]; false && !ok {")],
+     ["TestCutListsTableCanBeCaughtBeingWrong"]),
+    ("m49-空回话算正常收尾", "output.go",
+     [("if m.Says.Bytes == 0 && m.ToolCalls == 0 && m.Failure.Kind == FailNone {",
+       "if false && m.Says.Bytes == 0 && m.ToolCalls == 0 && m.Failure.Kind == FailNone {")],
+     ["TestEmptyReplyIsNotANormalFinish"]),
+    ("m51-空顺序表也放行", "input.go",
+     [("if len(m.Order) == 0 {", "if false && len(m.Order) == 0 {")],
+     ["TestEmptyPartsOrOrderIsRefused"]),
+    ("m52-预算挡下可以没数到", "output.go",
+     [("if m.WireBytesOut.Absent {", "if false && m.WireBytesOut.Absent {")],
+     ["TestSentIsThreeState"]),
+    # —— 本轮 M3 新增：record.go / kernel.go 那一层（元数据到账本的接线），此前一根针都没有 ——
+    # 规矩1：plan 用 checkRecord 先过一遍（守「plan 放过的 commit 一定收」）
+    ("m53-plan不再用账本判据先过一遍", "record.go",
+     [("\t\tif err := checkRecord(rec); err != nil {", "\t\tif err := checkRecord(rec); false && err != nil {")],
+     ["TestPlanRefusesWhatAppendWouldRefuse"]),
+    # 规矩2：alreadyRecorded —— 同一发同一侧只许记一次
+    ("m54-同一发同一侧可以记两遍", "record.go",
+     [("\tif l.alreadyRecorded(session, step, kind) {", "\tif false && l.alreadyRecorded(session, step, kind) {")],
+     ["TestSameCallCannotBeRecordedTwice", "TestNoHalfCallEvenWhenTranslationFailsLate"]),
+    # 规矩3：RecordCall 两侧都 Check 过才动手（输入侧坏 ⇒ 输出侧也不写）
+    ("m55-RecordCall不先核输入侧", "record.go",
+     [("\tif err := in.Check(); err != nil {", "\tif err := in.Check(); false && err != nil {")],
+     ["TestRecordCallNeverLeavesHalfACallOnTheLedger"]),
+    # 规矩4：RecordCall 两侧发号必须一致
+    ("m56-两侧发号对不上也收", "record.go",
+     [("\tif in.Call != out.Call {", "\tif false && in.Call != out.Call {")],
+     ["TestRecordCallNeverLeavesHalfACallOnTheLedger"]),
+    # 规矩5：claimOf 对空字符串不交出空串（emptyClaim）
+    ("m57-claimOf把空串原样交回", "record.go",
+     [("\t\tif x == \"\" {", "\t\tif false && x == \"\" {")],
+     ["TestClaimOfNeverHandsBackAnEmptySentence", "TestClaimsReadBackAsSentencesComputedFromTheFixture"]),
+    # 规矩6：basisOf 把缺席的 Measure 翻译成 BasisAbsent（不是 0、不是 Unset）
+    ("m58-缺席不翻成absent档", "record.go",
+     [("\t\t\treturn BasisAbsent, m.String(), nil", "\t\t\treturn BasisMeasured, m.String(), nil")],
+     ["TestBasisOfRefusesEveryShapeOfBasisLying", "TestAbsentCellsLandOnTheLedgerAsAbsentNotZero", "TestTallyCountsRecordedAbsencesIntoTheAbsentBucket"]),
+    # 规矩7：AbsentKeys 只挑 BasisAbsent 那一档
+    ("m59-AbsentKeys不只挑absent档", "record.go",
+     [("\tfor _, c := range CellsOf(docs, step, kind) {\n\t\tif c.Basis == BasisAbsent {",
+       "\tfor _, c := range CellsOf(docs, step, kind) {\n\t\tif c.Basis != BasisAbsent {")],
+     ["TestAbsentCellsLandOnTheLedgerAsAbsentNotZero"]),
+    # 规矩8：CellsOf 按 step + <kind>: 前缀过滤（不串发、不串侧）
+    ("m60-CellsOf不按发与侧过滤", "record.go",
+     [("\t\tif e.Step != step || !strings.HasPrefix(e.Kind, prefix) {",
+       "\t\tif false && (e.Step != step || !strings.HasPrefix(e.Kind, prefix)) {")],
+     ["TestCellsOfReadsBackOneCallOneSideOnly"]),
+    # 规矩10：checkRecord 里「actor 与 kind 不能空」
+    ("m62-checkRecord不要求actor与kind", "kernel.go",
+     [("\tif r.Actor == \"\" || r.Kind == \"\" {", "\tif false && (r.Actor == \"\" || r.Kind == \"\") {")],
+     ["TestPlanRefusesWhatAppendWouldRefuse"]),
+    # 规矩11：commit 逐条落账并返回真条数（中途失败时那个 n 也必须是真的）
+    ("m63-commit中途失败时条数报假", "record.go",
+     [("\t\tif _, err := l.Append(r); err != nil {\n\t\t\treturn n, err\n\t\t}",
+       "\t\tif _, err := l.Append(r); err != nil {\n\t\t\treturn 0, err\n\t\t}")],
+     ["TestCommitAcceptsEveryShapePlanTranslates"]),
+    # 额外：RecordInput 门口那道 Check（坏输入整发拒收、拒收有数）
+    ("m64-RecordInput不Check就记账", "record.go",
+     [("\tif err := m.Check(); err != nil {\n\t\tl.countRejected++\n\t\treturn 0, fmt.Errorf(\"kernel: 输入侧账不自洽，第 %d 发整发拒收：%v\", m.Call, err)",
+       "\tif err := m.Check(); false && err != nil {\n\t\tl.countRejected++\n\t\treturn 0, fmt.Errorf(\"kernel: 输入侧账不自洽，第 %d 发整发拒收：%v\", m.Call, err)")],
+     ["TestBrokenInputIsRefusedWholeAndCounted", "TestUnserializableCellIsRefusedAndCounted"]),
+    # 额外：plan 的空键名表那一支（直接喂 plan，绕开 CheckCells）
+    ("m65-plan收空键名表", "record.go",
+     [("\tif len(cells) == 0 {", "\tif false && len(cells) == 0 {")],
+     ["TestPlanRefusesAnEmptyCellList"]),
+    # 额外：RecordCall 的次序 —— 两侧全部翻译完才落账（改成边翻译边写就留半发）
+    ("m66-RecordCall边翻译边落账留半发", "record.go",
+     [("\toutRecs, err := l.plan(session, actor, out.Call, KindModelOutput, out.Cells())\n\tif err != nil {\n\t\tl.countRejected++\n\t\treturn 0, err\n\t}\n\tn, err := l.commit(inRecs)\n\tif err != nil {\n\t\treturn n, err\n\t}\n\tm, err := l.commit(outRecs)\n\treturn n + m, err",
+       "\tn, err := l.commit(inRecs)\n\tif err != nil {\n\t\treturn n, err\n\t}\n\toutRecs, err := l.plan(session, actor, out.Call, KindModelOutput, out.Cells())\n\tif err != nil {\n\t\tl.countRejected++\n\t\treturn n, err\n\t}\n\tm, err := l.commit(outRecs)\n\treturn n + m, err")],
+     ["TestNoHalfCallEvenWhenTranslationFailsLate"]),
+    # 额外：basisOf「值是缺席、格子却带着出处」那一支
+    ("m67-缺席值带出处也收", "record.go",
+     [("\t\t\tif c.Basis != BasisUnset {", "\t\t\tif false && c.Basis != BasisUnset {")],
+     ["TestBasisOfRefusesEveryShapeOfBasisLying"]),
+    # 额外：basisOf「只有三态量能报缺席」那一支
+    ("m68-非三态的值也能报缺席", "record.go",
+     [("\tif c.Basis == BasisAbsent {\n\t\treturn BasisUnset, \"\", fmt.Errorf(\"只有三态量能报缺席",
+       "\tif false && c.Basis == BasisAbsent {\n\t\treturn BasisUnset, \"\", fmt.Errorf(\"只有三态量能报缺席")],
+     ["TestBasisOfRefusesEveryShapeOfBasisLying"]),
+    # —— kcheck 闸门针：跑 go run ./cmd/kcheck，要求退出码非 0（gate=True、wants 空）——
+    # 这些判定 go test 覆盖不到：go test 从不手搭一条 BasisAbsent+空 Claim 的 Record，
+    # 也从不直接读 Basis.Decidable()（只经 Measure.Decidable，而它对 Absent 短路）。
+    # g1 守 kcheck 6.2「缺席必须带理由」
+    ("g1-缺席无理由账本也收", "kernel.go",
+     [("\tif r.Basis == BasisAbsent && strings.TrimSpace(r.Claim) == \"\" {",
+       "\tif false && r.Basis == BasisAbsent && strings.TrimSpace(r.Claim) == \"\" {")],
+     [], True),
+    # g2 守 kcheck 6.3「哪几种出处必须带来源」（把 estimated 从名单里去掉）
+    ("g2-必须带来源的名单少一档", "measure.go",
+     [("func needsSource(b Basis) bool { return b == BasisRelayed || b == BasisEstimated }",
+       "func needsSource(b Basis) bool { return b == BasisRelayed }")],
+     [], True),
+    # g3 守 kcheck 6.4「basis=absent 不可判定」
+    ("g3-absent档也能拿去做判定", "kernel.go",
+     [("func (b Basis) Decidable() bool { return b == BasisMeasured || b == BasisRelayed }",
+       "func (b Basis) Decidable() bool { return b == BasisMeasured || b == BasisRelayed || b == BasisAbsent }")],
+     [], True),
+]
+
+env = dict(os.environ)
+env["PATH"] = env.get("PATH", "") + os.pathsep + os.path.dirname(GO)
+rep = io.open(OUT, "w", encoding="utf-8")
+def w(s):
+    rep.write(s + "\n"); rep.flush()
+
+summary = []
+gate_names = set()   # 名字在这集合里的 = kcheck 针；用来把两类针分开数
+
+
+def run_in(d, args):
+    return subprocess.run([GO] + args, cwd=d, env=env, capture_output=True,
+                          text=True, encoding="utf-8", errors="replace")
+
+
+def fresh(name):
+    d = os.path.join(WORK, name)
+    if os.path.exists(d):
+        shutil.rmtree(d)
+    shutil.copytree(SRC, d)
+    return d
+
+
+def first_bad(out):
+    for ln in (out or "").splitlines():
+        s = ln.strip()
+        if ".go:" in s or "build failed" in s or s.startswith("--- FAIL"):
+            return s[:200]
+    return (out or "").strip()[-200:]
+
+
+# ======== 对照 0：干净拷贝必须全过 ========
+# 没有这一根，「全部空针」在两种解释之间是歧义的：我的判据弱，还是拷贝/工具链坏了。
+# 2026-09-27 真烧掉过一整轮：record_test.go 一个类型错误让 48 根 go-test 针同时 VACUOUS，
+# 而 go build 是绿的（它不编译 _test.go），汇总看着像大面积失守，其实是探针自己在报自己的故障。
+w("==== 对照 ====")
+base = fresh("_baseline")
+bt = run_in(base, ["test", "-count=1", "-v", "./..."])
+bout = (bt.stdout or "") + (bt.stderr or "")
+npass = len(re.findall(r"^--- PASS: ", bout, re.M))
+nfail = len(re.findall(r"^--- FAIL: ", bout, re.M))
+bg = run_in(base, ["run", "./cmd/kcheck"])
+baseline_ok = (bt.returncode == 0 and npass > 0 and nfail == 0 and bg.returncode == 0)
+w("对照 0（干净拷贝）：go test 退出码 %d、PASS %d 条、FAIL %d 条；kcheck 退出码 %d"
+  % (bt.returncode, npass, nfail, bg.returncode))
+if not baseline_ok:
+    # npass == 0 单独说一句：go test 退出码 0 而一条都没跑，是「ok 可能意味着 0 条」那一族。
+    if bt.returncode == 0 and npass == 0:
+        w("!! 干净拷贝上 go test 退出码是 0 却一条 PASS 都没有 —— 判据压根没跑，这不是绿。")
+    w("!! 干净拷贝就没过 —— 后面每一根针的结论都不可信，先修树再跑探针。")
+    w("   " + first_bad(bout if nfail or bt.returncode else (bg.stdout or "") + (bg.stderr or "")))
+
+# ======== 对照 T：探针自己必须能认出「测试没跑起来」 ========
+# 这一根把 TEST-BROKE 那个守卫钉住。只被手工验过一次的守卫等于没验：
+# 将来谁把那条守卫改窄，测试文件编译不过时全部 go-test 针又会一起读成空针，
+# 而汇总会把探针自己的故障报成被测代码的缺陷。
+# 判据是一个**组合**：go build 必须绿（它不编译测试文件）、go test 必须跑不起来 ——
+# 这个组合正是 BUILD-BROKE 抓不到、而 VACUOUS 会误报的那一格。
+tb = fresh("_testbroke")
+tp = os.path.join(tb, "record_test.go")
+ttxt = io.open(tp, encoding="utf-8").read()
+T_ANCHOR = "emptyKinds, emptyCuts := claimOf([]PartKind{}), claimOf([]Cut{})"
+T_BAD = "emptyKinds, emptyCuts := claimOf([]PartKind{}), []Cut{}"
+if ttxt.count(T_ANCHOR) != 1:
+    testbroke_ok = False
+    w("对照 T：锚点命中 %d 处（该是 1 处）—— 这一根对照是空的，换锚点" % ttxt.count(T_ANCHOR))
+else:
+    io.open(tp, "w", encoding="utf-8", newline="\n").write(ttxt.replace(T_ANCHOR, T_BAD))
+    gb = run_in(tb, ["build", "./..."])
+    gt = run_in(tb, ["test", "-run", "^TestDeriveBudgetIsTheOnlyOwnerOfTheFormula$",
+                     "-count=1", "-v", "./..."])
+    gout = (gt.stdout or "") + (gt.stderr or "")
+    has_verdict = bool(re.search(r"^--- (PASS|FAIL): ", gout, re.M))
+    testbroke_ok = (gb.returncode == 0 and "[build failed]" in gout and not has_verdict)
+    w("对照 T（故意弄坏一个测试文件）：go build 退出码 %d（该 0）、"
+      "go test 输出含 [build failed]=%s、有 PASS/FAIL 行=%s（该 False）"
+      % (gb.returncode, "[build failed]" in gout, has_verdict))
+    if not testbroke_ok:
+        w("!! 对照 T 不成立 —— TEST-BROKE 那个守卫认不出「测试没跑起来」。"
+          "那么下一次测试文件编译不过时，全部 go-test 针又会被读成空针。")
+        w("   " + first_bad(gout))
+
+w("")
+
+for entry in MUT:
+    name, fname, edits, wants = entry[0], entry[1], entry[2], entry[3]
+    gate = bool(entry[4]) if len(entry) > 4 else False
+    if gate:
+        gate_names.add(name)
+    d = os.path.join(WORK, re.sub(r"[^A-Za-z0-9]", "_", name))
+    if os.path.exists(d):
+        shutil.rmtree(d)
+    shutil.copytree(SRC, d)
+    p = os.path.join(d, fname)
+    txt = io.open(p, encoding="utf-8").read()
+    ok = True
+    for frm, to in edits:
+        n = txt.count(frm)
+        if n != 1:
+            w("!! %s: 锚点命中 %d 处（该是 1 处）-> %r" % (name, n, frm[:70]))
+            ok = False
+            break
+        txt = txt.replace(frm, to)
+    if not ok:
+        summary.append((name, "ANCHOR-BAD", ""))
+        continue
+    io.open(p, "w", encoding="utf-8", newline="\n").write(txt)
+    b = subprocess.run([GO, "build", "./..."], cwd=d, env=env, capture_output=True,
+                       text=True, encoding="utf-8", errors="replace")
+    if b.returncode != 0:
+        w("!! %s: 拷贝编译不过（崩不算红）：%s" % (name, (b.stderr or "").strip()[:260]))
+        summary.append((name, "BUILD-BROKE", ""))
+        continue
+    # —— kcheck 针：跑 go run ./cmd/kcheck，要求退出码非 0（编译已在上面过了一遍，崩不算红）——
+    if gate:
+        g = subprocess.run([GO, "run", "./cmd/kcheck"], cwd=d, env=env, capture_output=True,
+                           text=True, encoding="utf-8", errors="replace")
+        gout = (g.stdout or "") + (g.stderr or "")
+        # 真正的闸门红：kcheck 末尾印「✗ N 项没过」并 os.Exit(1)。
+        # 崩（panic / 运行期报错）虽然退出码也非 0，但那不是「判据报红」，单独归一类。
+        gate_red = ("\u9879\u6ca1\u8fc7" in gout)  # 「项没过」
+        crashed = ("panic:" in gout) or ("runtime error:" in gout)
+        w("")
+        w("== %s  [kcheck 针]" % name)
+        w("   点名该红：go run ./cmd/kcheck 退出码非 0")
+        w("   实际退出码：%d" % g.returncode)
+        for ln in (g.stdout or "").splitlines():
+            if "\u2717" in ln:  # ✗ —— 只把报红的那几行抄进 UTF-8 报告，便于分诊
+                w("   闸门报红：%s" % ln.strip()[:220])
+        if g.returncode == 0:
+            summary.append((name, "GATE-GREEN", "kcheck 竟然全过（空针）"))
+        elif gate_red and not crashed:
+            summary.append((name, "GATE-RED", "exit=%d" % g.returncode))
+        else:
+            summary.append((name, "GATE-CRASH", "退出码非 0 但不是判据报红（崩不算红）：%s" % gout.strip()[-200:]))
+        continue
+    # —— go test 针：跑点名的那条测试 + 一次全量 ——
+    pat = "^(" + "|".join(wants) + ")$"
+    r = subprocess.run([GO, "test", "-run", pat, "-count=1", "-v", "./..."], cwd=d, env=env,
+                       capture_output=True, text=True, encoding="utf-8", errors="replace")
+    out = (r.stdout or "") + (r.stderr or "")
+    # 「没跑成」不是「一条都没红」。测试文件编译不过时 go build 照样是绿的
+    # （它不编译 _test.go），而 go test 一条判据都跑不了 —— 那一整轮会被读成「全部空针」，
+    # 把探针自己的故障报成被测代码的缺陷。2026-09-27 真发生过一次：
+    # record_test.go 一个类型错误让 48 根 go-test 针同时 VACUOUS，而汇总看着像大面积失守。
+    if "[build failed]" in out or "build failed" in out or not re.search(r"^--- (PASS|FAIL): ", out, re.M):
+        first = ""
+        for ln in out.splitlines():
+            if ".go:" in ln or "build failed" in ln:
+                first = ln.strip()
+                break
+        w("!! %s: 测试没跑起来（编译失败或一条都没匹配到，崩不算红也不算空针）：%s" % (name, first[:200]))
+        summary.append((name, "TEST-BROKE", first[:120]))
+        continue
+    failed = set(re.findall(r"^--- FAIL: (\S+)", out, re.M))
+    missed = [x for x in wants if x not in failed]
+    full = subprocess.run([GO, "test", "-count=1", "-v", "./..."], cwd=d, env=env,
+                          capture_output=True, text=True, encoding="utf-8", errors="replace")
+    allfail = sorted(set(re.findall(r"^--- FAIL: (\S+)", (full.stdout or "") + (full.stderr or ""), re.M)))
+    w("")
+    w("== %s" % name)
+    w("   点名该红：%s" % ", ".join(wants))
+    w("   实际报红：%s" % (", ".join(sorted(failed)) or "（一条都没红）"))
+    w("   没红的点名：%s" % (", ".join(missed) or "无"))
+    w("   全量共红 %d 条%s" % (len(allfail), (": " + ", ".join(allfail)) if len(allfail) <= 6 else ""))
+    if missed:
+        summary.append((name, "VACUOUS", ",".join(missed)))
+    elif len(allfail) == len(failed):
+        summary.append((name, "RED-ONLY-NAMED", str(len(allfail))))
+    else:
+        summary.append((name, "RED-WIDER", str(len(allfail))))
+
+w("")
+w("==== 汇总 ====")
+for name, st, extra in summary:
+    w("%-42s %-14s %s" % (name, st, extra))
+
+def cnt(status):
+    return len([x for x in summary if x[1] == status])
+
+gate_total = len([x for x in summary if x[0] in gate_names])
+gotest_total = len(summary) - gate_total
+w("")
+w("—— 两类针分开数 ——")
+w("go test 针 %d 根：RED-ONLY-NAMED %d、RED-WIDER %d、VACUOUS %d、TEST-BROKE(没跑成) %d" % (
+    gotest_total, cnt("RED-ONLY-NAMED"), cnt("RED-WIDER"), cnt("VACUOUS"), cnt("TEST-BROKE")))
+w("kcheck  针 %d 根：GATE-RED %d、GATE-GREEN(空) %d、GATE-CRASH(崩) %d" % (
+    gate_total, cnt("GATE-RED"), cnt("GATE-GREEN"), cnt("GATE-CRASH")))
+w("两类共用：ANCHOR-BAD %d、BUILD-BROKE %d" % (cnt("ANCHOR-BAD"), cnt("BUILD-BROKE")))
+bad = [x for x in summary if x[1] in
+       ("VACUOUS", "ANCHOR-BAD", "BUILD-BROKE", "TEST-BROKE", "GATE-GREEN", "GATE-CRASH")]
+w("")
+w("针数 %d（go test %d + kcheck %d）；只有点名的红 %d；红得更宽 %d；闸门报红 %d；空针/坏针 %d" % (
+    len(summary), gotest_total, gate_total,
+    cnt("RED-ONLY-NAMED"), cnt("RED-WIDER"), cnt("GATE-RED"), len(bad)))
+if bad:
+    w("空针/坏针清单：")
+    for name, st, extra in bad:
+        w("  %-42s %-14s %s" % (name, st, extra))
+
+# 两根对照是**整轮结论的前提**，不是第 52、53 根针。
+# 对照 0 不过 ⇒ 树本身是坏的，那些"空针"说的是树不是判据；
+# 对照 T 不过 ⇒ 探针认不出"测试没跑起来"，那些"空针"可能全是同一个工具故障。
+# 两种情况都必须让整轮以非 0 退出，否则一份坏报告长得和一份好报告一样。
+w("")
+w("—— 两根对照 ——")
+w("对照 0（干净拷贝全过）：%s" % ("成立" if baseline_ok else "不成立"))
+w("对照 T（探针认得出「测试没跑起来」）：%s" % ("成立" if testbroke_ok else "不成立"))
+if not baseline_ok:
+    w("")
+    w("!! 整轮结论不可信：干净拷贝就没过。先修树，再跑探针。")
+if not testbroke_ok:
+    w("")
+    w("!! 整轮结论不可信：TEST-BROKE 那个守卫失效了，"
+      "上面任何一根 VACUOUS 都可能只是「测试没跑起来」被读成了「判据是空的」。")
+rep.close()
+print("PROBE DONE: %d mutations (%d go-test + %d kcheck); gate-red %d; vacuous/broken %d; "
+      "baseline %s; testbroke-control %s" % (
+          len(summary), gotest_total, gate_total, cnt("GATE-RED"), len(bad),
+          "OK" if baseline_ok else "FAILED", "OK" if testbroke_ok else "FAILED"))
+if not baseline_ok or not testbroke_ok:
+    sys.exit(2)

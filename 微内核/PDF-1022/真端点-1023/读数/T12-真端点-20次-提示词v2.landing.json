@@ -1,0 +1,10 @@
+{
+ "reading": "T12-真端点-20次-提示词v2.json",
+ "checked_at": "2026-10-23T12:59:41+08:00",
+ "reading_exists": true,
+ "reading_bytes": 28116,
+ "reading_sha256": "b902d147ac55373b51a1d8dc49c91ed9e72c3cf8832e4013f2003d172d480335",
+ "log_bytes": 322,
+ "key_in_reading": false,
+ "key_in_log": false
+}

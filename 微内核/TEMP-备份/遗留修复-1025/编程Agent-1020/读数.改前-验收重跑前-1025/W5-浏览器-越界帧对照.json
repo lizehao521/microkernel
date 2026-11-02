@@ -1,0 +1,13 @@
+{
+  "arm": "越界帧（认得出帧但对不上行号）",
+  "cards": 10,
+  "debug": "栈读数：贴入 54 字节 · 认出 1 帧 · 行号落进上面代码 0 帧（栈只定位、不下结论；文件名对不上就不许升 measured）",
+  "mix": "measured 8 / estimated 2 / model_says 0 / relayed 0 / absent 10 = 20　加总核对：对得上",
+  "stack_cards": 0,
+  "stack_chars": 54,
+  "stack_claims": [],
+  "stack_linenos": [],
+  "trace_items": 13,
+  "unknowns": 10,
+  "waited_ms": 870
+}

@@ -1,0 +1,234 @@
+{
+ "surface": "agenthub",
+ "endpoint": "http://121.36.29.96:8787/v1/chat/completions",
+ "model": "MiniMax-M2.5",
+ "key_masked": "sk-rel...IbWA",
+ "exe_sha256": "193940d2acdcca4b13b206c3f6fefcd892dfafa67c2039adfcba162e03abf2d5",
+ "elapsed_ms": 1563,
+ "health": {
+  "allow_exec": false,
+  "allow_write": false,
+  "memory": 0,
+  "model_endpoint": "http://121.36.29.96:8787/v1/chat/completions",
+  "next_turn": 1,
+  "ok": true,
+  "tools": 12
+ },
+ "events": [
+  {
+   "event": "meta",
+   "data": {
+    "max_steps": 6,
+    "memory_msgs": 1,
+    "plan": "模型端点→本机规则",
+    "tools": 12,
+    "turn": 1
+   }
+  },
+  {
+   "event": "plan",
+   "data": {
+    "ask": "模型端点",
+    "step": 1
+   }
+  },
+  {
+   "event": "tool_status",
+   "data": {
+    "args": {
+     "path": "."
+    },
+    "args_from": "端点给的参数",
+    "attempts_allowed": 1,
+    "fallback": "fs.read",
+    "risk": "local_read",
+    "status": "queued",
+    "step": 1,
+    "timeout_ms": 3000,
+    "tool": "fs.list"
+   }
+  },
+  {
+   "event": "tool_status",
+   "data": {
+    "status": "attempt",
+    "step": 1,
+    "tool": "fs.list",
+    "第几次": 1
+   }
+  },
+  {
+   "event": "tool_status",
+   "data": {
+    "ms": 1,
+    "status": "ok",
+    "step": 1,
+    "tool": "fs.list",
+    "第几次": 1
+   }
+  },
+  {
+   "event": "tool_result",
+   "data": {
+    "step": 1,
+    "tool": "fs.list",
+    "args": {
+     "path": "."
+    },
+    "args_from": "端点给的参数",
+    "class": "ok",
+    "risk": "local_read",
+    "text": "C:\\Users\\Admin\\AppData\\Local\\Temp\\ak-real-hub-h88bofx4\\fs ｜ 目录下共 2 条 ｜ 这里最大的文件是 alpha.txt（21 字节）\n文件 alpha.txt 21 字节 2026-10-23 12:28\n文件 beta.txt 6 字节 2026-10-23 12:28\n ｜ 试了 1 次 ｜ 1ms",
+    "data": {
+     "dir": "C:\\Users\\Admin\\AppData\\Local\\Temp\\ak-real-hub-h88bofx4\\fs",
+     "entries": 2,
+     "listed": 2,
+     "top": "alpha.txt"
+    },
+    "ms": 1516,
+    "attempts": 1,
+    "why": "端点选的件",
+    "provenance": "model_says",
+    "evidence": "measured",
+    "plan": "模型端点"
+   }
+  },
+  {
+   "event": "plan",
+   "data": {
+    "ask": "模型端点",
+    "step": 2
+   }
+  },
+  {
+   "event": "plan",
+   "data": {
+    "ask": "本机规则",
+    "step": 2
+   }
+  },
+  {
+   "event": "plan",
+   "data": {
+    "kind": "done",
+    "plan": "本机规则",
+    "step": 2,
+    "why": "话里点到的目标都已有成功读数 ⇒ 可以收口"
+   }
+  },
+  {
+   "event": "answer_delta",
+   "data": {
+    "text": "fs.list：C:\\Users\\Admin\\A",
+    "turn": 1
+   }
+  },
+  {
+   "event": "answer_delta",
+   "data": {
+    "text": "ppData\\Local\\Temp\\ak-rea",
+    "turn": 1
+   }
+  },
+  {
+   "event": "answer_delta",
+   "data": {
+    "text": "l-hub-h88bofx4\\fs ｜ 目录下共",
+    "turn": 1
+   }
+  },
+  {
+   "event": "answer_delta",
+   "data": {
+    "text": " 2 条 ｜ 这里最大的文件是 alpha.tx",
+    "turn": 1
+   }
+  },
+  {
+   "event": "answer_delta",
+   "data": {
+    "text": "t（21 字节）",
+    "turn": 1
+   }
+  },
+  {
+   "event": "done",
+   "data": {
+    "events": 10,
+    "turn": 1
+   }
+  }
+ ],
+ "result": {
+  "turn": 1,
+  "answer": "fs.list：C:\\Users\\Admin\\AppData\\Local\\Temp\\ak-real-hub-h88bofx4\\fs ｜ 目录下共 2 条 ｜ 这里最大的文件是 alpha.txt（21 字节）",
+  "findings": [
+   {
+    "text": "这一发第 1 轮：走 1 步（成功 1、失败 0、门口挡 0），重试多花了 0 次尝试、等 0 ms，降级 0 次",
+    "tier": "measured",
+    "step": 2
+   },
+   {
+    "text": "fs.list ｜ 步 1 ｜ 谁选的：模型端点 ｜ 参数：{\"path\":\".\"}（端点给的参数）｜ C:\\Users\\Admin\\AppData\\Local\\Temp\\ak-real-hub-h88bofx4\\fs ｜ 目录下共 2 条 ｜ 这里最大的文件是 alpha.txt（21 字节）\n文件 alpha.txt 21 字节 2026-10-23 12:28\n文件 beta.txt 6 字节 2026-10-23 12:28\n ｜ 试了 1 次 ｜ 1ms",
+    "tier": "model_says",
+    "step": 1
+   },
+   {
+    "text": "这轮会话共 2 条记忆；工具调用统计：fs.list×1；最后一句用户话：列出当前目录里的文件；窗口外挤掉 0 条（本机摘要，不是模型写的）",
+    "tier": "estimated",
+    "why": "本机摘要规则写的，不是模型写的"
+   },
+   {
+    "text": "上下文：这轮一共 2 条记忆，喂进去 2 条 / 192 码元，窗口外挤掉 0 条",
+    "tier": "measured"
+   }
+  ],
+  "steps": [
+   {
+    "step": 1,
+    "tool": "fs.list",
+    "args": {
+     "path": "."
+    },
+    "args_from": "端点给的参数",
+    "class": "ok",
+    "risk": "local_read",
+    "text": "C:\\Users\\Admin\\AppData\\Local\\Temp\\ak-real-hub-h88bofx4\\fs ｜ 目录下共 2 条 ｜ 这里最大的文件是 alpha.txt（21 字节）\n文件 alpha.txt 21 字节 2026-10-23 12:28\n文件 beta.txt 6 字节 2026-10-23 12:28\n ｜ 试了 1 次 ｜ 1ms",
+    "data": {
+     "dir": "C:\\Users\\Admin\\AppData\\Local\\Temp\\ak-real-hub-h88bofx4\\fs",
+     "entries": 2,
+     "listed": 2,
+     "top": "alpha.txt"
+    },
+    "ms": 1516,
+    "attempts": 1,
+    "why": "端点选的件",
+    "provenance": "model_says",
+    "evidence": "measured",
+    "plan": "模型端点"
+   }
+  ],
+  "stop": "跑完",
+  "stop_why": "话里点到的目标都已有成功读数 ⇒ 可以收口",
+  "plan": "本机规则",
+  "fallbacks": [
+   "规划器 模型端点 没接上（端点回了 HTTP 400：{\"error\":{\"message\":\"role=tool 的消息缺少 tool_call_id\",\"type\":\"invalid_request_error\",\"param\":\"/messages/2/tool_call_id\",\"code\":\"tool_call_id_missing\",\"relay_details\":{\"violations\":[{\"code\":\"tool_call_id_…）⇒ 这一步改由 本机规则 决定（本机规则选的件不许说成模型选的）"
+  ],
+  "retries": 0,
+  "waited_ms": 0,
+  "degrades": 0,
+  "mix": {
+   "estimated": 1,
+   "measured": 2,
+   "model_says": 1,
+   "total": 4
+  },
+  "mix_ok": true,
+  "sane": true,
+  "sane_why": "整列 1 步 / 4 条结论自洽（判据 13 条全过）",
+  "ms": 1561,
+  "memory_msgs": 2,
+  "dropped_from_window": 0,
+  "context_chars_used": 192
+ }
+}

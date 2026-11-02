@@ -1,0 +1,11 @@
+arm | file | test | control_rc | mutant_rc | verdict
+C1 | cmd/agentd/loop.go | TestInterruptDoesNotFabricateSteps | 0 | 1 | BIT
+C2 | cmd/agentd/loop.go | TestInterruptSettlesWithinSecond | 0 | 1 | BIT
+C3 | cmd/agentd/loop.go | TestEveryTurnSettlesExactlyOnce | 0 | 1 | BIT
+C4 | cmd/agentd/loop.go | TestSettleTurnIsIdempotent | 0 | 1 | BIT
+C5 | cmd/agentd/loop.go | TestInterruptSettlesWithinSecond | 0 | 1 | BIT
+C6 | cmd/agentd/loop.go | TestStopEntryIsSingleAndIdempotent | 0 | 1 | BIT
+C7 | cmd/agentd/loop.go | TestEventSeqMonotonicWithinEachTurn | 0 | 1 | BIT
+C8 | cmd/agentd/events.go | TestSettlementArmsCatchEachBadShape | 0 | 1 | BIT
+C9 | cmd/agentd/loop.go | TestInterruptDoesNotFabricateSteps | 0 | 1 | BIT
+total 9 | bit 9 | blind 0 | control-red 0

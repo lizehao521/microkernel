@@ -1,0 +1,46 @@
+{
+ "件": "W15 · 六档断点几何在新 build 上重测（工具/a11y_probe.js 分段跑）",
+ "生成时刻（本机钟）": "2026-10-21 03:21",
+ "为什么要重跑": "上一份六档读数是 W9 那一次留下的；W12b 改了 7 处文案与 CSS 换行、W14 又改了 loop.go / ledger.go / app.js 三处 —— 旧读数不能替新 build 说话（这条口径在 W12b 就立过一次）。",
+ "怎么跑的": "同一份探针代码（工具/a11y_probe.js 第 11-166 行逐字贴进页面后调用），分三段：[320,360] / [390,768] / [1024,1440]。分段的原因写死在探针注释里：外面那个浏览器工具单次 15 秒预算装不下六档 × 等每一档真跑完。",
+ "端口": "127.0.0.1:4345（我自己起的 exe，随机挑的 43xx；8797/8799 没碰）",
+ "分母": "自印 6 档 × 每档 4 项检查（栏数 / 溢出 / 脏字 / 九步在不在）+ 对比度 8 项 + 可及名 4 项 + 标题 8 个 + 焦点 3 层",
+ "六档": [
+  {"width": 320, "cols": 1, "expect_cols": 1, "overflow_px": 0, "pane_widths": [281, 281, 281], "trace_items": 13, "band_chars": 325, "dirty_上屏": 0},
+  {"width": 360, "cols": 1, "expect_cols": 1, "overflow_px": 0, "pane_widths": [321, 321, 321], "trace_items": 13, "band_chars": 325, "dirty_上屏": 0},
+  {"width": 390, "cols": 1, "expect_cols": 1, "overflow_px": 0, "pane_widths": [351, 351, 351], "trace_items": 13, "band_chars": 325, "dirty_上屏": 0},
+  {"width": 768, "cols": 2, "expect_cols": 2, "overflow_px": 0, "pane_widths": [358, 358, 729], "trace_items": 13, "band_chars": 325, "dirty_上屏": 0},
+  {"width": 1024, "cols": 2, "expect_cols": 2, "overflow_px": 0, "pane_widths": [486, 486, 985], "trace_items": 13, "band_chars": 325, "dirty_上屏": 0},
+  {"width": 1440, "cols": 3, "expect_cols": 3, "overflow_px": 0, "pane_widths": [466, 355, 555], "trace_items": 13, "band_chars": 325, "dirty_上屏": 0}
+ ],
+ "对比度_WCAG相对亮度现算": [
+  {"sel": ".b.m measured", "ratio": 6.63, "字号": "11px"},
+  {"sel": ".b.e estimated", "ratio": 4.9, "字号": "11px", "注": "五档里最矮的一档，门槛 4.5 过线但余量最小"},
+  {"sel": ".b.s model_says", "ratio": 8.86, "字号": "11px"},
+  {"sel": ".b.r relayed", "ratio": 7.38, "字号": "11px"},
+  {"sel": ".b.a absent", "ratio": 6.9, "字号": "11px"},
+  {"sel": ".dim", "ratio": 5.84, "字号": "13px"},
+  {"sel": ".note", "ratio": 5.84, "字号": "12px"},
+  {"sel": "h1", "ratio": 16.59, "字号": "19px"}
+ ],
+ "可及名": [
+  {"id": "lang", "tag": "SELECT", "name": "语言"},
+  {"id": "code", "tag": "TEXTAREA", "name": "要分析的代码（本件只读字节与解析语法树，不会执行"},
+  {"id": "stack", "tag": "TEXTAREA", "name": "报错/栈（可留空）—— 贴进来就把每一帧指回上面"},
+  {"id": "q", "tag": "INPUT", "name": "问题"}
+ ],
+ "标题层级": ["H1 看得见的编程 Agent", "H2 代码编辑区", "H2 对话历史", "H2 结构化结果", "H3 这一发的循环（九步）", "H3 结论", "H3 账本改写了哪几格", "H3 没量到的（不许折叠）"],
+ "焦点三层": {
+  "css_focus_rules_parsed": 2,
+  "selectors": ["button:focus, input:focus, select:focus, textarea:focus, [tabindex]:focus", "button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible"],
+  "内联 outline 能不能画": "solid",
+  "document_has_focus": false,
+  "判定": "NOT_VERIFIED —— 这台宿主里标签页拿不到系统焦点，:focus 不参与匹配，真键盘轮廓这一层量不到（不写成通过）"
+ },
+ "不达标": 0,
+ "两处配了正对照": [
+  "脏字检测：明知有 undefined 的那串必须检出 ⇒ dirty_正对照=true（不然六档的 dirty_上屏=0 是装饰）",
+  "分段跑的空调用：a11yProbe([999]) ⇒ failures 里如实写「这一跑是空的，不算跑过」（不然分段会被读成跑过六档）"
+ ],
+ "与 W9 那份的差异": "六档栏数与溢出结论一致（1/1/1/2/2/3、溢出全 0），新增的是 dirty_上屏 一栏（W9 那版还没有）；旧件 读数/W9-探针-真跑完那一份.json 留着不删、不覆盖。"
+}

@@ -1,0 +1,21 @@
+== 真端点冒烟 Qwen/Qwen3.8-Flash-Next ｜ api-inference.modelscope.cn ==
+（口令只走 env，本件不回显；长度 39）
+
+【1 非流式】HTTP/1.1 200 OK ｜ 请求体 769 字节 ｜ 收到 3514 字节（含 HTTP 头）｜ 用时 8045ms
+   object=chat.completion ｜ finish=stop ｜ usage={'prompt_tokens': 276, 'completion_tokens': 541, 'total_tokens': 817}
+   有没有 reasoning_content 这个字段：True ｜ content 长度 259 字符
+   答复｜ 处置口径：  
+   答复｜ - 该单为**快递显示已签收但客户未收到**的签收争议。  
+   答复｜ - 先按工单库政策发起**物流核实/调取回单**，SLA 为 **30 分钟**内响应/推进处理。  
+
+【2 流式·裸 socket】HTTP/1.1 200 OK ｜ 请求体 123 ｜ 收到 12202 字节 ｜ 片数(recv 次) 24 ｜ 帧(data: 行) 24
+   首帧 1170.0 ms ｜ 最大帧间 129.6 ms ｜ 用时 2353 ms ｜ object 自报=['chat.completion.chunk']
+   usage 出现 23 次；最后一处："usage":{"prompt_tokens":0,"completion_tokens":0,"total_tokens":0} ｜ [DONE] 在不在：True
+
+【3 无依据那一发（模型会不会自己编）】HTTP/1.1 200 OK ｜ 用时 9413ms ｜ usage={'prompt_tokens': 289, 'completion_tokens': 555, 'total_tokens': 844}
+   答复｜ 工单号 **SO-2026-9999-0000** 不在当前工单库中。
+   答复｜ 
+   答复｜ 因此，我无法基于现有工单库向该客户给出 **退款口径** 或 **到账时间**，也不能按其自述金额直接确认处理结果。
+   答复｜ 
+   答复｜ 建议先核实工单号是否准确或补录有效工单；在核实前不做任何退款、金额或到账时效承诺。
+   这一发的答复里有没有出现库里没有的那个金额：8888 出现 = 0 次；那个订单号出现 = 1 次

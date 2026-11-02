@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S0 证据状态板 · Agentkernel 试点</title>
+<style>
+  :root {
+    --paper: #fbfaf7;
+    --ink: #1b1a17;
+    --muted: #6b675f;
+    --line: #d9d3c6;
+    --line-strong: #b9b1a0;
+    --pass: #1f5c3a;
+    --pass-bg: #e8f1ea;
+    --block: #8a1c1c;
+    --block-bg: #f6e7e5;
+    --warn: #7a5200;
+    --warn-bg: #f6eedb;
+    --draft: #3d4a5c;
+    --draft-bg: #e9edf2;
+    --mono: "Cascadia Mono", "Consolas", "SFMono-Regular", "Liberation Mono", monospace;
+    --sans: "Segoe UI", "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--paper); }
+  body {
+    margin: 0;
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 13px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 28px 32px 40px;
+  }
+  header.top {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    align-items: flex-start;
+    padding-bottom: 18px;
+    border-bottom: 2px solid var(--ink);
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 6px;
+  }
+  h1 {
+    font-size: 26px;
+    line-height: 1.15;
+    margin: 0 0 6px;
+    letter-spacing: .01em;
+  }
+  .subtitle {
+    margin: 0;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .stamp {
+    text-align: right;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    line-height: 1.7;
+    white-space: nowrap;
+  }
+  .stamp strong { color: var(--ink); font-weight: 600; }
+  .nonclaim {
+    margin: 14px 0 0;
+    padding: 9px 12px;
+    border-left: 3px solid var(--warn);
+    background: var(--warn-bg);
+    color: #4a3508;
+    font-size: 12px;
+  }
+  .status-strip {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin: 18px 0 22px;
+  }
+  .stat {
+    border: 1px solid var(--line);
+    background: #fff;
+    padding: 11px 12px 10px;
+    min-height: 76px;
+  }
+  .stat .k {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .08em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .stat .v {
+    font-size: 18px;
+    font-weight: 650;
+    margin-top: 4px;
+    line-height: 1.2;
+  }
+  .stat .v.small { font-size: 14px; }
+  .stat .n {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+  .v.pass { color: var(--pass); }
+  .v.block { color: var(--block); }
+  .v.draft { color: var(--draft); }
+  .v.warn { color: var(--warn); }
+  section { margin-top: 26px; }
+  h2 {
+    font-size: 15px;
+    margin: 0 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line-strong);
+  }
+  h2 .count {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 400;
+    margin-left: 8px;
+  }
+  .pack {
+    border: 1px solid var(--line-strong);
+    background: #fff;
+  }
+  .pack-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: center;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .pack-id {
+    font-family: var(--mono);
+    font-size: 15px;
+    font-weight: 650;
+    letter-spacing: .02em;
+  }
+  .pack-type { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .06em;
+    padding: 3px 8px;
+    border: 1px solid currentColor;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .badge.draft { color: var(--draft); background: var(--draft-bg); }
+  .badge.block { color: var(--block); background: var(--block-bg); }
+  .badge.pass { color: var(--pass); background: var(--pass-bg); }
+  .badge.warn { color: var(--warn); background: var(--warn-bg); }
+  .pack-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .cell {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+    min-height: 62px;
+  }
+  .cell:nth-child(3n) { border-right: none; }
+  .cell .k {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+  .cell .v { font-size: 12px; margin-top: 3px; }
+  .cell .v strong { font-size: 13px; }
+  .pack-foot {
+    padding: 12px 14px;
+    background: #fcfbf8;
+    border-top: 1px solid var(--line);
+  }
+  .pack-foot .k {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .06em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  ul.blockers { margin: 0; padding-left: 18px; }
+  ul.blockers li { margin: 2px 0; }
+  .table-wrap { overflow-x: auto; border: 1px solid var(--line-strong); background: #fff; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  th, td {
+    text-align: left;
+    vertical-align: top;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--line);
+  }
+  th {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: #f4f1ea;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  tr:last-child td { border-bottom: none; }
+  td.num, th.num { font-family: var(--mono); white-space: nowrap; }
+  .state {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 650;
+    letter-spacing: .04em;
+    white-space: nowrap;
+  }
+  .state.a { color: var(--pass); }
+  .state.b { color: var(--draft); }
+  .state.c { color: var(--warn); }
+  .state.d { color: var(--draft); }
+  .state.x { color: var(--block); }
+  .state.nr { color: var(--muted); }
+  .gate-pass { color: var(--pass); font-weight: 600; }
+  .gate-block { color: var(--block); font-weight: 600; }
+  .gate-draft { color: var(--warn); font-weight: 600; }
+  .legend {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .legend div {
+    border: 1px solid var(--line);
+    background: #fff;
+    padding: 8px 10px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .legend strong {
+    display: block;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+  .two-col {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: 18px;
+    align-items: start;
+  }
+  .note {
+    border: 1px solid var(--line);
+    background: #fff;
+    padding: 12px 14px;
+  }
+  .note h3 { font-size: 12px; margin: 0 0 6px; }
+  .note p { margin: 0 0 6px; color: var(--muted); font-size: 11.5px; }
+  .note p:last-child { margin-bottom: 0; }
+  code, .mono { font-family: var(--mono); font-size: 11px; }
+  .next {
+    margin: 0;
+    padding-left: 20px;
+  }
+  .next li { margin: 6px 0; }
+  footer {
+    margin-top: 30px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line-strong);
+    color: var(--muted);
+    font-size: 10.5px;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  footer .mono { font-size: 10px; }
+  @media (max-width: 760px) {
+    .page { padding: 18px 16px 30px; }
+    header.top { flex-direction: column; gap: 10px; }
+    .stamp { text-align: left; }
+    .status-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .pack-grid { grid-template-columns: 1fr; }
+    .cell { border-right: none; }
+    .legend { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .two-col { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 6px; }
+  }
+  @media print {
+    @page { size: A4; margin: 12mm 11mm; }
+    html, body { background: #fff; }
+    body { font-size: 10.5px; }
+    .page { max-width: none; padding: 0; }
+    header.top { padding-bottom: 10px; }
+    h1 { font-size: 20px; }
+    .stamp { font-size: 8.5px; }
+    .nonclaim { font-size: 9.5px; padding: 6px 8px; }
+    .status-strip { gap: 6px; margin: 12px 0; }
+    .stat { min-height: 0; padding: 7px 8px; }
+    .stat .v { font-size: 14px; }
+    .stat .v.small { font-size: 11px; }
+    .stat .n, .stat .k { font-size: 8.5px; }
+    section { margin-top: 14px; }
+    h2 { font-size: 12px; margin-bottom: 6px; }
+    .pack-head { padding: 8px 10px; }
+    .cell { padding: 6px 8px; min-height: 0; }
+    .cell .v { font-size: 9.5px; }
+    .cell .v strong { font-size: 10.5px; }
+    th, td { padding: 4px 6px; font-size: 9px; }
+    th { font-size: 8px; }
+    .pack, .table-wrap, .note, .stat { break-inside: avoid; }
+    tr { break-inside: avoid; }
+    footer { font-size: 8px; margin-top: 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="top">
+    <div>
+      <p class="eyebrow">Agentkernel · Pilot S0 · Read-only</p>
+      <h1>证据状态板</h1>
+      <p class="subtitle">包的当前步骤、8 段证据状态、阻塞与下一步 · 静态原型（单包，未接运行时）</p>
+    </div>
+    <div class="stamp">
+      <div><strong>2026-10-20</strong></div>
+      <div>数据截至本轮干跑</div>
+      <div>不是客户交付 · 不是复核记录</div>
+    </div>
+  </header>
+
+  <p class="nonclaim">
+    <strong>非声明：</strong>本板只汇总本地样本包的状态，不证明客户需求、不证明系统安全 / 合规 / 零风险，也不代表任何真实客户受理或真人复核。所有外部未发生项保持 <span class="mono">NOT_RUN</span>。
+  </p>
+
+  <div class="status-strip">
+    <div class="stat">
+      <div class="k">Pack state</div>
+      <div class="v draft">draft</div>
+      <div class="n">不能进入正式复核</div>
+    </div>
+    <div class="stat">
+      <div class="k">Chain</div>
+      <div class="v pass">A · 2,940 / 2,940</div>
+      <div class="n">前缀 539 / 539；切片 49 / 49</div>
+    </div>
+    <div class="stat">
+      <div class="k">Hard blocks</div>
+      <div class="v block">4</div>
+      <div class="n">原像 · 版本 · 复核人 · 条款</div>
+    </div>
+    <div class="stat">
+      <div class="k">External actions</div>
+      <div class="v nr" style="color:var(--muted)">NOT_RUN</div>
+      <div class="n">试读 · 复核 · R/N · 客户</div>
+    </div>
+  </div>
+
+  <section>
+    <h2>包列表 <span class="count">1 个 · 内部样本，不是客户包</span></h2>
+    <div class="pack">
+      <div class="pack-head">
+        <div>
+          <div class="pack-id">SAMPLE-491-539</div>
+          <div class="pack-type">内部真实账本切片 · 一次调用 49 格 · 不是客户提交</div>
+        </div>
+        <div>
+          <span class="badge draft">draft</span>
+          <span class="badge block">4 blockers</span>
+        </div>
+      </div>
+      <div class="pack-grid">
+        <div class="cell">
+          <div class="k">链复算</div>
+          <div class="v"><strong class="state a">A</strong> 全链 2,940 / 2,940；前缀 539 / 539；切片 49 / 49</div>
+        </div>
+        <div class="cell">
+          <div class="k">原像</div>
+          <div class="v"><strong class="state x">absent</strong> 0 件；无改前 / 改后产物、无 SHA-256、无 custodian</div>
+        </div>
+        <div class="cell">
+          <div class="k">版本三元组</div>
+          <div class="v"><strong class="state x">0 / 3</strong> 产物 / 行为 / 判据均缺；cs-flash 仅为 model_says</div>
+        </div>
+        <div class="cell">
+          <div class="k">非作者复核人</div>
+          <div class="v"><strong class="state nr">NOT_RUN</strong> 未指派；独立性 / 60 分钟均未发生</div>
+        </div>
+        <div class="cell">
+          <div class="k">拒收账</div>
+          <div class="v"><strong class="state nr">真实 0 / 0</strong> 演练 1 例（R1 主码 + R2/R3/R5/R7），不计分母</div>
+        </div>
+        <div class="cell">
+          <div class="k">R/N 双臂</div>
+          <div class="v"><strong class="state nr">0 / 10</strong> 不写增量、不写通过率</div>
+        </div>
+        <div class="cell">
+          <div class="k">custody / 删除</div>
+          <div class="v"><strong class="state x">absent</strong> 无条款、无删除回执；完整账本含真流量，不随包分发</div>
+        </div>
+        <div class="cell">
+          <div class="k">到期</div>
+          <div class="v"><strong class="state nr">n/a</strong> 无客户数据条款；留存 / 删除未适用</div>
+        </div>
+        <div class="cell">
+          <div class="k">校验器反臂</div>
+          <div class="v"><strong class="state a">A</strong> 5 类篡改均报红（claim / prev / payload / 删行 / 局部重算）</div>
+        </div>
+      </div>
+      <div class="pack-foot">
+        <div class="k">阻塞（按解除顺序）</div>
+        <ul class="blockers">
+          <li><strong>R1 / R2</strong>：没有真实修改与改前 / 改后原像 —— 不能封包。</li>
+          <li><strong>R3</strong>：版本三元组 0 / 3 —— 不能封包。</li>
+          <li><strong>R5</strong>：无非作者复核人 —— 不受理正式复核。</li>
+          <li><strong>R7</strong>：数据条款未签 —— 不签约。</li>
+          <li class="mono" style="color:var(--muted)">链自洽不是解阻项；它不能抵消以上任何一条。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>8 段证据 <span class="count">A / B / C / D / X 分级；X 不塌成 0</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>段</th>
+            <th>证据</th>
+            <th>状态</th>
+            <th>等级</th>
+            <th>硬门</th>
+            <th>缺口 / 说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="num">1</td>
+            <td>范围与非声明</td>
+            <td><span class="state a">present</span></td>
+            <td class="num">A（作者侧）</td>
+            <td class="gate-draft">客户确认 X</td>
+            <td>有范围、有非声明；“客户已确认”仍 <span class="mono">NOT_RUN</span>。</td>
+          </tr>
+          <tr>
+            <td class="num">2</td>
+            <td>修改记录 / 原像</td>
+            <td><span class="state x">absent</span></td>
+            <td class="num">X</td>
+            <td class="gate-block">红 · 不封包</td>
+            <td>0 件原像；只有账本值镜像，不是产物原件。</td>
+          </tr>
+          <tr>
+            <td class="num">3</td>
+            <td>版本三元组</td>
+            <td><span class="state x">0 / 3</span></td>
+            <td class="num">X</td>
+            <td class="gate-block">红 · 不封包</td>
+            <td>产物 / 行为 / 判据均缺；模型自报不等于部署记录。</td>
+          </tr>
+          <tr>
+            <td class="num">4</td>
+            <td>账本切片</td>
+            <td><span class="state a">present</span></td>
+            <td class="num">A</td>
+            <td class="gate-pass">通过（仅切片）</td>
+            <td>切片 49 / 49；全链 2,940 / 2,940；前缀 539 / 539；前缀与完整账本的 custodian 绑定仍 absent。</td>
+          </tr>
+          <tr>
+            <td class="num">5</td>
+            <td>拒收账</td>
+            <td><span class="state x">absent</span></td>
+            <td class="num">X</td>
+            <td class="gate-draft">只能草稿</td>
+            <td>真实 0 例 / 分母 0；演练 1 例另存，不进入分母。</td>
+          </tr>
+          <tr>
+            <td class="num">6</td>
+            <td>复核记录</td>
+            <td><span class="state nr">NOT_RUN</span></td>
+            <td class="num">X</td>
+            <td class="gate-draft">只能草稿</td>
+            <td>未指派复核人；S1–S6 用时与决定均未发生。</td>
+          </tr>
+          <tr>
+            <td class="num">7</td>
+            <td>R/N 记录</td>
+            <td><span class="state nr">NOT_RUN</span></td>
+            <td class="num">X</td>
+            <td class="gate-draft">不足 · 不写增量</td>
+            <td>0 / 10；R 臂与 N 臂均未运行。</td>
+          </tr>
+          <tr>
+            <td class="num">8</td>
+            <td>custody / 删除</td>
+            <td><span class="state x">absent</span></td>
+            <td class="num">X</td>
+            <td class="gate-block">不签约</td>
+            <td>无留存 / 删除 / 子处理方条款；无删除回执。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="legend">
+      <div><strong>A</strong>工具自印 + 独立复算</div>
+      <div><strong>B</strong>单源自印</div>
+      <div><strong>C</strong>作者规划 / 假设</div>
+      <div><strong>D</strong>外部公开资料</div>
+      <div><strong>X</strong>不可核 / 未验证；不写成 0</div>
+    </div>
+  </section>
+
+  <section class="two-col">
+    <div class="note">
+      <h3>下一步（解除阻塞的顺序）</h3>
+      <ol class="next">
+        <li><strong>非作者试读</strong>：不看作者，按 <span class="mono">03-复核工作台</span> 说出缺哪几段、为什么不能封包；这是 P0 出口，当前 <span class="mono">NOT_RUN</span>。</li>
+        <li><strong>真实修改</strong>：拿到改前 / 改后产物 + SHA-256 + custodian；给不出，停在 R1 / R2。</li>
+        <li><strong>版本三元组</strong>：产物版 / 行为版 / 判据版补齐；补不齐，停在 R3。</li>
+        <li><strong>非作者复核人</strong>：受理时具名 + 独立性声明 + 60 分钟；没有，停在 R5。</li>
+        <li><strong>条款</strong>：留存 / 删除 / 子处理方 / 密钥 / 责任边界签署；不签，停在 R7。</li>
+      </ol>
+    </div>
+    <div class="note">
+      <h3>本板不回答</h3>
+      <p><strong>不回答“客户会不会买”</strong>：G0 访谈 0 / 10，客户证据 X。</p>
+      <p><strong>不回答“复核能不能过”</strong>：真人复核未发生，复核记录为空。</p>
+      <p><strong>不回答“包比没包强多少”</strong>：R/N 0 / 10，不写增量。</p>
+      <p><strong>不回答“系统安不安全”</strong>：审计层不是防线，只对应 MCP08；不覆盖 MCP01 / 03 / 06。</p>
+      <p class="mono" style="margin-top:8px;color:var(--muted)">结论：链可复算；包不可复核；客户证据不存在。</p>
+    </div>
+  </section>
+
+  <footer>
+    <div>来源：<span class="mono">样本包-491-539/证据包.md</span> · <span class="mono">链校验-491-539.json</span> · <span class="mono">受控副本/链校验-491-539.json</span> · <span class="mono">干跑记录.md</span> · <span class="mono">受理演练-1020.md</span></div>
+    <div class="mono">S0 静态原型 · 单包 · 手工更新 · SHA256SUMS 见试点目录</div>
+  </footer>
+
+</div>
+</body>
+</html>

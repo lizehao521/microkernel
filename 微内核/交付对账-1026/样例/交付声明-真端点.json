@@ -1,0 +1,122 @@
+{
+  "receipt_version": 1,
+  "session": "真端点-真交付",
+  "delivery": {
+    "by": "编程 Agent pgagent（MiniMax-M2.5，2026-10-23 真端点那一发）",
+    "task": "审查一段 6 行 python 代码并指出具体行、给一句修法",
+    "produced_at": "2026-10-23"
+  },
+  "claims": [
+    {
+      "id": "D1",
+      "kind": "json_value",
+      "path": "../../PDF-1022/真端点-1023/读数/pgagent-真端点.json",
+      "json_path": "result.turn",
+      "value": 1,
+      "evidence_class": "self",
+      "why": "这是本会话的第 1 发"
+    },
+    {
+      "id": "D2",
+      "kind": "json_value",
+      "path": "../../PDF-1022/真端点-1023/读数/pgagent-真端点.json",
+      "json_path": "result.metrics.lines",
+      "value": 6,
+      "evidence_class": "self",
+      "why": "被审代码被数成 6 行"
+    },
+    {
+      "id": "D3",
+      "kind": "file_sha256",
+      "path": "源文件/待审.py",
+      "value": "05bdf4a2f686c85b",
+      "evidence_class": "disk",
+      "why": "交付报出的源码指纹（16 位前缀）"
+    },
+    {
+      "id": "D4",
+      "kind": "json_len",
+      "path": "../../PDF-1022/真端点-1023/读数/pgagent-真端点.json",
+      "json_path": "result.findings",
+      "value": 1,
+      "evidence_class": "self",
+      "why": "找到 1 条问题"
+    },
+    {
+      "id": "D5",
+      "kind": "json_len",
+      "path": "../../PDF-1022/真端点-1023/读数/pgagent-真端点.json",
+      "json_path": "result.unknowns",
+      "value": 6,
+      "evidence_class": "self",
+      "why": "另有 6 条未决"
+    },
+    {
+      "id": "D6",
+      "kind": "json_value",
+      "path": "../../PDF-1022/真端点-1023/读数/pgagent-真端点.json",
+      "json_path": "result.kpi_ledger_decided",
+      "value": 4,
+      "evidence_class": "self",
+      "why": "账本有 4 格改写了这一发的结果"
+    },
+    {
+      "id": "D7",
+      "kind": "json_value",
+      "path": "../../PDF-1022/真端点-1023/读数/pgagent-真端点.json",
+      "json_path": "result.trace_sane",
+      "value": true,
+      "evidence_class": "self",
+      "why": "13 步整列自洽"
+    },
+    {
+      "id": "D8",
+      "kind": "json_value",
+      "path": "../../PDF-1022/真端点-1023/读数/pgagent-真端点.json",
+      "json_path": "result.chain_sane",
+      "value": true,
+      "evidence_class": "self",
+      "why": "跨发账链对得上"
+    },
+    {
+      "id": "D9",
+      "kind": "json_value",
+      "path": "../../PDF-1022/真端点-1023/读数/pgagent-真端点.json",
+      "json_path": "result.provenance_mix.total",
+      "value": 7,
+      "evidence_class": "self",
+      "why": "五档加总 7 条"
+    }
+  ],
+  "evidence": {
+    "pgagent": {
+      "path": "../../PDF-1022/真端点-1023/读数/pgagent-真端点.json",
+      "sha256": "11e8b994a25483ad458303169d90d1bfca98a117923a5a39395226ff168405d1",
+      "relation": "本交付的证据",
+      "note": "13 步轨迹从这里读；不要和 agentd 那一发混成一次运行",
+      "expect": {
+        "steps": 13,
+        "findings": 1,
+        "unknowns": 6
+      }
+    },
+    "agentd": {
+      "path": "../../PDF-1022/真端点-1023/读数/agentd-真端点.events.jsonl",
+      "sha256": "59d1deb636993cf1e67e7bf6a56313f08ef3c817ffb0d03404ff5581b083218e",
+      "relation": "形状样例（与本交付无因果关系）",
+      "note": "同一批真端点验收里 agentd 那一发的会话名是 real-agentd-1，本交付是 real-pgagent-1，两发不同"
+    },
+    "journal": {
+      "path": "../../构建-1017/客服靶场/导出/账本-全量-1018.jsonl",
+      "sha256": "fb1fa5ef7a9347769eede05d48b06a3e712861cc1e979076cdf18f922543d220",
+      "relation": "形状样例（与本交付无因果关系）",
+      "note": "这是 10-18 客服靶场导出的 2940 条账，不是本交付的账本；本件只核它自己的链与 49 格形状",
+      "expect": {
+        "records": 2940,
+        "header_lines": 1,
+        "groups": 60,
+        "cells_per_group": 49
+      }
+    }
+  }
+}

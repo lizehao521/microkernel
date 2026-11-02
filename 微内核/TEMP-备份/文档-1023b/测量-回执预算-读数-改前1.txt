@@ -1,0 +1,25 @@
+exe built once: sha256_12=5ac171a854af bytes=14331904 build_s=2.3
+idle check before loop: go/compile/agentd procs=0
+run  0 rc=0 busy=0 发=6 max_ack=17ms 超100=0  check-log@100 rc=0 红的支=-
+run  1 rc=0 busy=0 发=6 max_ack=18ms 超100=0  check-log@100 rc=0 红的支=-
+run  2 rc=0 busy=0 发=6 max_ack=15ms 超100=0  check-log@100 rc=0 红的支=-
+run  3 rc=0 busy=0 发=6 max_ack=18ms 超100=0  check-log@100 rc=0 红的支=-
+run  4 rc=0 busy=0 发=6 max_ack=20ms 超100=0  check-log@100 rc=0 红的支=-
+run  5 rc=0 busy=0 发=6 max_ack=21ms 超100=0  check-log@100 rc=0 红的支=-
+run  6 rc=0 busy=0 发=6 max_ack=20ms 超100=0  check-log@100 rc=0 红的支=-
+run  7 rc=0 busy=0 发=6 max_ack=24ms 超100=0  check-log@100 rc=0 红的支=-
+run  8 rc=0 busy=0 发=6 max_ack=20ms 超100=0  check-log@100 rc=0 红的支=-
+run  9 rc=0 busy=0 发=6 max_ack=17ms 超100=0  check-log@100 rc=0 红的支=-
+run 10 rc=0 busy=0 发=6 max_ack=14ms 超100=0  check-log@100 rc=0 红的支=-
+run 11 rc=0 busy=0 发=6 max_ack=223ms 超100=1  check-log@100 rc=4 红的支=ValidateAccepts
+run 12 rc=0 busy=0 发=6 max_ack=17ms 超100=0  check-log@100 rc=0 红的支=-
+run 13 rc=0 busy=0 发=6 max_ack=18ms 超100=0  check-log@100 rc=0 红的支=-
+run 14 rc=0 busy=0 发=6 max_ack=21ms 超100=0  check-log@100 rc=0 红的支=-
+
+SAMPLES 发=90 趟=15 (每趟一行，行数即趟数) 自证: sum(每趟发数)=90 == 总发数=90 -> OK
+DIST ack_ms min=0 p50=0 p90=18 max=223 | 预算=100 超预算的发=1 (1.1%)
+PER-RUN 趟级 rc!=0 的趟=0 / -check-log@100 红的趟=1 / 观测到的最忙 busy=0
+SWEEP 若预算改成这些数，超预算的发数 = 50:1 100:1 150:1 200:1 300:0 500:0 1000:0
+ARM-TEETH 预算=0 在正常日志上 rc=4 红的支=ValidateAccepts 读数=第 1 发的回执距入口 17ms，超上限 0ms 最小ack=0 -> 没牙(不作数)
+ARM-WIDE  预算=60000 rc=0 红的支=- -> 绿
+VERDICT 尺子没牙（预算 0 不红）—— 上面所有 ack 结论作废

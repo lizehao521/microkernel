@@ -1,0 +1,10 @@
+{
+ "reading": "业务任务-三题x20-真端点.json",
+ "checked_at": "2026-10-23T15:01:25+08:00",
+ "reading_exists": true,
+ "reading_bytes": 90380,
+ "reading_sha256": "d4ccbbbe77e6556310844bc8fce07ba0027d74744a74be2b8a5b4427fd5b17d9",
+ "log_bytes": 322,
+ "key_in_reading": false,
+ "key_in_log": false
+}

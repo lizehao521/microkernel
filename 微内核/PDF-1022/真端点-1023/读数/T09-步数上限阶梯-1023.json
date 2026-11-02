@@ -1,0 +1,747 @@
+{
+ "surface": "agenthub",
+ "shape": "T09-step-ladder",
+ "task": "依次算 1+1、2+2、3+3、4+4、5+5、6+6、7+7、8+8。每一步都单独调用一次 calc.eval，不要合并成一个算式；最后把八个结果列出来。",
+ "expect": [
+  2,
+  4,
+  6,
+  8,
+  10,
+  12,
+  14,
+  16
+ ],
+ "ladder": [
+  6,
+  7,
+  8,
+  9,
+  10
+ ],
+ "reps": 3,
+ "endpoint": "http://121.36.29.96:8787/v1/chat/completions",
+ "model": "MiniMax-M2.5",
+ "exe_sha256": "8ad1abadd5305db43ed550c5de8656065ddb2b1fc80016eb3a009277cee5aca6",
+ "exe_bytes": 12070912,
+ "oracle": "T09-ladder-v1: >=8 calc.eval ok 且 stop=跑完 且 answer_tier=model_says 且 answer 含 2/4/6/8/10/12/14/16",
+ "arms": [
+  {
+   "arm": "全对必须绿",
+   "want_ok": true,
+   "got_ok": true,
+   "why": "ok",
+   "pass": true
+  },
+  {
+   "arm": "少一个结果必须红",
+   "want_ok": false,
+   "got_ok": false,
+   "why": "answer_missing=[16]",
+   "pass": true
+  },
+  {
+   "arm": "工具调用文本当答案必须红",
+   "want_ok": false,
+   "got_ok": false,
+   "why": "answer_missing=[2, 4, 6, 10, 12, 14, 16]",
+   "pass": true
+  },
+  {
+   "arm": "撞步数上限必须红",
+   "want_ok": false,
+   "got_ok": false,
+   "why": "stop=步数上限",
+   "pass": true
+  },
+  {
+   "arm": "回显答案必须红",
+   "want_ok": false,
+   "got_ok": false,
+   "why": "answer_tier=measured",
+   "pass": true
+  },
+  {
+   "arm": "只跑七步必须红",
+   "want_ok": false,
+   "got_ok": false,
+   "why": "steps<8(7)",
+   "pass": true
+  }
+ ],
+ "summary_ladder": [
+  {
+   "max_steps": 6,
+   "n": 3,
+   "pass": 0,
+   "n_ok_calc": [
+    6,
+    6,
+    6
+   ],
+   "stops": [
+    "步数上限",
+    "步数上限",
+    "步数上限"
+   ],
+   "tiers": [
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "why": [
+    "steps<8(6)",
+    "steps<8(6)",
+    "steps<8(6)"
+   ],
+   "errors": []
+  },
+  {
+   "max_steps": 7,
+   "n": 3,
+   "pass": 0,
+   "n_ok_calc": [
+    7,
+    7,
+    7
+   ],
+   "stops": [
+    "步数上限",
+    "步数上限",
+    "步数上限"
+   ],
+   "tiers": [
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "why": [
+    "steps<8(7)",
+    "steps<8(7)",
+    "steps<8(7)"
+   ],
+   "errors": []
+  },
+  {
+   "max_steps": 8,
+   "n": 3,
+   "pass": 0,
+   "n_ok_calc": [
+    7,
+    8,
+    8
+   ],
+   "stops": [
+    "跑完",
+    "步数上限",
+    "步数上限"
+   ],
+   "tiers": [
+    "model_says",
+    "measured",
+    "measured"
+   ],
+   "why": [
+    "steps<8(7)",
+    "stop=步数上限",
+    "stop=步数上限"
+   ],
+   "errors": []
+  },
+  {
+   "max_steps": 9,
+   "n": 3,
+   "pass": 2,
+   "n_ok_calc": [
+    8,
+    8,
+    3
+   ],
+   "stops": [
+    "跑完",
+    "跑完",
+    "跑完"
+   ],
+   "tiers": [
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "why": [
+    "ok",
+    "ok",
+    "steps<8(3)"
+   ],
+   "errors": []
+  },
+  {
+   "max_steps": 10,
+   "n": 3,
+   "pass": 3,
+   "n_ok_calc": [
+    8,
+    8,
+    8
+   ],
+   "stops": [
+    "跑完",
+    "跑完",
+    "跑完"
+   ],
+   "tiers": [
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "why": [
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "errors": []
+  }
+ ],
+ "runs": [
+  {
+   "max_steps": 6,
+   "rep": 1,
+   "result_seen": true,
+   "ok": false,
+   "why": "steps<8(6)",
+   "elapsed_ms": 38665,
+   "n_steps": 6,
+   "n_ok_calc": 6,
+   "tool_seq": [
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval"
+   ],
+   "stop": "步数上限",
+   "stop_why": "步数上限：跑到第 6 步还没收口 ⇒ 停了（剩下的目标：list）",
+   "answer_tier": "measured",
+   "answer_why": "模型收口没写 answer（或这一发不是模型收的）⇒ 这一格是本机按工具读数抄的，不是模型的话",
+   "sane": true,
+   "plan": "模型端点",
+   "fallbacks": null,
+   "answer_head": "calc.eval：1+1 = 2 ｜ 试了 1 次 ｜ 0ms；calc.eval：2+2 = 4 ｜ 试了 1 次 ｜ 0ms；calc.eval：3+3 = 6 ｜ 试了 1 次 ｜ 0ms；calc.eval：4+4 = 8 ｜ 试了 1 次 ｜ 0ms；calc.eval：5+5 = 10 ｜ 试了 1 次 ｜ 0ms；calc.eval：6+6 = 12 ｜ 试了 1 次 ｜ 0ms",
+   "provenance": [
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says"
+   ]
+  },
+  {
+   "max_steps": 6,
+   "rep": 2,
+   "result_seen": true,
+   "ok": false,
+   "why": "steps<8(6)",
+   "elapsed_ms": 12620,
+   "n_steps": 6,
+   "n_ok_calc": 6,
+   "tool_seq": [
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval"
+   ],
+   "stop": "步数上限",
+   "stop_why": "步数上限：跑到第 6 步还没收口 ⇒ 停了（剩下的目标：list）",
+   "answer_tier": "measured",
+   "answer_why": "模型收口没写 answer（或这一发不是模型收的）⇒ 这一格是本机按工具读数抄的，不是模型的话",
+   "sane": true,
+   "plan": "模型端点",
+   "fallbacks": null,
+   "answer_head": "calc.eval：1+1 = 2 ｜ 试了 1 次 ｜ 0ms；calc.eval：2+2 = 4 ｜ 试了 1 次 ｜ 0ms；calc.eval：3+3 = 6 ｜ 试了 1 次 ｜ 0ms；calc.eval：4+4 = 8 ｜ 试了 1 次 ｜ 0ms；calc.eval：5+5 = 10 ｜ 试了 1 次 ｜ 0ms；calc.eval：6+6 = 12 ｜ 试了 1 次 ｜ 0ms",
+   "provenance": [
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says"
+   ]
+  },
+  {
+   "max_steps": 6,
+   "rep": 3,
+   "result_seen": true,
+   "ok": false,
+   "why": "steps<8(6)",
+   "elapsed_ms": 14890,
+   "n_steps": 6,
+   "n_ok_calc": 6,
+   "tool_seq": [
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval"
+   ],
+   "stop": "步数上限",
+   "stop_why": "步数上限：跑到第 6 步还没收口 ⇒ 停了（剩下的目标：list）",
+   "answer_tier": "measured",
+   "answer_why": "模型收口没写 answer（或这一发不是模型收的）⇒ 这一格是本机按工具读数抄的，不是模型的话",
+   "sane": true,
+   "plan": "模型端点",
+   "fallbacks": null,
+   "answer_head": "calc.eval：1+1 = 2 ｜ 试了 1 次 ｜ 0ms；calc.eval：2+2 = 4 ｜ 试了 1 次 ｜ 0ms；calc.eval：3+3 = 6 ｜ 试了 1 次 ｜ 0ms；calc.eval：4+4 = 8 ｜ 试了 1 次 ｜ 0ms；calc.eval：5+5 = 10 ｜ 试了 1 次 ｜ 0ms；calc.eval：6+6 = 12 ｜ 试了 1 次 ｜ 0ms",
+   "provenance": [
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says"
+   ]
+  },
+  {
+   "max_steps": 7,
+   "rep": 4,
+   "result_seen": true,
+   "ok": false,
+   "why": "steps<8(7)",
+   "elapsed_ms": 21943,
+   "n_steps": 7,
+   "n_ok_calc": 7,
+   "tool_seq": [
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval"
+   ],
+   "stop": "步数上限",
+   "stop_why": "步数上限：跑到第 7 步还没收口 ⇒ 停了（剩下的目标：list）",
+   "answer_tier": "measured",
+   "answer_why": "模型收口没写 answer（或这一发不是模型收的）⇒ 这一格是本机按工具读数抄的，不是模型的话",
+   "sane": true,
+   "plan": "模型端点",
+   "fallbacks": null,
+   "answer_head": "calc.eval：1+1 = 2 ｜ 试了 1 次 ｜ 0ms；calc.eval：2+2 = 4 ｜ 试了 1 次 ｜ 0ms；calc.eval：3+3 = 6 ｜ 试了 1 次 ｜ 0ms；calc.eval：4+4 = 8 ｜ 试了 1 次 ｜ 0ms；calc.eval：5+5 = 10 ｜ 试了 1 次 ｜ 0ms；calc.eval：6+6 = 12 ｜ 试了 1 次 ｜ 0ms；calc.eval：7+7 = 14 ｜ 试了 1 次 ｜ 0ms",
+   "provenance": [
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says"
+   ]
+  },
+  {
+   "max_steps": 7,
+   "rep": 5,
+   "result_seen": true,
+   "ok": false,
+   "why": "steps<8(7)",
+   "elapsed_ms": 19368,
+   "n_steps": 7,
+   "n_ok_calc": 7,
+   "tool_seq": [
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval"
+   ],
+   "stop": "步数上限",
+   "stop_why": "步数上限：跑到第 7 步还没收口 ⇒ 停了（剩下的目标：list）",
+   "answer_tier": "measured",
+   "answer_why": "模型收口没写 answer（或这一发不是模型收的）⇒ 这一格是本机按工具读数抄的，不是模型的话",
+   "sane": true,
+   "plan": "模型端点",
+   "fallbacks": null,
+   "answer_head": "calc.eval：1+1 = 2 ｜ 试了 1 次 ｜ 0ms；calc.eval：2+2 = 4 ｜ 试了 1 次 ｜ 0ms；calc.eval：3+3 = 6 ｜ 试了 1 次 ｜ 0ms；calc.eval：4+4 = 8 ｜ 试了 1 次 ｜ 0ms；calc.eval：5+5 = 10 ｜ 试了 1 次 ｜ 0ms；calc.eval：6+6 = 12 ｜ 试了 1 次 ｜ 0ms；calc.eval：7+7 = 14 ｜ 试了 1 次 ｜ 0ms",
+   "provenance": [
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says"
+   ]
+  },
+  {
+   "max_steps": 7,
+   "rep": 6,
+   "result_seen": true,
+   "ok": false,
+   "why": "steps<8(7)",
+   "elapsed_ms": 26401,
+   "n_steps": 7,
+   "n_ok_calc": 7,
+   "tool_seq": [
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval"
+   ],
+   "stop": "步数上限",
+   "stop_why": "步数上限：跑到第 7 步还没收口 ⇒ 停了（剩下的目标：list）",
+   "answer_tier": "measured",
+   "answer_why": "模型收口没写 answer（或这一发不是模型收的）⇒ 这一格是本机按工具读数抄的，不是模型的话",
+   "sane": true,
+   "plan": "模型端点",
+   "fallbacks": null,
+   "answer_head": "calc.eval：1+1 = 2 ｜ 试了 1 次 ｜ 0ms；calc.eval：2+2 = 4 ｜ 试了 1 次 ｜ 0ms；calc.eval：3+3 = 6 ｜ 试了 1 次 ｜ 0ms；calc.eval：4+4 = 8 ｜ 试了 1 次 ｜ 0ms；calc.eval：5+5 = 10 ｜ 试了 1 次 ｜ 0ms；calc.eval：6+6 = 12 ｜ 试了 1 次 ｜ 0ms；calc.eval：7+7 = 14 ｜ 试了 1 次 ｜ 0ms",
+   "provenance": [
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says"
+   ]
+  },
+  {
+   "max_steps": 8,
+   "rep": 7,
+   "result_seen": true,
+   "ok": false,
+   "why": "steps<8(7)",
+   "elapsed_ms": 26685,
+   "n_steps": 7,
+   "n_ok_calc": 7,
+   "tool_seq": [
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval"
+   ],
+   "stop": "跑完",
+   "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "sane": true,
+   "plan": "模型端点",
+   "fallbacks": null,
+   "answer_head": "<tool_code>\n{\n  tool => 'done',\n  args => '\n<parameter name=\"answer\">1+1 = 2\n2+2 = 4\n3+3 = 6\n4+4 = 8\n5+5 = 10\n6+6 = 12\n7+7 = 14\n8+8 = 16</parameter>\n'\n}\n</tool_code>",
+   "provenance": [
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says"
+   ]
+  },
+  {
+   "max_steps": 8,
+   "rep": 8,
+   "result_seen": true,
+   "ok": false,
+   "why": "stop=步数上限",
+   "elapsed_ms": 20970,
+   "n_steps": 8,
+   "n_ok_calc": 8,
+   "tool_seq": [
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval"
+   ],
+   "stop": "步数上限",
+   "stop_why": "步数上限：跑到第 8 步还没收口 ⇒ 停了（剩下的目标：list）",
+   "answer_tier": "measured",
+   "answer_why": "模型收口没写 answer（或这一发不是模型收的）⇒ 这一格是本机按工具读数抄的，不是模型的话",
+   "sane": true,
+   "plan": "模型端点",
+   "fallbacks": null,
+   "answer_head": "calc.eval：1+1 = 2 ｜ 试了 1 次 ｜ 0ms；calc.eval：2+2 = 4 ｜ 试了 1 次 ｜ 0ms；calc.eval：3+3 = 6 ｜ 试了 1 次 ｜ 0ms；calc.eval：4+4 = 8 ｜ 试了 1 次 ｜ 0ms；calc.eval：5+5 = 10 ｜ 试了 1 次 ｜ 0ms；calc.eval：6+6 = 12 ｜ 试了 1 次 ｜ 0ms；calc.eval：7+7 = 14 ｜ 试了 1 次 ｜ 0ms；calc.eval：8+8 = 16 ｜ 试了 1 次 ｜ 0ms",
+   "provenance": [
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says"
+   ]
+  },
+  {
+   "max_steps": 8,
+   "rep": 9,
+   "result_seen": true,
+   "ok": false,
+   "why": "stop=步数上限",
+   "elapsed_ms": 15043,
+   "n_steps": 8,
+   "n_ok_calc": 8,
+   "tool_seq": [
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval"
+   ],
+   "stop": "步数上限",
+   "stop_why": "步数上限：跑到第 8 步还没收口 ⇒ 停了（剩下的目标：list）",
+   "answer_tier": "measured",
+   "answer_why": "模型收口没写 answer（或这一发不是模型收的）⇒ 这一格是本机按工具读数抄的，不是模型的话",
+   "sane": true,
+   "plan": "模型端点",
+   "fallbacks": null,
+   "answer_head": "calc.eval：1+1 = 2 ｜ 试了 1 次 ｜ 0ms；calc.eval：2+2 = 4 ｜ 试了 1 次 ｜ 0ms；calc.eval：3+3 = 6 ｜ 试了 1 次 ｜ 0ms；calc.eval：4+4 = 8 ｜ 试了 1 次 ｜ 0ms；calc.eval：5+5 = 10 ｜ 试了 1 次 ｜ 0ms；calc.eval：6+6 = 12 ｜ 试了 1 次 ｜ 0ms；calc.eval：7+7 = 14 ｜ 试了 1 次 ｜ 0ms；calc.eval：8+8 = 16 ｜ 试了 1 次 ｜ 0ms",
+   "provenance": [
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says"
+   ]
+  },
+  {
+   "max_steps": 9,
+   "rep": 10,
+   "result_seen": true,
+   "ok": true,
+   "why": "ok",
+   "elapsed_ms": 56438,
+   "n_steps": 8,
+   "n_ok_calc": 8,
+   "tool_seq": [
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval"
+   ],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "sane": true,
+   "plan": "模型端点",
+   "fallbacks": null,
+   "answer_head": "八个计算结果如下：\n\n1. 1 + 1 = 2\n2. 2 + 2 = 4\n3. 3 + 3 = 6\n4. 4 + 4 = 8\n5. 5 + 5 = 10\n6. 6 + 6 = 12\n7. 7 + 7 = 14\n8. 8 + 8 = 16",
+   "provenance": [
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says"
+   ]
+  },
+  {
+   "max_steps": 9,
+   "rep": 11,
+   "result_seen": true,
+   "ok": true,
+   "why": "ok",
+   "elapsed_ms": 24280,
+   "n_steps": 8,
+   "n_ok_calc": 8,
+   "tool_seq": [
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval"
+   ],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "sane": true,
+   "plan": "模型端点",
+   "fallbacks": null,
+   "answer_head": "已完成所有计算：\n1. 1+1 = 2\n2. 2+2 =4\n3. 3+3 = 6\n4. 4+4 = 8\n5. 5+5 = 10\n6. 6+6 = 12\n7. 7+7 = 14\n8. 8+8 = 16",
+   "provenance": [
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says"
+   ]
+  },
+  {
+   "max_steps": 9,
+   "rep": 12,
+   "result_seen": true,
+   "ok": false,
+   "why": "steps<8(3)",
+   "elapsed_ms": 7998,
+   "n_steps": 3,
+   "n_ok_calc": 3,
+   "tool_seq": [
+    "calc.eval",
+    "calc.eval",
+    "calc.eval"
+   ],
+   "stop": "跑完",
+   "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "sane": true,
+   "plan": "模型端点",
+   "fallbacks": null,
+   "answer_head": "[TOOL_CALL]\n{tool => \"calc.eval\", args => {\n  --expr \"4+4\"\n}}\n[/TOOL_CALL]",
+   "provenance": [
+    "model_says",
+    "model_says",
+    "model_says"
+   ]
+  },
+  {
+   "max_steps": 10,
+   "rep": 13,
+   "result_seen": true,
+   "ok": true,
+   "why": "ok",
+   "elapsed_ms": 23370,
+   "n_steps": 8,
+   "n_ok_calc": 8,
+   "tool_seq": [
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval"
+   ],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "sane": true,
+   "plan": "模型端点",
+   "fallbacks": null,
+   "answer_head": "八个计算结果如下：\n\n1. 1 + 1 = 2\n2. 2 + 2 = 4\n3. 3 + 3 = 6\n4. 4 + 4 = 8\n5. 5 + 5 = 10\n6. 6 + 6 = 12\n7. 7 + 7 = 14\n8. 8 + 8 = 16",
+   "provenance": [
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says"
+   ]
+  },
+  {
+   "max_steps": 10,
+   "rep": 14,
+   "result_seen": true,
+   "ok": true,
+   "why": "ok",
+   "elapsed_ms": 21542,
+   "n_steps": 8,
+   "n_ok_calc": 8,
+   "tool_seq": [
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval"
+   ],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "sane": true,
+   "plan": "模型端点",
+   "fallbacks": null,
+   "answer_head": "八个计算结果如下：\n\n1. 1+1 = 2\n2. 2+2 = 4\n3. 3+3 = 6\n4. 4+4 = 8\n5. 5+5 = 10\n6. 6+6 = 12\n7. 7+7 = 14\n8. 8+8 = 16",
+   "provenance": [
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says"
+   ]
+  },
+  {
+   "max_steps": 10,
+   "rep": 15,
+   "result_seen": true,
+   "ok": true,
+   "why": "ok",
+   "elapsed_ms": 43676,
+   "n_steps": 8,
+   "n_ok_calc": 8,
+   "tool_seq": [
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval",
+    "calc.eval"
+   ],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "sane": true,
+   "plan": "模型端点",
+   "fallbacks": null,
+   "answer_head": "八个计算结果如下：\n1. 1+1 = 2\n2. 2+2 = 4\n3. 3+3 = 6\n4. 4+4 = 8\n5. 5+5 = 10\n6. 6+6 = 12\n7. 7+7 = 14\n8. 8+8 = 16",
+   "provenance": [
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says"
+   ]
+  }
+ ],
+ "elapsed_ms_total": 381865
+}

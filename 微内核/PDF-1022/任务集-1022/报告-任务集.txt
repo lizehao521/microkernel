@@ -1,0 +1,78 @@
+任务集读数 · 2026-10-23T10:00:00+08:00
+根：C:\Users\Admin\Desktop\微内核
+
+构建：
+  go version go1.27.2 windows/amd64
+  hubd.exe sha256=301964072940cbe86a368f58e89a29e0da73300c71a9e5edfe3dbf4e2ddd28d0 bytes=12040704 源树最新 .go mtime=2026-10-23T09:36:07+08:00
+  pgagent.exe sha256=6273dad58ccdada6d98c0a92fda986f67b4805349828f0443010f74fd0f03750 bytes=15011840 源树最新 .go mtime=2026-10-21T09:43:21+08:00
+  agentd.exe sha256=8c94f991e8bb0ee900986c1bfc2b5a3a63c92887239cca0806f8560a607b8521 bytes=14358016 源树最新 .go mtime=2026-10-23T09:47:56+08:00
+
+隔离与参数：
+  Hub 端口=63369；pgagent 端口=63370；故障服务器端口=63368（均 127.0.0.1 随机空闲端口）
+  夹具：numbers.txt=7 行无尾换行；big.txt=200B；mid.txt=40B；small.txt=3B；victim/keep.txt
+  Hub：-data <temp>/hub-data -fs-roots <fixture> -net-allow 127.0.0.1,localhost -step-delay 0ms -max-steps 6 -allow-write=false -allow-exec=false
+  pgagent：-data <temp>/pg-data -fake-endpoint -step-delay 0ms
+  agentd：-driver ledger -task "把 27、15、8、34 加起来" -max-turns 8 -trace-out "" -events=false（本地执行器，不是模型；T08 在临时目录里篡改一份账再 resume）
+  Hub health：{"allow_exec": false, "allow_write": false, "memory": 0, "model_endpoint": "NOT_RUN（没配）", "next_turn": 1, "ok": true, "tools": 12}
+  pgagent health：{"budget_effective_ceiling": 14745, "executes_code": false, "ok": true, "parts_fixed_bytes": 324, "seam_installed": true}
+
+口径声明：
+  规划器全部是本机规则（estimated）；真模型端点 NOT_RUN；真人可用性 NOT_RUN。
+  下表是「规则规划器 + 真工具」的完成率/恢复率，不是模型自主决策的绿。
+  pgagent 的 -fake-endpoint 是演示件（真模型 0 次），T04 不依赖它的回答。
+  agentd 的 ledger 驱动是本机执行器（Autonomous=false）：T01 的答案由独立一趟求和
+  oracle 核，T08 核的是「坏账被拒且不落盘」；两者都不是模型自主决定的绿。
+
+尺子自证反臂（叶子臂，只打判据）：
+  [咬] T02 lines=8
+  [咬] T06 waited=400
+  [咬] T11 attempts=1
+  [咬] T11 stop=跑完
+  [咬] T11 重撞两步
+  [咬] T01 got=87
+  [咬] T01 calls=4
+  [咬] T01 entries=147
+  [咬] T08 rc=0
+  [咬] T08 写了空账
+  [咬] T10 no turn-1 hit
+  [咬] T10 turns 1/2/4/5
+  12/12 咬
+
+任务表（12 形）：
+  ID  | 场景 | 面 | 类别 | 状态 | 跑 | 判 | 观察
+  T01 | 典型 | agentd | completion | runnable | 是 | 过 | rc=0 expected=84 got=84 calls=3 calls_expected=3 verdict=ok entries=196 shots=4 chain_ok=True ms=174.9
+  T02 | 典型 | agenthub | completion | runnable | 是 | 过 | steps=2 stop=跑完 sane=True mix_ok=True retries=0 waited_ms=0 turn=1 read_class=ok stats_class=ok lines=7
+  T03 | 典型 | agenthub | completion | runnable | 是 | 过 | steps=1 stop=跑完 sane=True mix_ok=True retries=0 waited_ms=0 turn=2 list_class=ok top=big.txt
+  T04 | 边界 | pgagent | completion | runnable | 是 | 过 | code_status=400 code_body=代码是空的 —— 空输入不出结论，出结论也是假绿
+ empty_q_status=200 intent=未判定 trace_len=13 code_executed=False trace_sane=True mix_identity_ok=True chain_sane=True answer=问题路由=未判定（问题栏是空的 ⇒ 没有可路由的意图，按审查那一套全量给（词表 24 个词一个都没得匹配））｜按审查那一...
+  T05 | 边界 | agenthub | recovery | runnable | 是 | 过 | steps=1 stop=重复失败即停 sane=True mix_ok=True retries=0 waited_ms=0 turn=3 stats_class=bad_args attempts=1
+  T06 | 异常 | agenthub | recovery | runnable | 是 | 过 | steps=1 stop=跑完 sane=True mix_ok=True retries=2 waited_ms=1802 turn=4 http_class=ok attempts=3
+  T07 | 异常 | agenthub | recovery | runnable | 是 | 过 | steps=1 stop=重复失败即停 sane=True mix_ok=True retries=2 waited_ms=361 turn=1 http_class=timeout attempts=3
+  T08 | 异常 | agentd | recovery | runnable | 是 | 过 | rc=2 refused=True out_journal_exists=False oracle_written=False input_unchanged=True input_sha256=4264a8118037affd ms=29.4
+  T09 | 长链 | agenthub | completion | blocked | 否 | — | why=Hub 只有规则 planner，最多拼 4 个目标；默认 6 步上限，8 步链需要模型规划器与新工具
+      阻塞理由：Hub 只有规则 planner，最多拼 4 个目标；默认 6 步上限，8 步链需要模型规划器与新工具
+  T10 | 记忆 | agenthub | completion | runnable | 是 | 过 | steps=1 stop=跑完 sane=True mix_ok=True retries=0 waited_ms=0 turn=4 recall_class=ok hits=2 turn1_seen=True token_seen=True turn_numbers=[1, 2, 3, 4]
+  T11 | 安全 | agenthub | safety | runnable | 是 | 过 | steps=1 stop=没放行 sane=True mix_ok=True retries=0 waited_ms=0 turn=1 refused_steps=1 other_tools=[] attempts=[0] victim_exists=True
+  T12 | 稳定 | agenthub | stability | runnable | 是 | 20/20 | rep=1..20；steps=2 stop=跑完 sane=True mix_ok=True retries=0 waited_ms=0 turn=2 read_class=ok stats_class=ok lines=7
+
+分母（自印）：
+  12 形：可跑 11 形、阻塞 1 形（T09）。
+  完成率（kind=completion，可跑 5 形：T01,T02,T03,T04,T10）：5/5；阻塞 1 形（T09）NOT_RUN。
+  恢复率（kind=recovery，可跑 4 形：T05,T06,T07,T08）：4/4。
+  安全（kind=safety，可跑 1 形：T11）：1/1。
+  稳定性（kind=stability，T12，同会话重复 20 发）：20/20。
+  可跑行合计：30；通过 30；红 0。阻塞行 1 不计入成功率，单列理由。
+  注：完成率不把 T06（recovery）与 T12（stability）重复计入；它们在各自类别里报。
+  稳定性成本（T12，20 发）：总 293.5ms ｜ min 4.4 / 中位 15.4 / max 27.3 ms ｜ 这 20 发里失败 0 发
+  失败边界：NOT_RUN —— 这 20 发一次都没失败过，失败时怎么收口没被触发过（「失败 0 发」是量到的；「失败边界」是没量到的）
+
+整列自洽：
+  Hub sane=false：0 行
+  Hub mix_ok=false：0 行
+  pgagent trace_sane=false：0 行
+  pgagent mix_identity_ok=false：0 行
+
+读数落盘：C:\Users\Admin\Desktop\微内核\PDF-1022\任务集-1022\读数-任务集.jsonl
+landing check: 31/31 rows
+结论：SUITE_GREEN（这是任务集读数，不是分级结论）
+读数时间：2026-10-23T10:00:19+08:00

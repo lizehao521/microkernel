@@ -1,0 +1,35 @@
+锚点核对 · evidence.md 逐条回盘验证（本件自印分母，不手抄）
+解析到带锚点的表行：26
+[ 命中] 表行 27 ｜ stdout 正文由 `r.say` 单点写 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\loop.go 内找到 r.say、say
+[ 命中] 表行 28 ｜ 诊断/横幅另走一路（不进 stdout） ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\main.go 内找到 TestEmitFailureIsLoudOnStderr、errf、printEventBanner
+[ 命中] 表行 29 ｜ 停止入口只有一条（进程内与 SIGINT 同路） ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\loop.go 内找到 Stop、TestStopEntryIsSingleAndIdempotent
+[ 命中] 表行 30 ｜ 循环入口 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\loop.go ｜（该行没给可核符号，只验存在与行界）
+[ 命中] 表行 31 ｜ abort 两处看一眼 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\loop.go 内找到 abort、r.abort
+[ 命中] 表行 32 ｜ 预检调用点 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\loop.go 内找到 check_call、kernel.check_call
+[ 命中] 表行 33 ｜ 落账调用点 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\loop.go 内找到 kernel.record_call、record_call
+[ 命中] 表行 34 ｜ 回边读回 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\loop.go 内找到 487、636、kernel.read_back、read_back
+[ 命中] 表行 35 ｜ 账→决定 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\loop.go 内找到 decide、r.decide
+[ 命中] 表行 36 ｜ 续跑先核链 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\loop.go 内找到 r.resume、resume
+[ 命中] 表行 37 ｜ 收口落盘 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\loop.go 内找到 checkpoint、r.checkpoint
+[ 命中] 表行 38 ｜ 收口 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\loop.go 内找到 closeOut、r.closeOut
+[未命中] 表行 39 ｜ 事件总线：append-only 落点与序号接续 ｜ events.go 那一行的上下 2 行里找不到 O_APPEND、TestEventLogAppendsAcrossRuns、newEventBus
+[未命中] 表行 40 ｜ 一条事件的完整身份是 `(session, run, turn, seq)` ｜ events.go 那一行的上下 2 行里找不到 blockOf
+[ 命中] 表行 41 ｜ 回执 turn_accepted ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\loop.go 内找到 TestLateReceiptGoesRed、TestProductionAckLatencyIsMeasurable、acceptedEv、ackAnchor
+[未命中] 表行 42 ｜ 回执判据（可达形态） ｜ events.go 那一行的上下 2 行里找不到 TestAcceptArmsCatchEachBadShape、ValidateAcceptsWithin
+[ 命中] 表行 43 ｜ 结算 settleTurn（一发只结一次） ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\events.go 内找到 TestSettleTurnIsIdempotent、TestSettlementArmsCatchEachBadShape、ValidateSettlement、settleTurn、stopTokens
+[ 命中] 表行 44 ｜ 相位表（reached/not_reached 的唯一来源） ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\events.go 内找到 decide、read_back、turnPhases
+[ 命中] 表行 45 ｜ 事件挂点 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\loop.go 内找到 254、292、311、320、340、365、763、TestEventSeqMonotonicWithinEachTurn、TestEveryTurnSettlesExactlyOnce、TestTurnAcceptedLeadsEveryTurn、emit、r.emit
+[未命中] 表行 46 ｜ 序号判据的可达形态 ｜ events.go 那一行的上下 2 行里找不到 TestValidateLogArmRejectsDuplicateAndRegress、ValidateLog
+[ 命中] 表行 47 ｜ 五档 + 状态白名单 + 落盘后才计数 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\events.go 内找到 Emit、TestAbsentWithoutWhyIsRefusedAndNotWritten、eventStates
+[ 命中] 表行 48 ｜ 事件落点推导与撞车守卫 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\main.go 内找到 TestEventLogPathDerivationAndCollision、eventLogPath
+[ 命中] 表行 49 ｜ 轨迹页跑完才写 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\trace.go 内找到 writeTrace
+[ 命中] 表行 50 ｜ 六态退出码 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\main.go 内找到 exitOf
+[ 命中] 表行 51 ｜ 本机 HTTP/SSE 形状已有先例 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\fakesrv.go 内找到 Flusher、Hijacker
+[ 命中] 表行 52 ｜ 内核不写盘、只编字节 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\README.md ｜（该行没给可核符号，只验存在与行界）
+
+臂一（把「stdout 正文由 `r.say` 单点写」的行号改成 99999）：读数=range ｜ loop.go 只有 866 行，却引到 99999 ｜ 臂有效
+臂二（把「stdout 正文由 `r.say` 单点写」那一行的符号换成 ASCII 假标识符，行号不动）：读数=miss ｜ loop.go 那一行的上下 2 行里找不到 zzynothere_sym ｜ 臂有效
+
+覆盖面自印：符号可核 26 行 ｜ 仅存在性 0 行 ｜ 共 26 行
+合计：命中 22 ｜ 未命中 4 ｜ 缺文件 0 ｜ 行越界 0 ｜ 共 26 行
+结论：有锚点漂了，按上面点名那几行改 evidence.md（别改尺子迁就它，先确认是代码漂还是引用写错）。

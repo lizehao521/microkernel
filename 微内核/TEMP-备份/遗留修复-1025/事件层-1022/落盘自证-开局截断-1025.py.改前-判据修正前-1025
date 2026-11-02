@@ -1,0 +1,170 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""B1 的双臂现场凭证：同一发中断，**改前那份**把正式读数截没了，**改后这份**保住上一趟。
+
+为什么要有这一件（而不是改完就算）：这条判据长得像"写法更讲究了"，只有把它和改前的字节
+摆在同一发中断下，才看得出差别落在盘上 —— 10-23 臂检那一族的原话就是
+「一开跑就把上一份 82 行读数截成 0 字节，而合取件只看 mtime ⇒ 空读数被判成绿」。
+
+两个实验，都跑**产品字节**（一份是树上这一份，一份是 `TEMP-备份/遗留修复-1025/…改前-B1前-1025`
+那份逐字副本，不重写、不还原）：
+
+  E1 崩在最前 —— 传一把不存在的 go.exe，`list_tests()` 在第一行 emit 之前抛异常。
+     这一族最坏的形状：正式名被截成 **0 字节**（连一行罪名都没有）。
+  E2 跑到中途被打断 —— 命令行照 AGENTS.md 那条逐字抄（真 go、真树），跑 50 秒后 kill。
+     第二形状：正式名剩 **3～4 行**（表头那几行进去了，八条针一条没跑完），mtime 还是最新的。
+
+判据（本件自己的 rc）：改后必须**逐字保住**上一趟那份（sha 相等），改前必须**丢掉**它。
+两边都保住 = 我的改动没生效；两边都丢掉 = 换名这条路没接上 —— 两种都判红，因为
+"臂没接上=恒 0，与尺子没牙同形"。
+
+用法（工作目录 事件层-1022）：
+    C:/Users/Admin/sdk/py314/python.exe 落盘自证-开局截断-1025.py <go.exe> <树根>
+控制台只走 ASCII（GBK 会崩在中文上，崩掉的是退出码契约）；读数落 报告/落盘自证-开局截断-1025.txt。
+退出码：0 两个实验都成对（改后保住 / 改前丢掉）；2 形状不对；3 环境没备齐。
+"""
+import hashlib
+import io
+import os
+import shutil
+import subprocess
+import sys
+import time
+
+PY = sys.executable
+GO = sys.argv[1] if len(sys.argv) > 1 else r"C:/Users/Admin/sdk/go/bin/go.exe"
+SRC = sys.argv[2] if len(sys.argv) > 2 else r"C:/Users/Admin/Desktop/微内核/微内核/微内核"
+HERE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(HERE)                      # 微内核现场根
+FIXED = os.path.join(HERE, "验收-事件层-1022.py")  # 产品字节（改后）
+PRE = os.path.join(ROOT, "TEMP-备份", "遗留修复-1025", "事件层-1022",
+                   "验收-事件层-1022.py.改前-B1前-1025")
+DOC = os.path.join(ROOT, "研究-协同工作-1022.md")
+SEED = os.path.join(ROOT, "TEMP-备份", "遗留修复-1025", "事件层-1022",
+                    "报告-验收.txt.改前现那份-1025")  # 上一趟的完整读数，当"改前就在那儿"的凭据
+OUT_DIR = os.path.join(HERE, "报告")
+OUT = os.path.join(OUT_DIR, "落盘自证-开局截断-1025.txt")
+SCRIPT_NAME = "验收-事件层-1022.py"               # 两个实验里都按这个名放（脚本按 __file__ 找邻居）
+E2_SECONDS = 50
+
+_lines = []
+
+
+def say(s):
+    _lines.append(s)
+    sys.stdout.write(s.encode("ascii", "backslashreplace").decode("ascii") + "\n")
+
+
+def sha256(p):
+    if not os.path.isfile(p):
+        return "absent"
+    return hashlib.sha256(io.open(p, "rb").read()).hexdigest()[:16]
+
+
+def size_rows(p):
+    if not os.path.isfile(p):
+        return "absent", "absent"
+    raw = io.open(p, "rb").read()
+    n = len(io.open(p, encoding="utf-8", errors="replace").read().splitlines())
+    return len(raw), n
+
+
+def prep(tag, need_doc):
+    """造一棵临时目录：<父>/<tag>/验收-事件层-1022.py，旁边摆一份"上一趟的完整读数"。
+
+    DOC 放在**父目录**，因为被试件按 `HERE/../研究-协同工作-1022.md` 找它 —— 这是它的既有规矩，
+    本件不改它一个字（改了就不是产品字节）。
+    """
+    base = os.path.join(os.environ.get("TEMP", "/tmp"), "ak-1025-b1", tag)
+    shutil.rmtree(base, ignore_errors=True)
+    os.makedirs(os.path.join(base, "事件层"))
+    d = os.path.join(base, "事件层")
+    if need_doc:
+        shutil.copyfile(DOC, os.path.join(base, os.path.basename(DOC)))
+    shutil.copyfile(FIXED if tag.startswith("fixed") else PRE, os.path.join(d, SCRIPT_NAME))
+    shutil.copyfile(SEED, os.path.join(d, "报告-验收.txt"))
+    return d
+
+
+def run(d, go):
+    return subprocess.Popen([PY, os.path.join(d, SCRIPT_NAME), go, SRC], cwd=d,
+                            stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                            text=True, encoding="utf-8", errors="replace")
+
+
+def verdict(label, official_sha, seed_sha, part_rows):
+    kept = official_sha == seed_sha
+    say("  %-30s 正式名 sha=%s（改前那一份=%s）⇒ %s ｜ 半截留在 .part 的行数=%s"
+        % (label, official_sha, seed_sha, "保住上一趟" if kept else "被这一趟改了", part_rows))
+    return kept
+
+
+def e1():
+    say("== E1 崩在最前（一把不存在的 go.exe：第一行 emit 之前抛异常）==")
+    out = {}
+    for tag, label in (("fixed-e1", "改后（.part+replace）"), ("pre-e1", "改前（开局截正式名）")):
+        d = prep(tag, need_doc=False)
+        official = os.path.join(d, "报告-验收.txt")
+        part = official + ".part"
+        seed_sha = sha256(official)
+        p = run(d, r"C:/Users/Admin/sdk/go/bin/no-such-go.exe")
+        p.communicate()
+        kept = verdict(label, sha256(official), seed_sha,
+                       size_rows(part)[1] if os.path.isfile(part) else "没有 .part 这个文件")
+        out[tag] = (kept, seed_sha, size_rows(official))
+    ok_fixed = out["fixed-e1"][0]
+    ok_pre = (not out["pre-e1"][0])
+    say("  E1 结论：改后保住=%s ｜ 改前丢掉=%s（丢掉后的字节数/行数=%s，原来是 %s）"
+        % (ok_fixed, ok_pre, out["pre-e1"][2], out["fixed-e1"][2]))
+    return ok_fixed and ok_pre
+
+
+def e2():
+    say("== E2 跑到中途被打断（命令行照 AGENTS.md 逐字抄，%d 秒后 kill）==" % E2_SECONDS)
+    out = {}
+    for tag, label in (("fixed-e2", "改后（.part+replace）"), ("pre-e2", "改前（开局截正式名）")):
+        d = prep(tag, need_doc=True)
+        official = os.path.join(d, "报告-验收.txt")
+        part = official + ".part"
+        seed_sha = sha256(official)
+        p = run(d, GO)
+        time.sleep(E2_SECONDS)
+        p.kill()
+        p.communicate()
+        kept = verdict(label, sha256(official), seed_sha, size_rows(part)[1])
+        out[tag] = (kept, size_rows(official))
+    ok_fixed = out["fixed-e2"][0]
+    ok_pre = (not out["pre-e2"][0])
+    say("  E2 结论：改后保住=%s ｜ 改前丢掉=%s（改后=%s 改前=%s 字节/行）"
+        % (ok_fixed, ok_pre, out["fixed-e2"][2], out["pre-e2"][2]))
+    return ok_fixed and ok_pre
+
+
+def main():
+    for p, why in ((FIXED, "改后那份不在"), (PRE, "改前备份不在（它才是这一判的对照字节）"),
+                   (SEED, "上一趟的完整读数不在（没有它就没有「保住」可言）")):
+        if not os.path.isfile(p):
+            say("ENV-BAD %s：%s" % (why, p))
+            return 3
+    if not os.path.isfile(GO):
+        say("ENV-BAD go.exe 不在：%s —— E2 要真跑，不许拿假端点冒充" % GO)
+        return 3
+    say("产品字节：改后 %s（%d B，sha %s）" % (os.path.basename(FIXED), os.path.getsize(FIXED), sha256(FIXED)))
+    say("对照字节：改前 %s（%d B，sha %s）" % (os.path.basename(PRE), os.path.getsize(PRE), sha256(PRE)))
+    say("种子读数：%s（%d B，sha %s）" % (os.path.basename(SEED), os.path.getsize(SEED), sha256(SEED)))
+    say("")
+    r1 = e1()
+    say("")
+    r2 = e2()
+    say("")
+    say("双臂成对：%s（E1）%s（E2）—— 两半都要「改后保住 / 改前丢掉」，缺一半就是臂没接上"
+        % ("OK" if r1 else "BAD", "OK" if r2 else "BAD"))
+    os.makedirs(OUT_DIR, exist_ok=True)
+    io.open(OUT, "w", encoding="utf-8", newline="\n").write("\n".join(_lines) + "\n")
+    sys.stdout.write(("reading: %s (%d rows)\n" % (OUT, len(_lines)))
+                     .encode("ascii", "backslashreplace").decode("ascii"))
+    return 0 if (r1 and r2) else 2
+
+
+if __name__ == "__main__":
+    sys.exit(main())

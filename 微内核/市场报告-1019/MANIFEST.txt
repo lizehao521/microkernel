@@ -1,0 +1,18 @@
+REPORT MANIFEST
+built_at=2026-10-20 00:02:38
+html=报告.html
+pdf=agentkernel-市场进入研究-1019.pdf
+pdf_pages=67
+pdf_bytes=2097438
+html_bytes=219465
+pdf_sha256=d11cbcd254c3f073cfd71fc7cce121060d648ac113920bb948f52dc23877df31
+html_sha256=3bb8007d2676cfc1ccdd00ffe0f74cd05bb3e4e3c1e2b8191603fd34c5119728
+cjk_chars_extracted=29051
+toc_keys_expected=62
+toc_keys_filled=62
+body_start_page=6
+edge=C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+render=Microsoft Edge headless via CDP Page.printToPDF, custom footer, no URL
+extract=pdftotext -enc UTF-8
+missing_keys=0
+secret_pattern=0

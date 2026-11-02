@@ -1,0 +1,143 @@
+{
+ "receipt_version": 1,
+ "tool": {
+  "name": "交付对账单",
+  "version": "1.0",
+  "sha256": "7994b6660cd80d62e21b5b6cc4eda8ef7f3077d57ed7ab66fdb451212f10fa9f"
+ },
+ "spec": {
+  "path": "C:\\Users\\Admin\\Desktop\\微内核\\交付对账-1026\\示例-编程\\交付声明.json",
+  "resolved": "C:\\Users\\Admin\\Desktop\\微内核\\交付对账-1026\\示例-编程\\交付声明.json",
+  "sha256": "8f51989c0c6f255c89060ff7fa5fe9a317e5ad2c87c01a338a28b220c92e3057"
+ },
+ "generated_at": "2026-10-25T17:52:17Z",
+ "session": "示例-编程-好交付",
+ "delivery": {
+  "by": "编程 Agent（示例，人工扮演）",
+  "task": "修 calc.mean 空列表崩溃，并跑三个单测",
+  "produced_at": "2026-10-26"
+ },
+ "status": "ACCEPTED",
+ "status_why": "8 条声明全部由盘上证据复核通过，证据源无红，无仅凭自报的项",
+ "claims": [
+  {
+   "id": "C1",
+   "kind": "file_sha256",
+   "why": "交付说改完的就是这份文件",
+   "evidence_class": "disk",
+   "target": "工作区/calc.py",
+   "expected": "e5e1efde571cacada4c34b445da538a217fe097b47cd866e446bfdfec7e4f640",
+   "actual": "e5e1efde571cacada4c34b445da538a217fe097b47cd866e446bfdfec7e4f640",
+   "verdict": "MATCH",
+   "basis": "measured",
+   "detail": ""
+  },
+  {
+   "id": "C2",
+   "kind": "file_contains",
+   "why": "空列表先拦下",
+   "evidence_class": "disk",
+   "target": "工作区/calc.py",
+   "expected": "if not xs:",
+   "actual": "    if not xs:",
+   "verdict": "MATCH",
+   "basis": "measured",
+   "detail": "第 2 行"
+  },
+  {
+   "id": "C3",
+   "kind": "log_exit",
+   "why": "三个单测应当全过",
+   "evidence_class": "disk",
+   "target": "证据/修复后-测试.log",
+   "expected": 0,
+   "actual": "exit_code=0",
+   "verdict": "MATCH",
+   "basis": "measured",
+   "detail": "取最后一行非空行"
+  },
+  {
+   "id": "C4",
+   "kind": "log_contains",
+   "why": "unittest 全过时末行是 OK",
+   "evidence_class": "disk",
+   "target": "证据/修复后-测试.log",
+   "expected": "OK",
+   "actual": "出现 1 次",
+   "verdict": "MATCH",
+   "basis": "measured",
+   "detail": ""
+  },
+  {
+   "id": "C5",
+   "kind": "file_absent",
+   "why": "交付说调试用的临时文件已删",
+   "evidence_class": "disk",
+   "target": "工作区/tmp_debug.txt",
+   "expected": null,
+   "actual": "不存在",
+   "verdict": "MATCH",
+   "basis": "measured",
+   "detail": ""
+  },
+  {
+   "id": "C6",
+   "kind": "file_bytes",
+   "why": "报给下游的字节数",
+   "evidence_class": "disk",
+   "target": "工作区/calc.py",
+   "expected": 99,
+   "actual": "99 字节",
+   "verdict": "MATCH",
+   "basis": "measured",
+   "detail": ""
+  },
+  {
+   "id": "C7",
+   "kind": "file_lines",
+   "why": "报给下游的行数",
+   "evidence_class": "disk",
+   "target": "工作区/calc.py",
+   "expected": 4,
+   "actual": "4 行",
+   "verdict": "MATCH",
+   "basis": "measured",
+   "detail": ""
+  },
+  {
+   "id": "C8",
+   "kind": "log_contains",
+   "why": "三个用例都跑了",
+   "evidence_class": "disk",
+   "target": "证据/修复后-测试.log",
+   "expected": "Ran 3 tests",
+   "actual": "出现 1 次",
+   "verdict": "MATCH",
+   "basis": "measured",
+   "detail": ""
+  }
+ ],
+ "summary": {
+  "claims": 8,
+  "match": 8,
+  "mismatch": 0,
+  "absent": 0,
+  "disk": 8,
+  "self": 0
+ },
+ "evidence": {},
+ "limits": [
+  "本件只读盘上文件：不执行被交付的代码，不联网，不改任何输入。",
+  "核对的是「声明 vs 盘上证据」是否一致，不判断代码或结论本身对不对。",
+  "证据怎么产生的，本件证不了：日志与文件可能是事后补的，本件只核它们与声明是否对得上。",
+  "交付方自报的读数（trace_sane / KPI / chain_sane 等）记为 relayed，本件不重算。",
+  "内核账本只核 seal / 链接 / 序号 / payload / 49 格分组这些可复算的形状，不核每格内容对不对。",
+  "ACCEPTED 只代表「每条声明都由盘上证据复核通过，且没有仅凭自报的项」；不代表代码正确或测试充分。"
+ ],
+ "landing": {
+  "claims_json": 8,
+  "claims_html": 8,
+  "claims_total": 8,
+  "ok": true
+ }
+}

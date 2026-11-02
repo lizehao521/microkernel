@@ -1,0 +1,2 @@
+2026/10/18 11:35:28 mcphttp（streamable HTTP）：http://127.0.0.1:8797/mcp —— 10 个工具，账本活在本进程记忆里（当前 0 条），并发刻意不做（排队上限 30s）
+2026/10/18 11:35:28 mcphttp: listen tcp 127.0.0.1:8797: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.

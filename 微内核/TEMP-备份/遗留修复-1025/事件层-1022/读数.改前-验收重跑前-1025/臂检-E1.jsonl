@@ -1,0 +1,10 @@
+{"arm": "A1 append 改回截断", "file": "cmd/agentd/events.go", "test": "^TestEventLogAppendsAcrossRuns$", "control_rc": 0, "mutant_rc": 1, "bit": true, "note": ""}
+{"arm": "A2 序号判据恒过", "file": "cmd/agentd/events.go", "test": "^TestValidateLogArmRejectsDuplicateAndRegress$", "control_rc": 0, "mutant_rc": 1, "bit": true, "note": ""}
+{"arm": "A3 state 白名单拆掉", "file": "cmd/agentd/events.go", "test": "^TestAbsentWithoutWhyIsRefusedAndNotWritten$", "control_rc": 0, "mutant_rc": 1, "bit": true, "note": ""}
+{"arm": "A4 计数先于落盘", "file": "cmd/agentd/events.go", "test": "^TestEventSeqMonotonicWithinEachTurn$", "control_rc": 0, "mutant_rc": 1, "bit": true, "note": ""}
+{"arm": "A5 已关闭的守卫拆掉", "file": "cmd/agentd/events.go", "test": "^TestClosedBusRefusesNewEvents$", "control_rc": 0, "mutant_rc": 1, "bit": true, "note": ""}
+{"arm": "A6 拒收改回写 stdout", "file": "cmd/agentd/events.go", "test": "^TestEmitFailureIsLoudOnStderr$", "control_rc": 0, "mutant_rc": 1, "bit": true, "note": ""}
+{"arm": "A7 撞车守卫拆掉", "file": "cmd/agentd/main.go", "test": "^TestEventLogPathDerivationAndCollision$", "control_rc": 0, "mutant_rc": 1, "bit": true, "note": ""}
+{"arm": "A8 total 一律取额度", "file": "cmd/agentd/loop.go", "test": "^TestEventSeqMonotonicWithinEachTurn$", "control_rc": 0, "mutant_rc": 1, "bit": true, "note": ""}
+{"arm": "A9 账满那一形与继续那一形混成一条", "file": "cmd/agentd/loop.go", "test": "^TestRefusedEventsCarryTheirWhy$", "control_rc": 0, "mutant_rc": 1, "bit": true, "note": ""}
+{"arm": "A10 收口塞回发级坐标", "file": "cmd/agentd/loop.go", "test": "^TestEventSeqMonotonicWithinEachTurn$", "control_rc": 0, "mutant_rc": 1, "bit": true, "note": ""}

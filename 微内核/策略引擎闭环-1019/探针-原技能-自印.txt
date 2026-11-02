@@ -1,0 +1,84 @@
+========================================================================
+26 策略引擎 · 基础能力闭环探针
+========================================================================
+被测目录 = C:\Users\Admin\.qoder-cn\skills\loudong-wajue-jinhua-yinqing
+引擎 sha256 = c62b962c1a45d3df4b12f1abed16d9650a8e5f7e3ec8640bb61b8d8740f4b641
+python = 3.14.1
+
+-- 一、目录与实现 --
+目录声明 26 ｜ transform 21 ｜ meta 5 ｜ 分支 20（匹配 20 次）
+恒等（声明 transform 但无分支）= 1：['context_switch']
+三态加总 20 + 5 + 1 = 26（目录 26）
+  [GREEN] catalog_accounting ｜ 26/26
+选择池 = 21 条 ｜ context_switch 在池内 = True
+  [RED] identity_not_selectable ｜ 选择池 21 条
+
+-- 二、引擎 → 内核接线 --
+kernel 模块三件在场 2：['judge_response', 'scamper_mutate'] ｜ 缺 ['mutate']
+引擎侧 judge_response=False ｜ scamper_mutate=False
+根因行 engine:54: from vuln_hunter_kernel import judge_response, scamper_mutate, mutate
+  [RED] kernel_link ｜ 整条链路静默降级为 None
+judge_response 实调用 = None
+  [RED] kernel_judge_callable ｜ 不可调用
+
+-- 三、逐策略运行时（4 组样例 / 每条） --
+  analogy          变了 1/4 ｜ 有分支=是
+  s_substitute     变了 3/4 ｜ 有分支=是
+  s_combine        变了 4/4 ｜ 有分支=是
+  s_adapt          变了 4/4 ｜ 有分支=是
+  s_modify         变了 4/4 ｜ 有分支=是
+  s_put            变了 4/4 ｜ 有分支=是
+  s_eliminate      变了 2/4 ｜ 有分支=是
+  s_reverse        变了 4/4 ｜ 有分支=是
+  reverse_eng      变了 4/4 ｜ 有分支=是
+  first_principle  变了 1/4 ｜ 有分支=是
+  boundary         变了 4/4 ｜ 有分支=是
+  redundancy       变了 3/4 ｜ 有分支=是
+  context_switch   变了 0/4 ｜ 有分支=否  <-- 四组样例一个都没变
+  negative_space   变了 1/4 ｜ 有分支=是
+  proto_downgrade  变了 1/4 ｜ 有分支=是
+  temporal         变了 2/4 ｜ 有分支=是
+  enc_tunnel       变了 4/4 ｜ 有分支=是
+  chunked          变了 4/4 ｜ 有分支=是
+  polymorphism     变了 1/4 ｜ 有分支=是
+  grafting         变了 3/4 ｜ 有分支=是
+  adversarial      变了 3/4 ｜ 有分支=是
+  [GREEN] identity_is_runtime_noop ｜ context_switch 变了 0/4
+显式 mutate(context_switch)：payload 变了=False ｜ 用量 0->1 ｜ strategy_used=context_switch
+  [RED] noop_not_credited ｜ 用量 0->1
+
+-- 四、复现性 --
+  [GREEN] deterministic_with_seed ｜ 同种子 123 两次逐项相同
+  [GREEN] seed_changes_result ｜ 种子 123 vs 124 结果不同
+  [RED] run_evolution_accepts_seed ｜ 参数=['seeds', 'vuln_type', 'generations', 'population_size', 'response_fn']
+EvolutionArena(rng_seed=0) 两次首样本 = 0.340869295 / 0.517089064
+  [RED] arena_seed_zero_honored ｜ 0 是合法种子，不许被 falsy 丢掉
+
+-- 五、反馈闭环 --
+元基因库 TEMP = C:\Users\Admin\AppData\Local\Temp\celue26-a2q55id1
+第 1 轮 L4 基因 16 条 ｜ 记录 49 次 ｜ 成功 16 次 ｜ 落盘=True ｜ 字节=6484
+  [GREEN] crystal_written ｜ 16 条
+  [GREEN] crystal_roundtrip ｜ 16 条逐项相同
+读回权重 21 条 ｜ 偏离 1.0 的 6 条：['adversarial', 'chunked', 'context_switch', 'grafting', 's_adapt', 's_substitute']
+  [GREEN] prior_loaded ｜ 6 条偏置
+负对照（无先验）4000 次：{'s_substitute': 194, 's_eliminate': 209} ｜ 比 0.93
+正样本（2.0 vs 0.5）4000 次：{'s_substitute': 361, 's_eliminate': 107} ｜ 比 3.37
+  [GREEN] bias_detector_distinguishes ｜ 负对照 0.93 ｜ 正样本 3.37
+
+-- 六、归因（适应度与成功记账） --
+同 payload ｜ 无血统 0.0 ｜ 两段血统 0.08 ｜ 差 0.08
+  [RED] fitness_independent_of_lineage ｜ 差 0.08
+一个个体（lineage=s_adapt,s_combine；strategy_used=s_adapt）写回策略 = ['s_adapt', 's_combine']
+  [RED] credit_only_last_applied ｜ 写回 ['s_adapt', 's_combine']
+
+========================================================================
+闭环环节 6 条 ｜ 绿 2 ｜ 红 4
+  [RED] L1 目录→实现（无恒等混入选择）
+  [RED] L2 引擎→内核（真评分/真变异可用）
+  [GREEN] L3a 进化→结晶（写回+落盘+读回）
+  [RED] L3b 归因（无血统自奖/无多记）
+  [GREEN] L4 结晶→再进化（读回+偏置可测）
+  [RED] L5 复现（显式种子/0 被尊重）
+闭环判定 = 未闭环
+范围：离线/合成样例；真实目标投递 = NOT_RUN（无授权靶场，不跑）
+========================================================================

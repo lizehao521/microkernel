@@ -1,0 +1,16 @@
+bin/kaudit.exe: OK
+bin/kcheck.exe: OK
+bin/kresearch.exe: OK
+bin/mcphttp.exe: OK
+bin/mcpkernel.exe: OK
+docs/README.md: OK
+docs/contract.md: OK
+docs/产品定位.md: OK
+凭据/00-工具链.txt: OK
+凭据/01-go-build.txt: OK
+凭据/02-逐件构建.txt: OK
+凭据/03-go-test.txt: OK
+凭据/04-kcheck-exe.txt: OK
+凭据/05-分母.txt: OK
+凭据/打包读数.txt: OK
+凭据/源码指纹.sha256: OK

@@ -1,0 +1,2 @@
+agentd：驱动=scripted（自主=false）；session=agentd-6844；读回=false；声明读者=true
+  注意：这一路是剧本走出来的绿，不是模型自主决定的绿。

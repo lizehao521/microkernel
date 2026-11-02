@@ -1,0 +1,14 @@
+{
+  "seq": 490,
+  "session": "客服靶场",
+  "actor": "客服靶场-探针",
+  "step": 8,
+  "kind": "model_output:cost_countable",
+  "claim": "是",
+  "basis": 1,
+  "ts": "2026-10-17T14:32:42.4918991Z",
+  "payload_b64": "dHJ1ZQ==",
+  "payload_sha256": "b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b",
+  "prev_hash": "7759e104e90aacfa9dc374f2029307ccc6743c7117583ffb0b059bfffa857e02",
+  "hash": "f8e16f262ad27d1cde6b808997276e3953321e9ddbbd1d697f5af1b4d879138e"
+}

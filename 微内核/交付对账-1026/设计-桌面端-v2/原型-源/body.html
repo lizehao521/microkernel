@@ -1,0 +1,347 @@
+<div class="app">
+  <header class="titlebar">
+    <div class="traffic" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="app-title">微核台 <span>LOCAL EVIDENCE DESK</span></div>
+    <div class="titlebar-center">本机只读 · <b id="titleServer">127.0.0.1</b> · <span id="titleBuild" class="mono">build —</span></div>
+    <div class="titlebar-right">
+      <button class="kernel-pill is-idle" id="kernelPill" title="打开内核快闸读数">
+        <i id="kernelDot"></i><span id="kernelText">内核快闸 —</span>
+      </button>
+      <button class="model-pill is-off" id="modelPill" title="模型桥状态；点击到对话取证">
+        <i id="modelDot"></i><span id="modelText">模型未接入</span>
+      </button>
+      <span class="ro-badge"><i></i>不出本机</span>
+      <div class="mode-switch" role="tablist" aria-label="工作模式">
+        <button class="mode-btn is-on" id="modeOperate" data-mode="operate" role="tab" aria-selected="true">操作</button>
+        <button class="mode-btn" id="modeDialogue" data-mode="dialogue" role="tab" aria-selected="false">对话</button>
+      </div>
+      <button class="icon-btn" id="btnMemory" title="个人记忆（Alt+M）" aria-label="个人记忆">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M4 2.5h7.5A1.5 1.5 0 0 1 13 4v9.5H5.5A1.5 1.5 0 0 1 4 12V2.5Z"/><path d="M4 12a1.5 1.5 0 0 1 1.5-1.5H13"/><path d="M6.5 5h4M6.5 7.5h4"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div id="fatalHost"></div>
+
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="workspace">
+        <div class="workspace-mark">微</div>
+        <div class="workspace-text">
+          <b>本机证据包</b>
+          <small>交付对账-1026 / v2</small>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="主导航">
+        <div class="nav-label">工作区</div>
+        <button class="nav-item" data-nav="operate" aria-current="page">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M2.5 4h11M2.5 8h11M2.5 12h7"/></svg>
+          交付队列 <span class="count" id="navQueueCount">—</span>
+        </button>
+        <button class="nav-item" data-nav="dialogue">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M2.5 3.5h11v7h-6l-3 2.5v-2.5h-2v-7Z"/></svg>
+          对话取证 <span class="count" id="navChatCount">—</span>
+        </button>
+        <button class="nav-item" data-nav="memory">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M3.5 2.5h8v11h-8z"/><path d="M5.5 5h4M5.5 7.5h4M5.5 10h2.5"/></svg>
+          个人记忆 <span class="count" id="navMemoryCount">—</span>
+        </button>
+      </nav>
+
+      <div class="side-section">
+        <div class="nav-label">证据源</div>
+        <div class="source-row"><span class="dot ok" id="srcDotPg"></span><span>pgagent 13 步</span><small id="srcPg">—</small></div>
+        <div class="source-row"><span class="dot ok" id="srcDotAgentd"></span><span>agentd 事件</span><small id="srcAgentd">—</small></div>
+        <div class="source-row"><span class="dot warn" id="srcDotKernel"></span><span>内核 49 格</span><small id="srcKernel">—</small></div>
+      </div>
+
+      <div class="side-section">
+        <div class="nav-label">本机</div>
+        <div class="source-row"><span class="dot warn" id="srcDotGate"></span><span>内核快闸</span><small id="srcGate">—</small></div>
+        <div class="source-row"><span class="dot off"></span><span>回执目录</span><small>回执/</small></div>
+      </div>
+
+      <div class="side-foot">
+        无账号 · 无云 · 无外链<br>
+        <b>只读</b> 不执行交付代码<br>
+        <span class="mono" id="footBuild">build —</span>
+      </div>
+    </aside>
+
+    <main class="main">
+      <section class="screen is-active" id="view-operate">
+        <div class="desk">
+          <aside class="queue">
+            <div class="queue-head">
+              <div class="eyebrow">QUEUE / 本机</div>
+              <div class="qh-row"><h2>交付队列</h2><span class="count" id="queueCount">—</span></div>
+              <p class="qh-sub">先分诊，再下钻；已处理的沉底。</p>
+            </div>
+            <div class="queue-filters" id="queueFilters" role="tablist" aria-label="按判定筛选">
+              <button class="qf is-on" data-filter="all" role="tab" aria-selected="true">全部<b id="qfAll">—</b></button>
+              <button class="qf" data-filter="MISMATCH" role="tab" aria-selected="false">不符<b id="qfBad">—</b></button>
+              <button class="qf" data-filter="ABSENT" role="tab" aria-selected="false">核不了<b id="qfAbsent">—</b></button>
+              <button class="qf" data-filter="MATCH" role="tab" aria-selected="false">相符<b id="qfOk">—</b></button>
+            </div>
+            <div class="queue-list" id="queueList">
+              <div class="queue-loading">正在读本机证据…</div>
+            </div>
+            <div class="queue-foot" id="queueFoot">判定规则：任一不符整单退回；核不了只能挂起 / 退回；全相符才可收。</div>
+          </aside>
+
+          <section class="detail-wrap" id="detailWrap" aria-live="polite">
+            <div class="state-box" id="detailLoading">
+              <div class="state-icon">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3.5l2 1.2"/></svg>
+              </div>
+              <h3>正在读本机证据</h3>
+              <p>加载完成前不写 0；读不到就显示核不了，不显示绿。</p>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="screen" id="view-dialogue">
+        <div class="dialogue-layout">
+          <section class="chat-panel">
+            <header class="chat-head">
+              <div>
+                <div class="eyebrow">DIALOGUE / 只读取证</div>
+                <h1>问证据，不问模型</h1>
+                <p>答案默认只来自本机证据与个人记忆；模型只在开关打开时转述去标识摘要。</p>
+              </div>
+              <div class="chat-head-badges">
+                <span class="local-pill"><i></i>本机证据</span>
+                <span class="local-pill is-model" id="chatModelPill"><i></i>模型未接入</span>
+              </div>
+            </header>
+
+            <div class="chat-log" id="chatLog" aria-live="polite">
+              <div class="chat-empty" id="chatEmpty">
+                <div class="ce-mark">?</div>
+                <h2>从一句要核的事开始</h2>
+                <p>它不会猜。找不到证据时会说「核不了」；超出本机范围会说「答不了」。</p>
+                <div class="starter-grid" id="starterGrid">
+                  <button class="starter" data-ask="这版能收吗？">这版能收吗？<small>三单判定 + 拦下理由</small></button>
+                  <button class="starter" data-ask="测试过了吗？">测试过了吗？<small>声明 vs 盘上执行记录</small></button>
+                  <button class="starter" data-ask="有没有执行代码？">有没有执行代码？<small>只读边界的第一道核</small></button>
+                  <button class="starter" data-ask="哪些核不了？">哪些核不了？<small>缺席的声明与理由</small></button>
+                  <button class="starter" data-ask="证据在哪？">证据在哪？<small>三类来源 + 哈希</small></button>
+                  <button class="starter" data-ask="上次为什么退？">上次为什么退？<small>从个人记忆里找</small></button>
+                </div>
+              </div>
+            </div>
+
+            <div class="composer-wrap">
+              <div class="composer-model">
+                <label class="model-toggle" id="modelToggleLabel">
+                  <input type="checkbox" id="useModel" disabled>
+                  <span>用模型解释（发去标识摘要）</span>
+                </label>
+                <span class="model-note" id="modelNote">模型未接入：本地规则，0 次调用。</span>
+              </div>
+              <form class="composer" id="chatForm">
+                <textarea id="chatInput" rows="1" placeholder="例如：测试过了吗？ / 证据在哪？ / 上次为什么退？" aria-label="要核的问题"></textarea>
+                <button class="btn primary" type="submit" id="chatSend">问</button>
+              </form>
+              <div class="composer-hint">
+                <span>Enter 发送 · Shift+Enter 换行</span>
+                <span>对话只读，不能收 / 退</span>
+                <span class="mono" id="chatModelCalls">0 次模型调用</span>
+              </div>
+            </div>
+          </section>
+
+          <aside class="chat-rail">
+            <div class="panel">
+              <div class="rail-body">
+                <h3>答案的四档</h3>
+                <ul class="tier-legend">
+                  <li><span class="tier-badge measured">有依据</span><span>盘上能指到文件 / 行 / 事件；结论算数。</span></li>
+                  <li><span class="tier-badge model_says">模型转述</span><span>模型按摘要作答；标来源，不是证据。</span></li>
+                  <li><span class="tier-badge absent">核不了</span><span>证据缺席，写明为什么；不写成通过。</span></li>
+                  <li><span class="tier-badge refused">答不了</span><span>不在本机证据范围；本地规则不猜。</span></li>
+                </ul>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="rail-body">
+                <h3>本机记忆</h3>
+                <div id="chatMemory" class="mem-mini"><span class="empty-inline">还没有决定</span></div>
+                <button class="btn sm" data-nav="memory" style="margin-top:9px">打开个人记忆</button>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="rail-body">
+                <h3>可以问</h3>
+                <div class="ask-chips" id="askChips">
+                  <button class="ask-chip" data-ask="这版能收吗？">这版能收吗？</button>
+                  <button class="ask-chip" data-ask="为什么不能收？">为什么不能收？</button>
+                  <button class="ask-chip" data-ask="真实模型复核过吗？">真实模型复核过吗？</button>
+                  <button class="ask-chip" data-ask="事件断线可续吗？">事件断线可续吗？</button>
+                  <button class="ask-chip" data-ask="49 格在哪？">49 格在哪？</button>
+                  <button class="ask-chip" data-ask="内核快闸跑了吗？">内核快闸跑了吗？</button>
+                  <button class="ask-chip" data-ask="我的记忆在哪？">我的记忆在哪？</button>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="screen" id="view-memory">
+        <div class="memory-scroll">
+          <header class="page-head">
+            <div>
+              <div class="eyebrow">MEMORY / 本机</div>
+              <h1>个人记忆</h1>
+              <p class="sub">决定、退单理由、核对偏好；只写 <span class="mono">记忆/记忆.json</span>。</p>
+            </div>
+            <div class="head-actions">
+              <button class="btn" id="btnExportMemory">导出 JSON</button>
+              <button class="btn danger" id="btnClearMemory">清空记忆</button>
+            </div>
+          </header>
+
+          <div class="memory-grid">
+            <div>
+              <section class="panel">
+                <div class="section-head"><h2>决定</h2><span class="count" id="memDecCount">—</span><span class="tools" id="memDecNote"></span></div>
+                <div id="memDecisions"></div>
+              </section>
+              <section class="panel" style="margin-top:16px">
+                <div class="section-head"><h2>对话记录</h2><span class="count" id="memDlgCount">—</span><span class="tools">只存问题、回答与引用名；模型调用按条记来源</span></div>
+                <div id="memDialogue"></div>
+              </section>
+            </div>
+
+            <aside class="memory-side">
+              <section class="panel">
+                <div class="rail-body">
+                  <h3>操作者与偏好</h3>
+                  <label class="field-label" for="operatorName" style="margin-top:10px">回执署名</label>
+                  <input class="text-input" id="operatorName" maxlength="40" placeholder="本机操作者">
+                  <div class="setting-row">
+                    <span class="k">退回 / 挂起必须写理由</span>
+                    <button class="switch" id="requireReason" role="switch" aria-checked="true" aria-label="退回或挂起必须写理由"></button>
+                  </div>
+                  <p class="rail-note">偏好写进记忆文件；刷新后还在。</p>
+                </div>
+              </section>
+
+              <section class="panel" style="margin-top:12px">
+                <div class="rail-body">
+                  <h3>可复用退单理由</h3>
+                  <div id="reasonList"><div class="empty-inline">还没有理由模板</div></div>
+                  <form class="reason-add" id="reasonForm">
+                    <input class="text-input" id="reasonInput" maxlength="80" placeholder="加一条，≥4 字">
+                    <button class="btn sm" type="submit">加</button>
+                  </form>
+                </div>
+              </section>
+
+              <section class="panel" style="margin-top:12px">
+                <div class="rail-body">
+                  <h3>记忆文件</h3>
+                  <dl class="kv" id="memoryMeta"><dt>位置</dt><dd>—</dd></dl>
+                  <div class="memory-actions">
+                    <button class="btn sm" id="btnExportMemory2">导出</button>
+                    <button class="btn sm" data-nav="operate">回队列</button>
+                  </div>
+                </div>
+              </section>
+            </aside>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="statusbar">
+    <span><i class="dot"></i>只读会话</span>
+    <span>不执行交付代码</span>
+    <span>不联网</span>
+    <span>不调模型</span>
+    <span class="kernel-mini is-idle" id="statusKernel"><i></i>内核快闸 —</span>
+    <span class="spacer"></span>
+    <span id="statusClaims">—</span>
+    <span class="mono" id="statusBuild">build —</span>
+    <span class="mono" id="statusBoot">boot —</span>
+  </footer>
+</div>
+
+<div class="overlay" id="overlay"></div>
+
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true">
+  <div class="drawer-head">
+    <div>
+      <div class="d-kicker" id="drawerKicker">EVIDENCE</div>
+      <h2 id="drawerTitle">证据</h2>
+      <p class="d-sub" id="drawerSub"></p>
+    </div>
+    <button class="icon-btn drawer-close" id="drawerClose" aria-label="关闭证据抽屉">×</button>
+  </div>
+  <div class="drawer-tabs" id="drawerTabs" role="tablist" aria-label="证据页签"></div>
+  <div class="drawer-body" id="drawerBody"></div>
+</aside>
+
+<div class="modal" id="modalDecision" role="dialog" aria-modal="true" aria-labelledby="decTitle">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h2 id="decTitle">确认</h2>
+      <p id="decSub"></p>
+    </div>
+    <div class="modal-body">
+      <div class="dec-facts" id="decFacts"></div>
+      <label class="field-label" id="decReasonLabel" for="decReason">理由（写进回执与记忆）</label>
+      <div class="reason-chips" id="decReasons"></div>
+      <textarea class="reason-input" id="decReason" maxlength="240" placeholder="至少 4 个字；可以从上面选一条"></textarea>
+      <p class="modal-hint" id="decHint">决定会写进本机记忆并生成一张可转发回执；本页不能撤回。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" data-close-modal="modalDecision">取消</button>
+      <button class="btn danger" id="decConfirm">确认</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modalClear" role="dialog" aria-modal="true" aria-labelledby="clearTitle">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h2 id="clearTitle">清空个人记忆？</h2>
+      <p>会清掉本机的决定与对话记录；偏好与理由模板保留。已生成的回执文件不会删除。</p>
+    </div>
+    <div class="modal-body">
+      <div class="absent-box" style="text-align:left">
+        <div class="a-title">清空前确认</div>
+        <p>这次清空只影响 <span class="mono">记忆/记忆.json</span>。回执在 <span class="mono">回执/</span> 目录，仍可离线打开。</p>
+      </div>
+      <p class="modal-hint" id="clearHint"></p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" data-close-modal="modalClear">取消</button>
+      <button class="btn danger" id="btnConfirmClear">确认清空</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modalKernel" role="dialog" aria-modal="true" aria-labelledby="kernelTitle">
+  <div class="modal-card wide">
+    <div class="modal-head">
+      <h2 id="kernelTitle">内核快闸 kcheck</h2>
+      <p>只读自检：核隔离、账表、49 格接线；不写研究账 8797 / 8799。</p>
+    </div>
+    <div class="modal-body" id="kernelModalBody"></div>
+    <div class="modal-foot">
+      <button class="btn" id="btnKernelRetry">重跑</button>
+      <button class="btn ghost" data-close-modal="modalKernel">关闭</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toasts"></div>
+
+<noscript>
+  <div class="fatal-banner"><b>需要 JavaScript。</b> 微核台是单文件本地应用，不加载任何外部脚本。</div>
+</noscript>

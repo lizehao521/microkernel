@@ -1,0 +1,31 @@
+锚点核对 · evidence.md 逐条回盘验证（本件自印分母，不手抄）
+解析到带锚点的表行：22
+[ 命中] 表行 22 ｜ stdout 正文由 `r.say` 单点写 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\loop.go 内找到 r.say、say
+[ 命中] 表行 23 ｜ 诊断/横幅另走一路（不进 stdout） ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\loop.go 内找到 TestEmitFailureIsLoudOnStderr、errf、printEventBanner
+[ 命中] 表行 24 ｜ 循环入口 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\loop.go ｜（该行没给可核符号，只验存在与行界）
+[ 命中] 表行 25 ｜ abort 两处看一眼 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\loop.go 内找到 abort、r.abort
+[ 命中] 表行 26 ｜ 预检调用点 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\loop.go 内找到 check_call、kernel.check_call
+[ 命中] 表行 27 ｜ 落账调用点 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\loop.go 内找到 kernel.record_call、record_call
+[ 命中] 表行 28 ｜ 回边读回 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\loop.go 内找到 362、511、kernel.read_back、read_back
+[ 命中] 表行 29 ｜ 账→决定 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\loop.go 内找到 decide、r.decide
+[ 命中] 表行 30 ｜ 续跑先核链 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\loop.go 内找到 r.resume、resume
+[ 命中] 表行 31 ｜ 收口落盘 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\loop.go 内找到 checkpoint、r.checkpoint
+[ 命中] 表行 32 ｜ 收口 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\loop.go 内找到 closeOut、r.closeOut
+[ 命中] 表行 33 ｜ 事件总线：append-only 落点与序号接续 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\events.go 内找到 O_APPEND、TestEventLogAppendsAcrossRuns、newEventBus
+[ 命中] 表行 34 ｜ 回执 turn_accepted ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\events.go 内找到 TestLateReceiptGoesRed、acceptedEv
+[ 命中] 表行 35 ｜ 回执判据（可达形态） ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\events.go 内找到 TestAcceptArmsCatchEachBadShape、ValidateAccepts
+[ 命中] 表行 36 ｜ 事件八个挂点 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\loop.go 内找到 161、184、199、206、224、246、636、TestEventSeqMonotonicWithinEachTurn、TestTurnAcceptedLeadsEveryTurn、emit、r.emit
+[ 命中] 表行 37 ｜ 序号判据的可达形态 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\events.go 内找到 TestValidateLogArmRejectsDuplicateAndRegress、ValidateLog
+[ 命中] 表行 38 ｜ 五档 + 状态白名单 + 落盘后才计数 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\events.go 内找到 Emit、TestAbsentWithoutWhyIsRefusedAndNotWritten、eventStates
+[ 命中] 表行 39 ｜ 事件落点推导与撞车守卫 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\main.go 内找到 TestEventLogPathDerivationAndCollision、eventLogPath
+[ 命中] 表行 40 ｜ 轨迹页跑完才写 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\trace.go 内找到 writeTrace
+[ 命中] 表行 41 ｜ 六态退出码 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\main.go 内找到 exitOf
+[ 命中] 表行 42 ｜ 本机 HTTP/SSE 形状已有先例 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\cmd\agentd\fakesrv.go 内找到 Flusher、Hijacker
+[ 命中] 表行 43 ｜ 内核不写盘、只编字节 ｜ C:\Users\Admin\Desktop\微内核\微内核\微内核\README.md ｜（该行没给可核符号，只验存在与行界）
+
+臂一（把「stdout 正文由 `r.say` 单点写」的行号改成 99999）：读数=range ｜ loop.go 只有 725 行，却引到 99999 ｜ 臂有效
+臂二（把「stdout 正文由 `r.say` 单点写」那一行的符号换成 ASCII 假标识符，行号不动）：读数=miss ｜ loop.go 那一行的上下 2 行里找不到 zzynothere_sym ｜ 臂有效
+
+覆盖面自印：符号可核 22 行 ｜ 仅存在性 0 行 ｜ 共 22 行
+合计：命中 22 ｜ 未命中 0 ｜ 缺文件 0 ｜ 行越界 0 ｜ 共 22 行
+结论：evidence.md 的 22 条锚点全部回盘命中，且臂能红。

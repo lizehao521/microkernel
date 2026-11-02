@@ -1,0 +1,365 @@
+{
+  "generated_at": "2026-10-26T04:31:51+08:00",
+  "operator": "本机操作者（无账号）",
+  "policy": {
+    "verdicts": [
+      "ACCEPTED",
+      "NOT-ACCEPTED-MISMATCH",
+      "NOT-ACCEPTED-UNVERIFIED"
+    ],
+    "rule": "任一 MISMATCH ⇒ 整单退回；有 ABSENT 且无 MISMATCH ⇒ 只能退回或挂起；全 MATCH 才可收。",
+    "note": "收下不改变声明真假；核不了绝不写成通过。"
+  },
+  "deliveries": [
+    {
+      "id": "D-1026-01",
+      "title": "pgagent 真跑 · desk-1026#1",
+      "subtitle": "13 步 / 49 格 / 本机假端点",
+      "agent": "编程 Agent（本地 exe）",
+      "submitted_at": "2026-10-26 04:2x（本机）",
+      "evidence_profile": "pgagent",
+      "default_tab": "steps",
+      "summary": "一份声称「测试过了、真模型复核过」的代码交付；轨迹完整，但两句关键声明与盘上事实不符。",
+      "claims": [
+        {
+          "id": "D1-C1",
+          "text": "13 步全部走完",
+          "verdict": "MATCH",
+          "basis": "disk",
+          "why": "13 步逐条 ran=true，步号 1..13 无缺；trace_sane=true（11 条整列自洽判据）。",
+          "refs": [
+            {
+              "ev": "pgagent",
+              "locator": "steps",
+              "label": "13 步轨迹"
+            },
+            {
+              "ev": "pgagent",
+              "locator": "sanity.trace_sane",
+              "label": "trace_sane"
+            }
+          ]
+        },
+        {
+          "id": "D1-C2",
+          "text": "没有执行交付代码",
+          "verdict": "MATCH",
+          "basis": "disk",
+          "why": "result.code_executed=false；13 步里没有执行步；网关是 127.0.0.1 假端点。",
+          "refs": [
+            {
+              "ev": "pgagent",
+              "locator": "execution.code_executed",
+              "label": "code_executed"
+            },
+            {
+              "ev": "pgagent",
+              "locator": "gateway",
+              "label": "假端点证据"
+            }
+          ]
+        },
+        {
+          "id": "D1-C3",
+          "text": "49 格整发落账、链上自洽",
+          "verdict": "MATCH",
+          "basis": "disk",
+          "why": "record_call 落账 49 条（输入 20 + 输出 29）；tally 49 条；verify 49 条链自洽并比对原像。",
+          "refs": [
+            {
+              "ev": "pgagent",
+              "locator": "ledger.record_call",
+              "label": "record_call"
+            },
+            {
+              "ev": "pgagent",
+              "locator": "ledger.verify",
+              "label": "verify"
+            }
+          ]
+        },
+        {
+          "id": "D1-C4",
+          "text": "测试通过",
+          "verdict": "MISMATCH",
+          "basis": "disk",
+          "why": "13 步里没有测试步，result.code_executed=false；盘上没有任何测试运行记录。这句声明没有对应的动作。",
+          "refs": [
+            {
+              "ev": "pgagent",
+              "locator": "execution.code_executed",
+              "label": "code_executed=false"
+            },
+            {
+              "ev": "pgagent",
+              "locator": "steps",
+              "label": "13 步名单"
+            }
+          ]
+        },
+        {
+          "id": "D1-C5",
+          "text": "真实模型复核过",
+          "verdict": "MISMATCH",
+          "basis": "disk",
+          "why": "gateway.fake=true、loopback=true、真实模型调用 0 次；model 字段自述为「假端点·演示件」。",
+          "refs": [
+            {
+              "ev": "pgagent",
+              "locator": "gateway",
+              "label": "gateway.fake=true"
+            }
+          ]
+        },
+        {
+          "id": "D1-C6",
+          "text": "事件断线可续",
+          "verdict": "ABSENT",
+          "basis": "absent",
+          "why": "本发走单次 /api/turn，没有 agentd 事件落盘；事件层证据只在另一份参照账（real-agentd-1）里，不能替本发作证。",
+          "refs": [
+            {
+              "ev": "agentd",
+              "locator": "source.note",
+              "label": "参照账（非同发）"
+            }
+          ]
+        }
+      ],
+      "counts": {
+        "MATCH": 3,
+        "MISMATCH": 2,
+        "ABSENT": 1
+      },
+      "verdict": "NOT-ACCEPTED-MISMATCH",
+      "allowed": [
+        "reject"
+      ],
+      "tabs": [
+        "steps",
+        "claims",
+        "source"
+      ],
+      "notes": [
+        "49 格账文件随 TEMP 数据目录清理，本发只保留了 tally/verify 读数。",
+        "「事件断线可续」本发没有证据，判核不了，不是通过。"
+      ]
+    },
+    {
+      "id": "D-1026-02",
+      "title": "内核样例账 · 首块 49 格",
+      "subtitle": "294 条 = 6 块 × 49 格",
+      "agent": "内核样例账（仓库件）",
+      "submitted_at": "2026-10-13 16:29（账上时间）",
+      "evidence_profile": "kernel",
+      "default_tab": "cells",
+      "summary": "逐格可回查的样例账首块；五条声明全部有盘上依据，但不是全部实测。",
+      "claims": [
+        {
+          "id": "D2-C1",
+          "text": "首块 49 格齐全，kind 各不相同",
+          "verdict": "MATCH",
+          "basis": "disk",
+          "why": "首块 49 行，49 个 kind 唯一；六块形状一致。",
+          "refs": [
+            {
+              "ev": "kernel",
+              "locator": "rows",
+              "label": "49 格表"
+            }
+          ]
+        },
+        {
+          "id": "D2-C2",
+          "text": "49 条载荷哈希逐条匹配",
+          "verdict": "MATCH",
+          "basis": "disk",
+          "why": "逐条 base64 解码后重算 sha256，49/49 与账上 payload_sha256 相同。",
+          "refs": [
+            {
+              "ev": "kernel",
+              "locator": "checks.payload_hash_ok",
+              "label": "49/49"
+            }
+          ]
+        },
+        {
+          "id": "D2-C3",
+          "text": "块内前驱链接首尾相接",
+          "verdict": "MATCH",
+          "basis": "disk",
+          "why": "块内 48 条 prev_hash 全部等于上一条 hash；整账 293 条链接也全部相接。",
+          "refs": [
+            {
+              "ev": "kernel",
+              "locator": "checks.block_links_ok",
+              "label": "48/48"
+            },
+            {
+              "ev": "kernel",
+              "locator": "checks.global_links_ok",
+              "label": "293/293"
+            }
+          ]
+        },
+        {
+          "id": "D2-C4",
+          "text": "整账 294 条 = 6 块 × 49 格",
+          "verdict": "MATCH",
+          "basis": "disk",
+          "why": "294 行按 49 行切分恰好 6 块，六块 kind 集合一致。",
+          "refs": [
+            {
+              "ev": "kernel",
+              "locator": "checks.all_rows",
+              "label": "294"
+            }
+          ]
+        },
+        {
+          "id": "D2-C5",
+          "text": "每一格都带依据档，没有裸值",
+          "verdict": "MATCH",
+          "basis": "disk",
+          "why": "49 条 basis 均在 1..5，无 unset；分布 measured 37 / relayed 4 / estimated 2 / model_says 1 / absent 5。",
+          "refs": [
+            {
+              "ev": "kernel",
+              "locator": "basis_mix",
+              "label": "依据档分布"
+            }
+          ]
+        }
+      ],
+      "counts": {
+        "MATCH": 5,
+        "MISMATCH": 0,
+        "ABSENT": 0
+      },
+      "verdict": "ACCEPTED",
+      "allowed": [
+        "accept",
+        "reject"
+      ],
+      "tabs": [
+        "cells",
+        "claims",
+        "source"
+      ],
+      "notes": [
+        "样例账不是 pgagent 本发那本账；两类证据不混写。",
+        "依据档是混的：measured 37 / relayed 4 / estimated 2 / model_says 1 / absent 5。"
+      ]
+    },
+    {
+      "id": "D-1026-03",
+      "title": "agentd 真事件 · 两条 run",
+      "subtitle": "14 条事件 / 可续游标 / 导出副本",
+      "agent": "agentd 事件层（本机）",
+      "submitted_at": "2026-10-23 12:29–12:42（事件时间）",
+      "evidence_profile": "agentd",
+      "default_tab": "events",
+      "summary": "两条 run 的收口与可续游标都能核；但「导出没丢事件」盘上没有对照，只能判核不了。",
+      "claims": [
+        {
+          "id": "D3-C1",
+          "text": "两发 turn 都走到收口",
+          "verdict": "MATCH",
+          "basis": "disk",
+          "why": "两条 turn_settled 的 settle.kind=completed，reached 4 步、not_reached 为空。",
+          "refs": [
+            {
+              "ev": "agentd",
+              "locator": "events",
+              "label": "turn_settled ×2"
+            }
+          ]
+        },
+        {
+          "id": "D3-C2",
+          "text": "两条 run 各自收口",
+          "verdict": "MATCH",
+          "basis": "disk",
+          "why": "两条 run_settled：一条 stop=script（剧本走完），一条 stop=turns（轮次额度到）。",
+          "refs": [
+            {
+              "ev": "agentd",
+              "locator": "runs",
+              "label": "run_settled ×2"
+            }
+          ]
+        },
+        {
+          "id": "D3-C3",
+          "text": "接受后断线可续",
+          "verdict": "MATCH",
+          "basis": "disk",
+          "why": "两条 turn_accepted 的 accept.resumable 都是 true，游标写明是日志里的身份四元组。",
+          "refs": [
+            {
+              "ev": "agentd",
+              "locator": "events",
+              "label": "accept.resumable=true"
+            }
+          ]
+        },
+        {
+          "id": "D3-C4",
+          "text": "身份四元组齐全，可离线重放",
+          "verdict": "MATCH",
+          "basis": "disk",
+          "why": "14 条事件都带 v/session/run/turn/seq；kind/state/evidence 齐全；按文件序可重放。",
+          "refs": [
+            {
+              "ev": "agentd",
+              "locator": "events",
+              "label": "14 条事件"
+            }
+          ]
+        },
+        {
+          "id": "D3-C5",
+          "text": "这份导出一条事件都没丢",
+          "verdict": "ABSENT",
+          "basis": "absent",
+          "why": "盘上只有导出副本，没有投送端账本或 ACK 对照；只能核到「导出的这 14 条自洽」，丢没丢核不了。",
+          "refs": [
+            {
+              "ev": "agentd",
+              "locator": "source.note",
+              "label": "导出副本的边界"
+            }
+          ]
+        }
+      ],
+      "counts": {
+        "MATCH": 4,
+        "MISMATCH": 0,
+        "ABSENT": 1
+      },
+      "verdict": "NOT-ACCEPTED-UNVERIFIED",
+      "allowed": [
+        "reject",
+        "hold"
+      ],
+      "tabs": [
+        "events",
+        "claims",
+        "source"
+      ],
+      "notes": [
+        "事件来自两条不同的 run（real-agentd-1 / agentd-27276），非同一次执行。",
+        "seq 是每发 turn 内的自增序号，不是全文件序号。"
+      ]
+    }
+  ],
+  "stats": {
+    "deliveries": 3,
+    "claims": 16,
+    "counts": {
+      "MATCH": 12,
+      "MISMATCH": 2,
+      "ABSENT": 2
+    }
+  }
+}

@@ -1,0 +1,12 @@
+2026-04-12 09:58:01 INFO  service started
+2026-04-12 09:59:12 WARN  cache miss rate 0.42
+
+2026-04-12 10:00:03 INFO  request id=8812 path=/api/health 200 12ms
+2026-04-12 10:00:44 ERROR upstream timeout id=8813
+2026-04-12 10:01:02 ERROR retry failed id=8813
+2026-04-12 10:01:30 WARN  circuit open
+
+2026-04-12 10:02:00 INFO  fallback to cache
+2026-04-12 10:03:10 INFO  request id=8814 path=/api/tools 200 9ms
+2026-04-12 10:04:00 ERROR upstream timeout id=8815
+2026-04-12 10:05:00 INFO  recovered

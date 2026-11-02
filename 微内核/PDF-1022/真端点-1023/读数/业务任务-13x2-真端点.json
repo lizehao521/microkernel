@@ -1,0 +1,1731 @@
+{
+ "surface": "agenthub",
+ "set": "business-13",
+ "shape": "13 tasks x 2 passes, fresh session per task",
+ "fixture": "PDF-1022/真端点-1023/业务现场",
+ "fixture_files": 21,
+ "endpoint": "http://121.36.29.96:8787/v1/chat/completions",
+ "model": "MiniMax-M2.5",
+ "key_masked": "sk-rel...IbWA",
+ "port": 55351,
+ "passes_declared": 2,
+ "started": "2026-10-23T13:19:08+08:00",
+ "health": {
+  "allow_exec": false,
+  "allow_write": false,
+  "memory": 0,
+  "model_endpoint": "http://121.36.29.96:8787/v1/chat/completions",
+  "next_turn": 1,
+  "ok": true,
+  "tools": 12
+ },
+ "exe": {
+  "sha256": "8ad1abadd5305db43ed550c5de8656065ddb2b1fc80016eb3a009277cee5aca6",
+  "bytes": 12070912
+ },
+ "runs": [
+  {
+   "id": "B01",
+   "name": "发票合计",
+   "pass": 1,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture/财务/发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "发票合计 1280 元，含税（13%增值税）合计为 **1446.4 元**。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 11840.2,
+   "err": null,
+   "at": "2026-10-23T13:19:23+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B02",
+   "name": "预算超支",
+   "pass": 1,
+   "ok": true,
+   "model_ok": false,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "estimated",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 1,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture/财务/预算-2026-Q3.txt",
+     "provenance": "estimated",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "实际支出比预算多 1500 元。\n\n- 预算：50000 元\n- 实际支出：21800 + 15600 + 9400 + 4700 = 51500 元\n- 超支：51500 - 50000 = 1500 元",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 6830.0,
+   "err": null,
+   "at": "2026-10-23T13:19:30+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B03",
+   "name": "报价比价",
+   "pass": 1,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 4,
+   "tools": [
+    "fs.list",
+    "fs.read",
+    "fs.read",
+    "fs.read"
+   ],
+   "classes": [
+    "ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.list",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture\\财务\\报价",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture\\财务\\报价\\A-云杉科技.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture\\财务\\报价\\B-北辰云服.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture\\财务\\报价\\C-海岳数据.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "总价最低的供应商是北辰云服，总价为 17200 元。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 11381.2,
+   "err": null,
+   "at": "2026-10-23T13:19:42+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B04",
+   "name": "日志统计",
+   "pass": 1,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "text.stats"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture/运维/app.log",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "text.stats",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture\\运维\\app.log",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "该文件共 12 行，其中空行 2 行。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 8257.1,
+   "err": null,
+   "at": "2026-10-23T13:19:50+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B05",
+   "name": "健康巡检",
+   "pass": 1,
+   "ok": false,
+   "model_ok": false,
+   "steps_ok": true,
+   "answer_ok": false,
+   "answer_echo": true,
+   "answer_tier": "measured",
+   "answer_why": "模型收口没写 answer（或这一发不是模型收的）⇒ 这一格是本机按工具读数抄的，不是模型的话",
+   "misses": [
+    "answer_tier:measured"
+   ],
+   "step_misses": [],
+   "answer_misses": [
+    "answer_tier:measured"
+   ],
+   "stop": "跑完",
+   "stop_why": "话里点到的目标都已有成功读数 ⇒ 可以收口",
+   "steps": 1,
+   "tools": [
+    "http.get"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "relayed"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "http.get",
+     "class": "ok",
+     "path": "http://127.0.0.1:55351/api/health",
+     "provenance": "model_says",
+     "evidence": "relayed"
+    }
+   ],
+   "answer_head": "http.get：HTTP 200 200 OK ｜ 151 字节 ｜ 2ms",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 2871.2,
+   "err": null,
+   "at": "2026-10-23T13:19:53+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B06",
+   "name": "故障时长",
+   "pass": 1,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 3,
+   "tools": [
+    "fs.read",
+    "calc.eval",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture/运维/incident-0412.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "这次故障持续了 45 分钟（从 10:00 到 10:45）。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 8320.0,
+   "err": null,
+   "at": "2026-10-23T13:20:02+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B07",
+   "name": "SLA 判定",
+   "pass": 1,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "fs.read"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture/运维/SLA.md",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture\\运维\\incident-0412.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "**判断结果：违约**\n\n**停机分钟数：45 分钟**\n\n**计算过程：**\n- 故障时段：2026-04-12 10:00 ~ 10:45（共 45 分钟）\n- 4月总分钟数：43,200 分钟\n- 可用率 = (43,200 - 45) / 43,200 = 99.896%\n\n**结论：**\n实际可用率 99.896% < SLA 要求的 99.9%，因此此次故障构成违约。需在 5 个工作日内提交事故报告。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 11948.1,
+   "err": null,
+   "at": "2026-10-23T13:20:14+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B08",
+   "name": "入职材料缺项",
+   "pass": 1,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "fs.list"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture/人事/入职清单.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.list",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture\\人事\\入职材料",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "缺少的是第 4 项：离职证明（上一家单位）",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 9597.9,
+   "err": null,
+   "at": "2026-10-23T13:20:24+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B09",
+   "name": "投诉最大金额",
+   "pass": 1,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture/客户/投诉.csv",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "金额最大的投诉单号是 T-1042，金额为 8800 元。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 4932.0,
+   "err": null,
+   "at": "2026-10-23T13:20:29+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B10",
+   "name": "客户去重",
+   "pass": 1,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture/客户/客户名单.csv",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "根据读取的文件内容，邮箱情况如下：\n\n- zhang@example.com（出现2次：C001、C008）\n- li@example.com（1次）\n- wang@example.com（1次）\n- zhao@example.com（1次）\n- chen@example.com（1次）\n- liu@example.com（1次）\n- sun@example.com（1次）\n\n按邮箱去重后，共有 **7** 个客户。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 6360.4,
+   "err": null,
+   "at": "2026-10-23T13:20:36+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B11",
+   "name": "营收对账",
+   "pass": 1,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 3,
+   "tools": [
+    "fs.read",
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture\\报表\\4月营收-销售部.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture\\报表\\4月营收-财务部.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "两份报表相差 66,000 元，销售部报得更高（125 万元 vs 118.4 万元）。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 9924.2,
+   "err": null,
+   "at": "2026-10-23T13:20:46+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B12",
+   "name": "版本核对",
+   "pass": 1,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "fs.read"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture/发布/VERSION.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture\\发布\\CHANGELOG.md",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "版本号不一致。VERSION.txt 记录的是 2.4.1，但 CHANGELOG.md 里最新版本是 2.4.0，缺少 2.4.1 版本的变更记录。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 8059.0,
+   "err": null,
+   "at": "2026-10-23T13:20:54+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B13",
+   "name": "库存补货",
+   "pass": 1,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture/库存/库存.csv",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "库存低于 10 的商品名称：\n1. 机械键盘（库存 4）\n2. 无线鼠标（库存 7）\n3. 扩展坞（库存 2）",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 4374.5,
+   "err": null,
+   "at": "2026-10-23T13:20:59+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B01",
+   "name": "发票合计",
+   "pass": 2,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 4,
+   "tools": [
+    "fs.read",
+    "fs.read",
+    "calc.eval",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture/财务/发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture/财务/发票-2026-031.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "含税合计为 1356.8 元（1280 元 × 1.06）。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 12791.8,
+   "err": null,
+   "at": "2026-10-23T13:21:12+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B02",
+   "name": "预算超支",
+   "pass": 2,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture/财务/预算-2026-Q3.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "实际支出比预算多 1500 元。预算 50000 元，实际支出 51500 元（云资源 21800 + 外包 15600 + 差旅 9400 + 软件订阅 4700）。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 7946.6,
+   "err": null,
+   "at": "2026-10-23T13:21:20+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B03",
+   "name": "报价比价",
+   "pass": 2,
+   "ok": true,
+   "model_ok": false,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 5,
+   "tools": [
+    "fs.read",
+    "fs.list",
+    "fs.read",
+    "fs.read",
+    "fs.read"
+   ],
+   "classes": [
+    "ok",
+    "ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "estimated",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured",
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 1,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture/财务",
+     "provenance": "estimated",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.list",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture\\财务\\报价",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture\\财务\\报价\\A-云杉科技.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture\\财务\\报价\\B-北辰云服.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture\\财务\\报价\\C-海岳数据.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "总价最低的供应商是北辰云服，总价为 17200 元。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 16920.3,
+   "err": null,
+   "at": "2026-10-23T13:21:37+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B04",
+   "name": "日志统计",
+   "pass": 2,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "text.stats"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture/运维/app.log",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "text.stats",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture/运维/app.log",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "该文件共 12 行，其中空行 2 行。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 9975.1,
+   "err": null,
+   "at": "2026-10-23T13:21:47+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B05",
+   "name": "健康巡检",
+   "pass": 2,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "http.get"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "relayed"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "http.get",
+     "class": "ok",
+     "path": "http://127.0.0.1:55351/api/health",
+     "provenance": "model_says",
+     "evidence": "relayed"
+    }
+   ],
+   "answer_head": "ok 是 true，注册了 12 个工具。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 5032.7,
+   "err": null,
+   "at": "2026-10-23T13:21:52+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B06",
+   "pass": 2,
+   "ok": false,
+   "model_ok": false,
+   "steps_ok": false,
+   "answer_ok": false,
+   "answer_echo": true,
+   "misses": [
+    "session_new_exception"
+   ],
+   "err": "ConnectionResetError: [WinError 10054] 远程主机强迫关闭了一个现有的连接。",
+   "hub_alive_before_session": true,
+   "at": "2026-10-23T13:21:53+08:00"
+  },
+  {
+   "id": "B07",
+   "name": "SLA 判定",
+   "pass": 2,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 3,
+   "tools": [
+    "fs.read",
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture/运维/SLA.md",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture\\运维\\incident-0412.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "**判定结果：违约**\n\n**停机分钟数**：45 分钟\n\n**计算过程**：\n- 故障持续时间：10:00 ~ 10:45，共 45 分钟\n- 月度总分钟数：30 天 × 24 小时 × 60 分钟 = 43,200 分钟\n- 可用率 = (43,200 - 45) / 43,200 × 100% = **99.8958%**\n- SLA 要求：≥ 99.9%\n\n实际可用率 99.8958% < 99.9%，未达标准，属于违约。需在 5 个工作日内提交事故报告。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 18923.9,
+   "err": null,
+   "at": "2026-10-23T13:22:12+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B08",
+   "name": "入职材料缺项",
+   "pass": 2,
+   "ok": false,
+   "model_ok": false,
+   "steps_ok": false,
+   "answer_ok": false,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [
+    "list:人事/入职材料",
+    "text:离职证明"
+   ],
+   "step_misses": [
+    "list:人事/入职材料"
+   ],
+   "answer_misses": [
+    "text:离职证明"
+   ],
+   "stop": "跑完",
+   "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture\\人事\\入职清单.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "{\"tool\": \"fs.list\", \"args\": {\"path\": \"C:\\\\Users\\\\Admin\\\\AppData\\\\Local\\\\Temp\\\\hubd-biz-real-q86tw2q0\\\\fixture\\\\人事\\\\入职材料\"}\"}",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 5294.2,
+   "err": null,
+   "at": "2026-10-23T13:22:17+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B09",
+   "name": "投诉最大金额",
+   "pass": 2,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "text.stats"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture/客户/投诉.csv",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "text.stats",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "金额最大的投诉单号是 T-1042，金额为 8800 元。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 12535.4,
+   "err": null,
+   "at": "2026-10-23T13:22:30+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B10",
+   "name": "客户去重",
+   "pass": 2,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture/客户/客户名单.csv",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "按邮箱去重后有 7 个客户。\n\n去重后的邮箱列表：\n1. zhang@example.com\n2. li@example.com\n3. wang@example.com\n4. zhao@example.com\n5. chen@example.com\n6. liu@example.com\n7. sun@example.com\n\n（其中 zhang@example.com 出现 2 次，去重后计为 1 个）",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 7495.6,
+   "err": null,
+   "at": "2026-10-23T13:22:38+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B11",
+   "name": "营收对账",
+   "pass": 2,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 3,
+   "tools": [
+    "fs.read",
+    "fs.read",
+    "calc.eval"
+   ],
+   "classes": [
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture\\报表\\4月营收-销售部.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture\\报表\\4月营收-财务部.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "calc.eval",
+     "class": "ok",
+     "path": "",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "两份报表相差 66,000 元。销售部报的金额更高（1,250,000 元 > 1,184,000 元）。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 10838.0,
+   "err": null,
+   "at": "2026-10-23T13:22:49+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B12",
+   "name": "版本核对",
+   "pass": 2,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "fs.read"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture/发布/VERSION.txt",
+     "provenance": "model_says",
+     "evidence": "measured"
+    },
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture\\发布\\CHANGELOG.md",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "不一致。VERSION.txt 显示当前版本是 2.4.1，但 CHANGELOG.md 中最新的版本记录是 2.4.0，缺少版本 2.4.1 的变更日志。",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 9972.8,
+   "err": null,
+   "at": "2026-10-23T13:22:59+08:00",
+   "hub_alive_before_session": true
+  },
+  {
+   "id": "B13",
+   "name": "库存补货",
+   "pass": 2,
+   "ok": true,
+   "model_ok": true,
+   "steps_ok": true,
+   "answer_ok": true,
+   "answer_echo": false,
+   "answer_tier": "model_says",
+   "answer_why": "模型端点收口时自己写的回答，原样收下；里面的事实仍要回看上面的步",
+   "misses": [],
+   "step_misses": [],
+   "answer_misses": [],
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "estimated_steps": 0,
+   "trail": [
+    {
+     "tool": "fs.read",
+     "class": "ok",
+     "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-biz-real-q86tw2q0\\fixture/库存/库存.csv",
+     "provenance": "model_says",
+     "evidence": "measured"
+    }
+   ],
+   "answer_head": "库存低于 10 的商品：\n1. 机械键盘（库存 4）\n2. 无线鼠标（库存 7）\n3. 扩展坞（库存 2）",
+   "sane": true,
+   "mix_ok": true,
+   "status": 200,
+   "ms": 8037.2,
+   "err": null,
+   "at": "2026-10-23T13:23:07+08:00",
+   "hub_alive_before_session": true
+  }
+ ],
+ "summary": {
+  "runs": 26,
+  "tasks": 13,
+  "oracle_ok": 23,
+  "model_ok": 21,
+  "steps_ok": 24,
+  "answer_ok": 23,
+  "answer_echo": 2,
+  "answer_tiers": {
+   "model_says": 24,
+   "measured": 1,
+   "missing": 1
+  },
+  "tasks_both_passes": 10,
+  "tasks_any_pass": 13,
+  "by_task": {
+   "B01": {
+    "ok": 2,
+    "model_ok": 2,
+    "runs": 2,
+    "misses": []
+   },
+   "B02": {
+    "ok": 2,
+    "model_ok": 1,
+    "runs": 2,
+    "misses": []
+   },
+   "B03": {
+    "ok": 2,
+    "model_ok": 1,
+    "runs": 2,
+    "misses": []
+   },
+   "B04": {
+    "ok": 2,
+    "model_ok": 2,
+    "runs": 2,
+    "misses": []
+   },
+   "B05": {
+    "ok": 1,
+    "model_ok": 1,
+    "runs": 2,
+    "misses": [
+     {
+      "pass": 1,
+      "misses": [
+       "answer_tier:measured"
+      ]
+     }
+    ]
+   },
+   "B06": {
+    "ok": 1,
+    "model_ok": 1,
+    "runs": 2,
+    "misses": [
+     {
+      "pass": 2,
+      "misses": [
+       "session_new_exception"
+      ]
+     }
+    ]
+   },
+   "B07": {
+    "ok": 2,
+    "model_ok": 2,
+    "runs": 2,
+    "misses": []
+   },
+   "B08": {
+    "ok": 1,
+    "model_ok": 1,
+    "runs": 2,
+    "misses": [
+     {
+      "pass": 2,
+      "misses": [
+       "list:人事/入职材料",
+       "text:离职证明"
+      ]
+     }
+    ]
+   },
+   "B09": {
+    "ok": 2,
+    "model_ok": 2,
+    "runs": 2,
+    "misses": []
+   },
+   "B10": {
+    "ok": 2,
+    "model_ok": 2,
+    "runs": 2,
+    "misses": []
+   },
+   "B11": {
+    "ok": 2,
+    "model_ok": 2,
+    "runs": 2,
+    "misses": []
+   },
+   "B12": {
+    "ok": 2,
+    "model_ok": 2,
+    "runs": 2,
+    "misses": []
+   },
+   "B13": {
+    "ok": 2,
+    "model_ok": 2,
+    "runs": 2,
+    "misses": []
+   }
+  },
+  "stops": {
+   "跑完": 25,
+   "null": 1
+  },
+  "sane": 25,
+  "estimated_steps": 2,
+  "ms_p50": 8257.1,
+  "ms_p95": 16920.3,
+  "ms_max": 18923.9,
+  "failures": [
+   {
+    "id": "B05",
+    "pass": 1,
+    "misses": [
+     "answer_tier:measured"
+    ],
+    "stop": "跑完",
+    "tools": [
+     "http.get"
+    ],
+    "answer_head": "http.get：HTTP 200 200 OK ｜ 151 字节 ｜ 2ms",
+    "err": null
+   },
+   {
+    "id": "B06",
+    "pass": 2,
+    "misses": [
+     "session_new_exception"
+    ],
+    "stop": null,
+    "tools": null,
+    "answer_head": null,
+    "err": "ConnectionResetError: [WinError 10054] 远程主机强迫关闭了一个现有的连接。"
+   },
+   {
+    "id": "B08",
+    "pass": 2,
+    "misses": [
+     "list:人事/入职材料",
+     "text:离职证明"
+    ],
+    "stop": "跑完",
+    "tools": [
+     "fs.read"
+    ],
+    "answer_head": "{\"tool\": \"fs.list\", \"args\": {\"path\": \"C:\\\\Users\\\\Admin\\\\AppData\\\\Local\\\\Temp\\\\hubd-biz-real-q86tw2q0\\\\fixture\\\\人事\\\\入职材料\"}\"}",
+    "err": null
+   }
+  ]
+ },
+ "landing_ok": null,
+ "finished": "2026-10-23T13:23:07+08:00"
+}

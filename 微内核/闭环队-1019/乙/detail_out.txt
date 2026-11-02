@@ -1,0 +1,74 @@
+model_input:call	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_input:parts	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_input:part_totals	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_input:content_bytes	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_input:tokens	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=0 b5=10 b0=0 nullP=0 emptyP=0 nonE=10
+model_input:call_bytes_ceiling	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_input:transport_slack_pct	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_input:content_ceiling	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_input:effective_ceiling	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_input:clamp_rounds	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_input:leftover_pct	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_input:fixed_overhead	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=0 b5=10 b0=0 nullP=0 emptyP=0 nonE=10
+model_input:shares	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_input:notice_sent	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_input:notice_trimmed	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_input:notice_why	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_input:notice_text	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_input:folded	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_input:clipped	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_input:dropped	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_output:call	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_output:streaming	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_output:finish	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_output:finish_said	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_output:endpoint_model	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_output:endpoint_model_said	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_output:wire_format	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_output:wire_format_said	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_output:model_says_bytes	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_output:model_says_kept	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_output:model_says_clipped	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_output:model_says_sha256	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_output:usage_in	n=60 filled=34 b5=26 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=0 b5=10 b0=0 nullP=0 emptyP=0 nonE=10
+model_output:usage_out	n=60 filled=34 b5=26 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=0 b5=10 b0=0 nullP=0 emptyP=0 nonE=10
+model_output:wire_bytes_out	n=60 filled=36 b5=24 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=0 b5=10 b0=0 nullP=0 emptyP=0 nonE=10
+model_output:wire_bytes_in	n=60 filled=36 b5=24 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=0 b5=10 b0=0 nullP=0 emptyP=0 nonE=10
+model_output:chunks	n=60 filled=15 b5=45 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=0 b5=10 b0=0 nullP=0 emptyP=0 nonE=10
+model_output:first_byte_ms	n=60 filled=15 b5=45 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=0 b5=10 b0=0 nullP=0 emptyP=0 nonE=10
+model_output:max_gap_ms	n=60 filled=15 b5=45 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=0 b5=10 b0=0 nullP=0 emptyP=0 nonE=10
+model_output:tool_calls	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_output:malformed_actions	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_output:malformed_streak	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_output:fail_kind	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_output:fail_detail	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_output:fail_status	n=60 filled=0 b5=60 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=0 b5=10 b0=0 nullP=0 emptyP=0 nonE=10
+model_output:retry_after_ms	n=60 filled=0 b5=60 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=0 b5=10 b0=0 nullP=0 emptyP=0 nonE=10
+model_output:downgrade	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_output:sent	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+model_output:cost_countable	n=60 filled=60 b5=0 b0=0 nullP=0 emptyP=0 nonE=60 | n=10 filled=10 b5=0 b0=0 nullP=0 emptyP=0 nonE=10
+=== samples for fail_status / retry_after_ms / fail_detail ===
+model_output:fail_detail 账本-全量-1018.jsonl {"1":60}
+    {"seq":44,"basis":1,"claim":"（这一格是空的）","payload":"\"\""}
+    {"seq":93,"basis":1,"claim":"（这一格是空的）","payload":"\"\""}
+    {"seq":142,"basis":1,"claim":"（这一格是空的）","payload":"\"\""}
+model_output:fail_detail 账本-8799-第二次快照-included.jsonl {"1":10}
+    {"seq":44,"basis":1,"claim":"（这一格是空的）","payload":"\"\""}
+    {"seq":93,"basis":1,"claim":"（这一格是空的）","payload":"\"\""}
+    {"seq":142,"basis":1,"claim":"（这一格是空的）","payload":"\"\""}
+model_output:fail_status 账本-全量-1018.jsonl {"5":60}
+    {"seq":45,"basis":5,"claim":"—（没量到，不是 0）：合成演示：没有对端，没收到 HTTP 响应","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"合成演示：没有对端，没收到 "}
+    {"seq":94,"basis":5,"claim":"—（没量到，不是 0）：合成演示：没有对端，没收到 HTTP 响应","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"合成演示：没有对端，没收到 "}
+    {"seq":143,"basis":5,"claim":"—（没量到，不是 0）：这一发没故障，也就没有要记的状态码","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"这一发没故障，也就没有要记的"}
+model_output:fail_status 账本-8799-第二次快照-included.jsonl {"5":10}
+    {"seq":45,"basis":5,"claim":"—（没量到，不是 0）：没故障，也没有对端响应可抄状态码","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"没故障，也没有对端响应可抄状"}
+    {"seq":94,"basis":5,"claim":"—（没量到，不是 0）：没故障，也没有对端响应可抄状态码","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"没故障，也没有对端响应可抄状"}
+    {"seq":143,"basis":5,"claim":"—（没量到，不是 0）：没故障，也没有对端响应可抄状态码","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"没故障，也没有对端响应可抄状"}
+model_output:retry_after_ms 账本-全量-1018.jsonl {"5":60}
+    {"seq":46,"basis":5,"claim":"—（没量到，不是 0）：合成演示：没故障，没有重试等待","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"合成演示：没故障，没有重试等"}
+    {"seq":95,"basis":5,"claim":"—（没量到，不是 0）：合成演示：没故障，没有重试等待","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"合成演示：没故障，没有重试等"}
+    {"seq":144,"basis":5,"claim":"—（没量到，不是 0）：这一发没断，也就没有要等多久","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"这一发没断，也就没有要等多久"}
+model_output:retry_after_ms 账本-8799-第二次快照-included.jsonl {"5":10}
+    {"seq":46,"basis":5,"claim":"—（没量到，不是 0）：没故障，对端也没说要等多久","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"没故障，对端也没说要等多久\""}
+    {"seq":95,"basis":5,"claim":"—（没量到，不是 0）：没故障，对端也没说要等多久","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"没故障，对端也没说要等多久\""}
+    {"seq":144,"basis":5,"claim":"—（没量到，不是 0）：没故障，对端也没说要等多久","payload":"{\"N\":0,\"Basis\":0,\"Source\":\"\",\"Absent\":true,\"Refused\":false,\"Why\":\"没故障，对端也没说要等多久\""}

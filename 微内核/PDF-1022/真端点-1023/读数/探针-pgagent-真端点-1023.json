@@ -1,0 +1,10 @@
+{
+ "surface": "pgagent-ui",
+ "at": "2026-10-23T12:31:55",
+ "url": "http://127.0.0.1:4323/?run=1",
+ "exe_sha256": "bb5fd4ed58c360567e7fc1334b2a9bc518c080fb3fa7804b684272479f9edff5",
+ "png": "C:\\Users\\Admin\\Desktop\\微内核\\PDF-1022\\真端点-1023\\读数\\截图-pgagent-真端点-1023.png",
+ "png_bytes": 105617,
+ "edge_rc": 0,
+ "note": "无头截图只证「这一版 build 的页面看得见」；交互与真端点读数以 读数/pgagent-真端点.json 为准"
+}

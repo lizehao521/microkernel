@@ -1,0 +1,459 @@
+{
+ "receipt_version": 1,
+ "tool": {
+  "name": "交付对账单",
+  "version": "1.0",
+  "sha256": "7994b6660cd80d62e21b5b6cc4eda8ef7f3077d57ed7ab66fdb451212f10fa9f"
+ },
+ "spec": {
+  "path": "C:\\Users\\Admin\\Desktop\\微内核\\交付对账-1026\\样例\\交付声明-真端点.json",
+  "resolved": "C:\\Users\\Admin\\Desktop\\微内核\\交付对账-1026\\样例\\交付声明-真端点.json",
+  "sha256": "e1fce41a2c7a3c5c7148db96248d5b8d2376a67e709d7544e92804853280437c"
+ },
+ "generated_at": "2026-10-25T17:52:17Z",
+ "session": "真端点-真交付",
+ "delivery": {
+  "by": "编程 Agent pgagent（MiniMax-M2.5，2026-10-23 真端点那一发）",
+  "task": "审查一段 6 行 python 代码并指出具体行、给一句修法",
+  "produced_at": "2026-10-23"
+ },
+ "status": "NOT-ACCEPTED-UNVERIFIED",
+ "status_why": "1 条声明无法回盘核：D3；证据源核不全：pgagent；8 条声明只有交付方自己的产物作证：D1, D2, D4, D5, D6, D7, D8, D9",
+ "claims": [
+  {
+   "id": "D1",
+   "kind": "json_value",
+   "why": "这是本会话的第 1 发",
+   "evidence_class": "self",
+   "target": "../../PDF-1022/真端点-1023/读数/pgagent-真端点.json#result.turn",
+   "expected": 1,
+   "actual": "1",
+   "verdict": "MATCH",
+   "basis": "relayed",
+   "detail": ""
+  },
+  {
+   "id": "D2",
+   "kind": "json_value",
+   "why": "被审代码被数成 6 行",
+   "evidence_class": "self",
+   "target": "../../PDF-1022/真端点-1023/读数/pgagent-真端点.json#result.metrics.lines",
+   "expected": 6,
+   "actual": "6",
+   "verdict": "MATCH",
+   "basis": "relayed",
+   "detail": ""
+  },
+  {
+   "id": "D3",
+   "kind": "file_sha256",
+   "why": "交付报出的源码指纹（16 位前缀）",
+   "evidence_class": "disk",
+   "target": "源文件/待审.py",
+   "expected": "05bdf4a2f686c85b",
+   "actual": null,
+   "verdict": "ABSENT",
+   "basis": "absent",
+   "detail": "文件不存在，读不到内容：源文件/待审.py"
+  },
+  {
+   "id": "D4",
+   "kind": "json_len",
+   "why": "找到 1 条问题",
+   "evidence_class": "self",
+   "target": "../../PDF-1022/真端点-1023/读数/pgagent-真端点.json#result.findings",
+   "expected": 1,
+   "actual": "长度 1",
+   "verdict": "MATCH",
+   "basis": "relayed",
+   "detail": ""
+  },
+  {
+   "id": "D5",
+   "kind": "json_len",
+   "why": "另有 6 条未决",
+   "evidence_class": "self",
+   "target": "../../PDF-1022/真端点-1023/读数/pgagent-真端点.json#result.unknowns",
+   "expected": 6,
+   "actual": "长度 6",
+   "verdict": "MATCH",
+   "basis": "relayed",
+   "detail": ""
+  },
+  {
+   "id": "D6",
+   "kind": "json_value",
+   "why": "账本有 4 格改写了这一发的结果",
+   "evidence_class": "self",
+   "target": "../../PDF-1022/真端点-1023/读数/pgagent-真端点.json#result.kpi_ledger_decided",
+   "expected": 4,
+   "actual": "4",
+   "verdict": "MATCH",
+   "basis": "relayed",
+   "detail": ""
+  },
+  {
+   "id": "D7",
+   "kind": "json_value",
+   "why": "13 步整列自洽",
+   "evidence_class": "self",
+   "target": "../../PDF-1022/真端点-1023/读数/pgagent-真端点.json#result.trace_sane",
+   "expected": true,
+   "actual": "true",
+   "verdict": "MATCH",
+   "basis": "relayed",
+   "detail": ""
+  },
+  {
+   "id": "D8",
+   "kind": "json_value",
+   "why": "跨发账链对得上",
+   "evidence_class": "self",
+   "target": "../../PDF-1022/真端点-1023/读数/pgagent-真端点.json#result.chain_sane",
+   "expected": true,
+   "actual": "true",
+   "verdict": "MATCH",
+   "basis": "relayed",
+   "detail": ""
+  },
+  {
+   "id": "D9",
+   "kind": "json_value",
+   "why": "五档加总 7 条",
+   "evidence_class": "self",
+   "target": "../../PDF-1022/真端点-1023/读数/pgagent-真端点.json#result.provenance_mix.total",
+   "expected": 7,
+   "actual": "7",
+   "verdict": "MATCH",
+   "basis": "relayed",
+   "detail": ""
+  }
+ ],
+ "summary": {
+  "claims": 9,
+  "match": 8,
+  "mismatch": 0,
+  "absent": 1,
+  "disk": 1,
+  "self": 8
+ },
+ "evidence": {
+  "pgagent": {
+   "name": "pgagent 轨迹",
+   "relation": "本交付的证据",
+   "note": "13 步轨迹从这里读；不要和 agentd 那一发混成一次运行",
+   "path": "../../PDF-1022/真端点-1023/读数/pgagent-真端点.json",
+   "resolved": "C:\\Users\\Admin\\Desktop\\微内核\\PDF-1022\\真端点-1023\\读数\\pgagent-真端点.json",
+   "present": true,
+   "sha256": "11e8b994a25483ad458303169d90d1bfca98a117923a5a39395226ff168405d1",
+   "sha256_expected": "11e8b994a25483ad458303169d90d1bfca98a117923a5a39395226ff168405d1",
+   "checks": [
+    {
+     "id": "P0",
+     "desc": "指纹与钉住的一致",
+     "verdict": "GREEN",
+     "detail": "钉住 11e8b994a25483ad… 实际 11e8b994a25483ad…",
+     "class": "盘上"
+    },
+    {
+     "id": "P1",
+     "desc": "JSON 可解析",
+     "verdict": "GREEN",
+     "detail": "顶层键 8 个",
+     "class": "盘上"
+    },
+    {
+     "id": "P2",
+     "desc": "步数",
+     "verdict": "GREEN",
+     "detail": "13 步（期望 13）",
+     "class": "盘上"
+    },
+    {
+     "id": "P3",
+     "desc": "每步都 ran=true",
+     "verdict": "GREEN",
+     "detail": "全部 13 步",
+     "class": "盘上"
+    },
+    {
+     "id": "P4",
+     "desc": "每步 basis 合法",
+     "verdict": "GREEN",
+     "detail": "全部落在五档",
+     "class": "盘上"
+    },
+    {
+     "id": "P5",
+     "desc": "末步是终态",
+     "verdict": "GREEN",
+     "detail": "末步=stop（期望 stop）",
+     "class": "盘上"
+    },
+    {
+     "id": "P6",
+     "desc": "五档恒等",
+     "verdict": "GREEN",
+     "detail": "五档加总 7，findings+unknowns 7，mix.total 7",
+     "class": "盘上"
+    },
+    {
+     "id": "P7",
+     "desc": "finding/unknown 的 basis 合法",
+     "verdict": "GREEN",
+     "detail": "findings 1 条 / unknowns 6 条",
+     "class": "盘上"
+    },
+    {
+     "id": "P8",
+     "desc": "unknown 都带「为什么缺席」",
+     "verdict": "GREEN",
+     "detail": "全部 6 条都带理由",
+     "class": "盘上"
+    },
+    {
+     "id": "P9",
+     "desc": "条数与钉住的一致",
+     "verdict": "GREEN",
+     "detail": "findings 1 / unknowns 6（期望 1 / 6）",
+     "class": "盘上"
+    },
+    {
+     "id": "P10",
+     "desc": "finding 定位能回盘",
+     "verdict": "ABSENT",
+     "detail": "1/1 条 finding 的 where.lines 是 [0,0]（或空）；本次交付没有把被审源码一起交出来 ⇒ 回盘核不了",
+     "class": "盘上"
+    }
+   ],
+   "counts": {
+    "green": 10,
+    "red": 0,
+    "absent": 1,
+    "relayed": 0,
+    "vacuous": 0
+   },
+   "verdict": "ABSENT",
+   "relayed": [
+    {
+     "key": "trace_sane",
+     "label": "trace_sane",
+     "value": true,
+     "why": "交付方自报，本件不重算"
+    },
+    {
+     "key": "chain_sane",
+     "label": "chain_sane",
+     "value": true,
+     "why": "交付方自报，本件不重算"
+    },
+    {
+     "key": "kpi_ledger_decided",
+     "label": "KPI（账本改写了结果的格数）",
+     "value": 4,
+     "why": "交付方自报，本件不重算"
+    },
+    {
+     "key": "mix_identity_ok",
+     "label": "mix_identity_ok",
+     "value": true,
+     "why": "交付方自报，本件不重算"
+    }
+   ]
+  },
+  "agentd": {
+   "name": "agentd 事件层",
+   "relation": "形状样例（与本交付无因果关系）",
+   "note": "同一批真端点验收里 agentd 那一发的会话名是 real-agentd-1，本交付是 real-pgagent-1，两发不同",
+   "path": "../../PDF-1022/真端点-1023/读数/agentd-真端点.events.jsonl",
+   "resolved": "C:\\Users\\Admin\\Desktop\\微内核\\PDF-1022\\真端点-1023\\读数\\agentd-真端点.events.jsonl",
+   "present": true,
+   "sha256": "59d1deb636993cf1e67e7bf6a56313f08ef3c817ffb0d03404ff5581b083218e",
+   "sha256_expected": "59d1deb636993cf1e67e7bf6a56313f08ef3c817ffb0d03404ff5581b083218e",
+   "checks": [
+    {
+     "id": "E0",
+     "desc": "指纹与钉住的一致",
+     "verdict": "GREEN",
+     "detail": "钉住 59d1deb636993cf1… 实际 59d1deb636993cf1…",
+     "class": "盘上"
+    },
+    {
+     "id": "E1",
+     "desc": "每行都可解析",
+     "verdict": "GREEN",
+     "detail": "14 条事件，坏行 0，非对象行 0",
+     "class": "盘上"
+    },
+    {
+     "id": "E2",
+     "desc": "必备字段齐",
+     "verdict": "GREEN",
+     "detail": "全齐",
+     "class": "盘上"
+    },
+    {
+     "id": "E3",
+     "desc": "每个 (session,turn) 的 seq 严格递增",
+     "verdict": "GREEN",
+     "detail": "4 个 (session,turn) 严格递增（起始 seq real-agentd-1/turn0:1 / real-agentd-1/turn1:1 / agentd-27276/turn0:3 / agentd-27276/turn1:6）",
+     "class": "盘上"
+    },
+    {
+     "id": "E4",
+     "desc": "evidence 档合法",
+     "verdict": "GREEN",
+     "detail": "全部落在五档",
+     "class": "盘上"
+    },
+    {
+     "id": "E5",
+     "desc": "拒绝必须带理由",
+     "verdict": "VACUOUS",
+     "detail": "本批 0 条拒绝事件 ⇒ 这条判据没有现场",
+     "class": "盘上"
+    },
+    {
+     "id": "E6",
+     "desc": "absent 事件带理由",
+     "verdict": "VACUOUS",
+     "detail": "本批 0 条 absent 事件",
+     "class": "盘上"
+    },
+    {
+     "id": "E7",
+     "desc": "每一发与每一程都有终态事件",
+     "verdict": "GREEN",
+     "detail": "2 发 / 2 程全部 settled",
+     "class": "盘上"
+    }
+   ],
+   "counts": {
+    "green": 6,
+    "red": 0,
+    "absent": 0,
+    "relayed": 0,
+    "vacuous": 2
+   },
+   "verdict": "GREEN",
+   "relayed": [],
+   "totals": {
+    "events": 14,
+    "runs": 2,
+    "turns": 2,
+    "refused": 0,
+    "absent": 0
+   }
+  },
+  "journal": {
+   "name": "内核账本",
+   "relation": "形状样例（与本交付无因果关系）",
+   "note": "这是 10-18 客服靶场导出的 2940 条账，不是本交付的账本；本件只核它自己的链与 49 格形状",
+   "path": "../../构建-1017/客服靶场/导出/账本-全量-1018.jsonl",
+   "resolved": "C:\\Users\\Admin\\Desktop\\微内核\\构建-1017\\客服靶场\\导出\\账本-全量-1018.jsonl",
+   "present": true,
+   "sha256": "fb1fa5ef7a9347769eede05d48b06a3e712861cc1e979076cdf18f922543d220",
+   "sha256_expected": "fb1fa5ef7a9347769eede05d48b06a3e712861cc1e979076cdf18f922543d220",
+   "checks": [
+    {
+     "id": "J0",
+     "desc": "指纹与钉住的一致",
+     "verdict": "GREEN",
+     "detail": "钉住 fb1fa5ef7a934776… 实际 fb1fa5ef7a934776…",
+     "class": "盘上"
+    },
+    {
+     "id": "J1",
+     "desc": "账行可解析",
+     "verdict": "GREEN",
+     "detail": "2940 条账 + 1 行人读表头，坏行 0",
+     "class": "盘上"
+    },
+    {
+     "id": "J2",
+     "desc": "条数",
+     "verdict": "GREEN",
+     "detail": "2940 条（期望 2940）",
+     "class": "盘上"
+    },
+    {
+     "id": "J3",
+     "desc": "人读表头行",
+     "verdict": "GREEN",
+     "detail": "1 行（期望 1）",
+     "class": "盘上"
+    },
+    {
+     "id": "J4",
+     "desc": "seal 逐条复算",
+     "verdict": "GREEN",
+     "detail": "2940/2940",
+     "class": "盘上"
+    },
+    {
+     "id": "J5",
+     "desc": "prev_hash 链接",
+     "verdict": "GREEN",
+     "detail": "2940/2940",
+     "class": "盘上"
+    },
+    {
+     "id": "J6",
+     "desc": "seq 从 1 连续",
+     "verdict": "GREEN",
+     "detail": "1..2940",
+     "class": "盘上"
+    },
+    {
+     "id": "J7",
+     "desc": "payload 指纹",
+     "verdict": "GREEN",
+     "detail": "2940/2940",
+     "class": "盘上"
+    },
+    {
+     "id": "J8",
+     "desc": "49 格分组（20 入 + 29 出）",
+     "verdict": "GREEN",
+     "detail": "60 组，尺寸分布 {\"49\": 60}，入/出 20/29",
+     "class": "盘上"
+    }
+   ],
+   "counts": {
+    "green": 9,
+    "red": 0,
+    "absent": 0,
+    "relayed": 0,
+    "vacuous": 0
+   },
+   "verdict": "GREEN",
+   "relayed": [],
+   "totals": {
+    "records": 2940,
+    "header_lines": 1,
+    "groups": 60,
+    "size_dist": {
+     "49": 60
+    },
+    "seal_ok": 2940,
+    "link_ok": 2940,
+    "payload_ok": 2940,
+    "sessions": 12
+   }
+  }
+ },
+ "limits": [
+  "本件只读盘上文件：不执行被交付的代码，不联网，不改任何输入。",
+  "核对的是「声明 vs 盘上证据」是否一致，不判断代码或结论本身对不对。",
+  "证据怎么产生的，本件证不了：日志与文件可能是事后补的，本件只核它们与声明是否对得上。",
+  "交付方自报的读数（trace_sane / KPI / chain_sane 等）记为 relayed，本件不重算。",
+  "内核账本只核 seal / 链接 / 序号 / payload / 49 格分组这些可复算的形状，不核每格内容对不对。",
+  "ACCEPTED 只代表「每条声明都由盘上证据复核通过，且没有仅凭自报的项」；不代表代码正确或测试充分。"
+ ],
+ "landing": {
+  "claims_json": 9,
+  "claims_html": 9,
+  "claims_total": 9,
+  "ok": true
+ }
+}

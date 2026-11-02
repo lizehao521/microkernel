@@ -1,0 +1,75 @@
+{
+  "receipt_version": 1,
+  "session": "示例-编程-好交付",
+  "delivery": {
+    "by": "编程 Agent（示例，人工扮演）",
+    "task": "修 calc.mean 空列表崩溃，并跑三个单测",
+    "produced_at": "2026-10-26"
+  },
+  "claims": [
+    {
+      "id": "C1",
+      "kind": "file_sha256",
+      "path": "工作区/calc.py",
+      "value": "e5e1efde571cacada4c34b445da538a217fe097b47cd866e446bfdfec7e4f640",
+      "evidence_class": "disk",
+      "why": "交付说改完的就是这份文件"
+    },
+    {
+      "id": "C2",
+      "kind": "file_contains",
+      "path": "工作区/calc.py",
+      "line": 2,
+      "value": "if not xs:",
+      "evidence_class": "disk",
+      "why": "空列表先拦下"
+    },
+    {
+      "id": "C3",
+      "kind": "log_exit",
+      "path": "证据/修复后-测试.log",
+      "value": 0,
+      "evidence_class": "disk",
+      "why": "三个单测应当全过"
+    },
+    {
+      "id": "C4",
+      "kind": "log_contains",
+      "path": "证据/修复后-测试.log",
+      "value": "OK",
+      "evidence_class": "disk",
+      "why": "unittest 全过时末行是 OK"
+    },
+    {
+      "id": "C5",
+      "kind": "file_absent",
+      "path": "工作区/tmp_debug.txt",
+      "evidence_class": "disk",
+      "why": "交付说调试用的临时文件已删"
+    },
+    {
+      "id": "C6",
+      "kind": "file_bytes",
+      "path": "工作区/calc.py",
+      "value": 99,
+      "evidence_class": "disk",
+      "why": "报给下游的字节数"
+    },
+    {
+      "id": "C7",
+      "kind": "file_lines",
+      "path": "工作区/calc.py",
+      "value": 4,
+      "evidence_class": "disk",
+      "why": "报给下游的行数"
+    },
+    {
+      "id": "C8",
+      "kind": "log_contains",
+      "path": "证据/修复后-测试.log",
+      "value": "Ran 3 tests",
+      "evidence_class": "disk",
+      "why": "三个用例都跑了"
+    }
+  ]
+}

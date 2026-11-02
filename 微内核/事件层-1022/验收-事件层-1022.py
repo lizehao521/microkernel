@@ -1,0 +1,281 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""E9：八条验收针变成一条可复跑命令。
+
+口径来自 ../研究-协同工作-1022.md §8.2 —— **道数与针名从那份文档现读**，不写在代码里：
+文档加了第 九 条，这里就多一行；写死的道数会随闸增减说谎。
+
+每条针报四件事：吃了哪几支 Test（支数现数）、跑起来什么读数、有没有反臂（臂的根数从
+`读数/臂检-全部族.jsonl` 现数）、量不到的那一维明写 NOT_MEASURABLE / NOT_RUN（不折成 0）。
+
+一件额外的事：**没有任何针覆盖的 Test 会被点名**。映射漏了一支新 Test，这里就说漏了，
+而不是让「八行全过」把没人管的那支藏起来。
+
+用法（工作目录 事件层-1022）：
+    C:/Users/Admin/sdk/py314/python.exe 验收-事件层-1022.py <go.exe> <树根>
+退出码：0 全过；3 有红针 / 有针没臂也没写理由；4 输入读不到。
+"""
+import io
+import json
+import os
+import re
+import subprocess
+import sys
+import time
+
+GO = sys.argv[1] if len(sys.argv) > 1 else r"C:/Users/Admin/sdk/go/bin/go.exe"
+SRC = sys.argv[2] if len(sys.argv) > 2 else r"C:/Users/Admin/Desktop/微内核/微内核/微内核"
+HERE = os.path.dirname(os.path.abspath(__file__))
+DOC = os.path.normpath(os.path.join(HERE, "..", "研究-协同工作-1022.md"))
+ARMS = os.path.join(HERE, "读数", "臂检-全部族.jsonl")
+REPORT = os.path.join(HERE, "报告-验收.txt")
+# 落盘规矩（10-25 B1）：**这一件不许开局截正式名**。原先 `main()` 第一行就
+# `io.open(REPORT,"w")`，于是「跑到一半被打断」必然留下一个 mtime 最新、内容空或半截的读数 ——
+# 而现场认「最新」的那只眼睛只看 mtime（`体检-全闸-1023.py` 就这么读它），半截的那份会被读成绿。
+# 同一条病 10-23 已经在臂检那件上治过（`臂检-全部族.py` 用 `.part` + `os.replace`），
+# 这里补的是它的第二个落点。owner 现成，写法照同一件：**先关句柄再换名**
+# （Windows 上句柄还开着时 `os.replace`/`remove` 会失败 —— 崩掉的又是退出码）。
+PART = REPORT + ".part"
+PKG = "./cmd/agentd/"
+
+# 针名（§8.2 里那个粗体 token）→ 吃哪几支 Test。映射是判断，不是从代码推出来的；
+# 但「有没有 Test 落空」这一维由下面的差集自己数出来。
+MAP = {
+    "回执": r"TestTurnAcceptedLeadsEveryTurn|TestReceiptPayloadIsHonest|TestLateReceiptGoesRed|"
+            r"TestReceiptWithoutEntryInstantIsRefused|TestAcceptArmsCatchEachBadShape|"
+            r"TestProductionAckLatencyIsMeasurable|TestAckMSDoesNotLeakAcrossReuse|"
+            r"TestCallerCannotFakeAckLatency|TestResumableFieldSurvivesFalse|"
+            r"TestCheckLogEveryLineCarriesTheLimit",
+    "序号": r"TestEventSeqMonotonicWithinEachTurn|TestValidateLogArmRejectsDuplicateAndRegress|"
+            r"TestEventLogAppendsAcrossRuns|TestCrossRunLogStaysJudgeable|TestReadPathRejectsTamperedRows|"
+            r"TestClosedBusRefusesNewEvents|TestUnreadableExistingLogDegradesLoudly",
+    "缺席": r"TestAbsentWithoutWhyIsRefusedAndNotWritten|TestRefusedEventsCarryTheirWhy|"
+            r"TestEventsCarryNoPayloadText|TestScriptedClaimsNoWireBytes|"
+            r"TestNonScriptDriverLeavesPlannedNil|TestOldRecordWithoutResumableReadsAsNil",
+    "结算": r"TestEveryTurnSettlesExactlyOnce|TestSettleTurnIsIdempotent|TestSettlementArmsCatchEachBadShape|"
+            r"TestSettlementJudgeCatchesEachBadShape|TestInterruptSettlesWithinSecond|TestSettlesCoverRefusedShape|"
+            r"TestRunSettledPresence|TestSettlementPhaseShapeJudges|TestSettleProgressKeepsQuotaWhenNotFinished|"
+            r"TestResumedRunContinuesTurnAxis|TestRefusedNotRunBranchSettlesAsFailed|"
+            r"TestRefusedEndpointExhaustedSettlesAsFailed|TestRefusedPrecheckGateSettlesAsRefused|"
+            r"TestIdleTickCarriesCheckableProgress|TestWhyLateWhenTotalIsNotComputable|TestSettleFreezesIdleTicks",
+    "补步": r"TestInterruptDoesNotFabricateSteps|TestPhaseTables",
+    "续传": r"TestReplayTwiceGivesSameSequence|TestCrossRunReplayKeepsLogOrder|TestCursorCarriesRunAxis|"
+            r"TestBadCursorIsNotTreatedAsHead|TestUnreadableLogGives503|TestResumableIsMeasuredNotAssumed|"
+            r"TestReplayArmsCatchEachBadShape|TestReplayJudgeAndHandlerAgreeOnBadCursor|TestServedFramesAreLogRows|"
+            r"TestLogIsReadableWhileBusHoldsIt|TestResumeLostIsDistinguishable|TestOtherPathGives404|"
+            r"TestResumeContinuesAndRefusesSecondRecording|TestResumeRefusesInconsistentLedger|"
+            r"TestResumeRebuildsHistoryOnlyWhenFingerprintsMatch",
+    "混列": r"TestCrossRunCountsArePerRun|TestTraceTurnCountIsPerRun",
+    "投影": r"TestPage|TestTrace",
+}
+
+# 量不到的那一维与它的理由（不许折成 0，也不许读成「挡住了」）。
+NOT_MEASURABLE = {
+    "混列": "入口级锁没有落点：本树唯一的 HTTP 面是只读 /events，没有「第二发从外面进来」的入口"
+            "（见 交接-agentd事件层-1022.md §4.3）。已覆盖的是身份轴那一半（run 轴 + blockOf）。",
+}
+NOT_RUN = {
+    "真模型端点": "NOT_RUN：端点要口令，这台机器上没有，也不折算成 0。",
+    "真人可读性": "NOT_RUN：界面可读性没请真人读过。",
+}
+
+
+def read_text(p):
+    if not os.path.isfile(p):
+        return None
+    return io.open(p, encoding="utf-8", errors="replace").read()
+
+
+def pins_from_doc():
+    """道数与针名从 §8.2 现读：编号列表里那个粗体 X针。"""
+    txt = read_text(DOC)
+    if txt is None:
+        return None, ["读不到 " + DOC]
+    sec = txt.split("### 8.2", 1)
+    if len(sec) < 2:
+        return None, ["§8.2 这一节不见了"]
+    body = sec[1].split("### 8.3", 1)[0]
+    names = re.findall(r"^\s*\d+\.\s+\*\*(.+?)针\*\*", body, re.M)
+    errs = []
+    if not names:
+        errs.append("§8.2 里一条针都没解析出来（文档改了写法？别猜道数）")
+    return names, errs
+
+
+def list_tests():
+    r = subprocess.run([GO, "test", PKG, "-list", ".*"], cwd=SRC, capture_output=True,
+                       text=True, encoding="utf-8", errors="replace")
+    if r.returncode != 0:
+        return None, (r.stdout + r.stderr).strip().splitlines()[-3:]
+    return [l.strip() for l in (r.stdout + r.stderr).splitlines()
+            if re.match(r"^Test\w*$", l.strip())], []
+
+
+def tests_by_file():
+    """Test 名 → 它住在哪个 _test.go。用来把「映射漏了」判在事件层自己的文件上，
+    而不是把账本/驱动那几族（本面之外的 Test）也算成缺陷。"""
+    d = os.path.join(SRC, "cmd", "agentd")
+    out = {}
+    for f in sorted(os.listdir(d)):
+        if not f.endswith("_test.go"):
+            continue
+        for m in re.finditer(r"^func (Test\w+)\(", read_text(os.path.join(d, f)) or "", re.M):
+            out[m.group(1)] = f
+    return out
+
+
+def arms_by_test():
+    """臂的根数从读数现数；文件不在/比树旧 ⇒ 如实说没这份读数，不当作 0 根。"""
+    txt = read_text(ARMS)
+    if txt is None:
+        return None, []
+    fresh, rows = True, []
+    for line in txt.splitlines():
+        if not line.strip():
+            continue
+        d = json.loads(line)
+        rows.append(d)
+    newest_src = max(os.path.getmtime(os.path.join(SRC, "cmd", "agentd", f))
+                     for f in os.listdir(os.path.join(SRC, "cmd", "agentd")) if f.endswith(".go"))
+    if os.path.getmtime(ARMS) < newest_src:
+        fresh = False
+    return {"rows": rows, "fresh": fresh}, []
+
+
+def run_pin(pat):
+    r = subprocess.run([GO, "test", PKG, "-count=1", "-run", pat], cwd=SRC,
+                       capture_output=True, text=True, encoding="utf-8", errors="replace")
+    return r.returncode, (r.stdout + r.stderr)
+
+
+def main():
+    lines, errs = [], []
+    w = io.open(PART, "w", encoding="utf-8", newline="\n")
+
+    def emit(row):
+        lines.append(row)
+        w.write(row + "\n")
+        sys.stdout.write(row.encode("ascii", "backslashreplace").decode("ascii") + "\n")
+
+    def say(row):
+        # 只上屏、不进读数：这一句说的是「这份读数是怎么落地的」，不是被数的行本身。
+        # （写进 `lines` 再重数就恒多一行 ⇒ landing check 自己变成假红。）
+        sys.stdout.write(row.encode("ascii", "backslashreplace").decode("ascii") + "\n")
+
+    def land():
+        """跑完这一趟才发布：先关句柄，再 replace，最后从**落盘那份**重数一遍。
+
+        为什么还要重数：件印了读数路径 ≠ 它真写了那个文件（10-24 那把尺子印了名、文件里少 22 行）。
+        """
+        w.close()
+        try:
+            os.replace(PART, REPORT)
+        except OSError as e:
+            say("LANDING-FAILED replace %s -> %s ｜ %s —— 正式名还是上一趟那份，%s 留在盘上当现场；"
+                "rc 不因此改动（这一族今天由 报告-全闸.txt 的 STALE 警告接住，见 1025 那笔已知缺口）"
+                % (os.path.basename(PART), os.path.basename(REPORT), ascii(str(e)), os.path.basename(PART)))
+            return False
+        got = read_text(REPORT)
+        n = len(got.splitlines()) if got is not None else -1
+        say("landing check: %s %d/%d rows ｜ %s" %
+            ("OK" if n == len(lines) else "MISMATCH", n, len(lines), os.path.basename(REPORT)))
+        return n == len(lines)
+
+    names, e = pins_from_doc()
+    errs += e
+    all_tests, e2 = list_tests()
+    errs += e2
+    arms, e3 = arms_by_test()
+    errs += e3
+    if names is None or all_tests is None:
+        emit("INPUT-NOT-READABLE " + " | ".join(errs)[:400])
+        land()
+        return 4
+
+    emit("source=%s" % DOC)
+    emit("tree=%s" % SRC)
+    emit("doc_pins=%d ｜ tests_in_package=%d ｜ arm_rows=%s" %
+         (len(names), len(all_tests), (str(len(arms["rows"])) if arms else "无读数")))
+    if arms and not arms["fresh"]:
+        emit("ARM-READING-STALE 读数比 cmd/agentd 里最新的 .go 旧 ⇒ 下面每行的臂数只作参考，别读成「刚跑过」")
+
+    covered = set()
+    bad = 0
+    for i, name in enumerate(names, 1):
+        key = name.replace("针", "").strip()
+        pat = MAP.get(key)
+        if pat is None:
+            emit("PIN-%02d %s NO-MAPPING 文档里有这条针，脚本没给映射 ⇒ 不许跳" % (i, name))
+            bad += 1
+            continue
+        # 先按正则数出清单（search，不是整名相等 —— 上一版拿 ^(...)$ 把 TestPage|TestTrace
+        # 判成 0 支，那是尺子自己的错，不是页面没针）；再**按这份清单原样去跑**，
+        # 保证报出来的支数与真跑的支数是同一批。
+        mine = [t for t in all_tests if re.search(pat, t)]
+        if not mine:
+            emit("PIN-%02d %s PATTERN-MATCHES-NOTHING 正则一支 Test 都没对上（改名了？）" % (i, name))
+            bad += 1
+            continue
+        covered.update(mine)
+        rc, out = run_pin("^(" + "|".join(mine) + ")$")
+        nbite = 0
+        if arms:
+            # 咬住有两种 verdict：BIT 与 BIT(进程崩症状可见) —— 只数前者的话，
+            # 带 panic_watch 的那几根会被少数掉，报出来的臂数就比真数小。
+            nbite = sum(1 for d in arms["rows"]
+                        if any(re.search(re.escape(m), d.get("test", "")) for m in mine)
+                        and str(d.get("verdict", "")).startswith("BIT"))
+        state = "GREEN" if rc == 0 else "RED"
+        extra = ""
+        if key in NOT_MEASURABLE:
+            extra = " ｜ NOT_MEASURABLE：" + NOT_MEASURABLE[key]
+        emit("PIN-%02d %s %s tests=%d rc=%d arms_BIT=%d%s" % (i, name, state, len(mine), rc, nbite, extra))
+        if rc != 0:
+            bad += 1
+            tail = [l for l in out.splitlines() if "FAIL" in l or " Fatalf " in l][:3]
+            emit("    reason: " + " / ".join(tail)[:300])
+        if arms and arms["fresh"] and nbite == 0 and key not in NOT_MEASURABLE:
+            emit("    NO-ARM 这条针没有一根咬住的臂 ⇒ 全绿也不许说成「已证会红」")
+            bad += 1
+
+    # 「映射漏了」只判事件层自己的文件（events*_test.go）；账本/驱动那几族在本面之外，
+    # 把它们列出来当信息，不算缺陷 —— 否则这条闸永远红，红的还不是该红的东西。
+    tf = tests_by_file()
+    holes = sorted(t for t in set(all_tests) - covered if tf.get(t, "").startswith("events"))
+    outside = sorted(t for t in set(all_tests) - covered if not tf.get(t, "").startswith("events"))
+    # §8.2 只有八条，而事件层里还有不属于那八条的针（停止入口幂等 / 落盘失败要喊 / stdout 不变 /
+    # 落点推导 / 掩码对账）。不硬塞进某条针，也不许让它们没人跑：单列一行，一样报臂。
+    if holes:
+        rc, out = run_pin("^(" + "|".join(holes) + ")$")
+        nbite = 0
+        if arms:
+            nbite = sum(1 for d in arms["rows"]
+                        if any(re.search(re.escape(m), d.get("test", "")) for m in holes)
+                        and str(d.get("verdict", "")).startswith("BIT"))
+        emit("PIN-EXTRA 本面其余针 %s tests=%d rc=%d arms_BIT=%d" %
+             ("GREEN" if rc == 0 else "RED", len(holes), rc, nbite))
+        if rc != 0:
+            bad += 1
+            emit("    reason: " + " / ".join([l for l in out.splitlines() if "FAIL" in l][:3])[:300])
+        if arms and arms["fresh"] and nbite == 0:
+            emit("    NO-ARM 这些针没有一根咬住的臂")
+            bad += 1
+    emit("extra_pins_listed=%d（这些不属于 §8.2 那八条，已单列跑过，不算漏）" % len(holes))
+    emit("outside_this_face=%d（账本/驱动/宿主那几族的 Test，本条命令不判它们）" % len(outside))
+    for k, v in NOT_RUN.items():
+        emit("NOT_RUN %s ｜ %s" % (k, v))
+    emit("conclusion=%s" % ("ALL-PINS-GREEN-WITH-ARMS" if bad == 0 else "%d 行不合格（见上面点名的哪一行）" % bad))
+    land()
+    return 0 if bad == 0 else 3
+
+
+if __name__ == "__main__":
+    try:
+        sys.exit(main())
+    except Exception as exc:
+        # 崩在半路 ⇒ 正式名一个字没动（`land()` 是唯一碰它的地方），上一趟那份完整读数仍是「最新」。
+        # 这句只上屏不进读数：rc 仍然是 traceback 的那一档，本件不借机改退出码语义。
+        sys.stdout.write(("ABORT-BEFORE-LAND %s ｜ 正式名未动；半截留在 %s=%s\n"
+                          % (ascii(str(exc)), os.path.basename(PART), os.path.isfile(PART))
+                          ).encode("ascii", "backslashreplace").decode("ascii"))
+        raise

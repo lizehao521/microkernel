@@ -1,0 +1,2 @@
+跨发那一形：链上=[441, 490, 539] ｜ 三发跨发=[True, False, False] ｜ 账满那本被挡发有 KPI 吗=['没这格'] ｜ 没咬住=['跨发：三发都过判据（chain_sane=true）', '跨发：每一发的读数都自带"对得上"与被拒计数那一维']
+SUMMARY cases=22 bad=1 temp_left=0

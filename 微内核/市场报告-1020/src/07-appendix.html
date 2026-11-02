@@ -1,0 +1,292 @@
+<!-- ================= APPENDIX A ================= -->
+<section class="chapter appendix" id="appA">
+  <div class="chap-kicker">Appendix A</div>
+  <h1><span class="num">A</span>方法与证据分级</h1>
+
+  <h2>A.1 研究问题与范围</h2>
+  <p>
+    本报告回答一个决策问题：在“账本完整性已验证、但记录驱动二次修改尚未实证”的前提下，agentkernel 应以哪种方式面对市场。
+    范围限定为：产品叙事、进入方式、进入门槛、定价与三年财务；不重新做 v1 的市场规模调查，不评估内核代码质量，不评价模型能力。
+    市场数据沿用 v1（2026-10-19）；记录面事实来自 2026-10-19 至 10-20 的本机复算；外部文献用于校验“记录 → 修改”的因果链，不用于证明产品有效。
+  </p>
+
+  <h2>A.2 证据分级</h2>
+  <table class="tbl">
+    <thead><tr><th style="width:8%">等级</th><th style="width:38%">判据</th><th>本报告中的典型用法</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag tag-a">A</span></td><td>工具自印 + 独立复算；或两个独立来源逐字对上</td><td>账本 2,940 条、链 2,940/2,940、封板 78 针、外部 6 发对账</td></tr>
+      <tr><td><span class="tag tag-b">B</span></td><td>单一来源自印，未独立复算</td><td>单次运行读数、单一内部文件</td></tr>
+      <tr><td><span class="tag tag-c">C</span></td><td>作者复算 / 规划假设，无原始件</td><td>SAM / SOM、ARPU、成本、三情景财务、闸门天数</td></tr>
+      <tr><td><span class="tag tag-d">D</span></td><td>外部公开资料，注明访问日</td><td>市场规模、竞品价格、法规、OTel semconv</td></tr>
+      <tr><td><span class="tag tag-x">X</span></td><td>不可核 / 未验证</td><td>R/N 双臂、真人臂、30 分钟、闭环、内容可信</td></tr>
+    </tbody>
+  </table>
+  <p class="small">
+    使用规则：X 级不得写成 0；C 级不得写成调查结论；D 级不得写成官方原文已核（除非确已打开原文）；A 级必须能给出复算命令或对账文件。
+    本报告没有把“未找到付款证据”写成“0 个买家”，也没有把“未跑双臂”写成“无效”。
+  </p>
+
+  <h2>A.3 资料与方法</h2>
+  <ul>
+    <li><b>记录面审计：</b>对导出的账本逐行复算 seq / prev / payload / seal；统计调用数、会话数、basis 分布、字段空值；检查 read_back、declare_reader、load_journal 的行为。</li>
+    <li><b>市场数据：</b>沿用 v1 的三路自上而下与自下而上估算；v2 只改“相邻市场占比”，从 8–12% / 5–8% 下调到 3–6%，理由是本产品是功能而非平台。</li>
+    <li><b>外部文献：</b>检索自我修正、轨迹学习、可观测性与合规四组资料；优先 Tier 1（论文、官方文档），Tier 2（律所指南、厂商工程博客），Tier 3 仅作旁证。</li>
+    <li><b>财务：</b>按“付费账户 × ARPU”建模，成本不含作者人力；另做含 8 万美元 / 年作者成本的敏感性。</li>
+    <li><b>红队：</b>用“买家自建”“平台打包”两条攻击路径反推产品边界；未做真人红队演练。</li>
+  </ul>
+
+  <h2>A.4 局限</h2>
+  <ul>
+    <li><b>没有做付费市场调查。</b>10 次访谈是 G0 的动作，不是本报告已完成的工作；SAM / SOM 是规划假设。</li>
+    <li><b>R/N 双臂未跑。</b>报告只能给出协议与闸门，不能给出“记录驱动修改有效”的结论。</li>
+    <li><b>单一作者。</b>记录面审计、市场判断与财务假设都出自同一作者，缺少独立复核；这是本报告最大的方法风险。</li>
+    <li><b>外部资料有时效。</b>价格、法规与 semconv 都会变；引用日期为 2026-10-18 至 10-20。</li>
+    <li><b>财务不含融资与税费。</b>三情景只用于量级判断，不能作为投资决策或报价依据。</li>
+  </ul>
+
+  <h2>A.5 复现与推翻</h2>
+  <p>
+    记录面数字可用本机账本重新复算；财务表可按表 11 的账户数与 ARPU 重算；市场规模可用 v1 的三路数据与 3–6% 占比重算。
+    以下任一读数出现，本报告的核心结论应被推翻或修订：
+  </p>
+  <ul>
+    <li>G1.5 的 R 臂留出集通过率 ≥ N 臂 + 20 个百分点，且假修复率不升——应上调对 B 的投入，并重新评估“功能市场”判断。</li>
+    <li>外部团队在 60 分钟内无法产出可复核证据包——A 的交付物设计失败，应退回研究阶段。</li>
+    <li>买家为“可复核”单独设预算科目——SAM 与 ARPU 应上调，定价梯子需重做。</li>
+    <li>头部平台把证据包做成标准功能——A 退回规范与适配器，B 不做。</li>
+  </ul>
+</section>
+
+<!-- ================= APPENDIX B ================= -->
+<section class="chapter appendix" id="appB">
+  <div class="chap-kicker">Appendix B</div>
+  <h1><span class="num">B</span>数据表</h1>
+
+  <h2>B.1 记录面审计（本机账本，2026-10-19 / 10-20）</h2>
+  <table class="tbl">
+    <caption><b>表 B1</b> 账本结构与字段覆盖（A 级：逐行复算）</caption>
+    <thead><tr><th style="width:38%">项目</th><th class="num" style="width:18%">读数</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>账本总行数</td><td class="num">2,941</td><td>1 行前言 + 2,940 条记录</td></tr>
+      <tr><td>调用数 × 格数</td><td class="num">60 × 49</td><td>60 次调用，每次 49 格</td></tr>
+      <tr><td>会话数</td><td class="num">12</td><td>账本内 session 去重</td></tr>
+      <tr><td>自报 actor 数</td><td class="num">4</td><td>自报，未做身份绑定</td></tr>
+      <tr><td>basis = measured</td><td class="num">2,213</td><td>实测值</td></tr>
+      <tr><td>basis = absent</td><td class="num">355</td><td>带缺席理由</td></tr>
+      <tr><td>basis = relayed</td><td class="num">188</td><td>转述值</td></tr>
+      <tr><td>basis = estimated</td><td class="num">124</td><td>估计值</td></tr>
+      <tr><td>basis = model_says</td><td class="num">60</td><td>模型自述</td></tr>
+      <tr><td>basis = unset</td><td class="num">0</td><td>无未设置项</td></tr>
+      <tr><td>endpoint_model 非空</td><td class="num">23 / 60</td><td>不是每次调用都有模型标识</td></tr>
+      <tr><td>产物内容字段</td><td class="num">0 / 2,940</td><td>账本不保存产物正文</td></tr>
+      <tr><td>model_says_sha256</td><td class="num">60 / 60</td><td>43 个不同值</td></tr>
+      <tr><td>fail_kind 非空</td><td class="num">0 / 60</td><td>没有失败类型</td></tr>
+      <tr><td>fail_status = absent</td><td class="num">60 / 60</td><td>失败状态全部缺席</td></tr>
+      <tr><td>闸门行</td><td class="num">0</td><td>账本无闸门记录</td></tr>
+      <tr><td>链复算通过</td><td class="num">2,940 / 2,940</td><td>seq / prev / payload / seal</td></tr>
+      <tr><td>签名 / 密钥</td><td class="num">无</td><td>未做非对称签名</td></tr>
+      <tr><td>read_back 返回指纹</td><td class="num">否</td><td>读回不返回链头指纹</td></tr>
+      <tr><td>declare_reader 持久化</td><td class="num">否</td><td>仅内存</td></tr>
+      <tr><td>load_journal 可整本替换</td><td class="num">是</td><td>APPEND_ONLY 默认关闭</td></tr>
+    </tbody>
+  </table>
+
+  <h2>B.2 规模、SOM 与账户数</h2>
+  <table class="tbl">
+    <caption><b>表 B2</b> 规模重算（C 级假设，沿用 v1 的相邻市场口径）</caption>
+    <thead><tr><th style="width:34%">项目</th><th class="num">数值</th><th>口径</th></tr></thead>
+    <tbody>
+      <tr><td>TAM（相邻口径）</td><td class="num">27–31 亿美元</td><td>LLM 可观测性 26.9 亿 + AI TRiSM 30.9 亿，相邻不相加</td></tr>
+      <tr><td>相邻市场占比</td><td class="num">3–6%</td><td>v1 为 8–12% / 5–8%；v2 因“功能而非平台”下调</td></tr>
+      <tr><td>SAM</td><td class="num">1.0–2.0 亿美元</td><td>相邻市场 × 3–6%</td></tr>
+      <tr><td>SOM（三年）</td><td class="num">0.5–4.0 百万美元</td><td>SAM × 0.5–2%</td></tr>
+      <tr><td>ARPU</td><td class="num">1.5–3.0 万美元 / 年</td><td>团队版与证据包版的混合区间</td></tr>
+      <tr><td>对应账户数</td><td class="num">约 17–267 个</td><td>SOM ÷ ARPU，三年累计</td></tr>
+    </tbody>
+  </table>
+
+  <h2>B.3 公开价格锚（访问 2026-10-19）</h2>
+  <table class="tbl">
+    <caption><b>表 B3</b> 价格锚：为什么不能按 seat / span / token 定价（D 级，价格随页面变动）</caption>
+    <thead><tr><th style="width:26%">产品</th><th style="width:24%">公开价格锚</th><th style="width:16%">计价单位</th><th>对证据包的含义</th></tr></thead>
+    <tbody>
+      <tr><td>LangSmith</td><td>约 39 美元 / seat / 月</td><td>seat</td><td>按 seat 卖会被压到工具价</td></tr>
+      <tr><td>Langfuse</td><td>Cloud 约 29 美元 / 月起；可自托管</td><td>用量 / seat</td><td>免费替代最强；只能卖拒收语义</td></tr>
+      <tr><td>Braintrust</td><td>Pro 约 249 美元 / 月</td><td>组织 / seat</td><td>评测预算高于追踪，但内核不做评测</td></tr>
+      <tr><td>Datadog LLM Observability</td><td>约 160 美元 / 月起（10 万 spans）</td><td>span</td><td>按 span 比价对证据包不利</td></tr>
+      <tr><td>Helicone</td><td>约 79 美元 / 月</td><td>request</td><td>代理型追踪，价格锚低</td></tr>
+      <tr><td>Portkey</td><td>约 49 美元 / 月</td><td>request / seat</td><td>网关 + 可观测，同向竞争</td></tr>
+      <tr><td>W&amp;B Weave</td><td>约 60 美元 / 月</td><td>用量</td><td>评测 / 追踪，不是证据闸门</td></tr>
+      <tr><td>TrueFoundry</td><td>Pro 约 499 美元 / 月</td><td>平台</td><td>平台可以收更高，但需要平台能力</td></tr>
+      <tr class="em-row"><td>agentkernel 证据包（建议）</td><td>1.5–8 万美元 / 年</td><td>年费 / 证据包</td><td>是入门可观测性的 10–100 倍；必须用事故成本解释</td></tr>
+    </tbody>
+  </table>
+
+  <h2>B.4 三情景财务（明细）</h2>
+  <table class="tbl">
+    <caption><b>表 B4</b> 三情景财务明细（千美元；不含作者人力；C 级）</caption>
+    <thead><tr><th style="width:26%">项目</th><th class="num">保守 Y1</th><th class="num">保守 Y2</th><th class="num">保守 Y3</th><th class="num">基准 Y1</th><th class="num">基准 Y2</th><th class="num">基准 Y3</th><th class="num">乐观 Y1</th><th class="num">乐观 Y2</th><th class="num">乐观 Y3</th></tr></thead>
+    <tbody>
+      <tr><td>付费账户</td><td class="num">0</td><td class="num">6</td><td class="num">20</td><td class="num">1</td><td class="num">8</td><td class="num">25</td><td class="num">1</td><td class="num">12</td><td class="num">40</td></tr>
+      <tr><td>ARPU</td><td class="num">—</td><td class="num">18</td><td class="num">20</td><td class="num">15</td><td class="num">18</td><td class="num">20</td><td class="num">15</td><td class="num">20</td><td class="num">22</td></tr>
+      <tr><td>收入</td><td class="num">0</td><td class="num">108</td><td class="num">400</td><td class="num">15</td><td class="num">144</td><td class="num">500</td><td class="num">15</td><td class="num">240</td><td class="num">880</td></tr>
+      <tr><td>成本</td><td class="num">15</td><td class="num">32</td><td class="num">60</td><td class="num">15</td><td class="num">35</td><td class="num">70</td><td class="num">15</td><td class="num">40</td><td class="num">95</td></tr>
+      <tr><td>净现金流</td><td class="num">-15</td><td class="num">76</td><td class="num">340</td><td class="num">0</td><td class="num">109</td><td class="num">430</td><td class="num">0</td><td class="num">200</td><td class="num">785</td></tr>
+      <tr class="em-row"><td>累计收入</td><td class="num">0</td><td class="num">108</td><td class="num">508</td><td class="num">15</td><td class="num">159</td><td class="num">659</td><td class="num">15</td><td class="num">255</td><td class="num">1,135</td></tr>
+      <tr class="em-row"><td>累计净现金流</td><td class="num">-15</td><td class="num">61</td><td class="num">401</td><td class="num">0</td><td class="num">109</td><td class="num">539</td><td class="num">0</td><td class="num">200</td><td class="num">985</td></tr>
+    </tbody>
+  </table>
+
+  <h2>B.5 五道闸与读数来源</h2>
+  <table class="tbl">
+    <caption><b>表 B5</b> 闸门、读数与失败动作（与正文表 8 对应）</caption>
+    <thead><tr><th style="width:10%">闸</th><th style="width:10%">时间</th><th style="width:36%">主读数</th><th>读数来源 / 备注</th></tr></thead>
+    <tbody>
+      <tr><td>G0</td><td>D30</td><td>10 次访谈；≥3 真实触发；≥1 POC；≥1 预算科目</td><td>访谈记录 + 客户书面确认；不接受“有兴趣”</td></tr>
+      <tr><td>G1</td><td>D60</td><td>非作者真人 ≤60 分钟产出 1 个证据包并完成 1 次修改</td><td>录屏 + 证据包 + 计时；拒收必须计数</td></tr>
+      <tr class="em-row"><td>G1.5</td><td>D90</td><td>R 臂留出集通过率 ≥ N 臂 + 20 个百分点；假修复率不高于 N 臂</td><td>预注册 + 盲评；反臂 A/B 必须是叶子任务</td></tr>
+      <tr><td>G2</td><td>D120</td><td>2 封 LOI；1 次安全审查通过；SBOM / DPA / 责任边界</td><td>LOI 不等于收入；安全审查由客户方出具</td></tr>
+      <tr><td>G3</td><td>D180</td><td>≥3 家付费 ≥1 万美元，或 ≥5 家付费试点；≥1 家续费</td><td>以到账与续费为准，不以意向为准</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ================= APPENDIX C ================= -->
+<section class="chapter appendix" id="appC">
+  <div class="chap-kicker">Appendix C</div>
+  <h1><span class="num">C</span>参考文献</h1>
+
+  <p class="small">
+    [1]–[33] 沿用 v1（2026-10-19）；[34]–[50] 为本轮新增。未在正文直接引用的 v1 条目保留编号，便于对照。外部资料访问日为 2026-10-18 至 10-20。
+  </p>
+
+  <h2>C.1 市场、法规与竞品</h2>
+  <div class="ref"><span class="n">[1]</span> OWASP Foundation. <i>OWASP MCP Top 10</i>, MCP08: Lack of Audit and Telemetry. https://owasp.org/www-project-mcp-top-10/ <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[2]</span> European Union. <i>Regulation (EU) 2024/1689 (AI Act)</i>, Article 12: Record-keeping. https://eur-lex.europa.eu/eli/reg/2024/1689/oj <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[3]</span> Artificial Intelligence Act (tracker). Article 12. https://artificialintelligenceact.eu/article/12/ <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[4]</span> 全国标准信息公共服务平台. GB/T 47746—2026（2026-09-01 实施）. https://openstd.samr.gov.cn/ <span class="tag tag-d">D</span>（标准原文未逐条核，适用范围以原文为准）</div>
+  <div class="ref"><span class="n">[5]</span> 中国人大网. 《中华人民共和国电子商务法》第 48 条. http://www.npc.gov.cn/ <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[6]</span> NIST NVD. CVE-2026-27825 / CVE-2026-27826. https://nvd.nist.gov/vuln/detail/CVE-2026-27825 <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[7]</span> Gartner. “Over 40% of agentic AI projects will be canceled by end of 2027.” Gartner Newsroom. https://www.gartner.com/en/newsroom <span class="tag tag-d">D</span>（官方页访问受限，读数转引二级来源）</div>
+  <div class="ref"><span class="n">[8]</span> Business Research Company. <i>LLM Observability Market</i>（2026 口径，二手转引）. <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[9]</span> MarketsandMarkets. <i>AI TRiSM Market</i>（2026–2031 口径，二手转引）. <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[10]</span> Research and Markets / Mordor Intelligence. <i>AI Governance Market</i>（2025–2030 口径，二手转引）. <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[11]</span> QYResearch. <i>AI Observability Platforms Market</i>（2025–2032 口径，二手转引）. <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[12]</span> Stacklok. MCP adoption survey（公开摘要转引）. <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[13]</span> LangChain. <i>State of AI Agents</i>（公开摘要转引）. <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[14]</span> Model Context Protocol. https://modelcontextprotocol.io/ <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[15]</span> OpenTelemetry. GenAI semantic conventions. https://opentelemetry.io/docs/specs/semconv/gen-ai/ <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[16]</span> LangSmith pricing. https://www.langchain.com/pricing <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[17]</span> Langfuse pricing. https://langfuse.com/pricing <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[18]</span> Braintrust pricing. https://www.braintrust.dev/pricing <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[19]</span> Datadog pricing. https://www.datadoghq.com/pricing/ <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[20]</span> Helicone pricing. https://www.helicone.ai/pricing <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[21]</span> Portkey pricing. https://portkey.ai/pricing <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[22]</span> Weights &amp; Biases pricing. https://wandb.ai/pricing <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[23]</span> TrueFoundry pricing. https://www.truefoundry.com/pricing <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[24]</span> AWS. CloudTrail log file validation. https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-log-file-validation-intro.html <span class="tag tag-d">D</span></div>
+  <div class="ref"><span class="n">[25]</span> Microsoft Azure. Confidential Ledger. https://azure.microsoft.com/en-us/products/confidential-ledger <span class="tag tag-d">D</span></div>
+
+  <h2>C.2 内部证据与记录面</h2>
+  <div class="ref"><span class="n">[26]</span> 《产品定位（v1 封板用）》. 内部文件，2026-10-13 起封板；含 48 键 / 49 格、边界三条、唯一验收、15 条缺口. <span class="tag tag-a">A</span> / <span class="tag tag-b">B</span></div>
+  <div class="ref"><span class="n">[27]</span> 《可验证记账层的可行边界——技术可行性、外部叙事与市场位置的合并研究》. 内部报告，2026-10-19. <span class="tag tag-a">A</span> / <span class="tag tag-b">B</span></div>
+  <div class="ref"><span class="n">[28]</span> 《封板轮-整轮-1016-032847.txt》. 78 根针 / 整轮跑；退出码 0；空针 / 坏针 0；对照成立. <span class="tag tag-a">A</span></div>
+  <div class="ref"><span class="n">[29]</span> 《外部评估-主页圈-aec6dd94-对账-1018.md》. 外部 6 发 / 294 条；整本 490 条；逐发指纹对上. <span class="tag tag-a">A</span></div>
+  <div class="ref"><span class="n">[30]</span> 《收尾-现场与未闭合-1018.txt》. 未闭合项、KPI 计数半边、A1 提示注入实测. <span class="tag tag-a">A</span> / <span class="tag tag-b">B</span></div>
+  <div class="ref"><span class="n">[31]</span> 《agent-第二支-续跑臂.md》《挤历史-判生死.md》. 续跑 / 跨发边界；真实故障实例 0 次. <span class="tag tag-b">B</span></div>
+  <div class="ref"><span class="n">[32]</span> <span class="mono">tasks/audit/to_dataset.py</span>. 训练数据对 2/4 实测. <span class="tag tag-a">A</span></div>
+  <div class="ref"><span class="n">[33]</span> 《26 策略引擎闭环》. <span class="mono">../策略引擎闭环-1019/报告.md</span>、<span class="mono">MANIFEST.txt</span>. 26 声明 / 20 分支 / 1 恒等 / 5 元策略；7/7 离线合成；真实靶场 NOT_RUN. <span class="tag tag-a">A</span> / <span class="tag tag-x">X</span></div>
+  <div class="ref"><span class="n">[34]</span> Huang, J., et al. “Large Language Models Cannot Self-Correct Reasoning Yet.” ICLR 2024. https://arxiv.org/abs/2310.01798 <span class="tag tag-d">D</span>（Tier 1）</div>
+  <div class="ref"><span class="n">[35]</span> Kamoi, R., et al. “When Can LLMs Actually Correct Their Own Mistakes? A Critical Survey of Self-Correction of LLMs.” TACL 2024. https://arxiv.org/abs/2406.01297 <span class="tag tag-d">D</span>（Tier 1）</div>
+
+  <h2>C.3 自我修正与轨迹学习</h2>
+  <div class="ref"><span class="n">[36]</span> Madaan, A., et al. “Self-Refine: Iterative Refinement with Self-Feedback.” NeurIPS 2023. https://arxiv.org/abs/2303.17651 <span class="tag tag-d">D</span>（Tier 1）</div>
+  <div class="ref"><span class="n">[37]</span> Shinn, N., et al. “Reflexion: Language Agents with Verbal Reinforcement Learning.” NeurIPS 2023. https://arxiv.org/abs/2303.11366 <span class="tag tag-d">D</span>（Tier 1）</div>
+  <div class="ref"><span class="n">[38]</span> Zhao, A., et al. “ExpeL: LLM Agents Are Experiential Learners.” AAAI 2024. https://arxiv.org/abs/2308.10144 <span class="tag tag-d">D</span>（Tier 1）</div>
+  <div class="ref"><span class="n">[39]</span> Luo, X., et al. “Agent Lightning: Train ANY AI Agents with Reinforcement Learning.” 2025. https://arxiv.org/abs/2508.03680 <span class="tag tag-d">D</span>（Tier 1）</div>
+  <div class="ref"><span class="n">[40]</span> Agrawal, L., et al. “GEPA: Reflective Prompt Evolution Can Outperform Reinforcement Learning.” ICLR 2026. https://arxiv.org/abs/2507.19457 <span class="tag tag-d">D</span>（Tier 1）</div>
+  <div class="ref"><span class="n">[41]</span> Wang, Z., et al. “Agent Workflow Memory.” ICML 2025. https://arxiv.org/abs/2409.07429 <span class="tag tag-d">D</span>（Tier 1）</div>
+  <div class="ref"><span class="n">[42]</span> Wang, G., et al. “Voyager: An Open-Ended Embodied Agent with Large Language Models.” 2023. https://arxiv.org/abs/2305.16291 <span class="tag tag-d">D</span>（Tier 1）</div>
+  <div class="ref"><span class="n">[43]</span> Wang, Z., et al. “RAGEN: Understanding Self-Evolution in LLM Agents via Multi-Turn Reinforcement Learning.” 2025. https://arxiv.org/abs/2504.20073 <span class="tag tag-d">D</span>（Tier 1）</div>
+  <div class="ref"><span class="n">[44]</span> METR. “AI systems could cover up misbehavior.” 2026-10-06. https://metr.org/blog/2026-10-06-ai-systems-could-cover-up-misbehavior/ <span class="tag tag-d">D</span>（Tier 1）</div>
+
+  <h2>C.4 可观测性、治理与合规</h2>
+  <div class="ref"><span class="n">[45]</span> Microsoft Learn. “Observability | Microsoft Agent Framework.” 更新 2026-10-15. https://learn.microsoft.com/en-us/agent-framework/agents/observability <span class="tag tag-d">D</span>（Tier 1）</div>
+  <div class="ref"><span class="n">[46]</span> LangChain Docs. “Evaluation concepts.” https://docs.langchain.com/langsmith/evaluation-concepts <span class="tag tag-d">D</span>（Tier 1）</div>
+  <div class="ref"><span class="n">[47]</span> Cloud Security Alliance Labs. “NIST AI Agent Standards: What It Means for Enterprise.” 2026-08-04. https://labs.cloudsecurityalliance.org/research/csa-research-note-nist-ai-agent-standards-initiative-2026040/ <span class="tag tag-d">D</span>（Tier 2）</div>
+  <div class="ref"><span class="n">[48]</span> Bird &amp; Bird. <i>EU AI Act Guide</i>（中文版）. https://www.twobirds.com/-/media/new-website-content/pdfs/capabilities/artificial-intelligence/eu-ai-act-guide-chinese-version.pdf <span class="tag tag-d">D</span>（Tier 2；律所指南，官方英文本未完整打开）</div>
+  <div class="ref"><span class="n">[49]</span> EUR-Lex. <i>Regulation (EU) 2026/1744</i>. https://eur-lex.europa.eu/eli/reg/2026/1744/oj <span class="tag tag-d">D</span>（Tier 1；仅页头已核，修订条款文号待核）</div>
+  <div class="ref"><span class="n">[50]</span> open-telemetry/opentelemetry-js. Releases（semconv v1.37.0）. https://github.com/open-telemetry/opentelemetry-js/releases <span class="tag tag-d">D</span>（Tier 1；发布说明摘录级）</div>
+
+  <p class="small" style="margin-top:5mm">
+    说明：部分 v1 市场规模条目为二手转引，原始报告页未能完整打开；本报告只把它们用于量级与占比，不用于精确预测。
+    法规条目中，EU AI Act 第 12 条与第 26(6) 条的表述来自律所指南与公开条文摘要，官方英文本未完整逐条核对；
+    Digital Omnibus 只核到 Regulation (EU) 2026/1744 页头，具体修订条款文号待核。凡此均按 D 级使用，不写成“官方原文已核”。
+  </p>
+</section>
+
+<!-- ================= APPENDIX D ================= -->
+<section class="chapter appendix" id="appD">
+  <div class="chap-kicker">Appendix D</div>
+  <h1><span class="num">D</span>术语与对外材料草稿</h1>
+
+  <h2>D.1 术语表</h2>
+  <table class="kv">
+    <tr><td><b>账本 / journal</b></td><td>append-only 的调用记录；v1 为 60 次调用 × 49 格，共 2,940 条。</td></tr>
+    <tr><td><b>49 格</b></td><td>每次调用的固定记录形状；不是“49 个保证”，也不覆盖产物内容。</td></tr>
+    <tr><td><b>seal / 链</b></td><td>seq + prev + payload + seal 的哈希链；证明记录未被改，不证明内容为真。</td></tr>
+    <tr><td><b>basis</b></td><td>记录值的来源状态：measured / absent / relayed / estimated / model_says / unset。</td></tr>
+    <tr><td><b>absent</b></td><td>明确记录“没有这个值 + 理由”；不是 0，也不是空字符串。</td></tr>
+    <tr><td><b>read_back</b></td><td>读回接口；当前不返回链头指纹，不能单独证明“你看到的是原来那本”。</td></tr>
+    <tr><td><b>declare_reader</b></td><td>读者声明；当前仅内存，不持久化；严格双臂中拒收六桶全 0。</td></tr>
+    <tr><td><b>load_journal</b></td><td>装载账本；可整本替换，APPEND_ONLY 默认关闭；证据包需另加链头指纹与外部存证。</td></tr>
+    <tr><td><b>证据包</b></td><td>账本 + 产物原像 + 行为/判据版本 + 拒收计数 + 外部验证结果 + manifest；可复核、可回滚、可披露。</td></tr>
+    <tr><td><b>产物原像</b></td><td>被修改的文件/配置/提示词的原始内容或其可验证哈希；账本本身不保存。</td></tr>
+    <tr><td><b>版本三元组</b></td><td>产物版本 + 行为/配置版本 + 判据版本；缺一项，修改不可归因。</td></tr>
+    <tr><td><b>拒收计数</b></td><td>被验证器拒绝的候选修改数量与原因；不做拒收计数，就会把“挑过的成功”当总体。</td></tr>
+    <tr><td><b>R/N 双臂</b></td><td>R 臂看记录再改，N 臂不看记录直接改；比较留出集通过率与假修复率。</td></tr>
+    <tr><td><b>假修复率</b></td><td>验证器判为修好、但留出集或反臂显示未修好的比例。</td></tr>
+    <tr><td><b>反臂 A/B</b></td><td>预期失败或应被拒绝的叶子任务；用来证明验证器不是“永远通过”。</td></tr>
+    <tr><td><b>Gate 1.5</b></td><td>R/N 增量闸；不过则冻结为研究资产，不进入私有化。</td></tr>
+    <tr><td><b>功能市场 / 平台市场</b></td><td>前者挂在可观测性、评测、治理预算下；后者有独立预算科目与平台采购流程。本报告判断为前者。</td></tr>
+  </table>
+
+  <h2>D.2 对外材料草稿（一）：一句话与一段话</h2>
+  <div class="callout">
+    <div class="t">一句话</div>
+    <p>
+      agentkernel 把一次 Agent 修改的账本、产物原像、行为/判据版本与拒收计数装进一个可复核的证据包，让另一个团队能独立判断这次修改是否算数。
+    </p>
+  </div>
+  <div class="callout neutral">
+    <div class="t">一段话（对外简介）</div>
+    <p>
+      Agent 团队已经不缺 trace，缺的是“这次修改凭什么算数”的可复核证据。agentkernel 是一个证据适配层：它接在现有 trace / eval 旁边，
+      把账本、产物原像、行为与判据版本、拒收计数和外部验证结果装进一个证据包。它不拦截、不调度、不执行工具，也不宣称让 Agent 更可信；
+      它只让一次修改可被另一个人复核、回滚和披露。当前版本是研究资产，R/N 双臂尚未运行；我们优先寻找有真实事故复盘、审计或行为变更触发的团队做 POC。
+    </p>
+  </div>
+
+  <h2>D.3 对外材料草稿（二）：不承诺清单</h2>
+  <ul>
+    <li>不承诺“上了内核就挡住提示注入 / 工具滥用”——审计层不是防线。</li>
+    <li>不承诺“verify 通过 = 内容可信”——链只证明记录未被改。</li>
+    <li>不承诺“记录驱动自动改进已有效”——R/N 双臂 NOT_RUN，严格双臂仍 FAIL。</li>
+    <li>不承诺“30 分钟接入”——当前目标是非作者真人 60 分钟产出 1 个证据包并完成 1 次修改。</li>
+    <li>不承诺“符合 EU AI Act 第 12 条认证”——只支持记录义务，不构成合规认证。</li>
+    <li>不承诺“托管按次 / 多租户”——当前不做 C。</li>
+  </ul>
+
+  <h2>D.4 对外材料草稿（三）：POC 邀请</h2>
+  <div class="quote">
+    如果你们最近做过一次 Agent 行为修改（提示词、工具权限、检索策略或判据），并且能提供修改前后的产物与一次失败复盘，
+    我们愿意用 6 周做一次付费试点：不接你们的模型调用，不改你们的模型代码，只把这次修改做成一个可复核的证据包，
+    并由你们指定的一位非作者同学在 60 分钟内独立复核。试点价 3–5 千美元；如果我们做不出可复核的证据包，不收尾款。
+    <span class="who">草稿，未对外发送；发送前需确认预算、法务措辞与数据留存边界。</span>
+  </div>
+
+  <div class="endnote">
+    本报告为研究 / 规划件，不是报价单、投资建议或合规意见。所有 C 级数字为作者假设；所有 X 级缺口写“未跑 / 不知道”，不写成 0。
+    报告中的公司名与产品名归各自所有者；价格与法规以官方页面为准。
+  </div>
+</section>

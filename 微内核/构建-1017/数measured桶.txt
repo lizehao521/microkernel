@@ -1,0 +1,37 @@
+第 1 发：读到 2 侧 ｜ 格子分母 49 ｜ 按出处桶 {'measured': 35, 'estimated': 4, 'absent': 7, 'model_says': 1, 'relayed': 2}
+   其中记成 measured 但值是旗标/空文本/0 段的：15 格
+     input  clipped                值='0 段（裁剪表是空的）'
+     input  dropped                值='0 段（裁剪表是空的）'
+     input  folded                 值='0 段（裁剪表是空的）'
+     input  notice_sent            值='否'
+     input  notice_text            值='（这一格是空的）'
+     input  notice_trimmed         值='否'
+     output cost_countable         值='是'
+     output downgrade              值='否'
+     output endpoint_model_said    值='否'
+     output fail_detail            值='（这一格是空的）'
+     output fail_kind              值='（这一格是空的）'
+     output finish_said            值='否'
+     output model_says_clipped     值='否'
+     output streaming              值='否'
+     output wire_format_said       值='否'
+
+第 2 发：读到 2 侧 ｜ 格子分母 49 ｜ 按出处桶 {'measured': 35, 'estimated': 4, 'absent': 7, 'model_says': 1, 'relayed': 2}
+   其中记成 measured 但值是旗标/空文本/0 段的：15 格
+     input  clipped                值='0 段（裁剪表是空的）'
+     input  dropped                值='0 段（裁剪表是空的）'
+     input  folded                 值='0 段（裁剪表是空的）'
+     input  notice_sent            值='否'
+     input  notice_text            值='（这一格是空的）'
+     input  notice_trimmed         值='否'
+     output cost_countable         值='是'
+     output downgrade              值='否'
+     output endpoint_model_said    值='否'
+     output fail_detail            值='（这一格是空的）'
+     output fail_kind              值='（这一格是空的）'
+     output finish_said            值='否'
+     output model_says_clipped     值='否'
+     output streaming              值='否'
+     output wire_format_said       值='否'
+
+第 3 发：read_back 两侧都没有内容 ⇒ 这一发不存在（不再往下数）

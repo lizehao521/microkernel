@@ -1,0 +1,31 @@
+尺子自证 · 把旧病注回内存里的尺子副本（不动盘上的尺子，也不起真进程）
+基准 = 当前 证据模型核对.py；R1 = 追加式 SPEC 读不到；R2 = mis 被重复键覆盖
+复合闸那三行 = 基准 体检-全闸 / GMUT = 把「点名 Test」拧成恒空（探针进程全假，只喂一段 canned go test）
+
+ctrl rc=3 ｜ 符号可核 53 条 ｜ 臂判 6 条 ｜ 臂红/失效 0 条 ｜ 一条真漂移：sym_bad=22 mis=22
+R1   rc=3 ｜ 符号可核 32 条 ｜ 臂判 6 条 ｜ 臂红/失效 2 条 ｜ 一条真漂移：sym_bad=16 mis=16
+      ↳ A5 改一条「追加式 SPEC（SPEC["x"] = […]）」推出的 ref（尺子上一版根本读不到这类形状）
+      ↳ A5（没处下手）
+R2   rc=3 ｜ 符号可核 53 条 ｜ 臂判 6 条 ｜ 臂红/失效 1 条 ｜ 一条真漂移：sym_bad=22 mis=0
+      ↳ A4b 同一条坏点必须进「判 rc」那份清单（不是只印出来）
+
+复合闸 ctrl  rc=3 ｜ 罪名进线=True ｜ conclusion 点名这一道=True ｜ 全量落盘含 FAIL=True ｜ 落盘文件=红-全量-go_test_-count_1.txt
+      ↳ 行原文：go test -count=1       rc=1     0s | tail<-stdout | 红在 TestFlakeExample ｜ FAIL	agentkernel/cmd/agentd	27.669s / FAIL ｜ 全量=红-全量-go_test_-count_1.txt
+复合闸 GMUT  rc=3 ｜ 罪名进线=False ｜ conclusion 点名这一道=True ｜ 全量落盘含 FAIL=True ｜ 落盘文件=红-全量-go_test_-count_1.txt
+      ↳ 行原文：go test -count=1       rc=1     0s | tail<-stdout | 红但点不出 Test 名（不是 --- FAIL 那形）｜ FAIL	agentkernel/cmd/agentd	27.669s / FAIL ｜ 全量=红-全量-go_test_-count_
+
+注：R2 那一份 rc=3 不是坏点被抓 —— 是 A4b 自己失效把 rc 拖红的。
+    所以判「有没有牙」只看上面那对数：sym_bad>0 而 mis=0 = 只印不判。
+
+判：不过 ｜ 基准：rc=0 且所有臂都判成有效
+判：过 ｜ 基准：符号可核 53 条（与 锚点刷新.py 自印的 refs total=53 对齐）
+判：过 ｜ R1：A5 必须失效或没处下手（旧 parse 读不到追加槽）
+判：过 ｜ R1：符号可核掉回 32（21 条被降成仅存在性，正是这次的病）
+判：过 ｜ R2：A4b 必须失效（坏点进不了判 rc 的清单）
+判：过 ｜ 基准：一条真漂移既进 sym_bad 也进 mis（打印的那份和判 rc 的那份是同一份）
+判：过 ｜ R2：同一条漂移 sym_bad>0 而 mis=0 ⇒ 重复键确实让判据没了牙（修法不是可有可无）
+判：过 ｜ 复合闸·基准：红的那一道把 Test 名写进了读数行，且 conclusion 点名是哪一道不绿
+判：过 ｜ 复合闸·基准：红的那一道的全量输出落到读数目录且含那行 --- FAIL（罪名之外还留现场）
+判：过 ｜ 复合闸·GMUT：把点名拧成恒空后罪名必须消失，而 rc 照旧=3 ⇒ 归因靠这条函数，且变异没碰判据
+
+结论：1 条自证不过（共 10 条）—— 上面点名的那条臂没在管它声称管的事。

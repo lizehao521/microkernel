@@ -1,0 +1,1109 @@
+# -*- coding: utf-8 -*-
+"""微核台本地服务：127.0.0.1 随机端口，只读证据 + 个人记忆 + 确定性对话 + 内核快闸。
+默认不联网、不执行交付代码、不调用模型；只有显式设置 WEIHETAI_MODEL_BRIDGE 并在界面打开开关时，
+才把「问题 + 去标识证据摘要」发给本机模型桥。不写 8797/8799。
+用法：python 工具-本地服务.py [--port 0] [--no-open] [--no-kernel]
+"""
+import argparse
+import hashlib
+import html
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+import tempfile
+import threading
+import time
+import traceback
+import urllib.error
+import urllib.parse
+import urllib.request
+import webbrowser
+from datetime import datetime
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
+
+sys.stdout.reconfigure(errors="backslashreplace")
+sys.stderr.reconfigure(errors="backslashreplace")
+
+BASE = Path(__file__).resolve().parent
+ROOT = BASE.parents[1]
+EVID = BASE / "证据"
+MEM_DIR = BASE / "记忆"
+MEM_FILE = MEM_DIR / "记忆.json"
+RECEIPT_DIR = BASE / "回执"
+READOUT_DIR = BASE / "读数"
+HTML_FILE = BASE / "微核台.html"
+GO_BIN = Path(os.environ.get("WEIHE_GO", r"C:/Users/Admin/sdk/go/bin/go.exe"))
+KERNEL_DIR = ROOT / "微内核" / "微内核"
+VERSION = "0.3.0-prototype"
+MODEL_BRIDGE_URL = (os.environ.get("WEIHETAI_MODEL_BRIDGE") or "").strip()
+MODEL_BOUNDARY = "只发问题 + 去标识证据摘要；不发记忆、操作者、文件路径、sha256、回执、口令"
+STARTED_AT = datetime.now().astimezone().isoformat(timespec="seconds")
+BOOT_ID = os.urandom(3).hex()
+
+LOCK = threading.RLock()
+MEMORY_CACHE = None
+MEMORY_NOTE = ""
+
+
+def now_iso():
+    return datetime.now().astimezone().isoformat(timespec="seconds")
+
+
+def sha256_bytes(b):
+    return hashlib.sha256(b).hexdigest()
+
+
+def sha256_file(p):
+    try:
+        return sha256_bytes(Path(p).read_bytes())
+    except OSError:
+        return ""
+
+
+def rel(p):
+    try:
+        return Path(p).resolve().relative_to(BASE).as_posix()
+    except ValueError:
+        return str(p)
+
+
+def load_json(p, default=None):
+    try:
+        return json.loads(Path(p).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return default
+
+
+def atomic_write_json(p, obj):
+    p = Path(p)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    tmp = p.with_suffix(p.suffix + ".part")
+    tmp.write_text(json.dumps(obj, ensure_ascii=False, indent=2), encoding="utf-8")
+    os.replace(tmp, p)
+
+
+def atomic_write_text(p, text):
+    p = Path(p)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    tmp = p.with_suffix(p.suffix + ".part")
+    tmp.write_text(text, encoding="utf-8")
+    os.replace(tmp, p)
+
+
+# ---------------- evidence ----------------
+
+def load_evidence():
+    delivery = load_json(EVID / "交付.json")
+    if not delivery:
+        raise RuntimeError("证据包缺失：证据/交付.json。先跑 工具-抽取证据.py")
+    bundles = {
+        "pgagent": load_json(EVID / "pgagent-13步.json"),
+        "agentd": load_json(EVID / "agentd-事件.json"),
+        "kernel": load_json(EVID / "内核-49格.json"),
+        "index": load_json(EVID / "索引.json"),
+    }
+    return delivery, bundles
+
+
+DELIVERY, BUNDLES = load_evidence()
+DELIVERY_BY_ID = {d["id"]: d for d in DELIVERY["deliveries"]}
+
+
+def verdict_label(v):
+    return {
+        "ACCEPTED": "可收 · 全部相符",
+        "NOT-ACCEPTED-MISMATCH": "不能收 · 有不符",
+        "NOT-ACCEPTED-UNVERIFIED": "核不了 · 证据缺席",
+    }.get(v, v)
+
+
+def action_label(a):
+    return {"accept": "收下", "reject": "退回", "hold": "挂起"}.get(a, a)
+
+
+def claim_state_label(v):
+    return {"MATCH": "相符", "MISMATCH": "不符", "ABSENT": "核不了"}.get(v, v)
+
+
+# ---------------- memory ----------------
+
+def default_memory():
+    return {
+        "version": 1,
+        "owner": "本机操作者",
+        "created_at": now_iso(),
+        "preferences": {
+            "operator_name": "本机操作者",
+            "require_reason": True,
+            "reasons": ["测试声明没有盘上证据", "真实模型复核未发生", "证据缺席，无法判断"],
+        },
+        "decisions": [],
+        "dialogue": [],
+        "load_note": "",
+    }
+
+
+def load_memory():
+    global MEMORY_CACHE, MEMORY_NOTE
+    with LOCK:
+        if MEMORY_CACHE is not None:
+            return MEMORY_CACHE
+        mem = None
+        note = ""
+        if MEM_FILE.exists():
+            try:
+                mem = json.loads(MEM_FILE.read_text(encoding="utf-8"))
+            except Exception:
+                broken = MEM_DIR / f"记忆.broken-{datetime.now().strftime('%Y%m%d-%H%M%S')}.json"
+                try:
+                    shutil.copyfile(MEM_FILE, broken)
+                    note = f"原记忆文件损坏，已复制保留为 {rel(broken)}，本次从默认记忆启动。"
+                except OSError:
+                    note = "原记忆文件损坏且备份失败；本次从默认记忆启动。"
+                mem = None
+        if not isinstance(mem, dict):
+            mem = default_memory()
+        base = default_memory()
+        for k, v in base.items():
+            mem.setdefault(k, v)
+        for k, v in base["preferences"].items():
+            mem.setdefault("preferences", {}).setdefault(k, v)
+        if note:
+            mem["load_note"] = note
+        MEMORY_CACHE = mem
+        MEMORY_NOTE = note
+        if not MEM_FILE.exists():
+            atomic_write_json(MEM_FILE, mem)
+        return mem
+
+
+def save_memory(mem):
+    global MEMORY_CACHE
+    with LOCK:
+        MEMORY_CACHE = mem
+        atomic_write_json(MEM_FILE, mem)
+
+
+def memory_meta():
+    mem = load_memory()
+    return {
+        "file": rel(MEM_FILE),
+        "bytes": MEM_FILE.stat().st_size if MEM_FILE.exists() else 0,
+        "sha256": sha256_file(MEM_FILE),
+        "decisions": len(mem.get("decisions", [])),
+        "dialogue": len(mem.get("dialogue", [])),
+        "note": mem.get("load_note", ""),
+    }
+
+
+# ---------------- kernel quick gate ----------------
+
+class KernelChecker:
+    def __init__(self):
+        self.lock = threading.Lock()
+        self.status = {
+            "state": "idle",
+            "why": "还没开始",
+            "started_at": None,
+            "elapsed_ms": None,
+            "rc": None,
+            "checks_ok": None,
+            "checks_bad": None,
+            "unknown_lines": None,
+            "exe_sha256": None,
+            "exe_bytes": None,
+            "cmd": "go build -o <TEMP>/kcheck.exe ./cmd/kcheck && kcheck.exe",
+            "cwd": rel(KERNEL_DIR),
+            "readout": "读数/内核快闸.json",
+            "tail": [],
+        }
+
+    def snapshot(self):
+        with self.lock:
+            return dict(self.status)
+
+    def set(self, **kw):
+        with self.lock:
+            self.status.update(kw)
+
+    def start(self):
+        if self.snapshot()["state"] in ("running", "done"):
+            return
+        threading.Thread(target=self.run, name="kernel-check", daemon=True).start()
+
+    def run(self):
+        self.set(state="running", why="正在构建并运行 kcheck", started_at=now_iso())
+        t0 = time.time()
+        tmpdir = tempfile.mkdtemp(prefix="weihetai-kcheck-")
+        exe = Path(tmpdir) / "kcheck.exe"
+        try:
+            if not GO_BIN.exists():
+                raise RuntimeError(f"找不到 Go 工具链：{GO_BIN}")
+            if not (KERNEL_DIR / "cmd" / "kcheck").exists():
+                raise RuntimeError(f"找不到内核快闸目录：{KERNEL_DIR / 'cmd' / 'kcheck'}")
+            build = subprocess.run(
+                [str(GO_BIN), "build", "-o", str(exe), "./cmd/kcheck"],
+                cwd=str(KERNEL_DIR), capture_output=True, timeout=180,
+            )
+            if build.returncode != 0:
+                err = (build.stderr or build.stdout).decode("utf-8", "replace")[-1200:]
+                raise RuntimeError(f"kcheck 构建失败 rc={build.returncode}：{err}")
+            exe_hash = sha256_file(exe)
+            exe_bytes = exe.stat().st_size
+            run = subprocess.run([str(exe)], cwd=str(KERNEL_DIR), capture_output=True, timeout=180)
+            out = (run.stdout or b"").decode("utf-8", "replace")
+            err = (run.stderr or b"").decode("utf-8", "replace")
+            lines = out.splitlines()
+            ok = sum(1 for l in lines if l.lstrip().startswith("✓"))
+            bad = sum(1 for l in lines if l.lstrip().startswith("✗"))
+            unknown = sum(1 for l in lines if l.lstrip().startswith("—"))
+            elapsed = int((time.time() - t0) * 1000)
+            readout = {
+                "generated_at": now_iso(),
+                "cmd": self.status["cmd"],
+                "cwd": rel(KERNEL_DIR),
+                "rc": run.returncode,
+                "checks_ok": ok,
+                "checks_bad": bad,
+                "unknown_lines": unknown,
+                "exe_sha256": exe_hash,
+                "exe_bytes": exe_bytes,
+                "elapsed_ms": elapsed,
+                "stdout_lines": len(lines),
+                "tail": lines[-30:],
+                "stderr": err[-2000:],
+            }
+            READOUT_DIR.mkdir(parents=True, exist_ok=True)
+            atomic_write_json(READOUT_DIR / "内核快闸.json", readout)
+            atomic_write_text(READOUT_DIR / "内核快闸-输出.txt", out + ("\n--- stderr ---\n" + err if err else ""))
+            self.set(
+                state="done", why="kcheck 跑完；退出码与计数见读数",
+                elapsed_ms=elapsed, rc=run.returncode,
+                checks_ok=ok, checks_bad=bad, unknown_lines=unknown,
+                exe_sha256=exe_hash, exe_bytes=exe_bytes,
+                tail=lines[-12:],
+            )
+        except subprocess.TimeoutExpired:
+            self.set(state="error", why="kcheck 超时（>180s）", elapsed_ms=int((time.time() - t0) * 1000))
+            print("KERNEL_CHECK TIMEOUT")
+        except Exception as e:
+            self.set(state="error", why=str(e), elapsed_ms=int((time.time() - t0) * 1000))
+            print("KERNEL_CHECK ERROR:", str(e).encode("ascii", "backslashreplace").decode("ascii"))
+        finally:
+            shutil.rmtree(tmpdir, ignore_errors=True)
+
+    def rebuild(self):
+        with self.lock:
+            if self.status["state"] == "running":
+                return False
+            self.status.update({
+                "state": "idle", "why": "已重置，等待重跑", "rc": None, "checks_ok": None,
+                "checks_bad": None, "unknown_lines": None, "elapsed_ms": None,
+                "exe_sha256": None, "exe_bytes": None, "tail": [],
+            })
+        self.start()
+        return True
+
+
+KERNEL = KernelChecker()
+
+
+# ---------------- optional model bridge ----------------
+
+class ModelBridge:
+    """只认本机模型桥；端点与口令都在桥那边，主服务只拿状态与转述结果。"""
+
+    def __init__(self, url):
+        self.url = (url or "").rstrip("/")
+        self.lock = threading.Lock()
+        self.status = {
+            "state": "checking" if self.url else "off",
+            "bridge_host": self._host(),
+            "model": "",
+            "calls": 0,
+            "last_error": "",
+            "last_ms": None,
+            "checked_at": None,
+            "boundary": MODEL_BOUNDARY,
+            "why": "正在检查模型桥" if self.url else "未设置 WEIHETAI_MODEL_BRIDGE；对话走本地规则，0 次模型调用",
+        }
+
+    def _host(self):
+        try:
+            p = urllib.parse.urlparse(self.url)
+            return f"{p.scheme}://{p.netloc}" if p.scheme and p.netloc else ""
+        except ValueError:
+            return ""
+
+    def snapshot(self):
+        with self.lock:
+            return dict(self.status)
+
+    def set(self, **kw):
+        with self.lock:
+            self.status.update(kw)
+            self.status["checked_at"] = now_iso()
+
+    def refresh(self):
+        if not self.url:
+            return
+        try:
+            req = urllib.request.Request(self.url + "/health", headers={"Accept": "application/json"})
+            with urllib.request.urlopen(req, timeout=2) as r:
+                data = json.loads(r.read(65536).decode("utf-8"))
+            raw = str(data.get("state") or "")
+            state = "ready" if raw == "ready" else ("unconfigured" if raw == "unconfigured" else "error")
+            why = "" if state == "ready" else str(
+                data.get("why") or ("模型桥已连上，但端点未配置" if state == "unconfigured" else "模型桥状态异常")
+            )
+            self.set(
+                state=state,
+                model=str(data.get("model") or ""),
+                calls=int(data.get("calls") or 0),
+                last_error=str(data.get("last_error") or ""),
+                last_ms=data.get("last_ms"),
+                why=why,
+            )
+        except Exception as e:
+            self.set(state="error", why="模型桥不可达：" + str(e)[:160])
+
+    def poll(self):
+        while True:
+            self.refresh()
+            time.sleep(10)
+
+    def explain(self, question, digest):
+        if not self.url:
+            return 503, {"ok": False, "error": "NO_BRIDGE", "why": "未设置 WEIHETAI_MODEL_BRIDGE", "call_made": False}
+        body = json.dumps({"question": question, "digest": digest}, ensure_ascii=False).encode("utf-8")
+        req = urllib.request.Request(
+            self.url + "/explain",
+            data=body,
+            headers={"Content-Type": "application/json", "Accept": "application/json", "X-Weihetai-Bridge": "1"},
+            method="POST",
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=45) as r:
+                return r.status, json.loads(r.read(200000).decode("utf-8"))
+        except urllib.error.HTTPError as e:
+            try:
+                obj = json.loads(e.read(200000).decode("utf-8"))
+            except Exception:
+                obj = {"ok": False, "error": f"BRIDGE_{e.code}", "why": f"模型桥返回 HTTP {e.code}", "call_made": False}
+            return e.code, obj
+        except Exception as e:
+            return 502, {"ok": False, "error": "BRIDGE_UNREACHABLE", "why": "模型桥不可达：" + str(e)[:160], "call_made": False}
+
+
+MODEL = ModelBridge(MODEL_BRIDGE_URL)
+
+
+def model_digest():
+    return {
+        "deliveries": [
+            {
+                "id": d["id"],
+                "title": d["title"],
+                "agent": d["agent"],
+                "verdict": d["verdict"],
+                "counts": dict(d["counts"]),
+                "claims": [
+                    {"id": c["id"], "text": c["text"], "verdict": c["verdict"], "basis": c["basis"], "why": c["why"]}
+                    for c in d["claims"]
+                ],
+            }
+            for d in DELIVERY["deliveries"]
+        ],
+        "not_same_run": list(BUNDLES["index"].get("not_same_run") or []),
+    }
+
+
+def model_answer(q):
+    snap = MODEL.snapshot()
+    if snap["state"] == "off":
+        return {
+            "tier": "absent", "title": "模型未接入",
+            "text": "没有设置 WEIHETAI_MODEL_BRIDGE；这次没有调用模型。本地规则答案仍可问，0 次调用。",
+            "refs": [], "source": "model", "model_calls": 0,
+        }
+    if snap["state"] != "ready":
+        return {
+            "tier": "absent", "title": "模型桥不可用",
+            "text": f"{snap.get('why') or '模型桥状态未知'}。这次没有调用模型；这不是证据结论。",
+            "refs": [], "source": "model", "model_calls": 0,
+        }
+    code, obj = MODEL.explain(q, model_digest())
+    if code == 200 and obj.get("ok"):
+        refs = []
+        for r in obj.get("refs") or []:
+            cid = r.get("id") if isinstance(r, dict) else str(r or "")
+            if cid:
+                ref = _ref_claim(cid)
+                if ref.get("delivery"):
+                    refs.append(ref)
+            if len(refs) >= 6:
+                break
+        return {
+            "tier": "model_says",
+            "title": str(obj.get("title") or "模型解释")[:40],
+            "text": str(obj.get("text") or "")[:2000],
+            "refs": refs,
+            "source": "model",
+            "model": str(obj.get("model") or snap.get("model") or ""),
+            "model_ms": obj.get("ms"),
+            "model_calls": 1 if obj.get("call_made") else 0,
+            "boundary": MODEL_BOUNDARY,
+        }
+    call_made = bool(obj.get("call_made"))
+    return {
+        "tier": "absent", "title": "模型没有答上来",
+        "text": f"{obj.get('why') or obj.get('error') or '未知错误'}。这次模型调用{'发生了' if call_made else '没有发生'}；这不是证据结论。",
+        "refs": [], "source": "model", "model_calls": 1 if call_made else 0,
+        "model_error": str(obj.get("error") or "")[:80],
+    }
+
+
+# ---------------- deterministic dialogue ----------------
+
+def _ref_claim(cid):
+    d = next((x for x in DELIVERY["deliveries"] if any(c["id"] == cid for c in x["claims"])), None)
+    c = next((c for c in d["claims"] if c["id"] == cid), None) if d else None
+    return {"kind": "claim", "delivery": d["id"] if d else "", "claim": cid, "label": c["text"] if c else cid}
+
+
+def _ref_ev(ev, locator, label):
+    return {"kind": "evidence", "ev": ev, "locator": locator, "label": label}
+
+
+def _ref_memory(dec_id, label):
+    return {"kind": "memory", "id": dec_id, "label": label}
+
+
+def d1():
+    return DELIVERY_BY_ID["D-1026-01"]
+
+
+def d2():
+    return DELIVERY_BY_ID["D-1026-02"]
+
+
+def d3():
+    return DELIVERY_BY_ID["D-1026-03"]
+
+
+def claim(delivery, cid):
+    return next(c for c in delivery["claims"] if c["id"] == cid)
+
+
+def decision_for(delivery_id):
+    mem = load_memory()
+    return next((x for x in mem.get("decisions", []) if x.get("delivery_id") == delivery_id), None)
+
+
+def dialogue_answer(q):
+    raw = (q or "").strip()
+    s = raw.lower()
+    mem = load_memory()
+    if not raw:
+        return {"tier": "refused", "title": "没有收到问题", "text": "写一句要核的事；对话只读，不会替你收 / 退。", "refs": [], "suggestions": dialogue_suggestions()}
+
+    # 不可逆动作不允许从对话发起
+    if re.search(r"(帮我|直接|替我|现在就)(收|退|接受|放行)|收下这单|退掉这单", raw):
+        return {
+            "tier": "refused",
+            "title": "对话不能收 / 退",
+            "text": "这是故意的边界：对话模式只读。收 / 退必须到操作模式，看到声明表和按钮上的允许动作再点；决定会写进本机记忆并生成回执。",
+            "refs": [],
+            "suggestions": ["这版能收吗？", "哪些核不了？", "为什么不能收？"],
+        }
+
+    if any(k in s for k in ["能收吗", "能不能收", "该不该收", "收不收", "结论", "判决", "这版怎么样", "能过吗"]):
+        lines = []
+        refs = []
+        for d in DELIVERY["deliveries"]:
+            dec = decision_for(d["id"])
+            if dec:
+                lines.append(f"{d['id']} 已{action_label(dec['action'])}（{dec['action_label']}）；判定 {verdict_label(d['verdict'])}。")
+            else:
+                lines.append(f"{d['id']} {verdict_label(d['verdict'])}：{d['counts']['MATCH']} 条相符、{d['counts']['MISMATCH']} 条不符、{d['counts']['ABSENT']} 条核不了。")
+            blockers = [c for c in d["claims"] if c["verdict"] == "MISMATCH"]
+            absents = [c for c in d["claims"] if c["verdict"] == "ABSENT"]
+            for c in blockers[:2]:
+                lines.append(f"  拦下的是「{c['text']}」：{c['why']}")
+                refs.append(_ref_claim(c["id"]))
+            for c in absents[:1]:
+                lines.append(f"  核不了的是「{c['text']}」：{c['why']}")
+                refs.append(_ref_claim(c["id"]))
+        return {"tier": "measured", "title": "三单的判定", "text": "\n".join(lines), "refs": refs[:6], "suggestions": ["为什么不能收？", "哪些核不了？", "证据在哪？"]}
+
+    if any(k in s for k in ["测试", "test"]):
+        c = claim(d1(), "D1-C4")
+        return {
+            "tier": "measured", "title": "「测试通过」：不符",
+            "text": f"{c['why']}\n结论：这句声明不能当作通过；本发没有可核的测试证据。",
+            "refs": [_ref_claim("D1-C4"), _ref_ev("pgagent", "steps", "13 步名单"), _ref_ev("pgagent", "execution.code_executed", "code_executed=false")],
+            "suggestions": ["有没有执行代码？", "真实模型复核过吗？", "哪些核不了？"],
+        }
+
+    if any(k in s for k in ["执行", "运行", "跑代码", "会不会跑", "安全"]):
+        c = claim(d1(), "D1-C2")
+        return {
+            "tier": "measured", "title": "没有执行交付代码：相符",
+            "text": f"{c['why']}\n本机只读：13 步里没有执行步，端点是 127.0.0.1 的假端点；没有开 8797/8799。",
+            "refs": [_ref_claim("D1-C2"), _ref_ev("pgagent", "gateway", "假端点")],
+            "suggestions": ["测试过了吗？", "真实模型复核过吗？", "证据在哪？"],
+        }
+
+    if any(k in s for k in ["模型", "复核", "大模型", "model"]):
+        c = claim(d1(), "D1-C5")
+        return {
+            "tier": "measured", "title": "「真实模型复核过」：不符",
+            "text": f"{c['why']}\n假端点只证明通道能回帧，不证明模型看过这段代码。",
+            "refs": [_ref_claim("D1-C5"), _ref_ev("pgagent", "gateway", "gateway.fake=true")],
+            "suggestions": ["测试过了吗？", "有没有执行代码？", "这版能收吗？"],
+        }
+
+    if any(k in s for k in ["内核", "快闸", "kcheck", "启动微内核"]):
+        ks = KERNEL.snapshot()
+        if ks["state"] == "done":
+            text = f"kcheck 跑完：rc={ks['rc']}，✓ {ks['checks_ok']} 条、✗ {ks['checks_bad']} 条、— {ks['unknown_lines']} 条；exe sha256 {ks['exe_sha256'][:16]}…，耗时 {ks['elapsed_ms']} ms。原始读数在 {ks['readout']}。"
+            tier = "measured" if ks["rc"] == 0 and ks["checks_bad"] == 0 else "absent"
+        elif ks["state"] == "running":
+            text = "内核快闸还在跑，现在没有结果——不能写成通过。"
+            tier = "absent"
+        elif ks["state"] == "error":
+            text = f"内核快闸没跑成：{ks['why']}。这不是绿，也不是红，是核不了。"
+            tier = "absent"
+        else:
+            text = "内核快闸还没开始。"
+            tier = "absent"
+        return {"tier": tier, "title": "内核快闸", "text": text, "refs": [{"kind": "kernel", "id": "kcheck", "label": ks["readout"]}], "suggestions": ["49 格在哪？", "证据在哪？", "这版能收吗？"]}
+
+    if any(k in s for k in ["49", "格子", "落账", "账本"]):
+        k = BUNDLES["kernel"]
+        checks = k["checks"]
+        basis = k["basis_mix"]
+        return {
+            "tier": "measured", "title": "49 格：两个来源，不是同一发",
+            "text": "\n".join([
+                f"本发（D-1026-01）：record_call 落账 49 条，tally 49 条，verify 共 49 条链自洽并比对过原像。账文件随 TEMP 清理，只留读数。",
+                f"样例账（D-1026-02，非同发）：首块 49 格，49 个 kind 唯一；载荷哈希 {checks['payload_hash_ok']}/49，块内链接 {checks['block_links_ok']}/48，整账 {checks['all_rows']} 条。",
+                f"依据档不是全实测：measured {basis.get('measured', 0)} / relayed {basis.get('relayed', 0)} / estimated {basis.get('estimated', 0)} / model_says {basis.get('model_says', 0)} / absent {basis.get('absent', 0)}。",
+            ]),
+            "refs": [_ref_claim("D1-C3"), _ref_claim("D2-C2"), _ref_ev("kernel", "basis_mix", "依据档分布")],
+            "suggestions": ["测试过了吗？", "证据在哪？", "这版能收吗？"],
+        }
+
+    if any(k in s for k in ["事件", "断线", "续", "agentd"]):
+        c1 = claim(d1(), "D1-C6")
+        c3 = claim(d3(), "D3-C3")
+        return {
+            "tier": "absent", "title": "本发核不了；参照账能核",
+            "text": f"本发：{c1['why']}\n参照账（D-1026-03，非同发）：{c3['why']} 14 条事件里两条 turn_accepted 都带 resumable=true。\n结论：能力有证据，但不能写成「本单可续」。",
+            "refs": [_ref_claim("D1-C6"), _ref_claim("D3-C3"), _ref_ev("agentd", "events", "14 条事件")],
+            "suggestions": ["哪些核不了？", "证据在哪？", "这版能收吗？"],
+        }
+
+    if any(k in s for k in ["核不了", "缺席", "没证据", "absent", "不明"]):
+        absents = [(d, c) for d in DELIVERY["deliveries"] for c in d["claims"] if c["verdict"] == "ABSENT"]
+        if not absents:
+            return {"tier": "measured", "title": "没有核不了的声明", "text": "三单 16 条声明里没有 ABSENT。注意：这只说明这份证据包里没有缺席，不等于系统永远不会缺席。", "refs": [], "suggestions": ["证据在哪？", "这版能收吗？"]}
+        lines = [f"{d['id']}「{c['text']}」：{c['why']}" for d, c in absents]
+        return {
+            "tier": "absent", "title": f"{len(absents)} 条核不了",
+            "text": "\n".join(lines) + "\n核不了 ≠ 通过；这两条只能退回或挂起，不能收。",
+            "refs": [_ref_claim(c["id"]) for _, c in absents],
+            "suggestions": ["为什么不能收？", "证据在哪？", "这版能收吗？"],
+        }
+
+    if any(k in s for k in ["证据", "出处", "来源", "路径", "哈希"]):
+        idx = BUNDLES["index"]
+        lines = ["三类证据都在本机，且不是同一次执行："]
+        for f in idx["files"]:
+            if f["kind"] in ("pgagent-13-step", "agentd-events", "kernel-49-cells", "delivery-claims"):
+                lines.append(f"{f['kind']}：{f['file']}（{f['bytes']} B，sha256 {f['sha256'][:12]}…）")
+        lines.append("分源提示：" + idx["not_same_run"][0])
+        return {
+            "tier": "measured", "title": "证据索引",
+            "text": "\n".join(lines),
+            "refs": [_ref_ev("index", "files", "证据索引"), _ref_ev("pgagent", "source", "pgagent 来源"), _ref_ev("kernel", "source", "样例账来源")],
+            "suggestions": ["49 格在哪？", "事件能续吗？", "这版能收吗？"],
+        }
+
+    if any(k in s for k in ["记忆在哪", "记忆文件", "清空", "导出", "隐私", "存在哪"]):
+        meta = memory_meta()
+        return {
+            "tier": "measured", "title": "个人记忆只在本机",
+            "text": f"记忆文件：{meta['file']}（{meta['bytes']} B，sha256 {meta['sha256'][:12]}…）。现有 {meta['decisions']} 条决定、{meta['dialogue']} 条对话。没有账号、没有云端；清空要在记忆页确认，回执文件不会跟着删。",
+            "refs": [{"kind": "memory", "id": "", "label": "记忆文件"}],
+            "suggestions": ["为什么退？", "哪些核不了？", "怎么用？"],
+        }
+
+    if any(k in s for k in ["为什么退", "退单", "上次", "之前", "记忆", "记得", "偏好", "理由"]):
+        decisions = mem.get("decisions", [])
+        if not decisions:
+            return {
+                "tier": "absent", "title": "记忆里还没有决定",
+                "text": "本机记忆文件里没有收 / 退记录，所以没有「上次」可以讲。我不编一个。去操作模式做一次决定，它会写进记忆并生成回执。",
+                "refs": [{"kind": "memory", "id": "", "label": "记忆文件为空"}],
+                "suggestions": ["这版能收吗？", "哪些核不了？", "我的记忆在哪？"],
+            }
+        lines = []
+        refs = []
+        for d in decisions[-3:]:
+            lines.append(f"{d['at'][:16]} · {d['delivery_id']} {d['action_label']}：{d['reason'] or '（未填写理由）'}")
+            refs.append(_ref_memory(d["id"], f"{d['delivery_id']} {d['action_label']}"))
+        reasons = mem.get("preferences", {}).get("reasons", [])
+        lines.append(f"可复用退单理由 {len(reasons)} 条：" + "；".join(reasons[:4]))
+        return {"tier": "measured", "title": "本机记忆里的决定", "text": "\n".join(lines), "refs": refs, "suggestions": ["这版能收吗？", "证据在哪？", "记忆怎么清空？"]}
+
+    if any(k in s for k in ["怎么用", "帮助", "能问", "能做什么", "边界", "只读"]):
+        return {
+            "tier": "measured", "title": "这个对话能做什么",
+            "text": "\n".join([
+                "能问：判定、测试、执行、模型、49 格、事件、证据位置、核不了、本机记忆、内核快闸。",
+                "规则：答案只来自本机证据与记忆；找不到就答「核不了」或「答不了」，不调用模型猜。",
+                "边界：对话只读，不能收 / 退；收 / 退在操作模式，按钮上写明允许动作。",
+                "数据：不联网、无账号；证据与记忆都不出本机。",
+            ]),
+            "refs": [], "suggestions": ["这版能收吗？", "哪些核不了？", "证据在哪？"],
+        }
+
+    if any(k in s for k in ["为什么不能收", "不能收", "拦下"]):
+        c4, c5 = claim(d1(), "D1-C4"), claim(d1(), "D1-C5")
+        return {
+            "tier": "measured", "title": "为什么 D-1026-01 不能收",
+            "text": f"两条不符：\n「{c4['text']}」——{c4['why']}\n「{c5['text']}」——{c5['why']}\n按规则，任一不符整单退回；收下不会让这两句变真。",
+            "refs": [_ref_claim("D1-C4"), _ref_claim("D1-C5")],
+            "suggestions": ["测试过了吗？", "真实模型复核过吗？", "哪些核不了？"],
+        }
+
+    return {
+        "tier": "refused",
+        "title": "这个问题不在本机证据里",
+        "text": "我不调用模型猜答案。可以换一种问法，或从下面的问题里选：",
+        "refs": [],
+        "suggestions": dialogue_suggestions(),
+    }
+
+
+def dialogue_suggestions():
+    return ["这版能收吗？", "测试过了吗？", "有没有执行代码？", "真实模型复核过吗？", "哪些核不了？", "证据在哪？"]
+
+
+# ---------------- receipt ----------------
+
+def build_receipt(decision):
+    d = DELIVERY_BY_ID[decision["delivery_id"]]
+    mem = load_memory()
+    idx = BUNDLES["index"]
+    ks = KERNEL.snapshot()
+    esc = html.escape
+    state_cls = {"MATCH": "ok", "MISMATCH": "bad", "ABSENT": "warn"}
+    claim_rows = []
+    for c in d["claims"]:
+        claim_rows.append(
+            f"<tr class=\"{state_cls[c['verdict']]}\">"
+            f"<td class=\"mono\">{esc(c['id'])}</td>"
+            f"<td>{esc(c['text'])}</td>"
+            f"<td><span class=\"tag {state_cls[c['verdict']]}\">{esc(claim_state_label(c['verdict']))}</span></td>"
+            f"<td class=\"mono\">{esc(c['basis'])}</td>"
+            f"<td>{esc(c['why'])}</td></tr>"
+        )
+    src_rows = []
+    for f in idx["files"]:
+        if f["kind"] in ("pgagent-13-step", "agentd-events", "kernel-49-cells", "delivery-claims"):
+            src_rows.append(
+                f"<tr><td>{esc(f['kind'])}</td><td class=\"mono\">{esc(f['file'])}</td>"
+                f"<td class=\"mono\">{f['bytes']} B</td><td class=\"mono\">{esc(f['sha256'])}</td></tr>"
+            )
+    kernel_html = ""
+    if ks["state"] == "done":
+        kernel_html = (
+            f"<p><b>内核快闸：</b>rc={ks['rc']} · ✓ {ks['checks_ok']} / ✗ {ks['checks_bad']} / — {ks['unknown_lines']}"
+            f" · exe sha256 <span class=\"mono\">{esc(ks['exe_sha256'] or '')}</span> · {ks['elapsed_ms']} ms</p>"
+        )
+    elif ks["state"] in ("error", "running", "idle"):
+        kernel_html = f"<p><b>内核快闸：</b>核不了 —— {esc(ks['why'])}</p>"
+    action_cls = "bad" if decision["action"] == "reject" else ("warn" if decision["action"] == "hold" else "ok")
+    build_sha = sha256_file(HTML_FILE)
+    return f"""<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>交付回执 · {esc(d['id'])}</title>
+<style>
+:root{{--ink:#17191e;--ink2:#4b505b;--ink3:#646974;--line:#e4e2da;--paper:#f3f2ed;--ok:#0e7a4d;--bad:#b42318;--warn:#8a5a00;--mono:"Cascadia Mono",Consolas,monospace}}
+*{{box-sizing:border-box}}body{{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 "Segoe UI","Microsoft YaHei UI",sans-serif}}
+.wrap{{max-width:940px;margin:28px auto;background:#fff;border:1px solid var(--line);padding:34px 38px 28px}}
+.top{{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;border-bottom:2px solid var(--ink);padding-bottom:16px}}
+.brand{{font-size:18px;font-weight:700;letter-spacing:.02em}} .brand span{{font:10px var(--mono);letter-spacing:.18em;color:var(--ink3);margin-left:8px}}
+.no{{font:10.5px var(--mono);color:var(--ink3);text-align:right}}
+h1{{font-size:24px;margin:20px 0 4px}} .sub{{color:var(--ink2);font-size:12px;margin:0 0 16px}}
+.verdict{{border:1px solid var(--line);border-left:4px solid var(--ink);padding:12px 14px;margin:14px 0 18px;background:#faf9f5}}
+.verdict.bad{{border-left-color:var(--bad)}} .verdict.warn{{border-left-color:var(--warn)}} .verdict.ok{{border-left-color:var(--ok)}}
+.verdict b{{font-size:16px}} .verdict small{{display:block;color:var(--ink2);margin-top:3px}}
+.meta{{display:grid;grid-template-columns:repeat(4,1fr);gap:10px 18px;margin:16px 0 22px}}
+.meta div{{font-size:11px;color:var(--ink3)}} .meta b{{display:block;font-size:12px;color:var(--ink);font-weight:500;margin-top:2px}}
+h2{{font-size:14px;margin:24px 0 8px;border-bottom:1px solid var(--line);padding-bottom:6px}}
+table{{width:100%;border-collapse:collapse;font-size:11.5px}}
+th{{text-align:left;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);background:#faf9f5;padding:8px 9px;border-bottom:1px solid var(--line)}}
+td{{padding:9px;border-bottom:1px solid var(--line);vertical-align:top}}
+td.mono,.mono{{font-family:var(--mono);font-size:10px;word-break:break-all}}
+.tag{{display:inline-block;border:1px solid var(--line);border-radius:3px;padding:1px 5px;font-size:10px;white-space:nowrap}}
+.tag.ok{{color:var(--ok);border-color:#bfe3cd;background:#e7f4ec}} .tag.bad{{color:var(--bad);border-color:#f5c6c2;background:#fdeceb}} .tag.warn{{color:var(--warn);border-color:#ecd9a8;background:#fdf3dd}}
+.reason{{border:1px solid var(--line);background:#faf9f5;padding:12px 14px;font-size:13px;white-space:pre-wrap}}
+.note{{font-size:10.5px;color:var(--ink3);line-height:1.65;margin-top:18px;border-top:1px solid var(--line);padding-top:12px}}
+.foot{{display:flex;justify-content:space-between;gap:20px;margin-top:22px;font-size:10.5px;color:var(--ink3)}}
+@media print{{body{{background:#fff}}.wrap{{margin:0;border:0;padding:18mm}}}}
+</style></head><body><div class="wrap">
+<div class="top"><div class="brand">微核台<span>LOCAL EVIDENCE DESK</span></div>
+<div class="no">回执编号 {esc(decision['id'])}<br>生成于 {esc(decision['at'])}</div></div>
+<h1>交付回执</h1>
+<p class="sub">{esc(d['id'])} · {esc(d['title'])} · {esc(d['agent'])}</p>
+<div class="verdict {action_cls}"><b>{esc(decision['action_label'])} · {esc(verdict_label(d['verdict']))}</b>
+<small>{esc(DELIVERY['policy']['rule'])}</small></div>
+<div class="meta">
+<div>交付单<b>{esc(d['id'])}</b></div><div>声明<b>{d['counts']['MATCH']} 相符 / {d['counts']['MISMATCH']} 不符 / {d['counts']['ABSENT']} 核不了</b></div>
+<div>操作者<b>{esc(mem['preferences'].get('operator_name') or mem.get('owner', '本机操作者'))}</b></div>
+<div>证据范围<b>{esc(d['subtitle'])}</b></div>
+</div>
+<h2>决定理由</h2><div class="reason">{esc(decision['reason'] or '（未填写理由）')}</div>
+<h2>逐条声明</h2>
+<table><thead><tr><th>编号</th><th>声明</th><th>判定</th><th>依据档</th><th>凭什么</th></tr></thead><tbody>
+{''.join(claim_rows)}
+</tbody></table>
+<h2>证据来源</h2>
+<table><thead><tr><th>类型</th><th>文件</th><th>字节</th><th>sha256</th></tr></thead><tbody>
+{''.join(src_rows)}
+</tbody></table>
+<h2>边界与读数</h2>
+<p><b>只读：</b>本单未执行交付代码，未调用真实模型，未联网，未写内核研究账 8797/8799。</p>
+<p><b>分源：</b>{esc(idx['not_same_run'][0])}</p>
+{kernel_html}
+<div class="note">
+本回执由本机生成，可离线打开；核不了不等于通过，收下不改变声明真假。<br>
+证据包 证据/交付.json sha256 <span class="mono">{esc(sha256_file(EVID / '交付.json'))}</span> · 应用构建 微核台.html sha256 <span class="mono">{esc(build_sha)}</span>
+</div>
+<div class="foot"><span>微核台 {esc(VERSION)} · 本机 127.0.0.1</span><span>回执文件 sha256 另见 记忆/记忆.json 与 返回页</span></div>
+</div></body></html>"""
+
+
+# ---------------- server ----------------
+
+class Handler(BaseHTTPRequestHandler):
+    server_version = "Weihetai/" + VERSION
+
+    def log_message(self, fmt, *args):
+        pass
+
+    def _send(self, code, body, ctype="application/json; charset=utf-8", extra=None):
+        if isinstance(body, (dict, list)):
+            body = json.dumps(body, ensure_ascii=False, indent=2).encode("utf-8")
+        elif isinstance(body, str):
+            body = body.encode("utf-8")
+        self.send_response(code)
+        self.send_header("Content-Type", ctype)
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", "no-store")
+        self.send_header("X-Content-Type-Options", "nosniff")
+        if extra:
+            for k, v in extra.items():
+                self.send_header(k, v)
+        self.end_headers()
+        try:
+            self.wfile.write(body)
+        except (BrokenPipeError, ConnectionAbortedError):
+            pass
+
+    def _json_body(self):
+        n = int(self.headers.get("Content-Length") or 0)
+        if n <= 0 or n > 65536:
+            return None
+        if "application/json" not in (self.headers.get("Content-Type") or ""):
+            return None
+        try:
+            return json.loads(self.rfile.read(n).decode("utf-8"))
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            return None
+
+    def _origin_ok(self):
+        origin = self.headers.get("Origin")
+        host = self.headers.get("Host")
+        if origin and host and origin != f"http://{host}":
+            return False
+        sfs = self.headers.get("Sec-Fetch-Site")
+        if sfs and sfs not in ("same-origin", "none"):
+            return False
+        return True
+
+    def _state(self):
+        return {
+            "ok": True,
+            "server": {
+                "version": VERSION, "boot_id": BOOT_ID, "started_at": STARTED_AT,
+                "port": self.server.server_address[1],
+                "html_file": rel(HTML_FILE),
+                "html_bytes": HTML_FILE.stat().st_size if HTML_FILE.exists() else 0,
+                "html_sha256": sha256_file(HTML_FILE),
+                "paths": {"evidence": rel(EVID), "memory": rel(MEM_FILE), "receipts": rel(RECEIPT_DIR), "readouts": rel(READOUT_DIR)},
+                "offline": True,
+            },
+            "evidence": DELIVERY,
+            "bundles": BUNDLES,
+            "memory": load_memory(),
+            "memory_meta": memory_meta(),
+            "kernel": KERNEL.snapshot(),
+            "model": MODEL.snapshot(),
+        }
+
+    def do_GET(self):
+        path = urllib.parse.urlparse(self.path).path
+        if path in ("/", "/index.html"):
+            if not HTML_FILE.exists():
+                return self._send(500, "微核台.html 尚未构建：先跑 工具-合并原型.py", "text/plain; charset=utf-8")
+            return self._send(200, HTML_FILE.read_bytes(), "text/html; charset=utf-8", {
+                "Content-Security-Policy": "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'",
+            })
+        if path == "/api/state":
+            return self._send(200, self._state())
+        if path == "/api/health":
+            return self._send(200, {"ok": True, "boot_id": BOOT_ID, "version": VERSION})
+        if path == "/api/kernel":
+            return self._send(200, KERNEL.snapshot())
+        if path == "/api/model":
+            return self._send(200, {"ok": True, "model": MODEL.snapshot()})
+        if path == "/api/memory":
+            return self._send(200, {"ok": True, "memory": load_memory(), "meta": memory_meta()})
+        if path == "/api/memory/export":
+            body = json.dumps(load_memory(), ensure_ascii=False, indent=2).encode("utf-8")
+            return self._send(200, body, "application/json; charset=utf-8", {
+                "Content-Disposition": "attachment; filename=\"weihetai-memory.json\"",
+            })
+        if path.startswith("/api/receipt/"):
+            name = urllib.parse.unquote(path[len("/api/receipt/"):])
+            if not re.fullmatch(r"receipt-[A-Za-z0-9._-]+\.html", name):
+                return self._send(400, {"ok": False, "error": "BAD_NAME"})
+            p = RECEIPT_DIR / name
+            if not p.exists():
+                return self._send(404, {"ok": False, "error": "NOT_FOUND"})
+            return self._send(200, p.read_bytes(), "text/html; charset=utf-8")
+        return self._send(404, {"ok": False, "error": "NOT_FOUND"})
+
+    def do_POST(self):
+        if not self._origin_ok():
+            return self._send(403, {"ok": False, "error": "ORIGIN_REJECTED", "why": "只接受本页同源请求"})
+        path = urllib.parse.urlparse(self.path).path
+        body = self._json_body()
+        if body is None:
+            return self._send(400, {"ok": False, "error": "BAD_JSON", "why": "POST 需要 application/json，体积 ≤ 64KB"})
+        if path == "/api/decision":
+            return self._decision(body)
+        if path == "/api/dialogue":
+            return self._dialogue(body)
+        if path == "/api/memory/reason":
+            return self._reason_add(body)
+        if path == "/api/memory/reason/delete":
+            return self._reason_delete(body)
+        if path == "/api/memory/preferences":
+            return self._preferences(body)
+        if path == "/api/memory/clear":
+            return self._memory_clear(body)
+        if path == "/api/kernel/rebuild":
+            ok = KERNEL.rebuild()
+            return self._send(200 if ok else 409, {"ok": ok, "kernel": KERNEL.snapshot()})
+        return self._send(404, {"ok": False, "error": "NOT_FOUND"})
+
+    def _decision(self, body):
+        did = str(body.get("delivery_id") or "")
+        action = str(body.get("action") or "")
+        reason = str(body.get("reason") or "").strip()
+        if did not in DELIVERY_BY_ID:
+            return self._send(404, {"ok": False, "error": "NO_DELIVERY"})
+        d = DELIVERY_BY_ID[did]
+        if action not in d["allowed"]:
+            return self._send(409, {"ok": False, "error": "DISALLOWED", "why": f"这单只能：{' / '.join(action_label(a) for a in d['allowed'])}", "allowed": d["allowed"]})
+        if action in ("reject", "hold"):
+            if load_memory()["preferences"].get("require_reason", True) and len(reason) < 4:
+                return self._send(422, {"ok": False, "error": "REASON_REQUIRED", "why": "退回 / 挂起至少写 4 个字，或从模板里选一条"})
+            reason = reason or "（未填写理由）"
+        else:
+            reason = reason or "声明的盘上证据全部相符。"
+        with LOCK:
+            mem = load_memory()
+            prior = next((x for x in mem["decisions"] if x.get("delivery_id") == did), None)
+            if prior:
+                return self._send(409, {"ok": False, "error": "ALREADY_DECIDED", "why": f"这单已{prior['action_label']}", "decision": prior, "receipt": prior.get("receipt")})
+            at = now_iso()
+            dec_id = f"DEC-{datetime.now().strftime('%Y%m%d-%H%M%S')}-{BOOT_ID}"
+            dec = {
+                "id": dec_id,
+                "at": at,
+                "delivery_id": did,
+                "delivery_title": d["title"],
+                "action": action,
+                "action_label": action_label(action),
+                "verdict": d["verdict"],
+                "verdict_label": verdict_label(d["verdict"]),
+                "reason": reason,
+                "counts": dict(d["counts"]),
+                "operator": mem["preferences"].get("operator_name") or mem.get("owner", "本机操作者"),
+                "evidence_hash": sha256_file(EVID / "交付.json"),
+                "claims": [{"id": c["id"], "text": c["text"], "verdict": c["verdict"]} for c in d["claims"]],
+            }
+            name = f"receipt-{re.sub(r'[^A-Za-z0-9.-]', '_', did)}-{datetime.now().strftime('%Y%m%d-%H%M%S')}.html"
+            receipt_path = RECEIPT_DIR / name
+            # 先写回执占位再填元数据的做法会留下半截回执；这里先生成后落盘，再写记忆。
+            html_text = build_receipt({**dec, "receipt": {"file": name}})
+            try:
+                atomic_write_text(receipt_path, html_text)
+            except OSError as e:
+                return self._send(500, {"ok": False, "error": "RECEIPT_WRITE", "why": str(e)})
+            dec["receipt"] = {
+                "file": f"回执/{name}",
+                "url": f"/api/receipt/{name}",
+                "bytes": receipt_path.stat().st_size,
+                "sha256": sha256_file(receipt_path),
+                "created_at": at,
+            }
+            mem["decisions"].append(dec)
+            save_memory(mem)
+        return self._send(200, {"ok": True, "decision": dec, "receipt": dec["receipt"], "memory": mem, "memory_meta": memory_meta()})
+
+    def _dialogue(self, body):
+        q = str(body.get("q") or "")[:500]
+        use_model = body.get("use_model") is True
+        ans = model_answer(q) if use_model else dialogue_answer(q)
+        if not use_model:
+            ans["source"] = "local_rules"
+            ans["model_calls"] = 0
+        ans["q"] = q
+        ans["at"] = now_iso()
+        with LOCK:
+            mem = load_memory()
+            entry = {
+                "at": ans["at"], "q": q, "tier": ans["tier"], "title": ans["title"],
+                "text": ans["text"], "refs": [r.get("label", "") for r in ans["refs"]],
+                "source": ans.get("source", "local_rules"),
+                "model_calls": ans.get("model_calls", 0),
+            }
+            if ans.get("model"):
+                entry["model"] = ans["model"]
+            mem.setdefault("dialogue", []).append(entry)
+            mem["dialogue"] = mem["dialogue"][-80:]
+            save_memory(mem)
+        return self._send(200, {"ok": True, "answer": ans, "memory_meta": memory_meta()})
+
+    def _reason_add(self, body):
+        text = str(body.get("text") or "").strip()[:80]
+        if len(text) < 4:
+            return self._send(422, {"ok": False, "error": "TOO_SHORT", "why": "理由至少 4 个字"})
+        with LOCK:
+            mem = load_memory()
+            reasons = mem["preferences"].setdefault("reasons", [])
+            if text not in reasons:
+                reasons.append(text)
+                reasons = reasons[-30:]
+                mem["preferences"]["reasons"] = reasons
+                save_memory(mem)
+        return self._send(200, {"ok": True, "reasons": mem["preferences"]["reasons"]})
+
+    def _reason_delete(self, body):
+        text = str(body.get("text") or "").strip()
+        with LOCK:
+            mem = load_memory()
+            mem["preferences"]["reasons"] = [x for x in mem["preferences"].get("reasons", []) if x != text]
+            save_memory(mem)
+        return self._send(200, {"ok": True, "reasons": mem["preferences"]["reasons"]})
+
+    def _preferences(self, body):
+        allowed = {"operator_name", "require_reason"}
+        with LOCK:
+            mem = load_memory()
+            for k, v in body.items():
+                if k not in allowed:
+                    continue
+                if k == "operator_name":
+                    v = str(v).strip()[:40] or "本机操作者"
+                if k == "require_reason":
+                    v = bool(v)
+                mem["preferences"][k] = v
+            save_memory(mem)
+        return self._send(200, {"ok": True, "preferences": mem["preferences"]})
+
+    def _memory_clear(self, body):
+        if body.get("confirm") != "CLEAR":
+            return self._send(422, {"ok": False, "error": "CONFIRM_REQUIRED", "why": "需要 confirm=CLEAR"})
+        with LOCK:
+            old = load_memory()
+            mem = default_memory()
+            mem["preferences"] = old.get("preferences", mem["preferences"])
+            mem["owner"] = old.get("owner", mem.get("owner", "本机操作者"))
+            save_memory(mem)
+        return self._send(200, {"ok": True, "memory": mem, "meta": memory_meta(), "why": "清了决定与对话；偏好和理由模板保留；回执文件仍在 回执/ 目录"})
+
+
+def open_window(url):
+    candidates = [
+        Path(r"C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe"),
+        Path(r"C:/Program Files/Microsoft/Edge/Application/msedge.exe"),
+    ]
+    for exe in candidates:
+        if exe.exists():
+            try:
+                subprocess.Popen([str(exe), f"--app={url}", "--window-size=1440,900", "--no-first-run"], close_fds=True)
+                return "edge-app"
+            except OSError:
+                pass
+    try:
+        webbrowser.open(url)
+        return "browser"
+    except Exception:
+        return "none"
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--port", type=int, default=0)
+    ap.add_argument("--no-open", action="store_true")
+    ap.add_argument("--no-kernel", action="store_true")
+    args = ap.parse_args()
+    if args.port in (8797, 8799):
+        print("REFUSED: 8797/8799 are kernel research ledgers")
+        return 2
+    if not HTML_FILE.exists():
+        print("MISSING HTML: run 工具-合并原型.py first")
+        return 2
+    if not args.no_kernel:
+        KERNEL.start()
+    if MODEL.url:
+        MODEL.refresh()
+        threading.Thread(target=MODEL.poll, name="model-bridge-poll", daemon=True).start()
+    srv = ThreadingHTTPServer(("127.0.0.1", args.port), Handler)
+    url = f"http://127.0.0.1:{srv.server_address[1]}/"
+    atomic_write_text(READOUT_DIR / "服务地址.txt", f"{url}\nBOOT {BOOT_ID} VERSION {VERSION}\nstarted_at {STARTED_AT}\n")
+    print(f"READY {url}", flush=True)
+    print(f"BOOT {BOOT_ID} VERSION {VERSION}", flush=True)
+    ms = MODEL.snapshot()
+    print(f"MODEL {ms['state']} {ms.get('bridge_host') or '-'}", flush=True)
+    if not args.no_open:
+        how = open_window(url)
+        print(f"OPEN {how}", flush=True)
+    try:
+        srv.serve_forever()
+    except KeyboardInterrupt:
+        print("STOP signal")
+    finally:
+        srv.server_close()
+    return 0
+
+
+if __name__ == "__main__":
+    try:
+        sys.exit(main())
+    except Exception:
+        traceback.print_exc()
+        sys.exit(1)

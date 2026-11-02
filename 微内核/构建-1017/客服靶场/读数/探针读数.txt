@@ -1,0 +1,525 @@
+== 探针-门要什么键 · 10-17 22:45 ==
+跑之前 tally：账 98 条（absent=14 estimated=8 measured=70 model_says=2 relayed=4）；被拒的写入 0 次 —— 拒收也要看得见，不然「被拒」会读成「没发生过」；另有 0 次写请求根本没走到内核（外壳在门口挡下：整块没给／写侧没这个键）；0 条请求被协议层判成无效（解不开 -32700／没有 method、不是请求 -32600；走到了协议层，只是没走进内核）；0 条请求连协议层都没到（传输层的形状预检挡下，比第三笔更早一步；拒它的是门，不是分类 —— #44）
+
+== 第一段：拿拒因问门（全部只预检、不落账）==
+〔P0 原样复现第一轮第 7/8 发的形状（Order 按类去重 + 裁剪表 Bytes/Action）〕问：外壳门口与内核判据，谁先说话
+   预检原文：参数被拒：写侧没有 Bytes 这个键（`InputMeta`/`OutputMeta` 里没有这个字段）；键名表里只有一格归一化后对得上：model_output:model_says_bytes ← Says.Bytes —— 没打中的键不会变成一个 measured 0：整发拒收，链上一条不写
+〔P1 只把 Order 修成逐段，裁剪表仍是 Bytes/Action〕问：门口认不认这张裁剪表
+   预检原文：参数被拒：写侧没有 Bytes 这个键（`InputMeta`/`OutputMeta` 里没有这个字段）；键名表里只有一格归一化后对得上：model_output:model_says_bytes ← Says.Bytes —— 没打中的键不会变成一个 measured 0：整发拒收，链上一条不写
+〔P2 Order 逐段 + 裁剪表换成真键名 + ClampRounds=0（仍是第一轮的折法，通知不占额度）〕问：门口放行之后，内核里还压着一条什么
+   预检原文：输入侧：kernel: 内容 1843 字节超过了这一发真正生效的额度 1802 字节（本该被回夹；公式算出来的是 1802，夹过 0 刀） 输出侧：自洽 预检结论：整发会被拒 —— kernel: 输入侧账不自洽，第 7 发整发拒收（输出侧也不写）：kernel: 内容 1843 字节超过了这一发真正生效的额度 1802 字节（本该被回夹；公式算出来的是 1802，夹过 0 刀）
+〔P3 折法改成「先给通知留出位置」，但刀数仍记成裁剪段数〕问：把「挤了几段」写成「回夹了几刀」，内核收不收
+   预检原文：输入侧：kernel: 记着 2 刀回夹，生效额度却与公式算出来的一样 —— 刀数与结果对不上 输出侧：自洽 预检结论：整发会被拒 —— kernel: 输入侧账不自洽，第 7 发整发拒收（输出侧也不写）：kernel: 记着 2 刀回夹，生效额度却与公式算出来的一样 —— 刀数与结果对不上
+〔P4 问出来的答案：逐段 Order + 真键名裁剪表 + 通知占位 + ClampRounds=0〕这一发靶场挤的是整段，预算额度一刀没夹过
+   预检原文：输入侧：自洽 输出侧：自洽 预检结论：整发可落账（副本上真跑过一遍 RecordCall，两侧都不写回这本账）
+〔P5 同 P4，却把挤掉的段记成 folded/ToBytes=40（桩其实没进请求体）〕问：账上声称留了 40 字节的桩，而实际一个字都没发 —— 有没有第三格能说话
+   预检原文：输入侧：自洽 输出侧：自洽 预检结论：整发可落账（副本上真跑过一遍 RecordCall，两侧都不写回这本账）
+〔P6 未折叠那一发把 Notice.Sent 记成 true（段表里没有通知段）〕问：Notice 在未折叠时该给什么
+   预检原文：输入侧：kernel: 通知报的是「发出去了」，可段表里没有 truncation-notice 那一段 —— 发不出去就不算通知过 输出侧：自洽 预检结论：整发会被拒 —— kernel: 输入侧账不自洽，第 1 发整发拒收（输出侧也不写）：kernel: 通知报的是「发出去了」，可段表里没有 truncation-notice 那一段 —— 发不出去就不算通知过
+〔P7 未折叠那一发 Sent=false 同时 Trimmed=true〕问：没发出去的东西能不能被裁半句
+   预检原文：输入侧：kernel: 通知报的是「没发出去」，同时又报「被裁了半句」—— 没发出去的东西裁不了 输出侧：自洽 预检结论：整发会被拒 —— kernel: 输入侧账不自洽，第 1 发整发拒收（输出侧也不写）：kernel: 通知报的是「没发出去」，同时又报「被裁了半句」—— 没发出去的东西裁不了
+〔P8 挤了 2 段却不发通知、Why 也留空〕问：只写进账本、没发出去那一族
+   预检原文：输入侧：kernel: 这一发挤掉了 2 段，却没把那句知情通知发出去，也没说为什么 输出侧：自洽 预检结论：整发会被拒 —— kernel: 输入侧账不自洽，第 7 发整发拒收（输出侧也不写）：kernel: 这一发挤掉了 2 段，却没把那句知情通知发出去，也没说为什么
+
+== 第二段：按问到的答案如实装配，真跑真落账（替身端点，不是真实模型观测）==
+【第 1 发 非流式】发送顺序表 8 项 ｜ 段表 system/history/user ｜ 内容字节 1102（额度 1802）｜ 裁剪 0 段 ｜ 请求体过网线 1522 ｜ 通道收到 535 ｜ 帧 1 首帧 12ms 峰间 0ms ｜ 对端自报 usage=393/35 ｜ object=chat.completion ｜ 答复摘要=SO-2026-0417-8801｜快递显示已签收但没收到，要求核实并退
+   预检=放行 ｜ isError=False ｜ 原文：输入侧：自洽 输出侧：自洽 预检结论：整发可落账（副本上真跑过一遍 RecordCall，两侧都不写回这本账）
+   落账原文：整发落账 49 条（输入侧 20 格 + 输出侧 29 格），链上共 147 条
+【第 2 发 流式】发送顺序表 9 项 ｜ 段表 system/history/user ｜ 内容字节 1271（额度 1802）｜ 裁剪 0 段 ｜ 请求体过网线 1723 ｜ 通道收到 2371 ｜ 帧 12 首帧 205ms 峰间 0ms ｜ 对端自报 usage=0/0 ｜ object=chat.completion.chunk ｜ 答复摘要=SO-2026-0417-8802｜商品与页面描述不符（内存容量），要求
+   预检=放行 ｜ isError=False ｜ 原文：输入侧：自洽 输出侧：自洽 预检结论：整发可落账（副本上真跑过一遍 RecordCall，两侧都不写回这本账）
+   落账原文：整发落账 49 条（输入侧 20 格 + 输出侧 29 格），链上共 196 条
+【第 3 发 非流式】发送顺序表 10 项 ｜ 段表 system/history/user ｜ 内容字节 1359（额度 1802）｜ 裁剪 0 段 ｜ 请求体过网线 1845 ｜ 通道收到 500 ｜ 帧 1 首帧 25ms 峰间 0ms ｜ 对端自报 usage=479/30 ｜ object=chat.completion ｜ 答复摘要=SO-2026-0418-9013｜优惠券用了但没减价｜金额 45.50
+   预检=放行 ｜ isError=False ｜ 原文：输入侧：自洽 输出侧：自洽 预检结论：整发可落账（副本上真跑过一遍 RecordCall，两侧都不写回这本账）
+   落账原文：整发落账 49 条（输入侧 20 格 + 输出侧 29 格），链上共 245 条
+【第 4 发 流式】发送顺序表 11 项 ｜ 段表 system/history/user ｜ 内容字节 1524（额度 1802）｜ 裁剪 0 段 ｜ 请求体过网线 2042 ｜ 通道收到 2140 ｜ 帧 11 首帧 205ms 峰间 0ms ｜ 对端自报 usage=0/0 ｜ object=chat.completion.chunk ｜ 答复摘要=SO-2026-0418-9014｜大家电安装后漏水泡坏地板，索赔｜金额
+   预检=放行 ｜ isError=False ｜ 原文：输入侧：自洽 输出侧：自洽 预检结论：整发可落账（副本上真跑过一遍 RecordCall，两侧都不写回这本账）
+   落账原文：整发落账 49 条（输入侧 20 格 + 输出侧 29 格），链上共 294 条
+【第 5 发 非流式】发送顺序表 12 项 ｜ 段表 system/history/user ｜ 内容字节 1630（额度 1802）｜ 裁剪 0 段 ｜ 请求体过网线 2182 ｜ 通道收到 501 ｜ 帧 1 首帧 1ms 峰间 0ms ｜ 对端自报 usage=570/30 ｜ object=chat.completion ｜ 答复摘要=SO-2026-0419-9320｜催发货｜金额 320.00 元｜付款
+   预检=放行 ｜ isError=False ｜ 原文：输入侧：自洽 输出侧：自洽 预检结论：整发可落账（副本上真跑过一遍 RecordCall，两侧都不写回这本账）
+   落账原文：整发落账 49 条（输入侧 20 格 + 输出侧 29 格），链上共 343 条
+【第 6 发 流式】发送顺序表 13 项 ｜ 段表 system/history/user ｜ 内容字节 1791（额度 1802）｜ 裁剪 0 段 ｜ 请求体过网线 2375 ｜ 通道收到 2136 ｜ 帧 11 首帧 213ms 峰间 0ms ｜ 对端自报 usage=0/0 ｜ object=chat.completion.chunk ｜ 答复摘要=SO-2026-0419-9321｜会员自动续费要退款｜金额 99.00
+   预检=放行 ｜ isError=False ｜ 原文：输入侧：自洽 输出侧：自洽 预检结论：整发可落账（副本上真跑过一遍 RecordCall，两侧都不写回这本账）
+   落账原文：整发落账 49 条（输入侧 20 格 + 输出侧 29 格），链上共 392 条
+【第 7 发 非流式】发送顺序表 13 项 ｜ 段表 system/truncation-notice/history/user ｜ 内容字节 1699（额度 1802）｜ 裁剪 2 段 ｜ 请求体过网线 2284 ｜ 通道收到 477 ｜ 帧 1 首帧 1ms 峰间 0ms ｜ 对端自报 usage=594/29 ｜ object=chat.completion ｜ 答复摘要=SO-2026-0420-9588｜发票开错抬头，要重开｜金额 1580
+   预检=放行 ｜ isError=False ｜ 原文：输入侧：自洽 输出侧：自洽 预检结论：整发可落账（副本上真跑过一遍 RecordCall，两侧都不写回这本账）
+   落账原文：整发落账 49 条（输入侧 20 格 + 输出侧 29 格），链上共 441 条
+【第 8 发 流式】发送顺序表 13 项 ｜ 段表 system/truncation-notice/history/user ｜ 内容字节 1688（额度 1802）｜ 裁剪 3 段 ｜ 请求体过网线 2272 ｜ 通道收到 1929 ｜ 帧 10 首帧 190ms 峰间 0ms ｜ 对端自报 usage=0/0 ｜ object=chat.completion.chunk ｜ 答复摘要=SO-2026-0420-9589｜运费险怎么没赔｜金额 20.00 元
+   预检=放行 ｜ isError=False ｜ 原文：输入侧：自洽 输出侧：自洽 预检结论：整发可落账（副本上真跑过一遍 RecordCall，两侧都不写回这本账）
+   落账原文：整发落账 49 条（输入侧 20 格 + 输出侧 29 格），链上共 490 条
+
+【第 1 发 非流式 （无依据）】发送顺序表 4 项 ｜ 段表 system/history/user ｜ 内容字节 459（额度 1802）｜ 裁剪 0 段 ｜ 请求体过网线 747 ｜ 通道收到 408 ｜ 帧 1 首帧 14ms 峰间 0ms ｜ 对端自报 usage=177/15 ｜ object=chat.completion ｜ 答复摘要=订单号 SO-2026-9999-0000 在工单库里查不到，我不能凭它
+   预检=放行 ｜ isError=False ｜ 原文：输入侧：自洽 输出侧：自洽 预检结论：整发可落账（副本上真跑过一遍 RecordCall，两侧都不写回这本账）
+   落账原文：整发落账 49 条（输入侧 20 格 + 输出侧 29 格），链上共 539 条
+
+落账成功 9 发 ｜ 跑了 9 发（分母：工单 8 发 + 无依据 1 发）
+
+== 第三段：收口三件 + 逐格读回 ==
+verify（全文不截断）：✓ 链自洽（共 539 条，其中 539 条比对过原像）
+tally（全文不截断）：账 539 条（absent=47 estimated=26 measured=415 model_says=11 relayed=40）；被拒的写入 0 次 —— 拒收也要看得见，不然「被拒」会读成「没发生过」；另有 0 次写请求根本没走到内核（外壳在门口挡下：整块没给／写侧没这个键）；0 条请求被协议层判成无效（解不开 -32700／没有 method、不是请求 -32600；走到了协议层，只是没走进内核）；0 条请求连协议层都没到（传输层的形状预检挡下，比第三笔更早一步；拒它的是门，不是分类 —— #44）
+readers（全文不截断）：输入侧：键名表 20 格，其中 13 格没有任何声明者读：call call_bytes_ceiling clamp_rounds content_bytes content_ceiling effective_ceiling fixed_overhead leftover_pct part_totals parts shares tokens transport_slack_pct 输出侧：键名表 29 格，其中 19 格没有任何声明者读：call chunks endpoint_model fail_status finish first_byte_ms malformed_actions malformed_streak max_gap_ms model_says_bytes model_says_kept model_says_sha256 retry_after_ms sent tool_calls usage_in usage_out wire_bytes_out wire_format （这一栏内核自己核不到，只能由调用方声明；没人声明时它不是红，是待填）
+
+-- read_back 客服靶场 第 1 发 output 侧 --
+   session=客服靶场 的第 1 发 output 侧共 29 格，其中缺席 [chunks fail_status first_byte_ms max_gap_ms retry_after_ms]：
+   call                   measured  1
+   chunks                 absent    —（没量到，不是 0）：这一发不是流式的，结构上没有分帧
+   cost_countable         measured  是
+   downgrade              measured  否
+   endpoint_model         model_says cs-flash
+   endpoint_model_said    measured  是
+   fail_detail            measured  （这一格是空的）
+   fail_kind              measured  （这一格是空的）
+   fail_status            absent    —（没量到，不是 0）：这一发没故障，也就没有要记的状态码
+   finish                 relayed   stop
+   finish_said            measured  是
+   first_byte_ms          absent    —（没量到，不是 0）：这一发不是流式的，没有首帧这件事
+   malformed_actions      measured  0
+   malformed_streak       measured  0
+   max_gap_ms             absent    —（没量到，不是 0）：这一发不是流式的，没有帧间
+   model_says_bytes       measured  224
+   model_says_clipped     measured  否
+   model_says_kept        measured  224
+   model_says_sha256      measured  140803acd3316c878a38112b815f466b2b3a93ea2b81afc408429edcdcebc37f
+   retry_after_ms         absent    —（没量到，不是 0）：这一发没断，也就没有要等多久
+   sent                   measured  发出去了
+   streaming              measured  否
+   tool_calls             measured  0
+   usage_in               relayed   393（转述自 对端 usage.prompt_tokens（cs-flash 自报））
+   usage_out              relayed   35（转述自 对端 usage.completion_tokens（cs-flash 自报））
+   wire_bytes_in          measured  535
+   wire_bytes_out         measured  1522
+   wire_format            relayed   chat.completion
+   wire_format_said       measured  是
+-- read_back 客服靶场 第 1 发 input 侧 --
+   session=客服靶场 的第 1 发 input 侧共 20 格，其中缺席 []：
+   call                   measured  1
+   call_bytes_ceiling     measured  2048
+   clamp_rounds           measured  0
+   clipped                measured  0 段（裁剪表是空的）
+   content_bytes          measured  1102
+   content_ceiling        measured  1802
+   dropped                measured  0 段（裁剪表是空的）
+   effective_ceiling      measured  1802
+   fixed_overhead         estimated ≈48（这是估算，不是测量）：估的是system 头 + 模型名 + 工具清单的粗估
+   folded                 measured  0 段（裁剪表是空的）
+   leftover_pct           measured  1
+   notice_sent            measured  否
+   notice_text            measured  （这一格是空的）
+   notice_trimmed         measured  否
+   notice_why             measured  这发没超额度，没折叠没裁尾，所以没发提示
+   part_totals            measured  3 类共 1102 字节：system=1 history=6 user=1
+   parts                  measured  8 段：system history history history history history history user
+   shares                 measured  history=78 system=7 user=14
+   tokens                 estimated ≈367（这是估算，不是测量）：估的是1 token ≈ 3 字节的粗估（靶场按段表字节推）
+   transport_slack_pct    measured  12
+-- read_back 客服靶场 第 2 发 output 侧 --
+   session=客服靶场 的第 2 发 output 侧共 29 格，其中缺席 [fail_status retry_after_ms]：
+   call                   measured  2
+   chunks                 measured  12
+   cost_countable         measured  是
+   downgrade              measured  否
+   endpoint_model         model_says cs-flash
+   endpoint_model_said    measured  是
+   fail_detail            measured  （这一格是空的）
+   fail_kind              measured  （这一格是空的）
+   fail_status            absent    —（没量到，不是 0）：这一发没故障，也就没有要记的状态码
+   finish                 relayed   stop
+   finish_said            measured  是
+   first_byte_ms          measured  205
+   malformed_actions      measured  0
+   malformed_streak       measured  0
+   max_gap_ms             measured  0
+   model_says_bytes       measured  245
+   model_says_clipped     measured  否
+   model_says_kept        measured  245
+   model_says_sha256      measured  2f69628dc518ccdda156e84adf961cec64e91c278ed997b73eb52e25b5592739
+   retry_after_ms         absent    —（没量到，不是 0）：这一发没断，也就没有要等多久
+   sent                   measured  发出去了
+   streaming              measured  是
+   tool_calls             measured  0
+   usage_in               relayed   0（转述自 对端 usage.prompt_tokens（cs-flash 自报））
+   usage_out              relayed   0（转述自 对端 usage.completion_tokens（cs-flash 自报））
+   wire_bytes_in          measured  2371
+   wire_bytes_out         measured  1723
+   wire_format            relayed   chat.completion.chunk
+   wire_format_said       measured  是
+-- read_back 客服靶场 第 2 发 input 侧 --
+   session=客服靶场 的第 2 发 input 侧共 20 格，其中缺席 []：
+   call                   measured  2
+   call_bytes_ceiling     measured  2048
+   clamp_rounds           measured  0
+   clipped                measured  0 段（裁剪表是空的）
+   content_bytes          measured  1271
+   content_ceiling        measured  1802
+   dropped                measured  0 段（裁剪表是空的）
+   effective_ceiling      measured  1802
+   fixed_overhead         estimated ≈48（这是估算，不是测量）：估的是system 头 + 模型名 + 工具清单的粗估
+   folded                 measured  0 段（裁剪表是空的）
+   leftover_pct           measured  1
+   notice_sent            measured  否
+   notice_text            measured  （这一格是空的）
+   notice_trimmed         measured  否
+   notice_why             measured  这发没超额度，没折叠没裁尾，所以没发提示
+   part_totals            measured  3 类共 1271 字节：system=1 history=7 user=1
+   parts                  measured  9 段：system history history history history history history history user
+   shares                 measured  history=79 system=6 user=14
+   tokens                 estimated ≈423（这是估算，不是测量）：估的是1 token ≈ 3 字节的粗估（靶场按段表字节推）
+   transport_slack_pct    measured  12
+-- read_back 客服靶场 第 3 发 output 侧 --
+   session=客服靶场 的第 3 发 output 侧共 29 格，其中缺席 [chunks fail_status first_byte_ms max_gap_ms retry_after_ms]：
+   call                   measured  3
+   chunks                 absent    —（没量到，不是 0）：这一发不是流式的，结构上没有分帧
+   cost_countable         measured  是
+   downgrade              measured  否
+   endpoint_model         model_says cs-flash
+   endpoint_model_said    measured  是
+   fail_detail            measured  （这一格是空的）
+   fail_kind              measured  （这一格是空的）
+   fail_status            absent    —（没量到，不是 0）：这一发没故障，也就没有要记的状态码
+   finish                 relayed   stop
+   finish_said            measured  是
+   first_byte_ms          absent    —（没量到，不是 0）：这一发不是流式的，没有首帧这件事
+   malformed_actions      measured  0
+   malformed_streak       measured  0
+   max_gap_ms             absent    —（没量到，不是 0）：这一发不是流式的，没有帧间
+   model_says_bytes       measured  189
+   model_says_clipped     measured  否
+   model_says_kept        measured  189
+   model_says_sha256      measured  27b1dbdd152eea473c9e8c3ba99f4d78b080ad42cf6a731076eef6662fd55892
+   retry_after_ms         absent    —（没量到，不是 0）：这一发没断，也就没有要等多久
+   sent                   measured  发出去了
+   streaming              measured  否
+   tool_calls             measured  0
+   usage_in               relayed   479（转述自 对端 usage.prompt_tokens（cs-flash 自报））
+   usage_out              relayed   30（转述自 对端 usage.completion_tokens（cs-flash 自报））
+   wire_bytes_in          measured  500
+   wire_bytes_out         measured  1845
+   wire_format            relayed   chat.completion
+   wire_format_said       measured  是
+-- read_back 客服靶场 第 3 发 input 侧 --
+   session=客服靶场 的第 3 发 input 侧共 20 格，其中缺席 []：
+   call                   measured  3
+   call_bytes_ceiling     measured  2048
+   clamp_rounds           measured  0
+   clipped                measured  0 段（裁剪表是空的）
+   content_bytes          measured  1359
+   content_ceiling        measured  1802
+   dropped                measured  0 段（裁剪表是空的）
+   effective_ceiling      measured  1802
+   fixed_overhead         estimated ≈48（这是估算，不是测量）：估的是system 头 + 模型名 + 工具清单的粗估
+   folded                 measured  0 段（裁剪表是空的）
+   leftover_pct           measured  2
+   notice_sent            measured  否
+   notice_text            measured  （这一格是空的）
+   notice_trimmed         measured  否
+   notice_why             measured  这发没超额度，没折叠没裁尾，所以没发提示
+   part_totals            measured  3 类共 1359 字节：system=1 history=8 user=1
+   parts                  measured  10 段：system history history history history history history history history user
+   shares                 measured  history=84 system=5 user=9
+   tokens                 estimated ≈453（这是估算，不是测量）：估的是1 token ≈ 3 字节的粗估（靶场按段表字节推）
+   transport_slack_pct    measured  12
+-- read_back 客服靶场 第 4 发 output 侧 --
+   session=客服靶场 的第 4 发 output 侧共 29 格，其中缺席 [fail_status retry_after_ms]：
+   call                   measured  4
+   chunks                 measured  11
+   cost_countable         measured  是
+   downgrade              measured  否
+   endpoint_model         model_says cs-flash
+   endpoint_model_said    measured  是
+   fail_detail            measured  （这一格是空的）
+   fail_kind              measured  （这一格是空的）
+   fail_status            absent    —（没量到，不是 0）：这一发没故障，也就没有要记的状态码
+   finish                 relayed   stop
+   finish_said            measured  是
+   first_byte_ms          measured  205
+   malformed_actions      measured  0
+   malformed_streak       measured  0
+   max_gap_ms             measured  0
+   model_says_bytes       measured  207
+   model_says_clipped     measured  否
+   model_says_kept        measured  207
+   model_says_sha256      measured  84a1a919e85cc5bbb543f119dd8086f0b2a440f18bf2fc5c919d67a2117518da
+   retry_after_ms         absent    —（没量到，不是 0）：这一发没断，也就没有要等多久
+   sent                   measured  发出去了
+   streaming              measured  是
+   tool_calls             measured  0
+   usage_in               relayed   0（转述自 对端 usage.prompt_tokens（cs-flash 自报））
+   usage_out              relayed   0（转述自 对端 usage.completion_tokens（cs-flash 自报））
+   wire_bytes_in          measured  2140
+   wire_bytes_out         measured  2042
+   wire_format            relayed   chat.completion.chunk
+   wire_format_said       measured  是
+-- read_back 客服靶场 第 4 发 input 侧 --
+   session=客服靶场 的第 4 发 input 侧共 20 格，其中缺席 []：
+   call                   measured  4
+   call_bytes_ceiling     measured  2048
+   clamp_rounds           measured  0
+   clipped                measured  0 段（裁剪表是空的）
+   content_bytes          measured  1524
+   content_ceiling        measured  1802
+   dropped                measured  0 段（裁剪表是空的）
+   effective_ceiling      measured  1802
+   fixed_overhead         estimated ≈48（这是估算，不是测量）：估的是system 头 + 模型名 + 工具清单的粗估
+   folded                 measured  0 段（裁剪表是空的）
+   leftover_pct           measured  1
+   notice_sent            measured  否
+   notice_text            measured  （这一格是空的）
+   notice_trimmed         measured  否
+   notice_why             measured  这发没超额度，没折叠没裁尾，所以没发提示
+   part_totals            measured  3 类共 1524 字节：system=1 history=9 user=1
+   parts                  measured  11 段：system history history history history history history history history history user
+   shares                 measured  history=85 system=5 user=9
+   tokens                 estimated ≈508（这是估算，不是测量）：估的是1 token ≈ 3 字节的粗估（靶场按段表字节推）
+   transport_slack_pct    measured  12
+-- read_back 客服靶场 第 5 发 output 侧 --
+   session=客服靶场 的第 5 发 output 侧共 29 格，其中缺席 [chunks fail_status first_byte_ms max_gap_ms retry_after_ms]：
+   call                   measured  5
+   chunks                 absent    —（没量到，不是 0）：这一发不是流式的，结构上没有分帧
+   cost_countable         measured  是
+   downgrade              measured  否
+   endpoint_model         model_says cs-flash
+   endpoint_model_said    measured  是
+   fail_detail            measured  （这一格是空的）
+   fail_kind              measured  （这一格是空的）
+   fail_status            absent    —（没量到，不是 0）：这一发没故障，也就没有要记的状态码
+   finish                 relayed   stop
+   finish_said            measured  是
+   first_byte_ms          absent    —（没量到，不是 0）：这一发不是流式的，没有首帧这件事
+   malformed_actions      measured  0
+   malformed_streak       measured  0
+   max_gap_ms             absent    —（没量到，不是 0）：这一发不是流式的，没有帧间
+   model_says_bytes       measured  190
+   model_says_clipped     measured  否
+   model_says_kept        measured  190
+   model_says_sha256      measured  15bcbbadbc9cc5f247fae90eae72fd711525f58b8192173354914dce77a6d79e
+   retry_after_ms         absent    —（没量到，不是 0）：这一发没断，也就没有要等多久
+   sent                   measured  发出去了
+   streaming              measured  否
+   tool_calls             measured  0
+   usage_in               relayed   570（转述自 对端 usage.prompt_tokens（cs-flash 自报））
+   usage_out              relayed   30（转述自 对端 usage.completion_tokens（cs-flash 自报））
+   wire_bytes_in          measured  501
+   wire_bytes_out         measured  2182
+   wire_format            relayed   chat.completion
+   wire_format_said       measured  是
+-- read_back 客服靶场 第 5 发 input 侧 --
+   session=客服靶场 的第 5 发 input 侧共 20 格，其中缺席 []：
+   call                   measured  5
+   call_bytes_ceiling     measured  2048
+   clamp_rounds           measured  0
+   clipped                measured  0 段（裁剪表是空的）
+   content_bytes          measured  1630
+   content_ceiling        measured  1802
+   dropped                measured  0 段（裁剪表是空的）
+   effective_ceiling      measured  1802
+   fixed_overhead         estimated ≈48（这是估算，不是测量）：估的是system 头 + 模型名 + 工具清单的粗估
+   folded                 measured  0 段（裁剪表是空的）
+   leftover_pct           measured  2
+   notice_sent            measured  否
+   notice_text            measured  （这一格是空的）
+   notice_trimmed         measured  否
+   notice_why             measured  这发没超额度，没折叠没裁尾，所以没发提示
+   part_totals            measured  3 类共 1630 字节：system=1 history=10 user=1
+   parts                  measured  12 段：system history history history history history history history history history history user
+   shares                 measured  history=88 system=4 user=6
+   tokens                 estimated ≈543（这是估算，不是测量）：估的是1 token ≈ 3 字节的粗估（靶场按段表字节推）
+   transport_slack_pct    measured  12
+-- read_back 客服靶场 第 6 发 output 侧 --
+   session=客服靶场 的第 6 发 output 侧共 29 格，其中缺席 [fail_status retry_after_ms]：
+   call                   measured  6
+   chunks                 measured  11
+   cost_countable         measured  是
+   downgrade              measured  否
+   endpoint_model         model_says cs-flash
+   endpoint_model_said    measured  是
+   fail_detail            measured  （这一格是空的）
+   fail_kind              measured  （这一格是空的）
+   fail_status            absent    —（没量到，不是 0）：这一发没故障，也就没有要记的状态码
+   finish                 relayed   stop
+   finish_said            measured  是
+   first_byte_ms          measured  213
+   malformed_actions      measured  0
+   malformed_streak       measured  0
+   max_gap_ms             measured  0
+   model_says_bytes       measured  203
+   model_says_clipped     measured  否
+   model_says_kept        measured  203
+   model_says_sha256      measured  2978c7e73592b4fa28e15afe40928227e2045d788eb247ea70cd8c0d41c93c4e
+   retry_after_ms         absent    —（没量到，不是 0）：这一发没断，也就没有要等多久
+   sent                   measured  发出去了
+   streaming              measured  是
+   tool_calls             measured  0
+   usage_in               relayed   0（转述自 对端 usage.prompt_tokens（cs-flash 自报））
+   usage_out              relayed   0（转述自 对端 usage.completion_tokens（cs-flash 自报））
+   wire_bytes_in          measured  2136
+   wire_bytes_out         measured  2375
+   wire_format            relayed   chat.completion.chunk
+   wire_format_said       measured  是
+-- read_back 客服靶场 第 6 发 input 侧 --
+   session=客服靶场 的第 6 发 input 侧共 20 格，其中缺席 []：
+   call                   measured  6
+   call_bytes_ceiling     measured  2048
+   clamp_rounds           measured  0
+   clipped                measured  0 段（裁剪表是空的）
+   content_bytes          measured  1791
+   content_ceiling        measured  1802
+   dropped                measured  0 段（裁剪表是空的）
+   effective_ceiling      measured  1802
+   fixed_overhead         estimated ≈48（这是估算，不是测量）：估的是system 头 + 模型名 + 工具清单的粗估
+   folded                 measured  0 段（裁剪表是空的）
+   leftover_pct           measured  1
+   notice_sent            measured  否
+   notice_text            measured  （这一格是空的）
+   notice_trimmed         measured  否
+   notice_why             measured  这发没超额度，没折叠没裁尾，所以没发提示
+   part_totals            measured  3 类共 1791 字节：system=1 history=11 user=1
+   parts                  measured  13 段：system history history history history history history history history history history history user
+   shares                 measured  history=88 system=4 user=7
+   tokens                 estimated ≈597（这是估算，不是测量）：估的是1 token ≈ 3 字节的粗估（靶场按段表字节推）
+   transport_slack_pct    measured  12
+-- read_back 客服靶场 第 7 发 output 侧 --
+   session=客服靶场 的第 7 发 output 侧共 29 格，其中缺席 [chunks fail_status first_byte_ms max_gap_ms retry_after_ms]：
+   call                   measured  7
+   chunks                 absent    —（没量到，不是 0）：这一发不是流式的，结构上没有分帧
+   cost_countable         measured  是
+   downgrade              measured  否
+   endpoint_model         model_says cs-flash
+   endpoint_model_said    measured  是
+   fail_detail            measured  （这一格是空的）
+   fail_kind              measured  （这一格是空的）
+   fail_status            absent    —（没量到，不是 0）：这一发没故障，也就没有要记的状态码
+   finish                 relayed   stop
+   finish_said            measured  是
+   first_byte_ms          absent    —（没量到，不是 0）：这一发不是流式的，没有首帧这件事
+   malformed_actions      measured  0
+   malformed_streak       measured  0
+   max_gap_ms             absent    —（没量到，不是 0）：这一发不是流式的，没有帧间
+   model_says_bytes       measured  166
+   model_says_clipped     measured  否
+   model_says_kept        measured  166
+   model_says_sha256      measured  1347e661282f411bbc491572fbec4c32b33f128a7a76a16917a24066a3e342f6
+   retry_after_ms         absent    —（没量到，不是 0）：这一发没断，也就没有要等多久
+   sent                   measured  发出去了
+   streaming              measured  否
+   tool_calls             measured  0
+   usage_in               relayed   594（转述自 对端 usage.prompt_tokens（cs-flash 自报））
+   usage_out              relayed   29（转述自 对端 usage.completion_tokens（cs-flash 自报））
+   wire_bytes_in          measured  477
+   wire_bytes_out         measured  2284
+   wire_format            relayed   chat.completion
+   wire_format_said       measured  是
+-- read_back 客服靶场 第 7 发 input 侧 --
+   session=客服靶场 的第 7 发 input 侧共 20 格，其中缺席 []：
+   call                   measured  7
+   call_bytes_ceiling     measured  2048
+   clamp_rounds           measured  0
+   clipped                measured  0 段（裁剪表是空的）
+   content_bytes          measured  1699
+   content_ceiling        measured  1802
+   dropped                measured  2 段：history/坐席备注一段：最后一次整段随第 6 发发出，第 7 发超额度时整段挤出（连桩也没发） history/坐席备注一段：最后一次整段随第 6 发发出，第 7 发超额度时整段挤出（连桩也没发）
+   effective_ceiling      measured  1802
+   fixed_overhead         estimated ≈48（这是估算，不是测量）：估的是system 头 + 模型名 + 工具清单的粗估
+   folded                 measured  0 段（裁剪表是空的）
+   leftover_pct           measured  3
+   notice_sent            measured  是
+   notice_text            measured  （历史 2 轮已折叠，折叠表见 cuts）
+   notice_trimmed         measured  否
+   notice_why             measured  历史超额度，整段挤出 2 轮并附通知
+   part_totals            measured  4 类共 1699 字节：system=1 truncation-notice=1 history=10 user=1
+   parts                  measured  13 段：system truncation-notice history history history history history history history history history history user
+   shares                 measured  history=84 system=4 truncation-notice=2 user=7
+   tokens                 estimated ≈566（这是估算，不是测量）：估的是1 token ≈ 3 字节的粗估（靶场按段表字节推）
+   transport_slack_pct    measured  12
+-- read_back 客服靶场 第 8 发 output 侧 --
+   session=客服靶场 的第 8 发 output 侧共 29 格，其中缺席 [fail_status retry_after_ms]：
+   call                   measured  8
+   chunks                 measured  10
+   cost_countable         measured  是
+   downgrade              measured  否
+   endpoint_model         model_says cs-flash
+   endpoint_model_said    measured  是
+   fail_detail            measured  （这一格是空的）
+   fail_kind              measured  （这一格是空的）
+   fail_status            absent    —（没量到，不是 0）：这一发没故障，也就没有要记的状态码
+   finish                 relayed   stop
+   finish_said            measured  是
+   first_byte_ms          measured  190
+   malformed_actions      measured  0
+   malformed_streak       measured  0
+   max_gap_ms             measured  0
+   model_says_bytes       measured  189
+   model_says_clipped     measured  否
+   model_says_kept        measured  189
+   model_says_sha256      measured  855466432a97a4749c3f3a5c568b9078f8472f3193f70ad38cfc39a4f865a456
+   retry_after_ms         absent    —（没量到，不是 0）：这一发没断，也就没有要等多久
+   sent                   measured  发出去了
+   streaming              measured  是
+   tool_calls             measured  0
+   usage_in               relayed   0（转述自 对端 usage.prompt_tokens（cs-flash 自报））
+   usage_out              relayed   0（转述自 对端 usage.completion_tokens（cs-flash 自报））
+   wire_bytes_in          measured  1929
+   wire_bytes_out         measured  2272
+   wire_format            relayed   chat.completion.chunk
+   wire_format_said       measured  是
+-- read_back 客服靶场 第 8 发 input 侧 --
+   session=客服靶场 的第 8 发 input 侧共 20 格，其中缺席 []：
+   call                   measured  8
+   call_bytes_ceiling     measured  2048
+   clamp_rounds           measured  0
+   clipped                measured  0 段（裁剪表是空的）
+   content_bytes          measured  1688
+   content_ceiling        measured  1802
+   dropped                measured  3 段：history/坐席备注一段：最后一次整段随第 7 发发出，第 8 发超额度时整段挤出（连桩也没发） history/坐席备注一段：最后一次整段随第 7 发发出，第 8 发超额度时整段挤出（连桩也没发） history/坐席备注一段：最后一次整段随第 7 发发出，第 8 发超额度时整段挤出（连桩也没发）
+   effective_ceiling      measured  1802
+   fixed_overhead         estimated ≈48（这是估算，不是测量）：估的是system 头 + 模型名 + 工具清单的粗估
+   folded                 measured  0 段（裁剪表是空的）
+   leftover_pct           measured  2
+   notice_sent            measured  是
+   notice_text            measured  （历史 3 轮已折叠，折叠表见 cuts）
+   notice_trimmed         measured  否
+   notice_why             measured  历史超额度，整段挤出 3 轮并附通知
+   part_totals            measured  4 类共 1688 字节：system=1 truncation-notice=1 history=10 user=1
+   parts                  measured  13 段：system truncation-notice history history history history history history history history history history user
+   shares                 measured  history=85 system=4 truncation-notice=2 user=7
+   tokens                 estimated ≈562（这是估算，不是测量）：估的是1 token ≈ 3 字节的粗估（靶场按段表字节推）
+   transport_slack_pct    measured  12
+-- read_back 客服靶场-无依据 第 1 发 output 侧 --
+   session=客服靶场-无依据 的第 1 发 output 侧共 29 格，其中缺席 [chunks fail_status first_byte_ms max_gap_ms retry_after_ms]：
+   call                   measured  1
+   chunks                 absent    —（没量到，不是 0）：这一发不是流式的，结构上没有分帧
+   cost_countable         measured  是
+   downgrade              measured  否
+   endpoint_model         model_says cs-flash
+   endpoint_model_said    measured  是
+   fail_detail            measured  （这一格是空的）
+   fail_kind              measured  （这一格是空的）
+   fail_status            absent    —（没量到，不是 0）：这一发没故障，也就没有要记的状态码
+   finish                 relayed   stop
+   finish_said            measured  是
+   first_byte_ms          absent    —（没量到，不是 0）：这一发不是流式的，没有首帧这件事
+   malformed_actions      measured  0
+   malformed_streak       measured  0
+   max_gap_ms             absent    —（没量到，不是 0）：这一发不是流式的，没有帧间
+   model_says_bytes       measured  97
+   model_says_clipped     measured  否
+   model_says_kept        measured  97
+   model_says_sha256      measured  014c04e51e315d5fdf7d2a5bfa8e447b4f3aa90badc793fc98a01c521ad96fe1
+   retry_after_ms         absent    —（没量到，不是 0）：这一发没断，也就没有要等多久
+   sent                   measured  发出去了
+   streaming              measured  否
+   tool_calls             measured  0
+   usage_in               relayed   177（转述自 对端 usage.prompt_tokens（cs-flash 自报））
+   usage_out              relayed   15（转述自 对端 usage.completion_tokens（cs-flash 自报））
+   wire_bytes_in          measured  408
+   wire_bytes_out         measured  747
+   wire_format            relayed   chat.completion
+   wire_format_said       measured  是
+
+== 第四段：四根反针（用跑客服.py 里那一份 needles，一字没改；只预检不落账）==
+
+== 反针四根（只预检、不落账）==
+N1 转述不带出处（UsageIn relayed、Source 空）                      ⇒ 拒 ｜ isError=True ｜ 输入侧：自洽 输出侧：kernel: 入 token 说是 relayed 的，却没说来源（转述谁 / 估的是什么） 预检结论：整发会被拒 —— kernel: 输出侧账不自洽，第 1 发整发拒收（输入侧也不写）：kernel: 入 token 说是 relayed 的，却没说来源（转述谁 / 估的是什么）
+N2 absent 却有数（Chunks Absent=true 且 N=7）                  ⇒ 拒 ｜ isError=True ｜ 输入侧：自洽 输出侧：kernel: 分帧数 报的是缺席，却带着数 7 —— 缺席不许顺手塞一个值 预检结论：整发会被拒 —— kernel: 输出侧账不自洽，第 1 发整发拒收（输入侧也不写）：kernel: 分帧数 报的是缺席，却带着数 7 —— 缺席不许顺手塞一个值
+N3 声称流式却没帧（Streaming=true 而 Chunks absent）               ⇒ 拒 ｜ isError=True ｜ 输入侧：自洽 输出侧：kernel: 这一发是流式的，分帧数 却报缺席 —— 流式就该量得到它 预检结论：整发会被拒 —— kernel: 输出侧账不自洽，第 1 发整发拒收（输入侧也不写）：kernel: 这一发是流式的，分帧数 却报缺席 —— 流式就该量得到它
+N4 usage 全 0 同时线字节记 measured（#47 那一族）                    ⇒ 没拦 ｜ isError=False ｜ 输入侧：自洽 输出侧：自洽 预检结论：整发可落账（副本上真跑过一遍 RecordCall，两侧都不写回这本账）
+
+收口后 tally：账 539 条（absent=47 estimated=26 measured=415 model_says=11 relayed=40）；被拒的写入 0 次 —— 拒收也要看得见，不然「被拒」会读成「没发生过」；另有 0 次写请求根本没走到内核（外壳在门口挡下：整块没给／写侧没这个键）；0 条请求被协议层判成无效（解不开 -32700／没有 method、不是请求 -32600；走到了协议层，只是没走进内核）；0 条请求连协议层都没到（传输层的形状预检挡下，比第三笔更早一步；拒它的是门，不是分类 —— #44）

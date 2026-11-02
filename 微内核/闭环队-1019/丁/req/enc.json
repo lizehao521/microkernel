@@ -1,0 +1,1 @@
+{"jsonrpc":"2.0","id":60,"method":"tools/call","params":{"name":"kernel.encode_journal","arguments":{"payload":"included"}}}

@@ -1,0 +1,96 @@
+<!-- ================= EXECUTIVE SUMMARY ================= -->
+<section class="chapter" id="exec">
+  <div class="chap-kicker">00 · Executive Summary</div>
+  <h1><span class="num">00</span>v3 摘要：那句话说反了两次</h1>
+
+  <p class="lede">
+    v2 在自己身上留了一句反面：「SAM 下调可能过度悲观——如果 AI 审计在 2027 年成为独立预算科目，SAM 会回升。」
+    v3 用抽查过的法规时点与买方实态判这句话，结论是：<strong>方向反了两次</strong>。
+    在<strong>法规推动</strong>这条路上它过于乐观——高风险记录类义务被 Digital Omnibus 推到 2027-12-02（Annex III）与 2028-08-02（Annex I），
+    而条文要的是「部署方保留自动生成的日志至少六个月」，不是任何机器可读格式、不是出处分档、更不是第三方件；
+    在<strong>采购推动</strong>这条路上它又过于悲观——真正会淘汰你的是 SOC 2 Type II 这道与法规无关的门，
+    而它要求的「可归属到人 + 连续留存 6–12 个月」恰好是逐调用账本天然供得上的东西。v2 把需求整个挂在「审计」这个词上，<strong>挂错了接口</strong>。
+  </p>
+
+  <h2>三个结论</h2>
+
+  <div class="callout">
+    <div class="t">结论一：合规不会在 2027 之前逼出这本账；不要把它写成销售理由</div>
+    <p>
+      读到原文的两份权威件都是这么说的：NIST 官网写 AI RMF「is intended for voluntary use」<span class="tag tag-a">A 级</span>；
+      EU AI Act 的 Art.12 只要求记录使用期间、参照数据库、输入数据与核验人员，<strong>条文本体不含留存时长</strong>，
+      「至少六个月」在 Art.26(6) <span class="tag tag-a">A 级</span>。
+      再加上执法能力这一层：截至 2026-03 仅 8 个成员国设立了市场监督单点 <span class="tag tag-d">D 级（二级转述）</span>。
+      ⇒ <strong>任何「因为 AI Act 现在需要运行时账本」的话术都必须从对外材料里删掉</strong>，它既不准确，也是我们最容易失去信任的一句话。
+    </p>
+  </div>
+
+  <div class="callout">
+    <div class="t">结论二：预算科目没有出现，但「归属 + 连续留存」这两件门槛是真的——本件该挂在这里</div>
+    <p>
+      唯一像样的「独立预算科目」正面证据，是 IDC 维护了一个 AI-enabled financial GRC 的 MarketScape 类目 <span class="tag tag-d">D 级</span>；
+      但类目由 IBM 这类平台占着，说明坑位在<strong>平台内</strong>，不在单点件上。
+      另一侧是采购实态：SOC 2 Type II 被多份材料描述为 RFP 淘汰门槛、要求 6–12 个月连续生成并留存、最常见发现项是「共享服务账号无法归属到人」
+      <span class="tag tag-d">D 级，全 Tier 3</span>。
+      ⇒ 判词：<strong>门槛真实，但没有任何一份被记录下来的买方要求说「逐调用记录必须可独立验证」</strong>（补证波专门找过，明写没找到）。
+      这是本报告最大的不确定性，v3 不把它藏进「合规趋势」。
+    </p>
+  </div>
+
+  <div class="callout">
+    <div class="t">结论三：能讲的差异收窄到四个形容词，而且要先承认先例</div>
+    <p>
+      Traccia（arXiv:2607.14309，预印本）已把「trace → SHA-256 哈希防篡改账本 → 映射 AI Act 条文」这条链做出来 <span class="tag tag-b">B 级</span>；
+      UiPath 已经把「tamper-evident audit trail for every agent action」这句话写在平台上 <span class="tag tag-b">B 级</span>；
+      LiteLLM 免费网关「每个请求都带审计日志」<span class="tag tag-b">B 级</span>；Langfuse 的审计日志与 SCIM 锁在 $2,499/月 Enterprise 档 <span class="tag tag-a">A 级（定价页原文）</span>。
+      ⇒ 还能站住的差异只剩：<strong>被动的（不执行、不调度、不写盘）、本地优先的、出处分五档且 absent 必带理由的、停止必须结算的。</strong>
+      前三个已有实物与读数，第四个目前<strong>只有计划</strong>（事件层 E1–E9 状态 Planned）。
+    </p>
+  </div>
+
+  <h2>如果只记五句话</h2>
+  <ol class="stats">
+    <li>不要卖「符合 AI Act」——连条文自己都没要求这本账的形状。</li>
+    <li>要卖的是<strong>把留存与归属变成可评估对象</strong>：监管接受的是配置判断（S3 Object Lock compliance mode + Cohasset 评估，限定语「when correctly configured」），不是内容判断 <span class="tag tag-a">A 级</span>。</li>
+    <li>「防篡改 = 可信」这句话站不住：CT 用 Merkle 树只证内部一致，「不给两方看两棵树」是 Apple 的<strong>政策</strong>不是密码学；GoDaddy/Yeti 2025 里无效签名的 SCT 是<strong>外部研究者</strong>发现的，不是树发现的 <span class="tag tag-a">A 级</span>。</li>
+    <li>可信权威托管账这个形态被 AWS 自己撤了：QLDB 支持止于 2025-07-31，迁移目标 Aurora 明确「不维护永久不可变记录，历史要作为审计数据存到库外」<span class="tag tag-a">A 级（文档横幅原文）</span>。</li>
+    <li>本件唯一被证明的东西是「机械正确 + 尺子会红」：四道闸实跑、KPI=4 与反臂 0、六态退出码、49 格逐发落账。<strong>协同体验更好从未被证明</strong>（真人 0/1）。</li>
+  </ol>
+
+  <h2>本报告可能错在哪里</h2>
+  <table class="tbl diff-table">
+    <tr><th>可能错在</th><th>为什么仍按现在这样写</th><th>错了会怎样</th></tr>
+    <tr>
+      <td>把 Omnibus 的两个日期当判词核心</td>
+      <td>Annex III→2027-12-02、Annex I→2028-08-02 由三位具名来源互证；但 <strong>EUR-Lex 一手本轮两次打不开</strong>，OJ 日期与「Chapter III Sections 1-3」这个措辞都已撤下</td>
+      <td>时点若另有出入，「别把 AI Act 当销售理由」这句判词<strong>不受影响</strong>（它同时依赖自愿属性与条文文本，两条都已核）</td>
+    </tr>
+    <tr>
+      <td>把 SOC 2 门槛说成决定性</td>
+      <td>支撑它的全部是 Tier 3 材料；我们找不到一手「客户明确要求逐调用记录可独立验证」的件，所以这句话在 v3 里被同时写成<strong>缺口</strong></td>
+      <td>若门槛其实更弱，则 §3 的挂接接口建议失去意义，本件回到「研究出版 + 开源」单腿</td>
+    </tr>
+    <tr>
+      <td>竞品声明只核到「页面这么写」</td>
+      <td>UiPath/Datadog/Vanta/Langfuse 四件读的是官方页原文；但其机制（密钥、锚、离线验证）<strong>没有任何一家公布</strong>，我们无法证明它们不做</td>
+      <td>若某家其实有外部锚，则「机制层没人背书」这句要降级为「没人把机制讲清楚」</td>
+    </tr>
+    <tr>
+      <td>市场规模一个数都不给</td>
+      <td>三家 Tier 3 基数差 2.6 倍、口径互斥；Gartner 的两个类目（模型平台 $64.3B 与 agent 软件 $206.5B）也不是同一东西</td>
+      <td>读者无法据此排序预算优先级；这是有意的取舍——<strong>宁可空着，不造数</strong></td>
+    </tr>
+  </table>
+
+  <h2>六个危险动作（v3 复核后仍然成立，加了两条新的）</h2>
+  <ul class="avoid">
+    <li>把 Art.12 说成「要求逐调用机器可读账本」——条文没这么写。</li>
+    <li>把「我们有 49 格与哈希链」当成监管可接受的证据——接受的是配置与流程判断。</li>
+    <li>用 AI 模拟读者替真人验收——裁判类文献本身是有条件可信，且人测臂至今 0/1。</li>
+    <li>把快照级数字写进正文——本轮两条被抽查推翻的正是这个来源级别。</li>
+    <li>（新）暗示首创——Traccia 已经发表，暗示一次就失去一次专业信用。</li>
+    <li>（新）宣称「挡住风险」——审计层不是防线；本件不调度、不拦截、不执行，说「挡住」就是假。</li>
+  </ul>
+
+  <p class="endnote">分级与波次分母见附录 A；v2 → v3 逐主张对照见附录 B；未跑与未取到的清单见附录 D。</p>
+</section>

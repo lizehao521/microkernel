@@ -1,0 +1,109 @@
+<!-- ================= COVER + TOC ================= -->
+<section class="cover">
+  <div class="grid"></div>
+  <div class="glow"></div>
+  <div class="glow2"></div>
+  <div class="inner">
+    <div class="kicker">Agentkernel · Market Entry Research · V3（证据更新版）</div>
+    <h1>把「合规会不会<br><span class="thin">逼出这本账」问到底</span></h1>
+    <div class="sub">
+      v3 不重画赛道，只判 v2 自己留下的那一句风险：<br>
+      「SAM 下调可能过度悲观——如果 AI 审计在 2027 成为独立预算科目，SAM 会回升」。
+    </div>
+    <div class="object">
+      研究对象：agentkernel v1（48 键 / 49 格，判据表冻结）· 底盘 v2（2026-10-20，48 页）· 更新日 2026-10-22
+    </div>
+    <div class="verdict">
+      <div class="lab">v3 判定</div>
+      <div class="txt">那句话<strong>方向反了两次</strong>：法规侧它过乐观（记录类义务已被推到 2027-12 / 2028-08），采购侧它过悲观（真门槛是归属 + 连续留存，与法规无关）。<br>SAM/SOM 沿用 v2 的 C 级假设，不升格；回升的前提<strong>目前没有任何被记录下来的证据</strong>。</div>
+    </div>
+    <table class="stats">
+      <tr>
+        <td><div class="v">2027-12-02</div><div class="l">Annex III 高风险义务<br>被 Digital Omnibus 推迟（D 级）</div></td>
+        <td><div class="v">0 条</div><div class="l">被记录下来的买方要求<br>「逐调用记录须可独立验证」</div></td>
+        <td><div class="v">$2,499/月</div><div class="l">Langfuse Enterprise 档<br>审计日志与 SCIM 所在层（A 级）</div></td>
+        <td><div class="v">Planned</div><div class="l">事件层 E1–E9<br>实时过程可见，代码一行未动</div></td>
+      </tr>
+    </table>
+  </div>
+  <div class="foot">
+    本报告不是合规意见、不是报价单、不是「符合某法规」的声明。规模数字一律缺席：同名类目三家基数差 2.6 倍且全为 Tier 3。<br>
+    证据分级 A/B/C/D/未；「未」不折成 0；真人 0/1、访谈 0/10、LOI 0、付费 0。判定分母与波次账见附录 A。
+  </div>
+</section>
+
+<section class="toc-page pagebreak">
+  <h1 class="toc-title">这份 v3 怎么读</h1>
+
+  <div class="callout">
+    <div class="t">先说三件会让读者本能反感的事，说完再讲别的</div>
+    <p><strong>一、本报告不给你市场规模结论。</strong>同名类目「AI/LLM 可观测」2025 年基数有三家给法：$758M、$0.93B（仅美国）、$1.97B，
+      最大最小差 2.6 倍，来源全是 Tier 3 报告厂。v2 当年取的 26.9 亿美元其实是其中 <strong>2026 年</strong>的那个口径，既没标年份，也处在离散区间的上沿。
+      v3 把这些数字全部降级成「口径离散度」证据，SAM/SOM 一律沿用 v2 的 <span class="tag tag-c">C 级规划假设</span>，不升格。</p>
+    <p><strong>二、本件的话术已经被在位者说过了。</strong>UiPath 的平台页原文写着「每一个 agent 动作、模型调用、提示、响应与批准人都记入防篡改审计轨迹」，
+      并直接说这就是「监管所要的证据」。它没有给出密钥管理、外部锚或离线验证机制。所以我们不能讲「没人做这件事」，只能讲
+      <strong>「这句话的机制层没人背书」</strong>——这是完全不同的主张，也弱得多。</p>
+    <p><strong>三、我们的先例不是零。</strong>公开预印本 Traccia（arXiv:2607.14309，2026-07-15）已经把「执行 trace → 哈希防篡改账本 → 映射到 EU AI Act 条文」这条链做出来了。
+      v3 撤回所有暗示首创的表述，改把差异点收窄到四个可核对的形容词：<em>被动的、本地优先的、出处分五档的、停止必须结算的</em>。</p>
+  </div>
+
+  <h2>三条边界，先写在前面</h2>
+  <ul class="checklist">
+    <li><strong>不是合规意见。</strong>关于 EU AI Act 的全部表述只在「条文写了什么、什么时候适用」层面；哪条义务落到你身上，请找持牌法律顾问。</li>
+    <li><strong>不是尽调材料。</strong>本件没有 SOC 2 报告、没有渗透测试、没有保险。§3 会说明这为什么是采购侧的真墙，而不是可绕开的形式。</li>
+    <li><strong>效果未被证明。</strong>真人访谈 0/10、试读交接 0/1、LOI 0、付费 0；事件层（把循环过程投影给用户看的那部分）状态是 <span class="tag tag-x">Planned</span>，代码一行未动。</li>
+  </ul>
+
+  <h2>证据分级：五种状态，不许塌成一种</h2>
+  <table class="tbl">
+    <tr><th>级</th><th>含义</th><th>能说什么</th><th>不能说什么</th></tr>
+    <tr><td><span class="tag tag-a">A 级</span></td><td>逐行复算／原文已读，且给出复跑命令或盘上件</td><td>「本机实跑读数如此」「条文原句如此」</td><td>—</td></tr>
+    <tr><td><span class="tag tag-b">B 级</span></td><td>一手页已读，但为厂商自述或单一来源</td><td>「该厂商页面这样声明」</td><td>不能升格成「行业事实」</td></tr>
+    <tr><td><span class="tag tag-c">C 级</span></td><td>作者规划假设（占比、单价、情景）</td><td>「这是假设，随附假设值」</td><td>不得写成调查结论</td></tr>
+    <tr><td><span class="tag tag-d">D 级</span></td><td>二级/三级来源转述（含快照级数字）</td><td>「据具名来源转述」</td><td>不得写成官方原文已核</td></tr>
+    <tr><td><span class="tag tag-x">未</span></td><td>没跑、没取到、打不开</td><td>「不知道 / NOT_RUN」</td><td>不得折成 0，也不得用相邻材料顶</td></tr>
+  </table>
+  <p class="small">v3 期间新加一条硬规矩：<strong>只有 A 级（读过原文正文或表格原件）的数字才允许被排版进正文。</strong>
+    这条是被自己的错误逼出来的——抽查前我们已把「待复核」标注加在 MT-Bench 与 LangChain 的数字上，仍然让它们进了正文，结果一个判 UNSUPPORTED、一个一手根本取不到。</p>
+
+  <h2>与 v2 的关系</h2>
+  <p>v2 交付物仍在盘上且不作废：<code>市场报告-1020/agentkernel-市场进入重评-1020.pdf</code>（48 页，SHA256 <code>2766192e…cacff</code>）。
+    v3 改的是<strong>四件事的判词</strong>：法规时点、竞争空位的说法、需求叙述的挂接接口、以及「本件凭什么算差异」。<strong>不改</strong>的是：
+    五道闸的结构、定价四档的形状、财务三情景、以及「研究出版 + 开源适配层先行」的排序结论。</p>
+
+  <h2>目录</h2>
+  <table class="toc">
+    <tr class="l1"><td><span class="tn">00</span>v3 摘要：那句话说反了两次</td><td class="pg" data-key="exec"></td></tr>
+    <tr class="l1"><td><span class="tn">01</span>为什么要出 v3：抽查抓到的五处错</td><td class="pg" data-key="ch1"></td></tr>
+    <tr class="l1"><td><span class="tn">02</span>法规时线重算：账本义务现在到底要不要</td><td class="pg" data-key="ch2"></td></tr>
+    <tr class="l2"><td>2.1 Art.12 与 Art.26(6) 的分工</td><td class="pg" data-key="s2-1"></td></tr>
+    <tr class="l2"><td>2.2 Omnibus 把高风险义务推到哪一天</td><td class="pg" data-key="s2-2"></td></tr>
+    <tr class="l2"><td>2.3 自愿框架为什么撑不起预算</td><td class="pg" data-key="s2-3"></td></tr>
+    <tr class="l1"><td><span class="tn">03</span>买方门槛三件套</td><td class="pg" data-key="ch3"></td></tr>
+    <tr class="l2"><td>3.1 门槛真实存在，但与法规无关</td><td class="pg" data-key="s3-1"></td></tr>
+    <tr class="l2"><td>3.2 没人要求「逐调用记录可独立验证」</td><td class="pg" data-key="s3-2"></td></tr>
+    <tr class="l1"><td><span class="tn">04</span>竞争格局：话已被说，背书还没有</td><td class="pg" data-key="ch4"></td></tr>
+    <tr class="l1"><td><span class="tn">05</span>本机证据现状：能证的与不能证的</td><td class="pg" data-key="ch5"></td></tr>
+    <tr class="l1"><td><span class="tn">06</span>五条进入方式重评</td><td class="pg" data-key="ch6"></td></tr>
+    <tr class="l1"><td><span class="tn">07</span>推荐路线与五道闸</td><td class="pg" data-key="ch7"></td></tr>
+    <tr class="l2"><td>7.2 五道闸（v3 判据）</td><td class="pg" data-key="s7-2"></td></tr>
+    <tr class="l1"><td><span class="tn">08</span>定价与单位经济</td><td class="pg" data-key="ch8"></td></tr>
+    <tr class="l1"><td><span class="tn">09</span>风险登记与红队</td><td class="pg" data-key="ch9"></td></tr>
+    <tr class="l1"><td><span class="tn">10</span>实施路线（26 周）</td><td class="pg" data-key="ch10"></td></tr>
+    <tr class="l1"><td><span class="tn">11</span>财务三情景（C 级沿用）</td><td class="pg" data-key="ch11"></td></tr>
+    <tr class="l1"><td><span class="tn">12</span>结论与那句 SAM 的判定</td><td class="pg" data-key="ch12"></td></tr>
+    <tr class="l1"><td><span class="tn">A</span>方法、波次与分母</td><td class="pg" data-key="appA"></td></tr>
+    <tr class="l1"><td><span class="tn">B</span>v2 → v3 主张对照</td><td class="pg" data-key="appB"></td></tr>
+    <tr class="l1"><td><span class="tn">C</span>引用与分级登记</td><td class="pg" data-key="appC"></td></tr>
+    <tr class="l1"><td><span class="tn">D</span>缺口、NOT_RUN 与对外措辞红线</td><td class="pg" data-key="appD"></td></tr>
+  </table>
+
+  <h2>图表索引</h2>
+  <table class="toc">
+    <tr class="l2"><td>图 1 义务时线：现在能说的与还不能说的</td><td class="pg" data-key="fig1"></td></tr>
+    <tr class="l2"><td>图 2 门槛三件套与本件可供给位置</td><td class="pg" data-key="fig2"></td></tr>
+    <tr class="l2"><td>图 3 声明强度 × 机制背书</td><td class="pg" data-key="fig3"></td></tr>
+    <tr class="l2"><td>图 4 证据阶梯：从「我记了」到「别人能验」</td><td class="pg" data-key="fig4"></td></tr>
+    <tr class="l2"><td>图 5 五条进入方式在 v3 证据下的位移</td><td class="pg" data-key="fig5"></td></tr>
+  </table>
+</section>

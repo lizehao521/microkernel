@@ -1,0 +1,117 @@
+<!-- ================= CH 1-3 ================= -->
+<section class="chapter pagebreak" id="ch1">
+  <div class="chap-kicker">01 · Why a v3</div>
+  <h1><span class="num">01</span>为什么要出 v3：抽查抓到的五处错</h1>
+  <p class="lede">v3 不是因为市场变了，是因为 v2 与本轮初稿里有五处<strong>会被两分钟内复核掉的错</strong>。先把错摊开，才有资格讲后面的判词。</p>
+
+  <table class="tbl">
+    <tr><th>#</th><th>被抓到的句子</th><th>抽查判定</th><th>纠正后的口径</th></tr>
+    <tr><td>1</td><td>「Art.12 要求高风险系统在全生命周期内技术上支持自动记录事件」</td><td><span class="tag tag-c">内容大致对，时点错</span></td><td>Art.12 只规定记录使用期间、参照数据库、输入数据、核验人员；<strong>高风险义务的适用时点已被 Omnibus 推迟</strong>（见 §2.2）</td></tr>
+    <tr><td>2</td><td>「至少六个月留存」挂在 Art.12 名下</td><td><span class="tag tag-a">归属已核</span></td><td>六个月在 <strong>Art.26(6)</strong>，是部署方义务；Art.12 本体不含时长</td></tr>
+    <tr><td>3</td><td>MT-Bench：换序一致率 65%、复读失败率 8.7%/91.3%、同族自评 +10 分、人-人 81–82%</td><td><span class="tag tag-x">UNSUPPORTED，撤</span></td><td>摘要层只支撑「与人类一致率 &gt;80%」；其余四个数字与论文原件不吻合，<strong>不进正文</strong></td></tr>
+    <tr><td>4</td><td>「89% 团队已上可观测、29.5% 完全不做 eval（n≈1,300）」</td><td><span class="tag tag-x">一手取不到，撤</span></td><td>连报告名都存疑；一手报告页打开之前，这组数与 n 一律不出现</td></tr>
+    <tr><td>5</td><td>「Langfuse 把审计日志、SCIM、SSO 全锁在 Enterprise」</td><td><span class="tag tag-c">PARTIAL</span></td><td>审计日志与 SCIM 是 Enterprise；<strong>SSO 强制另出现在 $300/月 Teams 加购档</strong>。自托管许可（MIT）不写在定价页，须另取件</td></tr>
+  </table>
+
+  <div class="callout danger-row">
+    <div class="t">这五处错共同指向一条新规矩</div>
+    <p>第 3、4 条当初都带了「待复核」的标注，仍然进了正文——说明<strong>「标注了风险」不等于「没有过界」</strong>。
+      v3 起用机械口径执行：<strong>只有 A 级（读过原文正文或表格原件）的数字才允许被排版</strong>。
+      这条规矩本身也配了闸：话术闸（<code>研究-1022/话术闸.py</code>）逐行扫描四类越界话术并要求每个 `**[High]**` 同段有凭据词，五条臂全部验过会红（<code>GATE_RC=0</code>）。</p>
+  </div>
+
+  <p class="small">另有两处降级留在附录 A：RFC 9162 的「Experimental 轨 / obsolete RFC 6962」两个限定词未对 rfc-editor 核实即撤；Traccia 的「开源」未核到即撤。</p>
+</section>
+
+<section class="chapter pagebreak" id="ch2">
+  <div class="chap-kicker">02 · Regulation</div>
+  <h1><span class="num">02</span>法规时线重算：账本义务现在到底要不要</h1>
+
+  <h2 id="s2-1">2.1 Art.12 与 Art.26(6) 的分工</h2>
+  <p>读到原文的 Art.12 只要求：高风险系统在整个生命周期内<strong>技术上支持自动生成日志</strong>，记录范围包括使用期间、参照数据库、输入数据（造成匹配的那些）与核验人员，并指向 Art.26。
+    <strong>条文本体没有任何留存时长，也没有任何格式规定。</strong>
+    「至少六个月」出现在 Art.26(6)：部署方须保留系统自动生成的日志，期限按预期目的定，且「至少六个月」，除非适用的联盟或成员国法律另有规定。</p>
+  <div class="grid2">
+    <div class="card"><div class="lab">条文要的对象</div><div class="v">部署方<strong>保留</strong>系统自己生成的日志</div></div>
+    <div class="card"><div class="lab">条文没要的</div><div class="v">格式、字段、分档出处、第三方件、可独立验证</div></div>
+  </div>
+  <p class="small">⇒ 直接后果：本件的「49 格 + 五档出处」不是法定要求，它是<strong>内部复核装置</strong>——回答「谁的哪一次调用被账本改写了结果」。把后者讲清楚，比把前者说成合规要可信得多。</p>
+
+  <h2 id="s2-2">2.2 Omnibus 把高风险义务推到哪一天</h2>
+  <svg viewBox="0 0 720 168" width="100%" role="img" aria-label="EU AI Act 义务时线" style="margin:4mm 0 2mm">
+    <line x1="24" y1="96" x2="696" y2="96" stroke="#1b3a57" stroke-width="2"/>
+    <g font-family="system-ui,Microsoft YaHei" font-size="10.5" fill="#0b1f33">
+      <g><circle cx="60"  cy="96" r="5" fill="#0b6b34"/><text x="60"  y="118" text-anchor="middle">2025-02-02</text><text x="60"  y="76"  text-anchor="middle">禁令 · AI 素养</text></g>
+      <g><circle cx="188" cy="96" r="5" fill="#0b6b34"/><text x="188" y="118" text-anchor="middle">2025-08-02</text><text x="188" y="76"  text-anchor="middle">GPAI 文档义务</text></g>
+      <g><circle cx="316" cy="96" r="5" fill="#8a6d1f"/><text x="300" y="118" text-anchor="middle">2026-08-02</text><text x="298" y="76" text-anchor="middle">委员会执法权</text></g>
+      <g><circle cx="404" cy="96" r="5" fill="#8a6d1f"/><text x="404" y="118" text-anchor="middle">2026-12-02</text><text x="404" y="58"  text-anchor="middle">Art.50 部分标记/水印</text></g>
+      <g><circle cx="556" cy="96" r="7" fill="#a3151e"/><text x="556" y="118" text-anchor="middle">2027-12-02</text><text x="556" y="58"  text-anchor="middle">Annex III 高风险（含 Art.12）</text></g>
+      <g><circle cx="662" cy="96" r="5" fill="#a3151e"/><text x="662" y="138" text-anchor="middle">2028-08-02</text><text x="662" y="152" text-anchor="middle">Annex I 嵌入式</text></g>
+      <line x1="352" y1="30" x2="352" y2="160" stroke="#a3151e" stroke-width="1" stroke-dasharray="4 3"/>
+      <text x="356" y="26" fill="#a3151e" font-size="10.5">今天 2026-10-22：左侧已生效，右侧未生效</text>
+    </g>
+  </svg>
+  <table class="tbl" id="fig1">
+    <tr><th>义务组</th><th>本轮核对到的时点</th><th>依据强度</th><th>能说什么</th></tr>
+    <tr><td>禁令 + AI 素养</td><td>2025-02-02 起</td><td><span class="tag tag-d">D 级</span></td><td>早已适用，与账本无关</td></tr>
+    <tr><td>GPAI 提供方文档义务（Art.53/55）</td><td>2025-08-02 起；委员会执法权 2026-08-02</td><td><span class="tag tag-d">D 级（二级源）</span></td><td>只调第三方模型 API 的公司通常<strong>不是</strong> provider，而是下游系统提供方/部署方</td></tr>
+    <tr><td>Art.50 透明度：机读标记/水印</td><td>Omnibus 把<strong>其中部分</strong>标记与水印义务推到 2026-12-02</td><td><span class="tag tag-c">PARTIAL</span></td><td>不得写成「Art.50 自 2026-08-02 全面适用」</td></tr>
+    <tr><td>Annex III 高风险（Art.6(2)）：含 Art.12/14/11+Annex IV/26/73</td><td><strong>2027-12-02</strong></td><td><span class="tag tag-d">D 级，三位具名来源互证</span></td><td>记录类义务现在<strong>不逼</strong>你；距窗口约 14 个月</td></tr>
+    <tr><td>Annex I 嵌入式（Art.6(1)）</td><td><strong>2028-08-02</strong></td><td><span class="tag tag-d">D 级</span></td><td>更晚</td></tr>
+  </table>
+  <p class="figsrc">图 1 · 义务时线。<strong>本图不给任何「合规就绪」判断</strong>，只把「本轮能核到的时点」与「来源强度」并列，避免读者把 D 级读成已核原文。</p>
+
+  <div class="callout warn-row">
+    <div class="t">一手没打开的部分，写在这里而不是抹平</div>
+    <p>Regulation (EU) 2026/1744（Digital Omnibus on AI）的标题与编号经 ELI 条目与两家法律二级源核对；
+      但 <strong>EUR-Lex 页面本轮两次不可达</strong>，「Official Journal 2026-07-24 / 生效 07-27」与「Chapter III Sections 1-3」这两个措辞都已从正文撤下。
+      ISO/IEC 42001 的条款级记录清单在付费标准正文里（CHF 225），公开网无法核——所以我们同时拒绝两种说法：
+      既不说「42001 要求 12 个月日志」，也不说「42001 什么都不要求」。</p>
+  </div>
+
+  <h2 id="s2-3">2.3 自愿框架为什么撑不起预算</h2>
+  <p>NIST 官网原话是 AI RMF「is intended for voluntary use」，生成式 AI Profile（AI 600-1，2024-07-26）同族自愿；
+    两者提供的是风险类与建议动作清单，<strong>不规定任何特定留存件</strong>。ISACA 的实操描述更关键：因为 42001 与 27001 同族，
+    团队的真实做法是把 AI 控制项「折进既有审计节奏与证据里」——也就是说，<strong>审计师接受复用既有管线</strong>。</p>
+  <div class="callout danger-row">
+    <div class="t">中介话术样本：有人在替监管立法</div>
+    <p>一家 ISO 42001 代办机构的页面声称现场审核会问「是否保存至少 12 个月的输入输出日志供追溯」，并归给「Clause 8.2.3 及附件 B 的强制性要求」。
+      本轮在任何 A/B 级来源里都找不到这条要求。它的价值不是「证明 ISO 有这个要求」，恰恰相反——
+      <strong>它证明市场上存在把自愿框架包装成强制要求的推销话术</strong>，而这正是学界提醒要打折的那类来源（卖合规服务者自称无偏见，实则既有既得利益）。
+      ⇒ 对我们的含义：我们的客户会被这种话术教育过一遍，我们的诚实表述反而听像「卖得不够狠」。这是真实的销售摩擦，不是修辞。</p>
+  </div>
+  <p>智能体专项法律分析的位置也要更正：我们曾把 Nannini et al.《AI Agents Under EU Law》（arXiv:2604.04604，2026-04-06）称作「唯一一份」，
+    它自述为该方向<strong>第一份系统性监管映射</strong>（预印本），涉及 Standardisation Request M/613 下的草案协调标准、九类 agent 部署分类，
+    四项挑战为网络安全、人类监督、多方行动链上的透明度、<strong>运行期行为漂移</strong>。最后一项与本件同题——但它是预印本，不是监管意见，不能当依据卖。</p>
+</section>
+
+<section class="chapter pagebreak" id="ch3">
+  <div class="chap-kicker">03 · Buyer Gates</div>
+  <h1><span class="num">03</span>买方门槛三件套：归属 / 连续留存 / 可分发报告</h1>
+
+  <h2 id="s3-1">3.1 门槛真实存在，但与法规无关</h2>
+  <table class="tbl" id="fig2">
+    <tr><th>门槛</th><th>买方实际要的东西</th><th>本件能不能供上</th><th>来源强度</th></tr>
+    <tr><td>供应商资质</td><td>SOC 2 Type II 报告（被多份材料描述为 RFP 阶段即淘汰的门槛；一家有一 SOC 2 的企业会要求供应链也带 Type II）</td><td><strong>不能</strong>——本件没有报告，且这是<strong>对供应商</strong>的要求，不是对产品的要求</td><td><span class="tag tag-d">D 级</span></td></tr>
+    <tr><td>证据生成方式</td><td>Type II 要 6–12 个月<strong>持续生成并留存</strong>，不许审计前临时抓</td><td><strong>能</strong>——append-only 逐发落账正是连续生成；这是本件与门槛最直接的对接口</td><td><span class="tag tag-d">D 级</span></td></tr>
+    <tr><td>可归属</td><td>最常见发现项：共享服务账号<strong>无法归属到人</strong>、密钥进源码、缺细粒度访问控制</td><td><strong>半个</strong>——账本记的是调用与 session/发号/侧三轴，不记「人」；归属要靠宿主把主体写进入参</td><td><span class="tag tag-d">D 级</span></td></tr>
+    <tr><td>可分发</td><td>一份报告可复用分发给所有客户（这也是厂商愿意为 SOC 2 付 $12k–20k 的原因）</td><td><strong>能</strong>——本件的收口件（轨迹解剖 + 判定表 + 可复跑命令）天然是可分发形态</td><td><span class="tag tag-d">D 级</span></td></tr>
+    <tr><td>不可逆留存</td><td>监管接受的是<strong>存储配置判断</strong>：Object Lock compliance mode + Cohasset 评估，限定语「when correctly configured」</td><td><strong>不能单独供</strong>——本件不写盘、不控制存储；必须与宿主/对象存储配置件搭配讲</td><td><span class="tag tag-a">A 级</span></td></tr>
+  </table>
+  <p class="figsrc">图 2 · 门槛与本件可供给位置的对应。<strong>五行里两行是「不能」</strong>——把这张图讲成「我们满足全部」就是假。</p>
+
+  <h2 id="s3-2">3.2 没人要求「逐调用记录可独立验证」</h2>
+  <div class="callout">
+    <div class="t">这是一条自我否证的检索结果</div>
+    <p>补证波专门去找「客户/监管明确要求 agent 逐调用记录须可独立验证」的一手件，
+      <strong>结论是：没有取到</strong>，并且该路子代理在报告里明写「nearest thing is an unsourced practitioner assertion」。
+      我们把这个空洞放进正文而不是放进附录，因为它是<strong>本报告最重要的负结果</strong>：
+      如果连「要求」本身都没有被记录下来，那 v2 那句「等它成为独立预算科目」就不是乐观不乐观的问题，而是<strong>尚不存在</strong>。</p>
+  </div>
+  <p>但同一批检索给出了两个不依赖法规的正面信号：</p>
+  <ul class="grid2">
+    <li class="card"><div class="lab">买方把合规排在第一位</div><div class="v">云 AI 规模化障碍榜：治理/安全/合规 <strong>53%</strong> &gt; 数据质量 40% &gt; 成本 30% <span class="tag tag-d">D 级</span></div></li>
+    <li class="card"><div class="lab">治理成熟度是缺口</div><div class="v">约 1/5 公司对自治智能体有成熟治理模型，74% 计划部署 <span class="tag tag-d">D 级（厂商引 Deloitte）</span></div></li>
+  </ul>
+  <p>⇒ v3 的接口建议：<strong>不卖「合规要求」，卖「买方自己承认排在第一的那件事」</strong>——他们要在没有时间线压力的窗口里，把 agent 行为变成可归属、可持续留存、可分发的复核对象。这句话比「Art.12 要求你」小，但站得住。</p>
+</section>

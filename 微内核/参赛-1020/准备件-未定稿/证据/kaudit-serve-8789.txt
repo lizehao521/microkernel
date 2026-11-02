@@ -1,0 +1,1 @@
+2026/10/20 15:28:51 kaudit 只读服务：127.0.0.1:8789（账本 C:/Users/Admin/Desktop/微内核/参赛-1020/准备件-未定稿/02-环境与安装/demo-ledger.jsonl，100 条，链：green）

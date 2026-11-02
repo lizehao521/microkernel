@@ -1,0 +1,44 @@
+文档核对 · 垂类选择与产品化 v1 ｜ 只读，不改任何东西
+输入：评分表 schema=dtz-score/1 ｜ 关闭方向 9 条 ｜ 引用登记 24 条
+正文：8 份 HTML 段（src/）
+
+K1  权重合计=1                             PASS ｜ sum=1.00
+K2  结构齐（4×5）                           PASS ｜ 4 垂类 × 5 维
+K3  格子值合法                              PASS ｜ 格子值全为整数或字符串 unknown
+K4  unknown 带理由且不挂凭据                   PASS ｜ 未判定格 3 个，全部带理由
+K5  数字格有凭据与 rationale                  PASS ｜ 数字格均有凭据
+K6  凭据可核（盘上行号/核级/证伪阈值）                 PASS ｜ 凭据 32 条（disk=23 estimate=1 public=8）
+K7  无全 unknown 带权重维                    PASS ｜ 无「全 unknown 带权重」维
+K8  撞车核对可证伪                            PASS ｜ 登记 9 条 / 被点名 4 条 ｜ V1→C9 V2→C6 V3→C3 V4→C1
+K9  赢家由重算得出                            PASS ｜ 重算赢家 V1，名次 V4→V1→V3→V2
+K10 生成块无渲染漂移                           RED(2) ｜ 比对 SCORE、REFS
+    [2] SCORE 块与真值源不符：盘上第 0 字起不同（盘上「」/ 应为「<svg viewBox="0 0 636 254"」）
+    [2] REFS 块与真值源不符：盘上第 0 字起不同（盘上「」/ 应为「<p class="small">登记行数由脚本现数」）
+K11 第7章章名=赢家                           PASS ｜ 章名：7 甲方 AI 项目验收：把「做成」拆回能回盘核的格子 ｜ 赢家：V1
+K12 页脚日期=decided_at                    PASS ｜ 页脚日期 1 处，均为 2026-10-26
+D1  引用双向无孤儿 + 指针解析                     RED(3) ｜ data-cite 24 ｜ data-src 58 ｜ 口径件指针 16
+    [3] 引用号 S11 上屏那一行含缺席陈述词却没写 scan 档
+    [3] 引用号 S23 上屏那一行含缺席陈述词却没写 scan 档
+    [3] 引用号 S24 上屏那一行含缺席陈述词却没写 scan 档
+D3  普查标记（哪一种 0）                        RED(10) ｜ 缺席陈述 101 句，已标 91 句（census 11 / targeted 4 / not_run 44 / term 32）
+    [3] 07-appendix.html:59 有一句缺席陈述没标 data-scan：状态词四档的含义：核 本轮亲自复取且正文含可指认摘句 · 片 只给方向，其数字与日期不许排版 · 未 本轮取不到
+    [3] 07-appendix.html:69 有一句缺席陈述没标 data-scan：这一句写在这里的目的是防止把「表里没显示」读成「登记件里没有」。
+    [3] 07-appendix.html:149 有一句缺席陈述没标 data-scan：三、本目录不是 git 仓库、没有回滚，改任何件之前先复制进 TEMP-备份/。
+    [3] 07-appendix.html:168 有一句缺席陈述没标 data-scan：不得用「符合 SOC 2 / ISO / NIST」这类表述：本件没有通过任何评估，认证类宣称同时落在 R6 内
+    [3] 07-appendix.html:182 有一句缺席陈述没标 data-scan：本件没有任何一处需要它们
+    [3] 07-appendix.html:189 有一句缺席陈述没标 data-scan：有据盘上 这六条写在正文之前，是因为一份没有「我错在哪」这一节的报告，它的「有据」不值这么多。
+    [3] 07-appendix.html:207 有一句缺席陈述没标 data-scan：一手页里根本没有那个量的统计口径——「下界」是给不存在的数加谨慎外衣
+    [3] 07-appendix.html:210 有一句缺席陈述没标 data-scan：公告原文名单里没有这一项，是简报里默写夹带的
+    [3] 07-appendix.html:215 有一句缺席陈述没标 data-scan：六条里没有一条是「数字算错了」——它们分别是误归因、错日期、把机构间倡议读成创业公司、把不存在的话当成自述、 给
+    [3] 07-appendix.html:222 有一句缺席陈述没标 data-scan：需求侧那面镜子目前是空的，本报告没有替它画一幅画。
+
+chip 词表（disk/public/estimate/relayed/未）：52 处，越表 0 处
+三态（有据/相背/取不到）：51 处，越档 0 处
+
+checks_run=14/14 ｜ checks_red=15 ｜ own_error=0
+score_cells_filled=17/20 ｜ score_verticals=4 ｜ score_winner=V1 ｜ score_flips=0
+refs_rows=24 ｜ refs_status=核11|片6|未1|反6
+tier-labelled assertions = 52/52
+pointers_resolved: data-src=58 data-cite=24 口径件=16
+
+结论：判不了（rc=3）：13 处。不许改成品的样子迁就尺子——先看是不是数据本身没依据。

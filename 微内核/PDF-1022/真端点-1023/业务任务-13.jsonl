@@ -1,0 +1,13 @@
+{"id": "B01", "name": "发票合计", "question": "读 {fx}/财务/发票-2026-031.txt，算一下含税合计是多少元。", "requires": {"reads": ["财务/发票-2026-031.txt"]}, "numbers": ["1280"], "must_text": [], "any_groups": [], "amount_source": true}
+{"id": "B02", "name": "预算超支", "question": "读 {fx}/财务/预算-2026-Q3.txt，算出实际支出比预算多多少元。", "requires": {"reads": ["财务/预算-2026-Q3.txt"]}, "numbers": ["1500"], "must_text": [], "any_groups": []}
+{"id": "B03", "name": "报价比价", "question": "读 {fx}/财务/报价 下的三份报价单，告诉我总价最低的供应商和总价。", "requires": {"reads": ["财务/报价/A-云杉科技.txt", "财务/报价/B-北辰云服.txt", "财务/报价/C-海岳数据.txt"]}, "numbers": ["17200"], "must_text": ["北辰"], "any_groups": []}
+{"id": "B04", "name": "日志统计", "question": "读 {fx}/运维/app.log，告诉我总行数和空行数。", "requires": {"reads": ["运维/app.log"], "stats": ["运维/app.log"]}, "numbers": ["12", "2"], "must_text": ["空"], "any_groups": []}
+{"id": "B05", "name": "健康巡检", "question": "取 {hub}/api/health，告诉我 ok 是不是 true、注册了多少个工具。", "requires": {"gets": ["/api/health"]}, "numbers": ["12"], "must_text": ["true"], "any_groups": []}
+{"id": "B06", "name": "故障时长", "question": "读 {fx}/运维/incident-0412.txt，算出这次故障持续了多少分钟。", "requires": {"reads": ["运维/incident-0412.txt"]}, "numbers": ["45"], "must_text": ["分"], "any_groups": []}
+{"id": "B07", "name": "SLA 判定", "question": "读 {fx}/运维/SLA.md 和 {fx}/运维/incident-0412.txt，判断这次故障按 SLA 是否违约，并给出停机分钟数。", "requires": {"reads": ["运维/SLA.md", "运维/incident-0412.txt"]}, "numbers": ["45"], "must_text": ["违约"], "any_groups": [["43.2", "0.104", "99.89"]]}
+{"id": "B08", "name": "入职材料缺项", "question": "读 {fx}/人事/入职清单.txt，再列一下 {fx}/人事/入职材料 目录，告诉我缺哪一项。", "requires": {"reads": ["人事/入职清单.txt"], "lists": ["人事/入职材料"]}, "numbers": [], "must_text": ["离职证明"], "any_groups": []}
+{"id": "B09", "name": "投诉最大金额", "question": "读 {fx}/客户/投诉.csv，找出金额最大的投诉单号和金额。", "requires": {"reads": ["客户/投诉.csv"]}, "numbers": ["8800"], "must_text": ["t-1042"], "any_groups": []}
+{"id": "B10", "name": "客户去重", "question": "读 {fx}/客户/客户名单.csv，按邮箱去重后有多少个客户？", "requires": {"reads": ["客户/客户名单.csv"]}, "numbers": ["7"], "must_text": [], "any_groups": []}
+{"id": "B11", "name": "营收对账", "question": "读 {fx}/报表/4月营收-销售部.txt 和 {fx}/报表/4月营收-财务部.txt，两份报表差多少元？哪个部门报得高？", "requires": {"reads": ["报表/4月营收-销售部.txt", "报表/4月营收-财务部.txt"]}, "numbers": ["66000"], "must_text": ["销售部"], "any_groups": []}
+{"id": "B12", "name": "版本核对", "question": "读 {fx}/发布/VERSION.txt 和 {fx}/发布/CHANGELOG.md，判断版本号与变更日志是否一致；不一致就说差哪个版本。", "requires": {"reads": ["发布/VERSION.txt", "发布/CHANGELOG.md"]}, "numbers": [], "must_text": ["2.4.1", "2.4.0"], "any_groups": [["不一致", "缺少"]]}
+{"id": "B13", "name": "库存补货", "question": "读 {fx}/库存/库存.csv，列出库存低于 10 的商品名称。", "requires": {"reads": ["库存/库存.csv"]}, "numbers": [], "must_text": ["机械键盘", "无线鼠标", "扩展坞"], "any_groups": []}

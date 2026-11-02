@@ -1,0 +1,26 @@
+== model_input:folded
+   L1018 {"basis=1 payload=[]":60}
+   L8799 {"basis=1 payload=[]":10}
+   NON-EMPTY hits: 0
+== model_input:clipped
+   L1018 {"basis=1 payload=[]":60}
+   L8799 {"basis=1 payload=[]":10}
+   NON-EMPTY hits: 0
+== model_input:dropped
+   L1018 {"basis=1 payload=[]":54,"basis=1 payload=[{\"Kind\":\"history\",\"Ref\":\"坐席备注一段：最后一次整段随第 6 发发出，第 7 发超额度时整段挤出（连桩也没发）\",\"RefCall\":6,\"Role\":\"user\",\"Squeeze\":\"dropped-whole\",\"FromBytes\":144,\"ToBytes\":0,\"SHA256\":\"fc405e0ff811d299b46da419fbd74b2876a45bc4d1ce4fd3f084e5ae5f3ffeb3\"},{\"Kind\":\"history\",\"Ref\":\"坐席备注一段：最后一次整段随第 6 发发出，第 7 发超额度时整段挤出（连桩也没发）\",\"RefCall\":6,\"Role\":\"user\",\"Squeeze\":\"dropped-whole\",\"FromBytes\":144,\"ToBytes\":0,\"SHA256\":\"003780936375dcc657997de6ed2f6088615319a9d46a7497d9568e1fa5801810\"}]":1,"basis=1 payload=[{\"Kind\":\"history\",\"Ref\":\"坐席备注一段：最后一次整段随第 7 发发出，第 8 发超额度时整段挤出（连桩也没发）\",\"RefCall\":7,\"Role\":\"user\",\"Squeeze\":\"dropped-whole\",\"FromBytes\":144,\"ToBytes\":0,\"SHA256\":\"fc405e0ff811d299b46da419fbd74b2876a45bc4d1ce4fd3f084e5ae5f3ffeb3\"},{\"Kind\":\"history\",\"Ref\":\"坐席备注一段：最后一次整段随第 7 发发出，第 8 发超额度时整段挤出（连桩也没发）\",\"RefCall\":7,\"Role\":\"user\",\"Squeeze\":\"dropped-whole\",\"FromBytes\":144,\"ToBytes\":0,\"SHA256\":\"003780936375dcc657997de6ed2f6088615319a9d46a7497d9568e1fa5801810\"},{\"Kind\":\"history\",\"Ref\":\"坐席备注一段：最后一次整段随第 7 发发出，第 8 发超额度时整段挤出（连桩也没发）\",\"RefCall\":7,\"Role\":\"user\",\"Squeeze\":\"dropped-whole\",\"FromBytes\":144,\"ToBytes\":0,\"SHA256\":\"5dd7d542f5da80aae632c2c7779160c6a569aa000b53f115827d21742da55da2\"}]":1,"basis=1 payload=[{\"Kind\":\"history\",\"Ref\":\"坐席备注一段：整段随第 6 发挤出（连桩也没发）\",\"RefCall\":6,\"Role\":\"assistant\",\"Squeeze\":\"dropped-whole\",\"FromBytes\":144,\"ToBytes\":0,\"SHA256\":\"fc405e0ff811d299b46da419fbd74b2876a45bc4d1ce4fd3f084e5ae5f3ffeb3\"},{\"Kind\":\"history\",\"Ref\":\"坐席备注一段：整段随第 6 发挤出（连桩也没发）\",\"RefCall\":6,\"Role\":\"assistant\",\"Squeeze\":\"dropped-whole\",\"FromBytes\":144,\"ToBytes\":0,\"SHA256\":\"003780936375dcc657997de6ed2f6088615319a9d46a7497d9568e1fa5801810\"}]":2,"basis=1 payload=[{\"Kind\":\"history\",\"Ref\":\"坐席备注一段：整段随第 7 发挤出（连桩也没发）\",\"RefCall\":7,\"Role\":\"assistant\",\"Squeeze\":\"dropped-whole\",\"FromBytes\":144,\"ToBytes\":0,\"SHA256\":\"fc405e0ff811d299b46da419fbd74b2876a45bc4d1ce4fd3f084e5ae5f3ffeb3\"},{\"Kind\":\"history\",\"Ref\":\"坐席备注一段：整段随第 7 发挤出（连桩也没发）\",\"RefCall\":7,\"Role\":\"assistant\",\"Squeeze\":\"dropped-whole\",\"FromBytes\":144,\"ToBytes\":0,\"SHA256\":\"003780936375dcc657997de6ed2f6088615319a9d46a7497d9568e1fa5801810\"},{\"Kind\":\"history\",\"Ref\":\"坐席备注一段：整段随第 7 发挤出（连桩也没发）\",\"RefCall\":7,\"Role\":\"assistant\",\"Squeeze\":\"dropped-whole\",\"FromBytes\":144,\"ToBytes\":0,\"SHA256\":\"5dd7d542f5da80aae632c2c7779160c6a569aa000b53f115827d21742da55da2\"}]":2}
+   L8799 {"basis=1 payload=[]":10}
+   NON-EMPTY hits: 6
+      L1018 line413 seq412 [{"Kind":"history","Ref":"坐席备注一段：最后一次整段随第 6 发发出，第 7 发超额度时整段挤出（连桩也没发）","RefCall":
+      L1018 line462 seq461 [{"Kind":"history","Ref":"坐席备注一段：最后一次整段随第 7 发发出，第 8 发超额度时整段挤出（连桩也没发）","RefCall":
+      L1018 line1197 seq1196 [{"Kind":"history","Ref":"坐席备注一段：整段随第 6 发挤出（连桩也没发）","RefCall":6,"Role":"assistan
+      L1018 line1246 seq1245 [{"Kind":"history","Ref":"坐席备注一段：整段随第 7 发挤出（连桩也没发）","RefCall":7,"Role":"assistan
+== model_output:fail_kind
+   L1018 {"basis=1 payload=\"\"":60}
+   L8799 {"basis=1 payload=\"\"":9,"basis=1 payload=\"transport\"":1}
+   NON-EMPTY hits: 1
+      L8799 line240 seq239 "transport"
+== model_output:fail_detail
+   L1018 {"basis=1 payload=\"\"":60}
+   L8799 {"basis=1 payload=\"\"":9,"basis=1 payload=\"browser-use take_screenshot 返回 NATIVE_BROWSER_VIEWPORT_UNAVAILABLE：应用内浏览器 surface 隐藏（visibilityState=hidden，1000ms 内无正 viewport），像素层没取到图；结构验收改用 a11y snapshot + evaluate_script 代偿。另：一次 click 因弹层盖住目标被拒（页面状态，不是参数形状）\"":1}
+   NON-EMPTY hits: 1
+      L8799 line241 seq240 "browser-use take_screenshot 返回 NATIVE_BROWSER_VIEWPORT_UNAVAILABLE：应用内浏览器 surfa

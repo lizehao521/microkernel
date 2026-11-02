@@ -1,0 +1,22 @@
+{
+  "arm": "有栈",
+  "band": "第 1 发跑完： 命中 12 条，其中 critical 7 条；每条带出处档与自己数出来的分母 · 真跑了 12/13 步 · 账本触发过 9 次决定（读回 12 格，只有真改写了结果的才计入）· KPI = 账上读回来的值/出处档真的改写了结果的那几格（9 格，读回共 12 格）；反臂：不 read_back ⇒ 0 格 · 代码执行=否 · 结束=跑完：九步走完：到这里已亮 13 步（真跑了 12 步）、账本触发 9 次决定、findings 12 条、未决 9 条",
+  "cards": 12,
+  "debug": "栈读数：贴入 276 字节 · 认出 2 帧 · 行号落进上面代码 2 帧（栈只定位、不下结论；文件名对不上就不许升 measured）",
+  "decisions": 12,
+  "mix": "measured 8 / estimated 4 / model_says 0 / relayed 0 / absent 9 = 21　加总核对：对得上",
+  "stack_badges": [
+    "estimated",
+    "estimated"
+  ],
+  "stack_cards": 2,
+  "stack_chars": 276,
+  "stack_linenos": [
+    " L16-16 /tmp/demo/main.go",
+    " L31-31 /tmp/demo/main.go"
+  ],
+  "trace_items": 13,
+  "trace_ran": 12,
+  "unknowns": 9,
+  "waited_ms": 1203
+}

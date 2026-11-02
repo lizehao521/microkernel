@@ -1,0 +1,5 @@
+1:model_input:call | claim="1" | basis=1 | payload=1
+2:model_input:parts | claim="6 段：system skill memory history toolspec user" | basis=1 | payload=["system","skill","memory","history","toolspec","user"]
+3:model_input:part_totals | claim="6 类共 0 字节：system=1 skill=1 memory=1 history=1 toolspec=1 user=1" | basis=1 | payload=[{"Kind":"system","Parts":1,"Bytes":0},{"Kind":"skill","Parts":1,"Bytes":0},{"Kind":"memory","Parts":1,"Bytes":0},{"Kind":"history","Parts":1,"Bytes":0},{"Kind":"toolspec","Parts":1,"Bytes":0},{"Kind":"user","Parts":1,"Bytes":0}]
+4:model_input:content_bytes | claim="0" | basis=1 | payload=0
+5:model_input:tokens | claim="—（没量到，不是 0）：分词器在对端；且这一侧连 content_bytes 都没量到，估一个数没有依据" | basis=5 | payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"分词器在对端；且这一侧连 content_bytes 都没量到，估一个数没有依据"}

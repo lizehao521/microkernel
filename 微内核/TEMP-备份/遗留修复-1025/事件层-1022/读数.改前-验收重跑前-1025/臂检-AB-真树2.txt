@@ -1,0 +1,22 @@
+arm | file | test | control_rc | mutant_rc | verdict
+A1 | cmd/agentd/events.go | TestEventLogAppendsAcrossRuns | 0 | 1 | BIT
+A2 | cmd/agentd/events.go | TestValidateLogArmRejectsDuplicateAndRegress | 0 | 1 | BIT
+A3 | cmd/agentd/events.go | TestAbsentWithoutWhyIsRefusedAndNotWritten | 0 | 1 | BIT
+A4 | cmd/agentd/events.go | TestEventSeqMonotonicWithinEachTurn | 0 | 1 | BIT
+A5 | cmd/agentd/events.go | TestClosedBusRefusesNewEvents | 0 | 1 | BIT
+A6 | cmd/agentd/events.go | TestEmitFailureIsLoudOnStderr | 0 | 1 | BIT
+A7 | cmd/agentd/main.go | TestEventLogPathDerivationAndCollision | 0 | 1 | BIT
+A8 | cmd/agentd/loop.go | TestEventSeqMonotonicWithinEachTurn | 0 | 1 | BIT
+A9 | cmd/agentd/loop.go | TestRefusedEventsCarryTheirWhy | 0 | 1 | BIT
+A10 | cmd/agentd/loop.go | TestEventSeqMonotonicWithinEachTurn | 0 | 1 | BIT
+B1 | cmd/agentd/loop.go | TestTurnAcceptedLeadsEveryTurn | 0 | 1 | BIT
+B2 | cmd/agentd/events.go | TestLateReceiptGoesRed | 0 | 1 | BIT
+B3 | cmd/agentd/events.go | TestLateReceiptGoesRed | 0 | 1 | BIT
+B4 | cmd/agentd/events.go | TestAcceptArmsCatchEachBadShape | 0 | 1 | BIT
+B5 | cmd/agentd/events.go | TestResumableFieldSurvivesFalse | 0 | 1 | BIT
+B6 | cmd/agentd/events.go | TestReceiptWithoutEntryInstantIsRefused | 0 | 1 | BIT
+B7 | cmd/agentd/events.go | TestAcceptArmsCatchEachBadShape | 0 | 1 | BIT
+markdown: C:\Users\Admin\Desktop\微内核\事件层-1022\臂检-事件层-读数.md
+total 17 | bit 17 | blind 0 | control-red 0
+readings: C:\Users\Admin\Desktop\微内核\事件层-1022\读数\臂检-事件层.jsonl
+conclusion: every new pin bites, and all controls are green

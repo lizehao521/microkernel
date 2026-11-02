@@ -1,0 +1,25 @@
+A line19 seq=18 session=mount-check step=1 kind=model_input:folded basis=1
+   claim=0 段（裁剪表是空的）
+   payload=[]
+A line20 seq=19 session=mount-check step=1 kind=model_input:clipped basis=1
+   claim=0 段（裁剪表是空的）
+   payload=[]
+A line46 seq=45 session=mount-check step=1 kind=model_output:fail_status basis=5
+   claim=—（没量到，不是 0）：合成演示：没有对端，没收到 HTTP 响应
+   payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"合成演示：没有对端，没收到 HTTP 响应"}
+A line47 seq=46 session=mount-check step=1 kind=model_output:retry_after_ms basis=5
+   claim=—（没量到，不是 0）：合成演示：没故障，没有重试等待
+   payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"合成演示：没故障，没有重试等待"}
+
+B line19 seq=18 session=9ff63c40-273c-4185-9a49-c11248bec807 step=1 kind=model_input:folded basis=1
+   claim=0 段（裁剪表是空的）
+   payload=[]
+B line20 seq=19 session=9ff63c40-273c-4185-9a49-c11248bec807 step=1 kind=model_input:clipped basis=1
+   claim=0 段（裁剪表是空的）
+   payload=[]
+B line46 seq=45 session=9ff63c40-273c-4185-9a49-c11248bec807 step=1 kind=model_output:fail_status basis=5
+   claim=—（没量到，不是 0）：没故障，也没有对端响应可抄状态码
+   payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"没故障，也没有对端响应可抄状态码"}
+B line47 seq=46 session=9ff63c40-273c-4185-9a49-c11248bec807 step=1 kind=model_output:retry_after_ms basis=5
+   claim=—（没量到，不是 0）：没故障，对端也没说要等多久
+   payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"没故障，对端也没说要等多久"}

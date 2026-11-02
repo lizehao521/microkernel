@@ -1,0 +1,85 @@
+========================================================================
+26 策略引擎 · 基础能力闭环探针
+========================================================================
+被测目录 = C:\Users\Admin\Desktop\微内核\策略引擎闭环-1019\修复副本
+引擎 sha256 = 3365d852194082682c0888e5c3b5361207fe9ac561e2c34180e77450f2a5d4a9
+python = 3.14.1
+
+-- 一、目录与实现 --
+目录声明 26 ｜ transform 21 ｜ meta 5 ｜ 分支 20（匹配 20 次）
+恒等（声明 transform 但无分支）= 1：['context_switch']
+三态加总 20 + 5 + 1 = 26（目录 26）
+  [GREEN] catalog_accounting ｜ 26/26
+选择池 = 20 条 ｜ context_switch 在池内 = False
+  [GREEN] identity_not_selectable ｜ 选择池 20 条
+
+-- 二、引擎 → 内核接线 --
+kernel 模块三件在场 2：['judge_response', 'scamper_mutate'] ｜ 缺 ['mutate']
+引擎侧 judge_response=True ｜ scamper_mutate=True
+根因行 engine:55: from vuln_hunter_kernel import judge_response, scamper_mutate
+  [GREEN] kernel_link ｜ 真评分与真变异都可走 kernel
+judge_response 实调用 = {'success': False, 'evidence': '', 'confidence': 0.0}
+  [GREEN] kernel_judge_callable ｜ 返回带 confidence 的判定
+
+-- 三、逐策略运行时（4 组样例 / 每条） --
+  analogy          变了 1/4 ｜ 有分支=是
+  s_substitute     变了 3/4 ｜ 有分支=是
+  s_combine        变了 4/4 ｜ 有分支=是
+  s_adapt          变了 4/4 ｜ 有分支=是
+  s_modify         变了 4/4 ｜ 有分支=是
+  s_put            变了 4/4 ｜ 有分支=是
+  s_eliminate      变了 2/4 ｜ 有分支=是
+  s_reverse        变了 4/4 ｜ 有分支=是
+  reverse_eng      变了 4/4 ｜ 有分支=是
+  first_principle  变了 1/4 ｜ 有分支=是
+  boundary         变了 4/4 ｜ 有分支=是
+  redundancy       变了 3/4 ｜ 有分支=是
+  context_switch   变了 0/4 ｜ 有分支=否  <-- 四组样例一个都没变
+  negative_space   变了 1/4 ｜ 有分支=是
+  proto_downgrade  变了 1/4 ｜ 有分支=是
+  temporal         变了 2/4 ｜ 有分支=是
+  enc_tunnel       变了 4/4 ｜ 有分支=是
+  chunked          变了 4/4 ｜ 有分支=是
+  polymorphism     变了 1/4 ｜ 有分支=是
+  grafting         变了 3/4 ｜ 有分支=是
+  adversarial      变了 3/4 ｜ 有分支=是
+  [GREEN] identity_is_runtime_noop ｜ context_switch 变了 0/4
+显式 mutate(context_switch)：payload 变了=False ｜ 用量 0->0 ｜ strategy_used=None
+  [GREEN] noop_not_credited ｜ 用量 0->0
+
+-- 四、复现性 --
+  [GREEN] deterministic_with_seed ｜ 同种子 123 两次逐项相同
+  [GREEN] seed_changes_result ｜ 种子 123 vs 124 结果不同
+  [GREEN] run_evolution_accepts_seed ｜ 参数=['seeds', 'vuln_type', 'generations', 'population_size', 'response_fn', 'seed']
+EvolutionArena(rng_seed=0) 两次首样本 = 0.844421852 / 0.844421852
+  [GREEN] arena_seed_zero_honored ｜ 0 是合法种子，不许被 falsy 丢掉
+
+-- 五、反馈闭环 --
+元基因库 TEMP = C:\Users\Admin\AppData\Local\Temp\celue26-nxfedkmi
+第 1 轮 L4 基因 8 条 ｜ 记录 13 次 ｜ 成功 4 次 ｜ 落盘=True ｜ 字节=3916
+  [GREEN] crystal_written ｜ 8 条
+  [GREEN] crystal_roundtrip ｜ 8 条逐项相同
+读回权重 20 条 ｜ 偏离 1.0 的 5 条：['polymorphism', 'reverse_eng', 's_combine', 's_eliminate', 's_substitute']
+  [GREEN] prior_loaded ｜ 5 条偏置
+负对照（无先验）4000 次：{'s_substitute': 201, 's_eliminate': 219} ｜ 比 0.92
+正样本（2.0 vs 0.5）4000 次：{'s_substitute': 366, 's_eliminate': 111} ｜ 比 3.30
+  [GREEN] bias_detector_distinguishes ｜ 负对照 0.92 ｜ 正样本 3.30
+
+-- 六、归因（适应度与成功记账） --
+同 payload ｜ 无血统 0.0 ｜ 两段血统 0.0 ｜ 差 0.0
+  [GREEN] fitness_independent_of_lineage ｜ 差 0.0
+一个个体（lineage=s_adapt,s_combine；strategy_used=s_adapt）写回策略 = ['s_adapt']
+  [GREEN] credit_only_last_applied ｜ 写回 ['s_adapt']
+
+========================================================================
+闭环环节 6 条 ｜ 绿 6 ｜ 红 0
+  [GREEN] L1 目录→实现（无恒等混入选择）
+  [GREEN] L2 引擎→内核（真评分/真变异可用）
+  [GREEN] L3a 进化→结晶（写回+落盘+读回）
+  [GREEN] L3b 归因（无血统自奖/无多记）
+  [GREEN] L4 结晶→再进化（读回+偏置可测）
+  [GREEN] L5 复现（显式种子/0 被尊重）
+闭环判定 = 能闭环
+范围：离线/合成样例；真实目标投递 = NOT_RUN（无授权靶场，不跑）
+========================================================================
+[自印] 读数已写到 C:\Users\Admin\Desktop\微内核\策略引擎闭环-1019\探针-修复副本.txt

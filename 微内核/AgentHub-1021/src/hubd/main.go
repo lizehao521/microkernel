@@ -1,0 +1,201 @@
+package main
+
+// hubd —— 一个能对话、能自主选件真跑、能把过程画出来的 Agent 宿主。
+// 只监听 127.0.0.1；8797/8799 是内核交付件的端口，这台机器不许占它们。
+
+import (
+	"flag"
+	"fmt"
+	"os"
+	"path/filepath"
+	"strings"
+	"time"
+)
+
+type Config struct {
+	Port           int
+	DataDir        string
+	ToolsDir       string
+	NotesDir       string
+	MaxSteps       int
+	ContextChars   int
+	AllowWrite     bool
+	AllowExec      bool
+	FsRoots        []string
+	NetAllow       []string
+	ModelEndpoint  string
+	ModelName      string
+	ModelKeyEnv    string
+	ModelTimeoutMs int
+	ExecTimeoutMs  int
+	StepDelay      time.Duration
+	SelfCheck      bool
+	FakeEndpoint   bool // 起一个本机假端点当 -model-endpoint：它不是模型，只证管路那一族
+	安静             bool
+}
+
+func (c Config) 旗标开了(name string) bool {
+	switch name {
+	case "allow-write":
+		return c.AllowWrite
+	case "allow-exec":
+		return c.AllowExec
+	}
+	return false
+}
+
+func 读环境变量(k string) string { return os.Getenv(k) }
+
+func 默认配置() Config {
+	wd, _ := os.Getwd()
+	tmp := os.TempDir()
+	return Config{
+		Port: 8790, DataDir: filepath.Join(tmp, "hubd-数据"),
+		ToolsDir: "tools", NotesDir: filepath.Join(tmp, "hubd-笔记"),
+		MaxSteps: 6, ContextChars: 4000,
+		FsRoots:   []string{wd, filepath.Join(tmp, "hubd-笔记"), filepath.Join(tmp, "hubd-自检")},
+		NetAllow:  []string{"127.0.0.1", "localhost", "::1"},
+		ModelName: "hubd-local", ModelKeyEnv: "HUBD_MODEL_KEY",
+		ModelTimeoutMs: 6000, ExecTimeoutMs: 5000,
+	}
+}
+
+func 吃旗标() Config {
+	c := 默认配置()
+	wd, _ := os.Getwd()
+	flag.IntVar(&c.Port, "port", c.Port, "只听 127.0.0.1 的这个端口")
+	flag.StringVar(&c.DataDir, "data", c.DataDir, "会话与笔记的落盘目录")
+	flag.StringVar(&c.ToolsDir, "tools-dir", filepath.Join(wd, "tools"), "清单式工具目录（放一个 .json 就多一个工具）")
+	flag.IntVar(&c.MaxSteps, "max-steps", c.MaxSteps, "一发最多走几步")
+	flag.IntVar(&c.ContextChars, "context-chars", c.ContextChars, "喂给规划器的上下文码元上限")
+	flag.BoolVar(&c.AllowWrite, "allow-write", false, "放行会写文件的工具（默认关）")
+	flag.BoolVar(&c.AllowExec, "allow-exec", false, "放行 exec.run（默认关；开了也在临时目录里跑并带超时）")
+	根 := flag.String("fs-roots", "", "逗号分隔的文件根（默认：当前目录 + 笔记目录）")
+	网 := flag.String("net-allow", "", "逗号分隔的出网主机白名单（默认只 127.0.0.1/localhost/::1）")
+	flag.StringVar(&c.ModelEndpoint, "model-endpoint", "", "OpenAI 式端点；留空 ⇒ 模型这一路 NOT_RUN，选件全由本机规则")
+	flag.StringVar(&c.ModelName, "model-name", c.ModelName, "报给端点的模型名")
+	flag.StringVar(&c.ModelKeyEnv, "model-key-env", c.ModelKeyEnv, "从哪个环境变量读口令（口令绝不落盘、绝不上屏）")
+	flag.IntVar(&c.ModelTimeoutMs, "model-timeout-ms", c.ModelTimeoutMs, "每一步问模型的超时；本机假端点 6s 够，真端点慢就显式调大")
+	flag.IntVar(&c.ExecTimeoutMs, "exec-timeout-ms", c.ExecTimeoutMs, "放行执行时单条命令的超时")
+	延 := flag.Duration("step-delay", 0, "每步之间的停顿（演示流式时用，例如 120ms）")
+	flag.BoolVar(&c.SelfCheck, "selfcheck", false, "跑一遍自检判据并退出（该红的必须红）")
+	flag.BoolVar(&c.FakeEndpoint, "fake-endpoint", false, "起一个本机假端点当模型端点用（它不是模型，只让 model_says 那一族在页面上看得见）")
+	flag.Parse()
+	if *根 != "" {
+		c.FsRoots = 切开(*根)
+	}
+	if *网 != "" {
+		c.NetAllow = 切开(*网)
+	}
+	c.StepDelay = *延
+	return c
+}
+
+func 切开(s string) []string {
+	var out []string
+	for _, x := range strings.Split(s, ",") {
+		if t := strings.TrimSpace(x); t != "" {
+			out = append(out, t)
+		}
+	}
+	return out
+}
+
+func main() {
+	cfg := 吃旗标()
+	if cfg.SelfCheck {
+		os.Exit(自检(cfg))
+	}
+	env, err := 装配(cfg)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "起不来：%v\n", err)
+		os.Exit(2)
+	}
+	假 := ""
+	if cfg.FakeEndpoint {
+		f, err := 起假端点(false)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "假端点起不来：%v\n", err)
+			os.Exit(2)
+		}
+		cfg.ModelEndpoint = f.地址
+		// 假端点不查凭据 ⇒ 别再拿"环境变量里没口令"挡自己。真端点那条路照旧要口令。
+		cfg.ModelKeyEnv = ""
+		假 = "（本机假端点，按剧本回选件 —— 它不是模型）"
+	}
+	srv := 起服务(cfg, env)
+	fmt.Fprintf(os.Stdout, "hubd 起在 http://127.0.0.1:%d ｜ 工具 %d 个（内置 %d、清单 %d、被拒 %d）｜ 文件根 %d 个 ｜ 出网白名单 %s ｜ 模型端点=%s%s ｜ 写文件=%v 执行=%v\n",
+		cfg.Port, env.reg.Count(), env.内置数, env.清单数, len(env.清单拒), len(cfg.FsRoots),
+		strings.Join(cfg.NetAllow, ","), 或未配(cfg.ModelEndpoint), 假, cfg.AllowWrite, cfg.AllowExec)
+	if err := srv.ListenAndServe(); err != nil {
+		fmt.Fprintf(os.Stderr, "监听失败：%v\n", err)
+		os.Exit(2)
+	}
+}
+
+func 或未配(s string) string {
+	if s == "" {
+		return "NOT_RUN（没配）"
+	}
+	return s
+}
+
+// 端点话 是页眉与启动行上那一格：假端点必须自己报名，免得一张截图被读成"真模型跑通了"。
+func 端点话(c Config) string {
+	if c.ModelEndpoint == "" {
+		return 或未配("")
+	}
+	if c.FakeEndpoint {
+		return c.ModelEndpoint + "（本机假端点，按剧本回选件 —— 不是模型）"
+	}
+	return c.ModelEndpoint
+}
+
+type EnvX struct {
+	*Env
+	内置数  int
+	清单数  int
+	清单拒  []string
+	会话文件 string
+}
+
+func 装配(cfg Config) (*EnvX, error) {
+	for _, p := range []int{8797, 8799} {
+		if cfg.Port == p {
+			return nil, fmt.Errorf("端口 %d 是内核交付件的，这台机器不许占", p)
+		}
+	}
+	if err := os.MkdirAll(cfg.DataDir, 0o755); err != nil {
+		return nil, err
+	}
+	mem := NewMemory(filepath.Join(cfg.DataDir, fmt.Sprintf("会话-%d.jsonl", cfg.Port)))
+	行, 坏行, err := mem.Load()
+	if err != nil {
+		return nil, err
+	}
+	env := &Env{
+		fs:  NewFsGuard(cfg.FsRoots),
+		net: NewNetGuard(cfg.NetAllow, 4*time.Second),
+		mem: mem,
+		reg: NewRegistry(),
+		cfg: cfg,
+		now: time.Now,
+		慢:   40 * time.Millisecond,
+	}
+	内置, 内置拒 := RegisterBuiltins(env.reg, env)
+	清单, 拒 := LoadManifests(cfg.ToolsDir, env.reg, env.net)
+	x := &EnvX{Env: env, 内置数: len(内置), 清单数: len(清单),
+		清单拒: append(内置拒, 拒...), 会话文件: mem.path}
+	x.读数行(fmt.Sprintf("装配：记忆读回 %d 行（坏行 %d）⇒ 这一台从第 %d 发接着走", 行, 坏行, mem.NextTurn()))
+	if len(x.清单拒) > 0 {
+		x.读数行(fmt.Sprintf("被拒的注册 %d 条：%s", len(x.清单拒), strings.Join(x.清单拒, " ｜ ")))
+	}
+	return x, nil
+}
+
+func (x *EnvX) 读数行(s string) {
+	if x.cfg.安静 {
+		return
+	}
+	fmt.Fprintln(os.Stdout, "  "+s)
+}

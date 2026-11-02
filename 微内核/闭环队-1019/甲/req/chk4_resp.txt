@@ -1,0 +1,1 @@
+{"id":105,"jsonrpc":"2.0","result":{"content":[{"text":"输入侧：自洽\n输出侧：自洽\n预检结论：整发可落账（副本上真跑过一遍 RecordCall，两侧都不写回这本账）","type":"text"}],"isError":false}}

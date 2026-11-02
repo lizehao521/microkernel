@@ -1,0 +1,1 @@
+{"jsonrpc":"2.0","id":337,"method":"tools/call","params":{"name":"kernel.declare_reader","arguments":{"reader":"cell-auditor-yi","key":"chunks","side":"output"}}}

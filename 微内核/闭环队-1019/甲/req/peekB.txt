@@ -1,0 +1,49 @@
+model_input:call | claim="1" | basis=1 | payload=1
+model_input:parts | claim="6 段：system skill memory history toolspec user" | basis=1 | payload=["system","skill","memory","history","toolspec","user"]
+model_input:part_totals | claim="6 类共 0 字节：system=1 skill=1 memory=1 history=1 toolspec=1 user=1" | basis=1 | payload=[{"Kind":"system","Parts":1,"Bytes":0},{"Kind":"skill","Parts":1,"Bytes":0},{"Kind":"memory","Parts":1,"Bytes":0},{"Kind":"history","Parts":1,"Bytes":0},{"Kind":"toolspec","Parts":1,"Bytes":0},{"Kind":"user","Parts":1,"Bytes":0}]
+model_input:content_bytes | claim="0" | basis=1 | payload=0
+model_input:tokens | claim="—（没量到，不是 0）：分词器在对端；且这一侧连 content_bytes 都没量到，估一个数没有依据" | basis=5 | payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"分词器在对端；且这一侧连 content_bytes 都没量到，估一个数没有依据"}
+model_input:call_bytes_ceiling | claim="200000" | basis=1 | payload=200000
+model_input:transport_slack_pct | claim="15" | basis=1 | payload=15
+model_input:content_ceiling | claim="170000" | basis=1 | payload=170000
+model_input:effective_ceiling | claim="170000" | basis=1 | payload=170000
+model_input:clamp_rounds | claim="0" | basis=1 | payload=0
+model_input:leftover_pct | claim="0" | basis=1 | payload=0
+model_input:fixed_overhead | claim="—（没量到，不是 0）：骨架字节要装配器数，模型这一侧数不到" | basis=5 | payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"骨架字节要装配器数，模型这一侧数不到"}
+model_input:shares | claim="history=30 memory=10 skill=10 system=20 toolspec=10 user=20" | basis=1 | payload=["history=30","memory=10","skill=10","system=20","toolspec=10","user=20"]
+model_input:notice_sent | claim="否" | basis=1 | payload=false
+model_input:notice_trimmed | claim="否" | basis=1 | payload=false
+model_input:notice_why | claim="这一发没有裁剪记录，也就没有要发的知情通知" | basis=1 | payload="这一发没有裁剪记录，也就没有要发的知情通知"
+model_input:notice_text | claim="（这一格是空的）" | basis=1 | payload=""
+model_input:folded | claim="0 段（裁剪表是空的）" | basis=1 | payload=[]
+model_input:clipped | claim="0 段（裁剪表是空的）" | basis=1 | payload=[]
+model_input:dropped | claim="0 段（裁剪表是空的）" | basis=1 | payload=[]
+model_output:call | claim="1" | basis=1 | payload=1
+model_output:streaming | claim="否" | basis=1 | payload=false
+model_output:finish | claim="（这一格是空的）" | basis=2 | payload=""
+model_output:finish_said | claim="否" | basis=1 | payload=false
+model_output:endpoint_model | claim="（这一格是空的）" | basis=4 | payload=""
+model_output:endpoint_model_said | claim="否" | basis=1 | payload=false
+model_output:wire_format | claim="（这一格是空的）" | basis=2 | payload=""
+model_output:wire_format_said | claim="否" | basis=1 | payload=false
+model_output:model_says_bytes | claim="16622" | basis=1 | payload=16622
+model_output:model_says_kept | claim="16622" | basis=1 | payload=16622
+model_output:model_says_clipped | claim="否" | basis=1 | payload=false
+model_output:model_says_sha256 | claim="9deda46e1c36f47da8de9bae75c3b441a587c05b3f77d07ebdb7975a8c9ee1b7" | basis=1 | payload="9deda46e1c36f47da8de9bae75c3b441a587c05b3f77d07ebdb7975a8c9ee1b7"
+model_output:usage_in | claim="—（没量到，不是 0）：分词器在对端，这一趟外壳没把 usage 递到我这一侧" | basis=5 | payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"分词器在对端，这一趟外壳没把 usage 递到我这一侧"}
+model_output:usage_out | claim="—（没量到，不是 0）：分词器在对端，这一趟外壳没把 usage 递到我这一侧" | basis=5 | payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"分词器在对端，这一趟外壳没把 usage 递到我这一侧"}
+model_output:wire_bytes_out | claim="—（没量到，不是 0）：请求体字节是编码后数的，不在这次调用的可见面上" | basis=5 | payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"请求体字节是编码后数的，不在这次调用的可见面上"}
+model_output:wire_bytes_in | claim="—（没量到，不是 0）：通道字节是传输层数的，不在这次调用的可见面上" | basis=5 | payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"通道字节是传输层数的，不在这次调用的可见面上"}
+model_output:chunks | claim="—（没量到，不是 0）：按非流式记，结构上没有分帧数" | basis=5 | payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"按非流式记，结构上没有分帧数"}
+model_output:first_byte_ms | claim="—（没量到，不是 0）：按非流式记，结构上没有首帧等待" | basis=5 | payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"按非流式记，结构上没有首帧等待"}
+model_output:max_gap_ms | claim="—（没量到，不是 0）：按非流式记，结构上没有帧间静默" | basis=5 | payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"按非流式记，结构上没有帧间静默"}
+model_output:tool_calls | claim="28" | basis=1 | payload=28
+model_output:malformed_actions | claim="1" | basis=1 | payload=1
+model_output:malformed_streak | claim="1" | basis=1 | payload=1
+model_output:fail_kind | claim="（这一格是空的）" | basis=1 | payload=""
+model_output:fail_detail | claim="（这一格是空的）" | basis=1 | payload=""
+model_output:fail_status | claim="—（没量到，不是 0）：没故障，也没有对端响应可抄状态码" | basis=5 | payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"没故障，也没有对端响应可抄状态码"}
+model_output:retry_after_ms | claim="—（没量到，不是 0）：没故障，对端也没说要等多久" | basis=5 | payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"没故障，对端也没说要等多久"}
+model_output:downgrade | claim="否" | basis=1 | payload=false
+model_output:sent | claim="不知道发没发出去（没数到，不是 0）" | basis=1 | payload="不知道发没发出去（没数到，不是 0）"
+model_output:cost_countable | claim="否" | basis=1 | payload=false

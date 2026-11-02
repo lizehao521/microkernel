@@ -1,0 +1,29 @@
+[OK ] 脏样本命中 ignore-error｜findings=9
+[OK ] 脏样本命中 empty-err-block｜
+[OK ] 脏样本命中 dup-name-same-scope｜
+[OK ] 脏样本命中 print-as-log｜
+[OK ] 五档加总恒等｜{Measured:7 Estimated:2 ModelSays:0 Relayed:0 Absent:10 Total:19}
+[OK ] 接缝已装：内核三步都真跑了｜三轴读回（session/发号/侧）；读回 12 格，其中 9 格真的改写了这一发的结果
+[OK ] KPI：读回的格里有格真的改写了结果，且 ≥1｜读回 12 格 / 改写 9 格
+[OK ] 账上 content_bytes 落成了独立一格（不冒充代码字节）｜BytesSource="账上读回来的 content_bytes（整块送出量），与 metrics.bytes（贴进来的代码量）分列两格"｜账上那一格的读数：[input/measured] 830
+[OK ] 反臂：不 read_back ⇒ KPI 掉回 0｜KPI=0
+[OK ] 干净样本不许被编出 critical（反臂：尺子不能凭空红）｜findings=2
+[OK ] Python 样本整份降 estimated（不冒充 measured）｜measured=0 estimated=4
+[OK ] 栈那一发认出帧并落进贴入范围｜&{StackBytes:276 Frames:2 InRange:2}
+[OK ] 行号映射署 estimated（文件名没对上，不许升 measured）｜stack-frame(estimated) 2 条
+[OK ] 优化建议每条都写了怎么复验，且没有一条署 measured｜带修法的建议 4 条
+[OK ] 没给栈：记 absent 带理由，不许读成「没有 bug」｜
+[OK ] 没配端点也没开 -fake-endpoint：第 ⑧ 步 NOT_RUN，且不印 gateway 读数（不写 0）｜NOT_RUN（根本没打）：PGAGENT_BASE_URL 未设 ⇒ 真端点 NOT_RUN；假端点没开（要 -fake-endpoint）
+[OK ] 假端点一发：管路七格翻档（帧/时延/字节/usage 都不再是 absent）｜帧=4 读回=523 字节 送出=753 字节 剩下的「账上那一格」=[]
+[OK ] 端点的话署 model_says，且读数里写明是演示件｜gateway-text(model_says)=1 条
+[OK ] usage 全 0 停在 relayed（流式端点的老坑，不许升 measured）｜[output/relayed] 0（转述自 端点自报的 prompt_tokens（转述档：分词器在对端，我数不出来）；本机量过的坑：流式的推理型端点这几个数恒为 0 ⇒ 停在 relayed，不许升 measured）
+[OK ] 翻档之后五档恒等仍然成立｜{Measured:7 Estimated:2 ModelSays:1 Relayed:0 Absent:2 Total:12}
+[OK ] Python 考卷六族文本判据全咬住（少一把尺子就是漏判，不许说成够用）｜命中 6/6 族｜lang=python LangHow=嗅探推断（不是解析出来的）
+[OK ] Python 那一份一个 measured 都不许有（文本匹配不是解析）｜measured=0 共 6 条
+[OK ] JavaScript 考卷六族全咬住｜命中 6/6 族｜lang=javascript
+[OK ] 合规写法不许被命中（=== / !== 那一族假红过，所以钉成判据）｜负对照
+[OK ] 干净的 Python 样本不许被编出 critical（反臂：尺子不能凭空红）｜findings=0 条
+[OK ] 硬编码判据命中，且命中的字面量没被抄进任何读数｜命中=true 读数长度=1801 字节
+[OK ] 语言判定说得出处：嗅探给依据、显式选定不冒充解析｜嗅探依据=得分 2；命中 ^\s*(?:from\s+[\w.]+\s+)?import\s+\w+、\bprint\(×1
+
+读数自印：dirty=9 clean=2 py=4 条；未决项 10/10/11；失败项 0

@@ -1,0 +1,18 @@
+source=C:\Users\Admin\Desktop\微内核\研究-协同工作-1022.md
+tree=C:/Users/Admin/Desktop/微内核/微内核/微内核
+doc_pins=8 ｜ tests_in_package=119 ｜ arm_rows=82
+ARM-READING-STALE 读数比 cmd/agentd 里最新的 .go 旧 ⇒ 下面每行的臂数只作参考，别读成「刚跑过」
+PIN-01 回执 GREEN tests=10 rc=0 arms_BIT=9
+PIN-02 序号 GREEN tests=7 rc=0 arms_BIT=10
+PIN-03 缺席 GREEN tests=6 rc=0 arms_BIT=2
+PIN-04 结算 GREEN tests=16 rc=0 arms_BIT=27
+PIN-05 补步 GREEN tests=9 rc=0 arms_BIT=8
+PIN-06 续传 GREEN tests=15 rc=0 arms_BIT=11
+PIN-07 混列 GREEN tests=2 rc=0 arms_BIT=2 ｜ NOT_MEASURABLE：入口级锁没有落点：本树唯一的 HTTP 面是只读 /events，没有「第二发从外面进来」的入口（见 交接-agentd事件层-1022.md §4.3）。已覆盖的是身份轴那一半（run 轴 + blockOf）。
+PIN-08 投影 GREEN tests=13 rc=0 arms_BIT=11
+PIN-EXTRA 本面其余针 GREEN tests=8 rc=0 arms_BIT=4
+extra_pins_listed=8（这些不属于 §8.2 那八条，已单列跑过，不算漏）
+outside_this_face=34（账本/驱动/宿主那几族的 Test，本条命令不判它们）
+NOT_RUN 真模型端点 ｜ NOT_RUN：端点要口令，这台机器上没有，也不折算成 0。
+NOT_RUN 真人可读性 ｜ NOT_RUN：界面可读性没请真人读过。
+conclusion=ALL-PINS-GREEN-WITH-ARMS

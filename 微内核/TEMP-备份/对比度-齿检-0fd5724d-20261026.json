@@ -1,0 +1,38 @@
+{
+  "teeth": true,
+  "build": "0fd5724d",
+  "checked": 166,
+  "failures": 3,
+  "sample": [
+    {
+      "selector": "div.q-title",
+      "text": "pgagent 真跑 · desk-1026#1",
+      "ratio": 1.12,
+      "need": 4.5,
+      "fg": "rgb(242,242,242)",
+      "bg": "rgb(255,255,255)",
+      "size": 12.8,
+      "weight": 600
+    },
+    {
+      "selector": "div.q-title",
+      "text": "agentd 真事件 · 两条 run",
+      "ratio": 1.12,
+      "need": 4.5,
+      "fg": "rgb(242,242,242)",
+      "bg": "rgb(255,255,255)",
+      "size": 12.8,
+      "weight": 600
+    },
+    {
+      "selector": "div.q-title",
+      "text": "内核样例账 · 首块 49 格",
+      "ratio": 1.12,
+      "need": 4.5,
+      "fg": "rgb(242,242,242)",
+      "bg": "rgb(255,255,255)",
+      "size": 12.8,
+      "weight": 600
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+# 当前态 · agentkernel 今天到底是什么形状
+
+图源：`current-state.dot`（Graphviz，`rankdir=TB`）。问题：有几块、谁连谁、账本活在哪一面。听众：作者本人 + 任何准备接入或评审这套东西的人。
+
+## 一句话形状
+
+**一个被动库 + 六个可执行外壳 + 一本带哈希链的 JSONL 账**。库不联网、不写盘、不调度；联网和写盘全在 `cmd/` 那一层或调用方手里。
+
+## 阅读顺序
+
+1. 先看 `cluster_kernel`：Go 包 `agentkernel` 8 个文件共 **3416 行**（`kernel.go` 382 / `record.go` 347 / `journal.go` 539 / `cells.go` 495 / `input.go` 640 / `output.go` 403 / `measure.go` 208 / `isolate.go` 402，本轮 `wc -l` 自印），加 `mcpsrv/mcpsrv.go` 991 行协议层。
+2. 再看 `cluster_ship`：发布包里 **5 个 exe**（`kaudit` / `kcheck` / `kresearch` / `mcphttp` / `mcpkernel`）。
+3. 最后看两块灰虚线：`kwire.exe` 和账本文件 —— 前者是第 6 个 main，**没进发布包**。
+
+## 六块外壳各自的职责（都有行号）
+
+| 外壳 | main 行数 | 连法 | 默认地址 | 写入口 | 证据 |
+|---|---|---|---|---|---|
+| `mcpkernel.exe` | 62 | stdio JSON-RPC（换行分隔） | 无端口，子进程 | 有（`kernel.record_call`） | `cmd/mcpkernel/main.go:28,45-58` |
+| `mcphttp.exe` | 278 | HTTP `POST /mcp` | `127.0.0.1:8797` | 有 | `cmd/mcphttp/main.go:94,148,151` |
+| `kaudit.exe` | 339 | 只读 HTTP，6 条端点 | `127.0.0.1:8788` | **无**（POST 一律 405） | `cmd/kaudit/main.go:37,136-209` |
+| `kcheck.exe` | 559 | CLI 快闸，自带判据 | 不监听 | 无 | `cmd/kcheck/main.go:63-68,122` |
+| `kresearch.exe` | 347 | CLI，自己发 HTTP/流式实测 | 不监听 | 无（它是调用方） | `cmd/kresearch/main.go:1-13,29` |
+| `kwire.exe` | 559 + `report.go` 557 | CLI，文档↔代码 wire 对账 | 不监听 | 无 | `cmd/kwire/main.go:1-20`（未打包，置信度 medium） |
+
+## 三条要记住的边界（图上写了，这里给证据）
+
+**① 内存账和磁盘账是两个状态，中间没有自动桥。**
+`mcphttp` 启动日志自己就这么写：「账本活在本进程记忆里（当前 %d 条）」（`cmd/mcphttp/main.go:105`）；README:129 与 :377 都指明要留住账必须调 `kernel.encode_journal` 拿字节、**由调用方写盘**，内核自己不写盘；`mcpsrv/mcpsrv.go:283` 的工具描述里「不写盘」是加粗的。
+本轮实读：连着的 MCP 实例 `kernel.tally` 报「账 0 条（一格都没记过 —— 这不是各档都是 0，是还没有账）」。这不是缺陷，但它决定了智能体形态：**循环跑完不落盘，进程一死账就没了。**
+
+**② 只读那一面靠「它连不上」保证，不靠权限。**
+`kaudit` 只挂 6 条 GET 端点、POST 全 405；`KAUDIT_TOKEN` 只在你把监听地址开出回环之外时强制（`cmd/kaudit/main.go:128-129`，原话：「没有口令的只读审计口=任何人可下载全部往来原话」）。反面是 `mcphttp`：绑回环时按 `main.go:89` 自己说的是「本机任意进程都能读写」。
+
+**③ 隔离这件事目前是散文守着的，不是机械守着的。**
+README:9 那句「它不调度、不联网、不执行工具、不写磁盘」之后，README:12 立刻自认：「但 `package kernel` 不 import `net/http`、不写磁盘'目前**只有目录约定与这句散文守着**」。`isolate.go:326-331` 是机械核的那一半，但它依赖 PATH 上有 `go` 或给了 `GOBIN_EXE`；本机 PATH 上没有 `go`（实测 `command -v go` 为空），所以默认那一读报的是「核不了」而不是「合格」——原话就写在 `isolate.go:331`：「PATH 上找不到 go，也没给 `GOBIN_EXE`（这一路核不了，不是合格）」。
+**但这一路不是永久核不了。** 把 sdk 里的 go 通过环境变量递给它，同一枚闸门就翻成了机械绿。两种读数都留下了（`架构-1020/kcheck-A-no-gobin.txt`、`kcheck-B-with-gobin.txt`，10-20 22:29 重打，各带跑法抬头）：
+
+| 读法 | 退出码 | ✓ / — | 依赖闭包那一条 |
+|---|---|---|---|
+| 不给 `GOBIN_EXE`（默认，= 交付件在别人机器上的样子） | 0 | **40 / 7** | `— 依赖闭包核不了：PATH 上找不到 go…` |
+| 给 `GOBIN_EXE=C:/Users/Admin/sdk/go/bin/go.exe` | 0 | **41 / 6** | `✓ 依赖闭包 220 个包，越界 0 个` |
+
+闭包数跟着树长：217（S0）→ 219（agentd 进树）→ 220（本转又加一枚跨面对账针的测试文件），越界一直 0。
+**A 那一读只能用建好的 exe**：22:29 先用 `go run ./cmd/kcheck` 跑，A 那栏也报 ✓ 220 —— 子进程从 `go run`
+继承到能找到 `go` 的环境，两种读法塌成一种，闸门自己写的「核不了不是合格」被调用姿势抹掉了。
+改回 `go build` + `PATH=C:\Windows\system32` 才复现 40/7。这条坑记在两份读数的抬头里。
+
+所以准确说法是：**「默认环境里核不了，递上工具链就能核、且核过了」**，不是「永远只有散文」。`isolate.go:370-388` 说明源文件位置由编译期路径给出，所以这道只读闸扫的是打包时那棵树，跑它不改任何东西。**审计层 ≠ 防线**这条没变（README:12 自认的是 `net/http`、`os` 算标准库、"0 泄漏"抓不到它哪天联网），这条到智能体化之后会更要紧。
+
+## 10 件工具（`mcpsrv/mcpsrv.go:264-291`，点号命名）
+
+写侧 `kernel.record_call`（两侧一起进链，任一侧不自洽整发拒收）；预检 `kernel.check_call`（在**当前账的副本**上真跑一遍，一条不写回，被拒时 `isError=true`）；读侧 `kernel.verify` / `kernel.tally` / `kernel.read_back`（三轴定身份：session + 发号 + 侧）/ `kernel.celltable` / `kernel.readers_report`；声明侧 `kernel.declare_reader`；搬运侧 `kernel.encode_journal` / `kernel.load_journal`（非空账替换必须带 `acknowledge=replace`）。
+注意：Qoder 这边把它们渲染成下划线名（`kernel_record_call` 等），**服务端的真名是点号**，接的时候以服务端为准。
+
+## 已有实物里跟「智能体」直接相关的三件
+
+- `tasks/mcp/agent.py`（示踪弹）：`POLICY` 六条「账上 `fail_kind` → 动作」（`:53-60`），`DECISIONS` 记录每步依据来自哪一格（`:61-66`），KPI 是「账本触发过几次决定」（`:8`）。模型走 `AGNES_BASE/MODEL/KEY`（`:28-30`，KEY 默认空串）。文件头自称「示踪弹，不是产品」。
+- `tasks/mcp/client.py`：唯一的驱动客户端，`subprocess` 起 `mcpkernel.exe`（`:41-46`），需要时用 `go build ./cmd/mcpkernel` 现搭（`:51-64`），`GOBIN` 解析顺序=环境变量→PATH→写死的默认值（`:17-27`，注释记录了写死路径导致换机 `FileNotFoundError` 的事故）。
+- `微内核/微内核/报告/面板方案-待批.txt`（2026-10-15，未开工）：只读面板四块首屏 + 五条禁区 + 三个待圈决定。
+
+## 今天**没有**的东西（三态别塌）
+
+- Go 侧的 Agent 循环：**NOT FOUND**（`cmd/` 六个 main 里没有任何一个是循环宿主）。
+- 任何 Web 面板 / 本地 dashboard：**NOT FOUND**（全仓 HTML 只有 `市场报告-*/报告.html` 和 `参赛-1020/证据/活动须知-*.html`）。
+- 模拟 Agent 循环的 Go 测试：**NOT FOUND**（18 个 `_test.go` 全是判据/协议/守卫方向）。
+- 循环需要的模型凭证：**absent**（`AGNES_KEY` 默认空串，env 里没有任何模型口令）。
+- 端口 `8799`（记忆里 `wnh` 那本账）本轮**未复核**，当前态图里不画它，状态记 unknown。
+
+## 置信度
+
+- 高：六块外壳的职责/端口/写入口、10 件工具、账本字段与链、内存/磁盘两态、无面板无 Go 循环 —— 全部有本轮 `path:line` 自印证据。
+- 中：`kwire` 未进发布包（按 `构建-1017/agentkernel/bin/` 只有 5 个 exe 反推，没逐字节核 zip 清单）。
+- 待核：8799 那本账现状；面板草稿里 (b) 路线「让 kaudit 自己吐 HTML」会不会新增一根针（草稿自己说要 8 根变 9 根，本轮未动代码，无从验证）。

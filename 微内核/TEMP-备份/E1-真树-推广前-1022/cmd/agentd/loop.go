@@ -1,0 +1,698 @@
+package main
+
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"io"
+	"os"
+	"path/filepath"
+	"strconv"
+	"strings"
+	"time"
+
+	"agentkernel"
+)
+
+type stopReason string
+
+const (
+	stopScript stopReason = "跑完：端点剧本走到最后一发"
+	stopTurns  stopReason = "停下：轮次额度到（--max-turns）"
+	stopPolicy stopReason = "停下：账上的 fail_kind 指向「停」这一类，按 POLICY 主动停"
+	stopDriver stopReason = "停下：驱动这一路跑不了（NOT_RUN 或剧本没下一条）"
+	stopCapped stopReason = "停下：这本账已到上限，再发也只会被门口挡回来"
+	stopAbort  stopReason = "停下：外部打断（Ctrl-C / SIGINT）—— 先把账交出去，再走"
+)
+
+// decision 是账上那一格与「接下来干什么」之间唯一那条边。
+// Basis 要么是 read_back 真读回来的格名，要么是「本地信息，没问内核」—— 二者不许混写。
+type decision struct {
+	Shot   int
+	Basis  string
+	Value  string
+	Action string
+	Why    string
+}
+
+type run struct {
+	rpc             *kernelRPC
+	drv             Driver
+	session         string
+	maxTurns        int
+	checkpointEvery int
+	readBack        bool
+	declare         bool
+	abort           chan struct{} // 关闭它 = 外部打断；循环每一发开头看一眼
+	shotDelay       time.Duration // 每发之前等这么久（真端点本来就慢；也用来验 OS 级信号）
+	journalPath     string
+	payload         string
+	events          *eventBus // 宿主侧事件层；nil = 这一趟不带事件（内核调用与数值逻辑一律不变）
+	eventsPath      string    // 收口后留给横幅用：落在哪
+	eventsWritten   int       // 落了几条（不是「几条合格」，那条数在文件里）
+
+	log        io.Writer
+	decisions  []decision
+	traces     []shotTrace
+	kpi        int
+	caps       int
+	drift      int
+	shot       int
+	turns      int
+	stop       stopReason
+	lastTally  string
+	lastVerify string
+	resumed    int
+	caveat     string
+	tracePath  string
+
+	historyText string
+	historyOrig string
+	foldNext    bool
+	expectFold  bool
+	rephrase    bool
+	obs         string
+	closed      bool
+	declared    map[string]bool
+	lastChain   string
+}
+
+const (
+	systemPrompt = "你是一个只用工具的计算器。你手里只有一个 ledger_add，一次只能加两个数。" +
+		"要算一组数的和，就一步步提议加法，等我把每次的结果作为工具结果回给你，最后把总和写成一句话。不要一次编出结果。"
+	toolSpec = `{"type":"function","function":{"name":"ledger_add","description":"把两个整数相加，返回它们的和"}}`
+	userAsk  = "把 27、15、8、34 加起来。"
+	nums     = "27+15+8+34"
+)
+
+func (r *run) say(f string, a ...any) { fmt.Fprintf(r.log, f+"\n", a...) }
+
+// assemble 装这一发要发的东西。foldNext / rephrase 都是上一发从账上读回来的决定造成的，
+// 不是这里自己拍的 —— 那两个旗标是回边的落点。
+func (r *run) assemble(call int) *assembly {
+	// 旗标在这里就被吃掉：它们属于「上一发的账决定的下一发」，装配过一次就作废。
+	// 先取到局部变量再清 —— 清早了会让下面折历史那一段看不到自己刚读到的决定。
+	fold := r.foldNext
+	rephrase := r.rephrase
+	r.rephrase = false
+	r.foldNext = false
+
+	a := &assembly{system: systemPrompt, toolspec: toolSpec, user: userAsk, observation: r.obs}
+	if rephrase {
+		a.user = userAsk + "（换个说法：请只说这一个加法，两个操作数写全。）"
+	}
+	if r.historyOrig != "" {
+		a.historyOrig = r.historyOrig
+		r.say("    装配第 %d 发：往轮 %d 字节，折不折=%v", call, len(r.historyOrig), fold)
+		if fold && len(r.historyOrig) > 120 {
+			// 桩要么整段发、要么记成整段没进；折完还比原文长就不是折，是变大。
+			a.history = fmt.Sprintf(historyStub, sha(r.historyOrig), len(r.historyOrig))
+			a.foldHistory = true
+			a.historyRefCal = r.shot - 1 // 引用的是上一发（内核要求它严格小于这一发且大于 0）
+			r.expectFold = true          // 下一发要回账上确认这条折叠真落了，不是我以为它落了
+		} else {
+			a.history = r.historyOrig
+		}
+	}
+	return a
+}
+
+func (r *run) loop() {
+	r.emit(Event{Kind: "run_started", State: "running", Evidence: "measured"})
+	for {
+		// 每一发之前先看一眼有没有被打断；等待也放在同一个 select 里，
+		// 这样打断不用等满一整个延迟。
+		if r.shotDelay > 0 {
+			select {
+			case <-time.After(r.shotDelay):
+			case <-r.abort:
+				r.stop = stopAbort
+				return
+			}
+		}
+		select {
+		case <-r.abort:
+			// 被打断不是「跑完了」：这一趟的收口与交账仍然要做，
+			// 否则按 Ctrl-C 就等于把这几发的账扔掉 —— 那正是「断开即失」原样复现。
+			r.stop = stopAbort
+			return
+		default:
+		}
+		if s, ok := r.drv.(*scripted); ok && s.Done() {
+			r.stop = stopScript
+			return
+		}
+		if r.turns >= r.maxTurns {
+			r.stop = stopTurns
+			return
+		}
+		r.turns++
+		call := r.shot + 1
+
+		asm := r.assemble(call)
+		in, body, err := asm.buildInput(call)
+		if err != nil {
+			r.say("    装配就散了（第 %d 发）：%v", call, err)
+			r.noteLocal(call, "装配失败", "停 —— 装不出这一发")
+			r.stop = stopDriver
+			return
+		}
+		p, err := r.drv.Propose(r.turns, r.obs, body)
+		if err != nil {
+			r.say("    驱动回话（第 %d 发）：%v", call, err)
+			if strings.HasPrefix(err.Error(), "NOT_RUN") {
+				r.noteLocal(call, "驱动 NOT_RUN", "停 —— 这一路今天跑不了，也不许用剧本冒充")
+				r.stop = stopDriver
+				return
+			}
+			r.noteLocal(call, "端点没有下一条", "停")
+			r.stop = stopDriver
+			return
+		}
+		r.shot = call // 只有真要发出去的那一发才占发号
+		r.emit(r.stepEv("shot_started", "running", "measured", "", "assemble", call))
+		out := buildOutput(call, p, body)
+		t := shotTrace{Call: call, Assemble: describeShot(asm), Cells: 0}
+
+		args := sides(r.session, in, out)
+		pre, err := r.rpc.call("kernel.check_call", args)
+		if err != nil {
+			r.say("    预检回帧坏了（第 %d 发）：%v", call, err)
+			t.Precheck = "回帧坏了：" + err.Error()
+			r.traces = append(r.traces, t)
+			r.stop = stopDriver
+			return
+		}
+		t.Precheck = firstLine(pre.Text)
+		if pre.IsErr {
+			r.emit(r.stepEv("precheck", "refused", "measured", "", "kernel.check_call", call))
+			r.say("    预检被拒（第 %d 发）：%s", call, firstLine(pre.Text))
+			r.noteLocal(call, "预检拒收", "不发 —— 这一发一条都不写")
+			t.BasisFlag, t.Basis, t.Value, t.Action = "本地", "本地信息，没问内核", "预检拒收", "不发 —— 这一发一条都不写"
+			r.traces = append(r.traces, t)
+			continue
+		}
+		r.emit(r.stepEv("precheck", "ok", "measured", "", "kernel.check_call", call))
+		rec, err := r.rpc.call("kernel.record_call", args)
+		if err != nil {
+			r.say("    落账回帧坏了（第 %d 发）：%v", call, err)
+			t.Record = "回帧坏了：" + err.Error()
+			r.traces = append(r.traces, t)
+			r.stop = stopDriver
+			return
+		}
+		t.Record = firstLine(rec.Text)
+		if rec.IsErr {
+			r.emit(r.stepEv("recorded", "refused", "measured", "", "kernel.record_call", call))
+			r.say("    落账被拒（第 %d 发）：%s", call, firstLine(rec.Text))
+			if why := r.ledgerCapped(); why != "" {
+				// 这一笔**不计进 KPI**：它来自外壳的容量那一栏，不是 49 格里的一格。
+				// 两个数分开数，与内核把「门口挡的」和「内核拒的」分开数是同一条纪律。
+				r.caps++
+				r.decisions = append(r.decisions, decision{
+					Shot: call, Basis: "tally 的容量栏（不是 49 格里的一格）", Value: why,
+					Action: "停 —— 这本账吃不下了，再发还是挡", Why: "继续发只会把发号烧光",
+				})
+				r.say("    决定：第 %d 发 依据=%-14s 值=%-18q 动作=%s", call, "容量栏", why, "停 —— 这本账吃不下了")
+				t.BasisFlag, t.Basis, t.Value, t.Action = "本地", "tally 的容量栏", why, "停 —— 这本账吃不下了"
+				r.traces = append(r.traces, t)
+				r.stop = stopCapped
+				return
+			}
+			r.noteLocal(call, "落账拒收", "问内核为什么，再决定下一发")
+			t.BasisFlag, t.Basis, t.Value, t.Action = "本地", "本地信息，没问内核", "落账拒收", "问内核为什么，再决定下一发"
+			r.traces = append(r.traces, t)
+			continue
+		}
+		t.Cells = cellsFromRecordLine(rec.Text)
+		r.emit(r.stepEv("recorded", "ok", "measured", "", "kernel.record_call", call))
+		r.say("  第 %d 发落账：%s", call, firstLine(rec.Text))
+		if r.expectFold {
+			r.expectFold = false
+			r.confirmFold(call, &t)
+		}
+
+		basis, value, ok := r.readBackCell(call)
+		if !ok {
+			// 读不到就是读不到：这一发的依据只能记「本地」，KPI 不加。
+			// 这条边虚接的时候，这个数字必须自己掉回 0，那是这一支唯一要证的事。
+			kernelFail := p.Fail
+			act := noFailureAction
+			if rule, has := POLICY[kernelFail]; has {
+				act = rule.Action
+			}
+			r.noteLocal(call, string(kernelFail), act)
+			t.BasisFlag, t.Basis, t.Value, t.Action, t.Why = "本地", "本地信息，没问内核", string(kernelFail), act, "这一发的下一步不是从账上读回来的"
+			r.traces = append(r.traces, t)
+		} else {
+			act, why := noFailureAction, "账上这一格没有故障：接着算下一发"
+			fail := normalizeFail(value)
+			if driftOf(value, p.Fail) {
+				// 账上读回来的故障类别与驱动当场给的不一味 —— 只可能是读错了发、
+				// 错了侧或错了 session。这一眼不分大小，先记下来再说。
+				r.drift++
+				r.say("    漂移：第 %d 发账上是 %q，驱动当场给的是 %q —— 这一发的依据不能算从账上读回来的", call, fail, p.Fail)
+			}
+			if rule, has := POLICY[fail]; has {
+				act, why = rule.Action, rule.Why
+				r.decide(call, fail)
+			}
+			r.decisions = append(r.decisions, decision{
+				Shot: call, Basis: basis, Value: strings.TrimSpace(value), Action: act, Why: why,
+			})
+			if !driftOf(value, p.Fail) {
+				r.kpi++ // 漂移那一发不计：账上说的与当场给的不一样，这一步是谁决定的就说不清了
+			}
+			r.say("    决定：第 %d 发 依据=%-14s 值=%-18q 动作=%s", call, basis, strings.TrimSpace(value), act)
+			t.BasisFlag, t.Basis, t.Value, t.Action, t.Why = "账上", basis, strings.TrimSpace(value), act, why
+			t.LocalFail = string(p.Fail)
+			t.Drift = driftOf(value, p.Fail)
+			t.BasisCells = append(t.BasisCells, basis)
+			t.OutCells = r.cellsOf(call, "output")
+			t.InCells = r.cellsOf(call, "input")
+			r.traces = append(r.traces, t)
+			if strings.HasPrefix(act, "停") {
+				r.stop = stopPolicy
+				return
+			}
+		}
+
+		if p.Text != "" {
+			r.historyOrig += p.Text + "\n"
+			r.obs = "上一次结果：" + p.Text
+			r.appendTranscript(call, p.Text)
+		}
+
+		if r.checkpointEvery > 0 && r.shot%r.checkpointEvery == 0 {
+			r.checkpoint("每 " + strconv.Itoa(r.checkpointEvery) + " 发")
+		}
+		if r.turns >= r.maxTurns {
+			r.stop = stopTurns
+			return
+		}
+	}
+}
+
+// readBackCell 是那条回边本身：值只能从 read_back 的字节里读出来。
+// --no-read-back 就是这个开关关掉 —— 反臂靠它把 KPI 打回 0。
+func (r *run) readBackCell(call int) (basis, value string, ok bool) {
+	if !r.readBack {
+		return "", "", false
+	}
+	rb, err := r.rpc.call("kernel.read_back", map[string]any{
+		"session": r.session, "call": call, "side": "output",
+	})
+	if err != nil || rb.IsErr {
+		return "", "", false
+	}
+	basisTxt, claim, found := cellFromReadBack(rb.Text, "fail_kind")
+	if !found {
+		return "", "", false
+	}
+	r.declareKey("output", "fail_kind")
+	_ = basisTxt
+	return "fail_kind", stripBasisWord(claim), true
+}
+
+func stripBasisWord(claim string) string {
+	i := strings.IndexAny(claim, " ")
+	if i < 0 {
+		return claim
+	}
+	return claim[:i]
+}
+
+func (r *run) decide(call int, fail kernel.FailKind) {
+	switch fail {
+	case kernel.FailBudget:
+		r.foldNext = true
+	case kernel.FailMalformedAction:
+		r.rephrase = true
+	case kernel.FailTransport, kernel.FailHTTP:
+		// 原样再发：这两个动作在循环里的落点就是「下一发不折历史、不换说法，照装」。
+	default:
+	}
+}
+
+// confirmFold 是回边的另一半：不是「我决定折历史」就算折了，而是回账上把那一格读回来。
+// 读回来是空的（内核那句「没交这一档的名单」）就当没折过 —— 意图与效果分开数，
+// 否则 KPI 数的是我们打了几个旗标，而不是账认了几步。
+func (r *run) confirmFold(call int, t *shotTrace) {
+	if !r.readBack {
+		return
+	}
+	rb, err := r.rpc.call("kernel.read_back", map[string]any{
+		"session": r.session, "call": call, "side": "input",
+	})
+	if err != nil || rb.IsErr {
+		t.Extra = "折历史的回读没走通（不算进 KPI）"
+		return
+	}
+	_, claim, found := cellFromReadBack(rb.Text, "folded")
+	if !found || strings.Contains(claim, "没交") || strings.Contains(claim, "空表") {
+		t.Extra = "我以为折了，账上这一格是空的 —— 不计进 KPI"
+		r.say("    回读确认：第 %d 发 input/folded 没有真记录（旗标 ≠ 效果）", call)
+		return
+	}
+	r.declareKey("input", "folded")
+	r.kpi++
+	t.BasisCells = append(t.BasisCells, "folded")
+	r.decisions = append(r.decisions, decision{
+		Shot: call, Basis: "folded（输入侧）", Value: claim, Action: "折叠真落了：接着按桩续跑",
+		Why: "这一条是从账上读回来的效果，不是我们打的旗标",
+	})
+	r.say("    回读确认：第 %d 发 input/folded = %s", call, claim)
+	t.Extra = "账上确认 input/folded = " + claim
+}
+
+// declareKey 声明「我读了这一格」。内核按 读者+格 去重，所以只声明真读到的那一次。
+func (r *run) declareKey(side, key string) {
+	if !r.declare {
+		return
+	}
+	id := side + "/" + key
+	if r.declared[id] {
+		return
+	}
+	d, err := r.rpc.call("kernel.declare_reader", map[string]any{"reader": "agentd", "key": key, "side": side})
+	if err != nil {
+		r.say("    声明读者回帧坏了：%v", err)
+		return
+	}
+	if d.IsErr {
+		r.say("    声明读者被拒：%s", firstLine(d.Text))
+		return
+	}
+	r.declared[id] = true
+	r.say("    已声明读者：agentd 读 %s/%s（这一格的话真的被用掉了）", side, key)
+}
+
+func (r *run) noteLocal(call int, value, action string) {
+	r.decisions = append(r.decisions, decision{
+		Shot: call, Basis: "本地信息，没问内核", Value: value, Action: action,
+		Why: "这一发的下一步不是从账上读回来的，所以不计进 KPI",
+	})
+	r.say("    决定：第 %d 发 依据=%-14s 值=%-18q 动作=%s", call, "本地", value, action)
+}
+
+// resume 把上一次编出去的账读回来接着跑。顺序不能反：先核链再续写 ——
+// 拿着一条不符的账往下写，是把错往下传给下一个读账的人。
+func (r *run) resume(path string) bool {
+	b, err := os.ReadFile(path)
+	if err != nil {
+		r.say("  续跑失败：读不到上一次的账（%s）：%v", path, err)
+		r.stop = stopDriver
+		return false
+	}
+	l, err := r.rpc.call("kernel.load_journal", map[string]any{"text": string(b), "acknowledge": "replace"})
+	if err != nil || l.IsErr {
+		r.say("  续跑被内核拒：%s", firstLine(l.Text))
+		r.stop = stopDriver
+		return false
+	}
+	n := r.rpc.srv.Entries()
+	shots := n / 49
+	v, _ := r.rpc.call("kernel.verify", nil)
+	r.say("  续跑：读回 %d 条 = %d 发；先核一遍链：%s", n, shots, firstLine(v.Text))
+	if v.IsErr || strings.Contains(v.Text, "不符") {
+		r.say("  链不符（或读不出原像）就不往下写 —— 这是拒写，不是照跑")
+		r.stop = stopDriver
+		return false
+	}
+	r.shot = shots
+	r.resumed = n
+	r.say("  发号从第 %d 发接着走", shots+1)
+	r.rebuildHistory()
+	return true
+}
+
+// transcriptPath 是宿主自己的往轮轨迹文件（内核的账里**存不下原文**：
+// 那 49 格里只有 model_says_bytes / _kept / _sha256 三格，都是元数据）。
+// 所以续跑要带历史，只能宿主自己留着，再用账上那枚指纹对一遍。
+func (r *run) transcriptPath() string {
+	if r.journalPath == "" {
+		return ""
+	}
+	return r.journalPath + ".transcript"
+}
+
+type transcriptLine struct {
+	Call int    `json:"call"`
+	Sha  string `json:"sha"`
+	Text string `json:"text"`
+}
+
+func (r *run) appendTranscript(call int, text string) {
+	tf := r.transcriptPath()
+	if tf == "" {
+		return
+	}
+	line, err := json.Marshal(transcriptLine{Call: call, Sha: sha(text), Text: text})
+	if err != nil {
+		r.say("    往轮轨迹记不下来（不影响落账）：%v", err)
+		return
+	}
+	f, err := os.OpenFile(tf, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o644)
+	if err != nil {
+		r.say("    往轮轨迹写不出去（不影响落账）：%v", err)
+		return
+	}
+	defer func() { _ = f.Close() }()
+	_, _ = f.Write(append(line, '\n'))
+}
+
+// rebuildHistory 每发都拿账上的 model_says_sha256 对一遍原文指纹：
+// 对得上才敢把它当往轮轨迹用；对不上就说「这一段的原文与封好的账不一致」，
+// 宁可不带历史，也不拿一句对不上的话去续跑。
+func (r *run) rebuildHistory() {
+	tf := r.transcriptPath()
+	if tf == "" {
+		r.say("  往轮轨迹：没给 --journal-out，宿主没处留原文 —— 这一趟不带历史段")
+		return
+	}
+	b, err := os.ReadFile(tf)
+	if err != nil {
+		r.say("  往轮轨迹：%s 读不到（%v）—— 这一趟不带历史段", tf, err)
+		return
+	}
+	var sb strings.Builder
+	matched, checked, bad := 0, 0, []int{}
+	for _, raw := range strings.Split(strings.TrimRight(string(b), "\n"), "\n") {
+		if strings.TrimSpace(raw) == "" {
+			continue
+		}
+		var e transcriptLine
+		if json.Unmarshal([]byte(raw), &e) != nil {
+			bad = append(bad, -1)
+			continue
+		}
+		checked++
+		// 对两遍：账上那枚指纹要对得上**这段原文重算出来的**，
+		// 文件里自己写的那枚也要与原文一致 —— 只比文件里那两个字段，改原文就查不出来。
+		want := sha(e.Text)
+		rb, err := r.rpc.call("kernel.read_back", map[string]any{"session": r.session, "call": e.Call, "side": "output"})
+		claim := ""
+		if err == nil {
+			_, claim, _ = cellFromReadBack(rb.Text, "model_says_sha256")
+		}
+		if strings.TrimSpace(claim) != want || e.Sha != want {
+			bad = append(bad, e.Call)
+			continue
+		}
+		matched++
+		sb.WriteString(e.Text)
+		sb.WriteString("\n")
+	}
+	if len(bad) > 0 {
+		r.say("  往轮轨迹：**有 %d 发的原文与账上指纹对不上**（发号 %v）—— 不带这些段续跑", len(bad), bad)
+		if matched == 0 {
+			return
+		}
+	}
+	r.historyOrig = sb.String()
+	r.say("  往轮轨迹：从宿主的 %s 重建，%d/%d 发的指纹与账上 model_says_sha256 对上", filepath.Base(tf), matched, checked)
+}
+
+// ledgerCapped 问内核的 tally 那一栏：容量挡下的次数不是 49 格里的一格，
+// 但它是这本账的真实状态 —— 账吃不下了还一路发，就是把发号烧光换五句同一样的拒绝。
+func (r *run) ledgerCapped() string {
+	const mark = "其中容量挡下 "
+	t, err := r.rpc.call("kernel.tally", nil)
+	if err != nil {
+		return ""
+	}
+	i := strings.Index(t.Text, mark)
+	if i < 0 {
+		return ""
+	}
+	rest := t.Text[i+len(mark):]
+	digits := ""
+	for _, ch := range rest {
+		if ch < '0' || ch > '9' {
+			break
+		}
+		digits += string(ch)
+	}
+	if digits == "" || digits == "0" {
+		return ""
+	}
+	return "容量挡下 " + digits + " 次"
+}
+
+func (r *run) checkpoint(tag string) {
+	args := map[string]any{"payload": r.payload}
+	j, err := r.rpc.call("kernel.encode_journal", args)
+	if err != nil {
+		r.say("  checkpoint(%s) 失败：编字节就散了：%v", tag, err)
+		return
+	}
+	if j.IsErr {
+		r.say("  checkpoint(%s) 被拒：%s", tag, firstLine(j.Text))
+		return
+	}
+	if r.journalPath == "" {
+		r.say("  checkpoint(%s)：编出 %d 字节，但没给 --journal-out —— 内核不写盘，这一步是我自己省的", tag, len(j.Text))
+		return
+	}
+	if err := os.WriteFile(r.journalPath, []byte(j.Text), 0o644); err != nil {
+		r.say("  checkpoint(%s) 写盘失败：%v", tag, err)
+		return
+	}
+	r.say("  checkpoint(%s)：写了 %s（%d 字节；写盘是宿主的事，内核只交字节）",
+		tag, r.journalPath, len(j.Text))
+	r.verifyRoundTrip(tag)
+}
+
+// verifyRoundTrip 把刚写出去的那份字节交给**另一本空账**读回来，看内核说什么。
+// 起一本临时的，不是拿这本去 load —— 顶掉自己正在写的账不叫自证，叫自毁。
+func (r *run) verifyRoundTrip(tag string) {
+	b, err := os.ReadFile(r.journalPath)
+	if err != nil {
+		r.lastChain = "回读失败：" + err.Error()
+		r.say("  回读（%s）：%s", tag, r.lastChain)
+		return
+	}
+	probe := newKernelRPC(0, false)
+	l, err := probe.call("kernel.load_journal", map[string]any{"text": string(b), "acknowledge": "replace"})
+	if err != nil {
+		r.lastChain = "回读没走到内核：" + err.Error()
+		r.say("  回读（%s）：%s", tag, r.lastChain)
+		return
+	}
+	verdict := "收下"
+	if l.IsErr {
+		// 载入就被拒 ⇒ 那本临时账压根没成形，再去 verify 只会得到「空账」那句假绿。
+		r.lastChain = "载入被拒 —— " + strings.ReplaceAll(l.Text, "\n", " ⏎ ")
+		r.say("  回读核一遍（%s，另起一本空账）：拒收 / %s", tag, r.lastChain)
+		return
+	}
+	// 载入那句只报「读回几条」，链的三态得再问一次 verify —— 这两句不是同一件事，
+	// 拿前一句当后一句会把「读得动」读成「核得过」。
+	v, err := probe.call("kernel.verify", nil)
+	if err != nil {
+		r.lastChain = "收下之后核不动：" + err.Error()
+	} else {
+		r.lastChain = strings.ReplaceAll(v.Text, "\n", " ⏎ ")
+	}
+	r.say("  回读核一遍（%s，另起一本空账）：%s / %s", tag, verdict, r.lastChain)
+}
+
+func (r *run) closeOut() {
+	r.say("")
+	r.say("【收口】")
+	// 收口也要落一条事件：done/total 给得出来就给，结束原因是哪一态直接照六态写 ——
+	// 这一条是「停了断了会怎样」那一句的账本形态，不是给人看的装饰。
+	settle := r.stepEv("run_settled", string(r.stop), "measured", "", "closeOut", r.shot)
+	settle.Turn = 0
+	settle.Progress = &Progress{Done: r.shot, Total: intp(r.maxTurns)}
+	r.emit(settle)
+	if r.events != nil {
+		// 这一句故意不写进 stdout：stdout 是能被逐字比对的运行正文，
+		// 「事件层落在哪、落了几条」属横幅，走 stderr（见 main.go 那条老规矩）。
+		r.eventsPath, r.eventsWritten = r.events.path, r.events.written
+		r.events.Close()
+	}
+	if v, err := r.rpc.call("kernel.verify", nil); err == nil {
+		r.lastVerify = v.Text
+		r.say("  verify：%s", firstLine(v.Text))
+	}
+	if t, err := r.rpc.call("kernel.tally", nil); err == nil {
+		r.lastTally = t.Text
+		r.say("  tally ：%s", firstLine(t.Text))
+	}
+	if rr, err := r.rpc.call("kernel.readers_report", nil); err == nil {
+		for _, line := range strings.Split(strings.TrimRight(rr.Text, "\n"), "\n") {
+			r.say("  读者  ：%s", line)
+		}
+	}
+	r.checkpoint("收口")
+	r.say("")
+	r.say("账本触发过的决定：%d（共 %d 发，其中依据写「本地」的 %d 发不计）", r.kpi, r.shot, len(r.decisions)-r.kpi-r.caps)
+	if r.caps > 0 {
+		r.say("  另计（不与上面相加）：由内核容量那一栏促成的停 —— %d 次", r.caps)
+	}
+	if r.kpi == 0 {
+		r.say("  => 这条回边虚接：没有任何一步「接下来干什么」是从账上读回来的。")
+	}
+	if r.drift > 0 {
+		r.say("  漂移：%d 发的格值与当场给的类别不一致 —— 那些发的依据不算从账上读回来", r.drift)
+	} else {
+		r.say("  漂移：0 发（每一发读回来的故障类别都与当场给的对得上；对不上只可能是读错了发/侧/session）")
+	}
+	r.say("结束原因：%s", r.stop)
+	r.closed = true
+	if err := r.writeTrace(r.tracePath); err != nil {
+		r.say("  轨迹件没写出去：%v", err)
+	} else if r.tracePath != "" {
+		r.say("  轨迹解剖：%s（这一趟每一发的依据是哪一格，都在这张表里）", r.tracePath)
+	}
+}
+
+// describeShot 说的是这一发装了什么 —— 只报段名顺序与两个旗标，不报正文。
+func describeShot(a *assembly) string {
+	kinds := []string{}
+	for _, s := range a.segs() {
+		kinds = append(kinds, string(s.kind))
+	}
+	return fmt.Sprintf("%s ｜ 折历史=%v ｜ 换说法=%v",
+		strings.Join(kinds, " "), a.foldHistory, a.user != userAsk)
+}
+
+// cellsFromRecordLine 从「整发落账 49 条…」那句里取条数；取不到回 0，
+// 但页面那一栏会把 0 与「读不到」分开显示，因为这两句话不一样。
+func cellsFromRecordLine(s string) int {
+	i := strings.Index(s, "整发落账 ")
+	if i < 0 {
+		return -1
+	}
+	rest := s[i+len("整发落账 "):]
+	digits := ""
+	for _, ch := range rest {
+		if ch < '0' || ch > '9' {
+			break
+		}
+		digits += string(ch)
+	}
+	n, err := strconv.Atoi(digits)
+	if err != nil {
+		return -1
+	}
+	return n
+}
+
+func firstLine(s string) string {
+	s = strings.TrimRight(s, "\n")
+	if i := strings.IndexByte(s, '\n'); i >= 0 {
+		return s[:i] + " …（共 " + strconv.Itoa(strings.Count(s, "\n")+1) + " 行）"
+	}
+	return s
+}
+
+var _ = io.Discard
+
+func (r *run) bufString() string {
+	if b, ok := r.log.(*bytes.Buffer); ok {
+		return b.String()
+	}
+	return ""
+}

@@ -1,0 +1,128 @@
+{
+  "skill": "frame",
+  "generated_at": "2026-10-25T18:15:00Z",
+  "project_name": "交付对账 · 桌面端（收货台）",
+  "persona": {
+    "name": "陈岚",
+    "description": "34 岁，8 人研发团队负责人；团队用编码 Agent 交付业务代码，她负责收/退。",
+    "situation": "Agent 交来一版改动并声称「测试过了、问题修好了」，她要在收/退前确认这些声明是否成立。",
+    "goal": "在不执行对方代码、不联网的前提下，10 分钟内逐条核对声明与盘上证据，并留下一张能转发的回执。",
+    "workaround": "翻 Agent 总结、问开发者、手动看 diff 与测试日志，偶尔自己重跑测试（有执行风险）。",
+    "frustrations": [
+      "声明真假难辨，摘要与盘上事实经常不是一回事",
+      "证据散在文件、日志、轨迹、账本里，手动核对靠 grep 和哈希",
+      "聊天记录不是凭证，出问题无法回溯当时凭什么收",
+      "云端验收工具要把代码上传，团队不愿意",
+      "「核不了」经常被当成「通过」"
+    ],
+    "what_good_looks_like": "每条关键声明都能下钻到文件/行/日志/事件；第一屏就分清 MATCH / MISMATCH / 核不了；一键导出可转发回执。"
+  },
+  "secondary_persona": {
+    "name": "周野",
+    "description": "27 岁，独立开发者；提交/发布前用同一套件自查，不想引入团队流程。"
+  },
+  "jtbd": {
+    "functional": "当编码 Agent 交来一版「已完成」的代码，陈岚想在不运行对方代码、不联网的前提下逐条核对声明与盘上证据，从而在 10 分钟内决定收/退并留下可追溯的回执。",
+    "social": "让团队和上级觉得陈岚的验收有据可查，不是凭感觉放行。",
+    "emotional": "感到掌控与安心 / 避免替「假完成」背锅的焦虑。",
+    "combined": "当 Agent 交来「已完成」的代码，陈岚想只读地逐条核对声明与盘上证据，从而快速收/退并留下凭证；让团队觉得她的验收有据可查；感到掌控与安心，避免背锅焦虑。"
+  },
+  "opportunities": [
+    { "title": "我没法快速判断 Agent 的「完成」到底有几分真", "importance": "H", "satisfaction": "L", "priority": "高" },
+    { "title": "我每次都得手动翻日志、对哈希、grep，核对成本高", "importance": "H", "satisfaction": "L", "priority": "高" },
+    { "title": "我希望 Agent 交来的声明是机器可核的，不用我手写 JSON", "importance": "H", "satisfaction": "L", "priority": "高" },
+    { "title": "我希望验收结果能留成可转发、可复查的凭证", "importance": "H", "satisfaction": "M", "priority": "中" },
+    { "title": "我想把多次交付放在一起看，知道这次比上次退步没有", "importance": "M", "satisfaction": "L", "priority": "中" }
+  ],
+  "competitive_landscape": [
+    {
+      "product": "AET / Agent Engineering Toolkit",
+      "bet_on": "本地工程控制平面：audit / review / trace / evidence pack / context manifest / run manifest，产物给静态 Viewer。",
+      "got_right": "明确区分本地证据与 Agent 自述（attestation）；append-only 交付生命周期；不接管 Agent、不替它跑命令。",
+      "gap_left": "CLI 优先、证据在自己的工作流里产生；没有面向第三方交付的「逐条声明 vs 盘上证据」回执，也没有收/退队列与审批台。",
+      "verified": "2026-10 网页检索与文章摘要，未上手实测"
+    },
+    {
+      "product": "LangSmith / Langfuse / Braintrust",
+      "bet_on": "运行时 Trace 与评测（观测/评估平台）。",
+      "got_right": "深轨迹、评测集、团队协作成熟。",
+      "gap_left": "需要接入与插桩，云或重型自托管；解释「运行时发生了什么」，不裁决「这份交付的声明是否成立」，且与代码上云的顾虑冲突。",
+      "verified": "2026-10 网页检索，价格与形态仅按公开资料"
+    },
+    {
+      "product": "claim-verification / peer-audit-verification（技能件）",
+      "bet_on": "把报告拆成可证伪声明，逐条独立核验。",
+      "got_right": "声明分解与出处意识。",
+      "gap_left": "提示词层面的方法，不是产品：没有本地证据源、没有回执、没有队列与历史。",
+      "verified": "2026-10 技能目录页摘要"
+    },
+    {
+      "product": "SLSA / in-toto（背景参考）",
+      "bet_on": "构建期来源证明与签名。",
+      "got_right": "可验证来源、防篡改。",
+      "gap_left": "管构建来源，不管 Agent 的「我修好了/测试过了」；对小团队过重。",
+      "verified": "训练知识，未实时核验"
+    }
+  ],
+  "business_angle": {
+    "why_now": "编码 Agent 已进入日常交付，「完成」这句话变便宜了，验收成为瓶颈；同时团队对代码上云与执行不可信代码有硬顾虑。",
+    "who_pays": "先用 Agent 写代码的团队负责人/工程组织；短期作者自己作为内部工具。",
+    "monetization": "pre-product：一次性许可或内部成本中心，不先做订阅。",
+    "strategic_intent": "cost-center"
+  },
+  "directions": [
+    {
+      "id": "A",
+      "one_liner": "单件回执台：打开一份交付 → 跑核 → 读回执。",
+      "addresses_opportunity": "1/2",
+      "user_value": "把 CLI 与 HTML 回执包成一个可双击的本地窗口。",
+      "business_value": "最低成本把现有能力产品化。",
+      "riskiest_assumption": "单件核对的频率足以让人愿意装一个桌面应用。"
+    },
+    {
+      "id": "B",
+      "one_liner": "团队收货台：交付队列 + 三态分诊 + 收/退 + 回执历史 + 分享。",
+      "addresses_opportunity": "1/2/4/5",
+      "user_value": "只处理需要人判断的那几单；每单都有可追溯回执；退单理由能复用。",
+      "business_value": "桌面形态的真正理由：队列与审批，而不是把网页装进窗口。",
+      "riskiest_assumption": "团队负责人愿意把验收搬进一个新工具，而不是继续在聊天里拍板。"
+    },
+    {
+      "id": "C",
+      "one_liner": "证据深潜器：以轨迹/事件/账本为中心的时间线与下钻浏览器。",
+      "addresses_opportunity": "2/5",
+      "user_value": "审计与争议时能一路看到文件行、日志行、事件 seq。",
+      "business_value": "专业审计场景的差异化。",
+      "riskiest_assumption": "存在高频的深潜需求，而不只是偶尔的争议复盘。"
+    }
+  ],
+  "lean_direction": "B",
+  "critical_assumption": "团队负责人愿意且需要每版交付后花 3–10 分钟逐条核对，而不是继续信任摘要；这个动作每周至少发生 3 次。",
+  "pressure_test": {
+    "ran": true,
+    "verdict": "holds_with_conditions",
+    "conditions": [
+      "找 3–5 位目标用户用真实交付跑一遍，观察是否打开声明行并做出收/退动作（当前只有作者一次 dogfooding 证据）",
+      "可核声明必须由 Agent 侧自动生成；否则核对成本只是从「看日志」转移到「写 JSON」",
+      "队列频率需 ≥ 每周 3 次；达不到就把方向 B 降级为方向 A（单件回执台），不硬做团队流程"
+    ]
+  },
+  "hmw_cards": {
+    "ran": true,
+    "cards": [
+      { "hmw": "我们如何能让陈岚在 10 分钟内看完一版交付的所有关键声明，从而做出收/退决定？", "addresses_opportunity": "1", "workshop_hint": "作为第一张破冰卡：先不讨论界面，让每个人说出自己今天验收一版 Agent 交付要花多久。" },
+      { "hmw": "我们如何能让「核不了」和「假完成」在第一屏就分开，而不是埋进表格？", "addresses_opportunity": "1", "workshop_hint": "适合做两组对照草图：一组按状态分组，一组按声明顺序，比较哪种更快做出收/退。" },
+      { "hmw": "我们如何能让 Agent 自动产出可核声明，从而不把写 JSON 的负担丢给负责人？", "addresses_opportunity": "3", "workshop_hint": "把工程师和 Agent 使用者分到同一组，现场写一条真实声明，检验成本落在谁身上。" },
+      { "hmw": "我们如何能让一次验收留下可转发的回执，而不是聊天记录截图？", "addresses_opportunity": "4", "workshop_hint": "适合做「给老板看什么」的反向演示：让参与者只用回执向第三人解释为什么退单。" },
+      { "hmw": "我们如何能把多次交付排成队列，让负责人只处理需要人判断的那几单？", "addresses_opportunity": "5", "workshop_hint": "先让参与者按自己的真实一周排优先级，再对照队列视图，找「哪些单其实不需要人看」。" },
+      { "hmw": "我们如何能让证据下钻到文件行号/日志行/事件 seq，同时保持只读？", "addresses_opportunity": "2", "workshop_hint": "适合作为约束卡：任何下钻方案都必须先回答「会不会执行被交付的代码」。" },
+      { "hmw": "我们如何能让独立开发者在提交前 3 分钟自查，而不需要团队流程？", "addresses_opportunity": "2", "workshop_hint": "把独立开发者单独拉一组，避免团队流程思路压过个人场景。" },
+      { "hmw": "我们如何能让「退单理由」变成下一版可复用的核对项，从而越用越快？", "addresses_opportunity": "4", "workshop_hint": "适合放在后半场：让参与者把一条真实退单理由改写成下一条声明模板。" }
+    ]
+  },
+  "evidence_log": [
+    "作者 dogfooding：2026-10-23 真端点交付单 9 条声明里 8 条只有自报，源码未随交付，回执判 UNVERIFIED（产品目录 样例/交付声明-真端点.json 与 读数/对账单-真端点.json）。",
+    "现有 CLI 工具 85/85 验收全绿、24 根臂全咬（2026-10-26 读数），证明能力已存在，但尚未有外部用户使用记录。",
+    "竞品 AET 的文章自述「不接管 Agent、不主动选择命令、不调用模型」（2026-10 网页检索），与本产品只读边界相近，是其证据包路线的直接参照。"
+  ]
+}

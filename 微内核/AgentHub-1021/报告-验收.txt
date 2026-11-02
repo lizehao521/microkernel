@@ -1,0 +1,16 @@
+AgentHub 验收复跑 · 全部数字现算（工具/验收.py）
+生成时刻（本机钟）：2026-10-25 07:08:43
+闸 1 go test：退出码=0 ｜ Test 函数（^func Test 现数）=35 ｜ 尾行：['ok  \thubd\t2.308s']
+闸 1b 前端语法（node --check app.js）：退出码=0 ｜ 语法过
+  （跑的就是这一份：构建-hubd\hubd-验收.exe ｜ 12070912 字节 ｜ sha16 8ad1abadd5305db4）
+闸 2 selfcheck：退出码=0 ｜ [OK ]=25 ｜ [RED]=0 ｜ 自印=[('25', '0')] ｜ 两读一致
+闸 3 端到端（127.0.0.1:65025）：HTTP=200 ｜ 事件种类={'meta': 1, 'plan': 4, 'tool_status': 6, 'tool_result': 2, 'result': 1, 'answer_delta': 12, 'done': 1} ｜ 步=2 ｜ 结束=跑完
+  五档={'absent': 1, 'estimated': 1, 'measured': 4, 'total': 6} ｜ 加总对得上=True ｜ 整列自洽=True ｜ 屏幕脏字=[] ｜ 工具数=12
+  首页=2197 字节 ｜ 含 #calls 与 /api/chat 接线=True
+闸 4a 反臂（-max-steps 1）：步=1 ｜ 结束=步数上限 ｜ 上限真的在管=True ｜ 整列自洽=True
+闸 4b 反臂（默认不放行写文件）：走没走=True ｜ 类别=refused ｜ 试了几次=0 ｜ 读数档=absent
+闸 5 扩展那一维：specs=12 ｜ 探针在册=True ｜ 自然语言选起=True ｜ 类别=ok ｜ 出处档=relayed ｜ 被拒清单=0
+闸 6 界面读数新鲜度：源码 15 件，最新是 httpapi.go ｜ 界面读数 40 份，最新是 读数\浏览器-停止-1023.json ｜ 读数比源码新 616 秒
+
+跑了 4 条命令：C:/Users/Admin/sdk/go/bin/go.exe→rc=0(17 字节)；node→rc=0(0 字节)；C:/Users/Admin/sdk/go/bin/go.exe→rc=0(0 字节)；C:\Users\Admin\Desktop\微内核\AgentHub-1021\构建-hubd\hubd-验收.exe→rc=0(2509 字节)
+结论：现数 8 行闸读数全过

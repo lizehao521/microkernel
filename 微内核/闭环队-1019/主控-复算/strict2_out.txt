@@ -1,0 +1,27 @@
+kinds: 49
+
+L1018 never-really-filled: 4
+  model_output:fail_detail
+  model_output:fail_kind
+  model_output:fail_status
+  model_output:retry_after_ms
+
+L8799 never-really-filled: 14
+  model_input:fixed_overhead
+  model_input:tokens
+  model_output:chunks
+  model_output:endpoint_model
+  model_output:fail_status
+  model_output:finish
+  model_output:first_byte_ms
+  model_output:max_gap_ms
+  model_output:retry_after_ms
+  model_output:usage_in
+  model_output:usage_out
+  model_output:wire_bytes_in
+  model_output:wire_bytes_out
+  model_output:wire_format
+
+BOTH never-really-filled: 2
+  model_output:fail_status
+  model_output:retry_after_ms

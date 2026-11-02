@@ -1,0 +1,128 @@
+BASE http://127.0.0.1:60638/
+
+PASS GET / 200 | status=200
+PASS GET / bytes match build | got=147904 file=147904
+PASS GET / sha match build
+PASS CSP self only | default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 
+PASS nosniff
+PASS single-file no <link>
+PASS single-file no script src
+PASS no external hosts in page
+PASS health ok | {'ok': True, 'boot_id': '21b0aa', 'version': '0.3.0-prototype'}
+PASS page has model control
+PASS page has model toggle copy
+PASS state 200 | status=200
+PASS state model off by default | state=off calls=0
+PASS state model boundary declared | 只发问题 + 去标识证据摘要；不发记忆、操作者、文件路径、sha256、回执、口令
+PASS api model off | status=200
+PASS use_model without bridge absent | tier=absent title=模型未接入
+PASS use_model without bridge 0 calls | source=model calls=0
+PASS state 3 deliveries | got=3
+PASS state 16 claims | got=16
+PASS claims basis all disk/absent
+PASS counts add up D-1026-01 | field={'MATCH': 3, 'MISMATCH': 2, 'ABSENT': 1} actual={'MATCH': 3, 'MISMATCH': 2, 'ABSENT': 1}
+PASS counts add up D-1026-02 | field={'MATCH': 5, 'MISMATCH': 0, 'ABSENT': 0} actual={'MATCH': 5, 'MISMATCH': 0, 'ABSENT': 0}
+PASS counts add up D-1026-03 | field={'MATCH': 4, 'MISMATCH': 0, 'ABSENT': 1} actual={'MATCH': 4, 'MISMATCH': 0, 'ABSENT': 1}
+PASS D1 allowed only reject | ['reject']
+PASS D2 allowed accept+reject | ['accept', 'reject']
+PASS D3 allowed reject+hold | ['reject', 'hold']
+PASS D1-C4/C5 mismatch
+PASS D1-C6 + D3-C5 absent
+PASS absent claims carry why
+PASS bundle pgagent 13 steps | {'steps': 13, 'steps_ran': 13, 'findings': 4}
+PASS bundle agentd 14 events / 2 runs | {'events': 14, 'runs': 2, 'turns_settled': 2, 'runs_settled': 2, 'resumable': 2}
+PASS bundle kernel 49 rows | 49
+PASS kernel basis sums to 49 | {'measured': 37, 'relayed': 4, 'estimated': 2, 'model_says': 1, 'absent': 5}
+PASS kernel hash 49/49
+PASS pgagent code not executed
+PASS raw hash pgagent | 证据/raw/pgagent-真跑-解析.json
+PASS raw hash agentd | 证据/raw/agentd-真端点.events.jsonl
+PASS raw hash kernel | 证据/raw/样例-agent.jsonl
+PASS index file hashes all match
+PASS kernel gate done | state=done why=kcheck 跑完；退出码与计数见读数
+PASS kernel gate rc=0 bad=0 | rc=0 bad=0
+PASS kernel counts non-zero | ok=40 unknown=7
+PASS kernel exe hash 64 hex
+PASS kernel readout matches snapshot | 读数/内核快闸.json
+PASS dialogue 测试过了吗？ | status=200 tier=measured title=「测试通过」：不符
+  Q 测试过了吗？ -> [measured] 「测试通过」：不符 refs=3
+PASS dialogue 有没有执行代码？ | status=200 tier=measured title=没有执行交付代码：相符
+  Q 有没有执行代码？ -> [measured] 没有执行交付代码：相符 refs=2
+PASS dialogue 真实模型复核过吗？ | status=200 tier=measured title=「真实模型复核过」：不符
+  Q 真实模型复核过吗？ -> [measured] 「真实模型复核过」：不符 refs=2
+PASS dialogue 这版能收吗？ | status=200 tier=measured title=三单的判定
+  Q 这版能收吗？ -> [measured] 三单的判定 refs=4
+PASS dialogue 哪些核不了？ | status=200 tier=absent title=2 条核不了
+  Q 哪些核不了？ -> [absent] 2 条核不了 refs=2
+PASS dialogue 证据在哪？ | status=200 tier=measured title=证据索引
+  Q 证据在哪？ -> [measured] 证据索引 refs=3
+PASS dialogue 49 格在哪？ | status=200 tier=measured title=49 格：两个来源，不是同一发
+  Q 49 格在哪？ -> [measured] 49 格：两个来源，不是同一发 refs=3
+PASS dialogue 事件断线可续吗？ | status=200 tier=absent title=本发核不了；参照账能核
+  Q 事件断线可续吗？ -> [absent] 本发核不了；参照账能核 refs=3
+PASS dialogue 内核快闸跑了吗？ | status=200 tier=measured title=内核快闸
+  Q 内核快闸跑了吗？ -> [measured] 内核快闸 refs=1
+PASS dialogue 我的记忆在哪？ | status=200 tier=measured title=个人记忆只在本机
+  Q 我的记忆在哪？ -> [measured] 个人记忆只在本机 refs=1
+PASS dialogue 上次为什么退？ | status=200 tier=absent title=记忆里还没有决定
+  Q 上次为什么退？ -> [absent] 记忆里还没有决定 refs=1
+PASS dialogue 帮我收下这单 | status=200 tier=refused title=对话不能收 / 退
+  Q 帮我收下这单 -> [refused] 对话不能收 / 退 refs=0
+PASS dialogue 帮我写一首诗 | status=200 tier=refused title=这个问题不在本机证据里
+  Q 帮我写一首诗 -> [refused] 这个问题不在本机证据里 refs=0
+PASS dialogue 明天天气怎么样？ | status=200 tier=refused title=这个问题不在本机证据里
+  Q 明天天气怎么样？ -> [refused] 这个问题不在本机证据里 refs=0
+PASS dialogue 怎么用？ | status=200 tier=measured title=这个对话能做什么
+  Q 怎么用？ -> [measured] 这个对话能做什么 refs=0
+PASS dialogue 为什么不能收？ | status=200 tier=measured title=为什么 D-1026-01 不能收
+  Q 为什么不能收？ -> [measured] 为什么 D-1026-01 不能收 refs=2
+PASS dialogue persisted 16+ | 17
+PASS dialogue rows have q/tier/text
+PASS D1 accept disallowed | status=409 err=DISALLOWED
+PASS D2 hold disallowed | status=409 err=DISALLOWED
+PASS D3 accept disallowed | status=409 err=DISALLOWED
+PASS reject short reason 422 | status=422 err=REASON_REQUIRED
+PASS unknown delivery 404 | status=404 err=NO_DELIVERY
+PASS D1 reject accepted | status=200 err=None
+PASS D1 receipt exists | 回执/receipt-D-1026-01-20261026-062559.html
+PASS D1 receipt has 6 claims
+PASS D1 receipt has reason
+PASS D1 receipt has kernel readout
+PASS D1 receipt self-contained
+PASS D1 repeat 409 | status=409 err=ALREADY_DECIDED
+PASS D2 accept accepted | status=200 err=None
+PASS D2 receipt exists
+PASS D3 hold accepted | status=200 err=None
+PASS D3 receipt exists
+PASS D3 repeat 409 | status=409 err=ALREADY_DECIDED
+PASS memory 3 decisions | 3
+PASS memory decisions have receipts
+PASS memory file hash matches meta
+PASS receipt files 3 new | receipt-D-1026-01-20261026-062559.html,receipt-D-1026-02-20261026-062559.html,receipt-D-1026-03-20261026-062559.html
+PASS reason add | status=200
+PASS reason too short 422 | status=422
+PASS reason delete | status=200
+PASS preference save | status=200
+PASS memory export json | status=200
+PASS cross-origin POST 403 | status=403 err=ORIGIN_REJECTED
+PASS text/plain POST 400 | status=400 err=BAD_JSON
+PASS oversized POST 400 | status=400 err=BAD_JSON
+PASS declared 70KB POST 400 | status=400
+PASS receipt traversal 400 | status=400 err=BAD_NAME
+PASS unknown POST 404 | status=404
+PASS memory clear | status=200
+PASS memory clear needs confirm | status=422
+PASS clear kept preferences
+
+READOUTS
+html bytes=147904 sha256=4db8f042957580fd33af10ec5031610cf0b714fbe8d028467c73be0bddcdc5cb
+deliveries=3 claims=16
+kernel rc=0 ok=40 bad=0 unknown=7 exe=c6e5d6dcc58c683c20da49681c32001afbe87fe8e9a275aa5cf5cd55694767ac elapsed_ms=877
+pgagent steps=13 trace_sane=True chain_sane=True code_executed=False
+agentd events=14 runs=2 turns_settled=2 runs_settled=2
+kernel rows=49 basis={"measured": 37, "relayed": 4, "estimated": 2, "model_says": 1, "absent": 5}
+model state=off calls=0 boundary=只发问题 + 去标识证据摘要；不发记忆、操作者、文件路径、sha256、回执、口令
+receipts=receipt-D-1026-01-20261026-061854.html,receipt-D-1026-03-20261026-061826.html,receipt-D-1026-02-20261026-060742.html,receipt-D-1026-01-20261026-045642.html,receipt-D-1026-02-20261026-061230.html,receipt-D-1026-02-20261026-060730.html,receipt-D-1026-02-20261026-045643.html,receipt-D-1026-02-20261026-061640.html,receipt-D-1026-01-20261026-061509.html,receipt-D-1026-02-20261026-061801.html,receipt-D-1026-03-20261026-060539.html,receipt-D-1026-03-20261026-060730.html,receipt-D-1026-01-20261026-060539.html,receipt-D-1026-02-20261026-061826.html,receipt-D-1026-02-20261026-061510.html,receipt-D-1026-02-20261026-061839.html,receipt-D-1026-03-20261026-045643.html,receipt-D-1026-01-20261026-061825.html,receipt-D-1026-01-20261026-061147.html,receipt-D-1026-01-20261026-062559.html,receipt-D-1026-01-20261026-061800.html,receipt-D-1026-01-20261026-060729.html,receipt-D-1026-01-20261026-060740.html,receipt-D-1026-01-20261026-061639.html,receipt-D-1026-01-20261026-061229.html,receipt-D-1026-03-20261026-061855.html,receipt-D-1026-03-20261026-061801.html,receipt-D-1026-03-20261026-060741.html,receipt-D-1026-02-20261026-061855.html,receipt-D-1026-03-20261026-061510.html,receipt-D-1026-03-20261026-061230.html,receipt-D-1026-02-20261026-062559.html,receipt-D-1026-03-20261026-061639.html,receipt-D-1026-02-20261026-061149.html,receipt-D-1026-03-20261026-061839.html,receipt-D-1026-03-20261026-061148.html,receipt-D-1026-02-20261026-060539.html,receipt-D-1026-01-20261026-061838.html,receipt-D-1026-03-20261026-062559.html
+note: receipts from this HTTP acceptance remain in 回执/; the script cleared decisions/dialogue afterwards.
+
+RESULT PASS checks=97/97

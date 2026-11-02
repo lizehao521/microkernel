@@ -1,0 +1,1 @@
+{"endpoints":["/healthz","/v1/verify","/v1/tally","/v1/celltable","/v1/turns","/v1/read_back"]}

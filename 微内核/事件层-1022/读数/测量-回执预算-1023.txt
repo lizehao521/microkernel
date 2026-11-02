@@ -1,0 +1,47 @@
+exe built once: sha256_12=5ac171a854af bytes=14331904 build_s=1.2
+idle check before loop: go/compile/agentd procs=0
+run  0 rc=0 busy=0 发=6 max_ack=18ms 超100=0  check-log@100 rc=0 红的支=-
+run  1 rc=0 busy=0 发=6 max_ack=46ms 超100=0  check-log@100 rc=0 红的支=-
+run  2 rc=0 busy=0 发=6 max_ack=41ms 超100=0  check-log@100 rc=0 红的支=-
+run  3 rc=0 busy=0 发=6 max_ack=18ms 超100=0  check-log@100 rc=0 红的支=-
+run  4 rc=0 busy=0 发=6 max_ack=22ms 超100=0  check-log@100 rc=0 红的支=-
+run  5 rc=0 busy=0 发=6 max_ack=212ms 超100=1  check-log@100 rc=4 红的支=ValidateAccepts
+run  6 rc=0 busy=0 发=6 max_ack=34ms 超100=0  check-log@100 rc=0 红的支=-
+run  7 rc=0 busy=0 发=6 max_ack=288ms 超100=1  check-log@100 rc=4 红的支=ValidateAccepts
+run  8 rc=0 busy=0 发=6 max_ack=15ms 超100=0  check-log@100 rc=0 红的支=-
+run  9 rc=0 busy=0 发=6 max_ack=22ms 超100=0  check-log@100 rc=0 红的支=-
+run 10 rc=0 busy=0 发=6 max_ack=19ms 超100=0  check-log@100 rc=0 红的支=-
+run 11 rc=0 busy=0 发=6 max_ack=20ms 超100=0  check-log@100 rc=0 红的支=-
+run 12 rc=0 busy=0 发=6 max_ack=18ms 超100=0  check-log@100 rc=0 红的支=-
+run 13 rc=0 busy=0 发=6 max_ack=22ms 超100=0  check-log@100 rc=0 红的支=-
+run 14 rc=0 busy=0 发=6 max_ack=17ms 超100=0  check-log@100 rc=0 红的支=-
+run 15 rc=0 busy=0 发=6 max_ack=26ms 超100=0  check-log@100 rc=0 红的支=-
+run 16 rc=0 busy=0 发=6 max_ack=16ms 超100=0  check-log@100 rc=0 红的支=-
+run 17 rc=0 busy=0 发=6 max_ack=20ms 超100=0  check-log@100 rc=0 红的支=-
+run 18 rc=0 busy=0 发=6 max_ack=23ms 超100=0  check-log@100 rc=0 红的支=-
+run 19 rc=0 busy=0 发=6 max_ack=15ms 超100=0  check-log@100 rc=0 红的支=-
+run 20 rc=0 busy=0 发=6 max_ack=17ms 超100=0  check-log@100 rc=0 红的支=-
+run 21 rc=0 busy=0 发=6 max_ack=362ms 超100=1  check-log@100 rc=4 红的支=ValidateAccepts
+run 22 rc=0 busy=0 发=6 max_ack=18ms 超100=0  check-log@100 rc=0 红的支=-
+run 23 rc=0 busy=0 发=6 max_ack=30ms 超100=0  check-log@100 rc=0 红的支=-
+run 24 rc=0 busy=0 发=6 max_ack=16ms 超100=0  check-log@100 rc=0 红的支=-
+run 25 rc=0 busy=0 发=6 max_ack=87ms 超100=0  check-log@100 rc=0 红的支=-
+run 26 rc=0 busy=0 发=6 max_ack=24ms 超100=0  check-log@100 rc=0 红的支=-
+run 27 rc=0 busy=0 发=6 max_ack=16ms 超100=0  check-log@100 rc=0 红的支=-
+run 28 rc=0 busy=0 发=6 max_ack=15ms 超100=0  check-log@100 rc=0 红的支=-
+run 29 rc=0 busy=0 发=6 max_ack=13ms 超100=0  check-log@100 rc=0 红的支=-
+
+SAMPLES 发=180 趟=30 (每趟一行，行数即趟数) 自证: sum(每趟发数)=180 == 总发数=180 -> OK
+DIST-第一发 n=30 min=13 p50=20 p90=87 max=362 | 超100 的发=3 (10.0%)
+DIST-后续发  n=150 min=0 max=2 其中 ack_ms=0 的发=131
+DIST-全样本 n=180 min=0 p50=0 p90=18 max=362 | 超100 的发=3 (1.7%)
+PER-RUN 趟级 rc!=0 的趟=0 / -check-log@100 红的趟=3 / 观测到的最忙 busy=0
+BREAK   超预算的那几发（发位=每趟第一发）= run5=212ms,run7=288ms,run21=362ms
+SWEEP 第一发口径，若预算改成这些数则超的发数 = 20:14 50:4 100:3 150:3 200:3 300:1 500:0
+ARM-TEETH 预算=0 在正常日志上 rc=4 红的支=ValidateAccepts 读数=第 1 发的回执距入口 18ms，超上限 0ms 那句里的ack=18 -> 有牙
+ARM-WIDE  预算=60000 rc=0 红的支=- -> 绿
+ARM-CROSS 最慢那本 run21 F=362ms: 预算361 rc=4 红的支=ValidateAccepts | 预算362 rc=0 红的支=- | 预算100 rc=4 红的支=ValidateAccepts -> 两档真打架
+ARM-CROSS-READ 预算361 那句=第 1 发的回执距入口 362ms，超上限 361ms
+VERDICT 偶发破：同一无并发条件下 30 趟第一发里 3 趟超 100ms（破的那几发见 BREAK；其余第一发 max=87ms、p50=20ms）—— 预算是**发现**不是本件的闸，所以这不算测量失败，算『100ms 这台机器守得住但不是每次』
+CAVEAT 只测了 happy 脚本、max-turns=20、单进程；真模型端点 NOT_RUN、真人 NOT_RUN —— 换负载这一分布得重测
+三态 分布=量出来的 / 破预算=发现（不改本件 rc）/ 本件 rc 只答『这趟量可不可信』：臂不成立或趟没跑完才红

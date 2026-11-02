@@ -1,0 +1,14 @@
+# 臂读数空档自证（臂读数空档自证-1023.py 现跑，勿手抄）
+
+- 被检件：C:\Users\Admin\Desktop\微内核\事件层-1022\体检-全闸-1023.py
+- 修前对照：C:/Users/Admin/Desktop/微内核\TEMP-备份\文档-1023\体检-改前2-1023.py
+- 形 6 个（假树与假读数全在 C:\Users\Admin\AppData\Local\Temp\armempty-u7_knavb，真读数没被碰）
+
+PASS empty-fresh     live=EMPTY  old=FRESH  rows=0 red=Y | rows=0 verdicts={} ｜ 一条臂都没说话 ⇒ 这一趟臂检被打断或没跑，新鲜度不作数
+PASS blind-row       live=BAD    old=FRESH  rows=3 red=Y | rows=3 verdicts={"BIT": 2, "BLIND": 1} ｜ 点名不绿的档：BLIND
+PASS not-wired-row   live=BAD    old=FRESH  rows=3 red=Y | rows=3 verdicts={"BIT": 2, "NOT-WIRED": 1} ｜ 点名不绿的档：NOT-WIRED
+PASS all-bit-fresh   live=FRESH  old=FRESH  rows=2 red=n | rows=2 verdicts={"BIT": 2}
+PASS all-bit-stale   live=STALE  old=STALE  rows=2 red=n | rows=2 verdicts={"BIT": 2}
+PASS no-file         live=MISSING old=STALE  rows=0 red=Y | 读不到 C:\Users\Admin\AppData\Local\Temp\armempty-u7_knavb\tree\读数.jsonl ⇒ 先跑 臂检-全部族.py
+
+结论：0 条自证不过。空读数与坏档现在都能把合取件逼红，而同一份读数喂修前件一条都报不出来 ⇒ 这条牙是新长的。

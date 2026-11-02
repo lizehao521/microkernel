@@ -1,0 +1,494 @@
+<!-- ================= CHAPTER 3 ================= -->
+<section class="chapter" id="ch3">
+  <div class="chap-kicker">Chapter 03 · Demand Drivers</div>
+  <h1><span class="num">03</span>需求驱动</h1>
+
+  <div class="chap-q">
+    <b>本章回答：</b>是什么在推动买方寻找“可复核的交代”？这些驱动是长期趋势，还是只在事故/审计发生时才会触发？
+  </div>
+
+  <p class="lede">
+    需求是真的，但它是<b>触发型需求</b>，不是“每天都要用”的需求。
+    合规、事故、外包交付、客户追责，这四件事发生时，买方会在很短时间内找一个“能拿出记录”的东西；
+    事情过去后，预算又会回到可观测性和功能开发。
+    这决定了销售动作：不要在平时教育市场，要在触发点上出现。
+  </p>
+
+  <h2>3.1 合规驱动：三条法规，三种单位</h2>
+
+  <p>
+    2026 年最重要的三条外部驱动是 EU AI Act 第 12 条、中国 GB/T 47746—2026、以及 OWASP MCP08。
+    它们都指向“可追溯”，但单位不同：EU 要的是高风险系统的<b>事件日志</b>，中国标准要的是<b>应用/服务记录</b>，
+    OWASP 要的是<b>MCP 调用遥测</b>。这颗内核最贴近的是第三种，其次是第一种；第二种的单位常常是“对客承诺”，
+    与“模型调用”不是一回事，不能直接宣称合规。
+  </p>
+
+  <table class="tbl">
+    <caption><b>表 5 · 合规映射</b>：只写“能提供什么技术附件”，不写“保证合规”</caption>
+    <thead><tr><th style="width:18%">法规 / 标准</th><th style="width:28%">要求（外部口径）</th><th style="width:22%">内核能提供</th><th style="width:22%">内核不能提供</th><th>等级</th></tr></thead>
+    <tbody>
+      <tr><td>EU AI Act 第 12 条</td><td>高风险 AI 系统应能在全生命周期自动记录事件（日志）；日志至少保存 6 个月（另有规定除外）；高风险义务自 2026-08-02 起适用，部分产品类别延至 2027-08-02</td><td>逐次调用的记录、哈希链、逐格出处、三态校验</td><td>高风险分类、法律意见、合规认证；不覆盖所有 Agent</td><td><span class="tag tag-d">D</span></td></tr>
+      <tr><td>GB/T 47746—2026</td><td>2026-09-01 实施；具体适用范围与条款以标准原文为准</td><td>可追溯的调用记录、出处、拒收原因</td><td>对客承诺级记账；标准符合性结论</td><td><span class="tag tag-d">D</span></td></tr>
+      <tr><td>电商法第 48 条 + 平台规则</td><td>自动信息系统订立/履行合同的行为效力；价格与承诺合规</td><td>模型调用的记录与指纹</td><td>证明“对客承诺的内容是真的”；单位不匹配</td><td><span class="tag tag-d">D</span></td></tr>
+      <tr><td>OWASP MCP08</td><td>MCP 服务器与 Agent 的遥测有限，阻碍调查与事件响应</td><td>逐次 MCP 调用的 49 格记录、拒收计数、链校验</td><td>完整的事件响应、入侵检测、阻断</td><td><span class="tag tag-d">D</span></td></tr>
+      <tr><td>客户合同 / 审计条款</td><td>甲方要求乙方提供可复核的交付记录</td><td>证据包、读回、指纹、拒收清单</td><td>替代审计师、出具鉴证意见</td><td><span class="tag tag-c">C</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn">
+    <div class="t">合规驱动的三个“不要”</div>
+    <p><b>不要</b>说“用了它就符合 EU AI Act”。它只提供技术记录，不提供法律结论。<br>
+    <b>不要</b>把“高风险系统”的义务外推到所有 Agent。大多数Agent不是高风险；过度宣称会被合规买家一眼识破。<br>
+    <b>不要</b>把“模型调用记录”当成“对客承诺记录”。后者是另一个产品（B 路线），单位不对。</p>
+  </div>
+
+  <p>
+    合规驱动还有一个时间差：法规生效不等于预算到位。EU AI Act 的高风险义务从 2026-08-02 起适用，
+    但企业的合规预算通常提前 6–12 个月立项，且在第一次审计/问卷/客户追责时才会真正花钱。
+    所以 2026 年下半年到 2027 年上半年，是“问询增多、预算释放”的窗口；窗口里卖的是“技术附件”，不是“认证”。
+  </p>
+
+  <h2>3.2 技术驱动：MCP 采用了，遥测没跟上</h2>
+
+  <p>
+    MCP 生态的采用数据说明两件事：<b>预算存在</b>，且<b>缺口存在</b>。
+    公网 MCP 服务器已经超过 10,000 个；Stacklok 的调查里 41% 的组织在生产中使用 MCP；
+    LangChain 的调查里 57% 的受访者在生产中使用 Agent，约 89% 有某种可观测性，29.5% 没有评测。
+    这些样本偏向活跃开发者，不能当全球普查，但足以说明“追踪/评测”已经是常规预算项。
+  </p>
+
+  <table class="tbl">
+    <thead><tr><th style="width:34%">外部读数</th><th style="width:14%">数字</th><th>对内核的含义</th></tr></thead>
+    <tbody>
+      <tr><td>公网 MCP 服务器数量</td><td class="num">10,000+</td><td>供给端已经形成；调用审计有对象，不需要教育“什么是 MCP”</td></tr>
+      <tr><td>Stacklok：组织在生产中使用 MCP</td><td class="num">41%</td><td>生产采用意味着“出事故要调查”的概率上升</td></tr>
+      <tr><td>LangChain：受访者在生产中使用 Agent</td><td class="num">57%</td><td>Agent 从 demo 走进生产，审计需求随之出现</td></tr>
+      <tr><td>LangChain：有可观测性</td><td class="num">约 89%</td><td>预算存在，但“可观测性”不等于“可拒收、可归因”</td></tr>
+      <tr><td>LangChain：没有评测</td><td class="num">29.5%</td><td>质量预算有缺口，但这不是内核的能力域；不要误卖</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    这组数据最容易被误读成“市场很大，赶紧做”。正确的读法是：
+    <b>可观测性是红海，证据/拒收是红海里的一个窄缝。</b>
+    89% 有可观测性，说明买方已经习惯了“看追踪”；他们不会为“再一个追踪面板”付钱，
+    但可能会为“追踪之后的一层签收”付钱——前提是你能证明这层签收能拦住东西、能指名格位。
+  </p>
+
+  <h2>3.3 事故驱动：调查需要账，但账不是防线</h2>
+
+  <p>
+    2026-02-27 披露的 MCPwnfluence 是一个典型：CVE-2026-27825（CVSS 9.1，任意文件写到 RCE）
+    加 CVE-2026-27826（CVSS 8.2，未认证 SSRF），影响 0.17.0 之前版本，有公开 PoC；
+    按披露方口径，受影响包的下载量逾 400 万。FreeBuf 与 Bishop Fox 的复盘都指向同一件事：
+    认证与边界在每一环缺席。
+  </p>
+  <p>
+    这类事故会带来两个需求：<b>事前阻断</b>和<b>事后调查</b>。
+    这颗内核只做后者的一小部分：它能告诉你“这一发调用记了什么、谁算的、哪一格被拒”，
+    但它不能告诉你“攻击者怎么进来的”，也不能阻止下一次。把两者混为一谈，是进入安全预算时最常见的死法。
+  </p>
+
+  <div class="callout danger">
+    <div class="t">审计层不是防线（对外材料第一屏）</div>
+    <p>如果买方问“能不能挡提示注入”，正确答案是“不能”。如果买方需要阻断，应该找 MCP 网关、WAF、DLP、访问控制。内核的价值是事后能拿出发生过什么，而不是事前不让它发生。</p>
+  </div>
+
+  <p>
+    内部事故的说服力更强，因为它有账可查：一次 session 里，内核当面拒了 4 次不实装配
+    （空响应记正常收尾、类别谎报去留状态码、对端自报数标成自己量的、宣称通知发了而段里没有）。
+    每一次都能从账上读出“被拒的写入 N 次”并指名格位。
+    这不是“模型变聪明了”，而是“说错话被当场收费了”。
+  </p>
+
+  <h2>3.4 采购驱动：四个预算，两种能进</h2>
+
+  <table class="tbl">
+    <thead><tr><th style="width:14%">预算</th><th style="width:16%">典型负责人</th><th style="width:20%">触发事件</th><th style="width:16%">年度量级（假设）</th><th style="width:14%">内核位置</th><th>销售动作</th></tr></thead>
+    <tbody>
+      <tr><td>可观测性</td><td>平台 / ML Infra</td><td>排障、SLA、成本</td><td class="num">2–20 万美元</td><td>签收层</td><td>开源切入，POC 30 分钟</td></tr>
+      <tr><td>合规</td><td>风险 / 合规 / CTO</td><td>审计、问卷、客户追责</td><td class="num">5–50 万美元</td><td>技术附件</td><td>设计伙伴，法律配合</td></tr>
+      <tr><td>安全</td><td>CISO</td><td>入侵、注入、外泄</td><td class="num">10 万美元+</td><td class="no">不进</td><td>不销售；必要时转介网关</td></tr>
+      <tr><td>质量 / 评测</td><td>AI 质量负责人</td><td>准确率、成功率</td><td class="num">3–20 万美元</td><td class="no">不进</td><td>不销售；不拿 8/8 vs 6/8 做卖点</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    采购驱动最关键的不是“预算大小”，而是“谁在什么时候会主动找”。可观测性预算是常态预算，但买方不会主动找“签收层”；
+    合规预算是触发预算，一旦审计/问卷/追责发生，买方会在几周内找人。
+    所以冷启动的正确顺序是：<b>先用开源进入可观测性预算，再用一次真实触发把签收层推进合规预算。</b>
+    反过来（先打合规、再补工程）会卡在采购周期和法律审查上。
+  </p>
+
+  <h2>3.5 反驱动：五件会让需求消失的事</h2>
+  <ul>
+    <li><b>大厂捆绑：</b>LangSmith、Langfuse、Datadog 把“证据/签收”做成默认功能，价格包含在现有套餐里。</li>
+    <li><b>开源替代：</b>Langfuse 以 MIT 协议自托管；买方会说“我为什么不用免费的”。</li>
+    <li><b>自建：</b>一个工程师 2–4 周能写一个“记录 + 哈希”的版本；难点不在代码，在判据和证据，但买方常常低估后者。</li>
+    <li><b>“我们已经有日志”：</b>买方把“调用发生过”当成“出处可核”，不认为需要额外一层。</li>
+    <li><b>Agent 项目取消：</b>Gartner 预测到 2027 年底超过 40% 的 Agentic AI 项目会被取消；预算消失时，审计是第一个被砍的“非功能项”。</li>
+  </ul>
+
+  <p>
+    这五条反驱动里，前三条是竞争，后两条是需求本身的风险。
+    它们共同说明：<b>不能做“泛审计”，只能做“触发点上的收口”。</b>
+    泛审计会被免费/捆绑打掉；触发点上的收口有明确的“现在就要”的买方。
+  </p>
+
+  <h2>3.6 需求结论</h2>
+  <div class="callout">
+    <div class="t">需求是触发型的，不是常态型的</div>
+    <p>平时买方不会主动找“可复核的交代”；事故、审计、外包交付、客户追责发生时，他会在一周内找。产品的市场动作应该围绕触发点设计：<b>让他在触发时能搜到你、能在 30 分钟试到你、能在一次 POC 里看到你拦住东西。</b></p>
+  </div>
+  <p>
+    这也解释了为什么“研究出版 + 开源”是正确顺序：研究出版让触发时的搜索能找到你（合规/审计关键词），
+    开源让触发时的工程验证能立刻开始（不需要销售、不需要合同）。两者都不需要现金投入，却正好覆盖触发型买方的两个动作。
+  </p>
+
+  <div class="endnote">
+    本章外部数据均为 D 级：OWASP MCP Top 10、EU AI Act 第 12 条、GB/T 47746—2026、MCPwnfluence CVE 披露、Stacklok/LangChain 调查、Gartner 预测；访问日 2026-10-19。法规适用需法律复核；本报告不提供法律意见。
+  </div>
+</section>
+
+<!-- ================= CHAPTER 4 ================= -->
+<section class="chapter" id="ch4">
+  <div class="chap-kicker">Chapter 04 · Competitive Landscape</div>
+  <h1><span class="num">04</span>竞争格局</h1>
+
+  <div class="chap-q">
+    <b>本章回答：</b>谁在抢同一个预算？他们的价格锚是多少？这颗内核的空白在哪里、能守多久？
+  </div>
+
+  <p class="lede">
+    竞争不是一个“同类产品列表”，而是五种不同形状的玩家从五个方向挤压同一个预算：
+    可观测性平台向下做证据，MCP 网关向后做审计，云厂商从基础设施向上做账本，GRC 从合规向下要运行时数据，开源/自建从价格底部往上顶。
+    这颗内核的空白是“窄而深的证据/拒收层”，但空白不大，且 12–24 个月内可能被捆绑。
+  </p>
+
+  <h2 id="s4-1">4.1 五类玩家</h2>
+
+  <table class="tbl">
+    <caption><b>表 6 · 五类玩家</b>：强项、缺口与和内核的关系</caption>
+    <thead><tr><th style="width:15%">类别</th><th style="width:25%">代表</th><th style="width:22%">强项</th><th style="width:22%">缺口</th><th>与内核的关系</th></tr></thead>
+    <tbody>
+      <tr><td>LLM 可观测性</td><td>LangSmith、Langfuse、Braintrust、Datadog、Helicone、Portkey、W&amp;B Weave</td><td>追踪、评测、成本、提示管理；分发强</td><td>没有“逐格出处 + 原子拒收 + 拒收归因”</td><td>宿主 / 上游；内核做签收层</td></tr>
+      <tr><td>MCP 网关 / 控制面</td><td>Microsoft MCP Gateway、Docker MCP Gateway、Zuplo、TrueFoundry、Lunar.dev MCPX、Obot、IBM ContextForge、Bifrost</td><td>认证、路由、限流、策略、准入</td><td>管“能不能进”，不管“进来后这句话是谁算的”</td><td>互补；网关准入，内核报账</td></tr>
+      <tr><td>云审计账本</td><td>AWS CloudTrail（SHA-256 + RSA 日志校验）、Azure Confidential Ledger（TEE/区块链背书）</td><td>基础设施级不可抵赖、合规信任</td><td>没有 LLM 语义格位；不知道“模型说了什么”</td><td>底层类比 / 基座；不是应用层竞品</td></tr>
+      <tr><td>GRC / AI 治理平台</td><td>传统 GRC、AI 治理与模型风险管理平台</td><td>制度、风险登记、合规流程</td><td>缺运行时逐调用证据；常靠问卷/人工</td><td>证据的消费者；可集成</td></tr>
+      <tr><td>开源 / 自建</td><td>OpenTelemetry GenAI 语义约定、自写日志、Langfuse 自托管</td><td>免费、可定制、无采购</td><td>没有判据表、没有拒收语义、没有证据 corpus</td><td>替代品；也是分发渠道</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    这张表最重要的不是“谁更强”，而是“谁离预算更近”。
+    可观测性平台离预算最近，MCP 网关离“准入”最近，云账本离“信任”最近，GRC 离“合规流程”最近。
+    内核离“拒收语义”最近，但“拒收语义”本身不是一个预算项；它必须挂到上面某一个预算里，才有采购路径。
+  </p>
+
+  <h2 id="s4-2">4.2 价格锚：为什么不能按 seat 卖</h2>
+
+  <p>
+    可观测性市场的公开价格锚很低：29–249 美元/月的入门套餐随处可见，按 seat、按 span、按 request 计价。
+    如果内核按 seat 或按 span 卖，它会被直接放进同一个比价表，然后被“免费版/自带追踪”打掉。
+    它必须按“一次收口/一份证据包/一年私有化”计价，才能避开这个锚。
+  </p>
+
+  <table class="tbl">
+    <caption><b>表 7 · 公开价格锚</b>：厂商公开页/二手转引，访问 2026-10-19；价格随页面变动</caption>
+    <thead><tr><th style="width:22%">产品</th><th style="width:18%">公开价格锚</th><th style="width:16%">计价单位</th><th>对内核的含义</th></tr></thead>
+    <tbody>
+      <tr><td>LangSmith</td><td>约 39 美元/seat/月</td><td>seat</td><td>开发者工具的锚；按 seat 卖会被压到很低</td></tr>
+      <tr><td>Langfuse</td><td>Cloud 约 29 美元/月起；MIT 自托管</td><td>用量 / seat</td><td>免费替代最强；必须卖“拒收语义”，不是“日志”</td></tr>
+      <tr><td>Braintrust</td><td>Pro 约 249 美元/月</td><td>组织 / seat</td><td>评测预算高于追踪；但内核不做评测</td></tr>
+      <tr><td>Datadog LLM Observability</td><td>约 160 美元/月起（10 万 spans）</td><td>span</td><td> incumbent；按 span 比价对内核不利</td></tr>
+      <tr><td>Helicone</td><td>约 79 美元/月</td><td>request</td><td>代理型追踪；价格锚低</td></tr>
+      <tr><td>Portkey</td><td>约 49 美元/月</td><td>request / seat</td><td>网关 + 可观测；与 MCP 网关同向</td></tr>
+      <tr><td>W&amp;B Weave</td><td>约 60 美元/月</td><td>用量</td><td>评测/追踪；不是证据闸门</td></tr>
+      <tr><td>TrueFoundry</td><td>Pro 约 499 美元/月</td><td>平台</td><td>控制面价格；说明“平台”可以收更高</td></tr>
+      <tr><td>CloudTrail / Azure Confidential Ledger</td><td>按用量 / 按账本</td><td>基础设施</td><td>云账本把“不可抵赖”变成基础设施功能</td></tr>
+      <tr class="em-row"><td>agentkernel（建议）</td><td>1.2–3 万美元/年起</td><td>年费 + 收口次数</td><td>是入门可观测性的 10–25 倍；必须用合规/收口价值解释</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn">
+    <div class="t">价格锚的残酷之处</div>
+    <p>买家不会拿“一次人工复核 25–300 美元”来和你比价；他会拿“Langfuse 免费版”来和你比价。所以你不能卖“日志 + 哈希”，只能卖“拒收 + 归因 + 合规附件”；前者是功能，后者是责任。</p>
+  </div>
+
+  <h2>4.3 竞争定位：空白在右下角，但不大</h2>
+
+  <figure>
+    <div class="pad">
+      <svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="竞争定位矩阵">
+        <rect x="0" y="0" width="700" height="400" fill="#ffffff"/>
+        <line x1="80" y1="330" x2="650" y2="330" stroke="#94a3b8" stroke-width="1.2"/>
+        <line x1="80" y1="330" x2="80" y2="40" stroke="#94a3b8" stroke-width="1.2"/>
+        <line x1="365" y1="40" x2="365" y2="330" stroke="#e2e8f0" stroke-width="1"/>
+        <line x1="80" y1="185" x2="650" y2="185" stroke="#e2e8f0" stroke-width="1"/>
+        <g font-family="Microsoft YaHei, Noto Sans SC, sans-serif" font-size="9" fill="#64748b">
+          <text x="365" y="354" text-anchor="middle">追踪 / 可观测 → 证据 / 拒收 / 可验</text>
+          <text x="80" y="26" text-anchor="start">通用平台</text>
+          <text x="80" y="390" text-anchor="start">窄而深</text>
+          <text x="630" y="354" text-anchor="end" fill="#0f766e">空白：证据闸门</text>
+          <text x="90" y="54" fill="#94a3b8">红海：通用追踪</text>
+          <text x="640" y="54" text-anchor="end" fill="#94a3b8">大厂腹地：控制面 / 云审计</text>
+          <text x="90" y="322" fill="#94a3b8">自建 / 标准</text>
+          <text x="640" y="322" text-anchor="end" fill="#0f766e">窄而深的签收层</text>
+        </g>
+        <g font-family="Microsoft YaHei, Noto Sans SC, sans-serif" font-size="8.5">
+          <circle cx="180" cy="95" r="26" fill="#2563eb" opacity="0.16"/><text x="180" y="98" text-anchor="middle" fill="#1e40af">LangSmith</text>
+          <circle cx="255" cy="125" r="24" fill="#2563eb" opacity="0.16"/><text x="255" y="128" text-anchor="middle" fill="#1e40af">Langfuse</text>
+          <circle cx="330" cy="95" r="28" fill="#2563eb" opacity="0.16"/><text x="330" y="98" text-anchor="middle" fill="#1e40af">Datadog</text>
+          <circle cx="205" cy="150" r="24" fill="#2563eb" opacity="0.16"/><text x="205" y="153" text-anchor="middle" fill="#1e40af">Braintrust</text>
+          <circle cx="430" cy="105" r="27" fill="#64748b" opacity="0.18"/><text x="430" y="108" text-anchor="middle" fill="#334155">MCP 网关</text>
+          <circle cx="510" cy="85" r="30" fill="#64748b" opacity="0.18"/><text x="510" y="88" text-anchor="middle" fill="#334155">云审计账本</text>
+          <circle cx="500" cy="155" r="26" fill="#b45309" opacity="0.18"/><text x="500" y="158" text-anchor="middle" fill="#92400e">GRC</text>
+          <circle cx="150" cy="275" r="25" fill="#94a3b8" opacity="0.20"/><text x="150" y="278" text-anchor="middle" fill="#475569">OTel / 自建</text>
+          <circle cx="525" cy="270" r="34" fill="#0f766e" opacity="0.28"/><text x="525" y="267" text-anchor="middle" fill="#0f5f58" font-weight="700">agentkernel</text>
+          <text x="525" y="281" text-anchor="middle" fill="#0f5f58" font-size="7.5">49 格 / 拒收 / 链</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>图 4 · 竞争定位：追踪 vs 证据</b>。横轴从“追踪/可观测”到“证据/拒收/可验”，纵轴从“通用平台”到“窄而深”。右下角是空白，但面积小、靠近预算边缘。<span class="figsrc">来源：作者基于公开产品定位 C 级整理；不是市场份额图。</span></figcaption>
+  </figure>
+
+  <h2>4.4 五力：横向 SaaS 不具吸引力</h2>
+
+  <figure>
+    <div class="pad">
+      <svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="波特五力示意图">
+        <rect x="0" y="0" width="700" height="420" fill="#ffffff"/>
+        <rect x="245" y="165" width="210" height="90" rx="4" fill="#0b1f33"/>
+        <text x="350" y="196" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans SC, sans-serif" font-size="12" font-weight="700" fill="#ffffff">横向 SaaS 吸引力</text>
+        <text x="350" y="218" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans SC, sans-serif" font-size="11" fill="#fbbf24">低</text>
+        <text x="350" y="238" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans SC, sans-serif" font-size="7.5" fill="#cbd5e1">作为窄合规组件：中高</text>
+
+        <rect x="245" y="30" width="210" height="80" rx="4" fill="#fef2f2" stroke="#fca5a5"/>
+        <text x="350" y="55" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans SC, sans-serif" font-size="10" font-weight="700" fill="#991b1b">新进入者：高</text>
+        <text x="350" y="74" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans SC, sans-serif" font-size="8" fill="#7f1d1d">MCP 网关 / 开源 / 自建</text>
+        <text x="350" y="90" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans SC, sans-serif" font-size="8" fill="#7f1d1d">代码不是壁垒，判据才是</text>
+
+        <rect x="245" y="315" width="210" height="80" rx="4" fill="#fff7ed" stroke="#fdba74"/>
+        <text x="350" y="340" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans SC, sans-serif" font-size="10" font-weight="700" fill="#9a3412">替代品：高</text>
+        <text x="350" y="359" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans SC, sans-serif" font-size="8" fill="#7c2d12">日志 + 人工复核 / 云审计</text>
+        <text x="350" y="375" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans SC, sans-serif" font-size="8" fill="#7c2d12">“我们已经有日志”</text>
+
+        <rect x="25" y="165" width="190" height="90" rx="4" fill="#eff6ff" stroke="#93c5fd"/>
+        <text x="120" y="190" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans SC, sans-serif" font-size="10" font-weight="700" fill="#1e40af">供方力量：低</text>
+        <text x="120" y="209" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans SC, sans-serif" font-size="8" fill="#1e3a8a">Go stdlib / 无模型依赖</text>
+        <text x="120" y="225" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans SC, sans-serif" font-size="8" fill="#1e3a8a">分发渠道有力量</text>
+
+        <rect x="485" y="165" width="190" height="90" rx="4" fill="#f0fdf4" stroke="#86efac"/>
+        <text x="580" y="190" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans SC, sans-serif" font-size="10" font-weight="700" fill="#166534">买方力量：高</text>
+        <text x="580" y="209" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans SC, sans-serif" font-size="8" fill="#14532d">可自建 / 开源替代</text>
+        <text x="580" y="225" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans SC, sans-serif" font-size="8" fill="#14532d">采购周期长 / 比价容易</text>
+
+        <line x1="350" y1="110" x2="350" y2="160" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#ar)"/>
+        <line x1="350" y1="260" x2="350" y2="310" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#ar)"/>
+        <line x1="220" y1="210" x2="240" y2="210" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#ar)"/>
+        <line x1="460" y1="210" x2="480" y2="210" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#ar)"/>
+        <defs><marker id="ar" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="#94a3b8"/></marker></defs>
+        <text x="350" y="410" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans SC, sans-serif" font-size="8" fill="#64748b">五力都指向同一结论：不要做横向平台，做窄而深的组件</text>
+      </svg>
+    </div>
+    <figcaption><b>图 5 · 五力：横向 SaaS 不具吸引力</b>。现有竞争、新进入者、替代品、买方力量都强，供方力量弱；唯一可行的位置是“窄而深的合规组件”。<span class="figsrc">来源：作者基于公开市场结构 C 级评估；评级不是统计量。</span></figcaption>
+  </figure>
+
+  <p>
+    “五力都强”通常意味着这个市场不该进。但对这颗内核来说，正确的结论不是“不进”，而是“不要以横向 SaaS 的方式进”。
+    作为窄合规组件，它可以用高单价、低销量、私有化交付绕开五力中最伤人的两条：买方比价和免费替代。
+    买方仍然强，但他买的不是“日志”，而是“出了事能拿出的交代”；这个价值不在 Langfuse 的比价表里。
+  </p>
+
+  <h2>4.5 竞争会从哪里打死它</h2>
+
+  <p><b>第一条路径：可观测性平台向下做证据。</b>LangSmith、Langfuse、Datadog 已经有追踪、评测、提示管理；
+  再加一个“evidence / attestation”模块，把“逐格出处 + 拒收”做成套餐功能，是完全合理的产品延伸。
+  它们的优势是分发和现有预算，时间窗 12–24 个月。</p>
+
+  <p><b>第二条路径：MCP 网关把审计做成默认。</b>Microsoft、Docker、Zuplo、TrueFoundry 等控制面厂商，
+  已经在做认证、路由、策略；再加“调用后审计”是同一采购人的相邻需求。
+  它们的优势是“准入”这个必经之路，时间窗 6–18 个月。</p>
+
+  <p>
+    还有两条慢路径：云厂商把“AI 审计账本”做成基础设施（AWS/Azure 的信任与合规优势），
+    以及开源社区复制 49 格契约（代码可复制，证据 corpus 不可复制）。
+    这四条路径里，前两条最危险，因为它们不需要“相信一个新品类”，只需要在现有产品里加一个功能。
+  </p>
+
+  <div class="callout warn">
+    <div class="t">防御不是“代码更难抄”</div>
+    <p>49 格、哈希链、MCP 集成都不是壁垒。真正的壁垒是：<b>判据表的可证伪性、拒收语义的细节、真实故障的证据 corpus、以及“外部调用方已经过了干净臂”这件事。</b>前三个可以写出来，第四个只能跑出来。</p>
+  </div>
+
+  <h2>4.6 合作而非替代：做签收层，不做追踪层</h2>
+
+  <p>
+    最现实的进入方式不是“替代 Langfuse/Datadog”，而是“接在它们后面”：
+    追踪层记录“发生了什么”，签收层记录“这句话是谁算的、能不能收”。两者用 trace ID 关联，
+    买方不需要换掉现有可观测性，只需要在收口处多一步“签收”。
+  </p>
+  <ul>
+    <li><b>与 OTel 合作：</b>消费 GenAI 语义约定的 span，或在 span 结束后生成一份“收口凭证”；不重复造追踪。</li>
+    <li><b>与 Langfuse/Datadog 合作：</b>把内核账本的指纹写回追踪，作为“可验附件”；它们有分发，内核有拒收语义。</li>
+    <li><b>与 MCP 网关合作：</b>网关管准入，内核管报账；“过了网关”不等于“这句话有出处”，两者互补。</li>
+    <li><b>与 GRC 合作：</b>GRC 管制度和风险登记，内核提供运行时证据；GRC 是证据的消费者，不是竞品。</li>
+  </ul>
+
+  <h2>4.7 壁垒：什么能守，什么不能守</h2>
+
+  <table class="tbl">
+    <thead><tr><th style="width:24%">资产</th><th style="width:14%">可防御性</th><th>为什么</th></tr></thead>
+    <tbody>
+      <tr><td>49 格判据 + 拒收语义</td><td class="ok">高</td><td>不是字段列表，而是“哪一格不自洽就整发拒收”的判断；需要真实故障打磨</td></tr>
+      <tr><td>真实故障证据 corpus</td><td class="ok">中高</td><td>4 次拒收、外部 6 发、10-19 那一趟 80 根慢闸；时间积累，不能一夜复制</td></tr>
+      <tr><td>哈希链</td><td class="no">低</td><td>商品化技术；CloudTrail/Azure 已经做得更成熟</td></tr>
+      <tr><td>MCP 集成</td><td class="no">低</td><td>协议公开，任何网关都能接</td></tr>
+      <tr><td>标准/出版</td><td class="mid">中</td><td>先发可以建立话语，但标准可被大厂接管</td></tr>
+      <tr><td>切换成本</td><td class="mid">中</td><td>账本历史与集成有粘性；但单发账本可导出，粘性有限</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    结论：<b>能守的是“判据 + 证据”，不是“代码 + 协议”。</b>
+    这也决定了市场动作：公开判据（研究出版）、开放代码（开源）、保留证据与合规包（私有化付费）。
+    如果反过来——闭源判据、开源代码——既得不到标准话语，也守不住代码。
+  </p>
+
+  <div class="endnote">
+    本章竞品信息来自公开产品页/定价页与二手资料，D 级，访问日 2026-10-19；价格与套餐可能变动。五力评级与壁垒评估为作者判断（C），不是统计量。
+  </div>
+</section>
+
+<!-- ================= CHAPTER 5 ================= -->
+<section class="chapter" id="ch5">
+  <div class="chap-kicker">Chapter 05 · Customers &amp; Buying Journey</div>
+  <h1><span class="num">05</span>客户细分与购买旅程</h1>
+
+  <div class="chap-q">
+    <b>本章回答：</b>谁最可能买？谁不会买？从触发到续费，每一步需要什么证据？
+  </div>
+
+  <p class="lede">
+    最可能买的不是“想让 Agent 更聪明”的团队，而是<b>已经在生产里跑多代理、又背了合规或外包交付责任</b>的团队。
+    他们的痛点不是“模型不够好”，而是“出了事拿不出发生过什么”。
+    这类客户数量不多，但单价高、触发明确、愿意做设计伙伴；正好匹配这颗内核“窄而深”的形状。
+  </p>
+
+  <h2>5.1 三类客户，一条主线</h2>
+
+  <table class="tbl">
+    <caption><b>表 8 · 客户细分</b>：规模、痛点、预算与优先级（金额为作者假设 C 级）</caption>
+    <thead><tr><th style="width:15%">细分</th><th style="width:18%">画像</th><th style="width:20%">痛点</th><th style="width:15%">买方 / 预算</th><th style="width:12%">年单价</th><th>优先级</th></tr></thead>
+    <tbody>
+      <tr><td><b>多代理平台团队</b></td><td>10–200 名工程师；已在生产跑 2 个以上 Agent；有可观测性预算</td><td>上游计数没依据、下游当证据；出事只能翻日志</td><td>平台 / ML Infra 负责人；可观测性预算</td><td class="num">1.2–2 万</td><td class="ok">1：开源切入</td></tr>
+      <tr><td><b>受监管 AI 交付</b></td><td>金融、医疗、电商客服；有合规/风控团队；外部审计或客户追责</td><td>审计要记录；现有日志不能证明“谁算的”</td><td>风险/合规 + CTO；合规预算</td><td class="num">2–5 万</td><td class="mid">2：设计伙伴</td></tr>
+      <tr><td><b>Agent 框架 / 工具厂商</b></td><td>做 Agent 平台、MCP 网关、垂直 SaaS；需要差异化</td><td>客户要“可追溯”，自建成本高</td><td>产品负责人；研发/合作预算</td><td class="num">3–10 万（OEM）</td><td class="mid">3：合作</td></tr>
+      <tr><td>中小企业 / 代理公司</td><td>少量 Agent、价格敏感、无合规压力</td><td>“看起来专业”</td><td>老板；无专项预算</td><td class="num">＜5 千</td><td class="no">不做</td></tr>
+      <tr><td>个人开发者 / 学术</td><td>学习、研究、试验</td><td>不需要付费</td><td>无预算</td><td class="num">0</td><td class="no">只做开源用户</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    主线是“<b>平台团队做入口，受监管客户做单价，框架厂商做规模</b>”。
+    平台团队最容易通过开源接上，但他们预算有限、决策快；受监管客户单价高，但采购慢、需要法律和安全审查；
+    框架厂商可以带来规模，但会要求 OEM 授权和深度集成。三者的顺序不能颠倒：
+    没有平台团队的证据，受监管客户不会信；没有受监管客户的单价，框架厂商不会认真谈。
+  </p>
+
+  <h2>5.2 五类反对意见，五种回答</h2>
+
+  <table class="tbl">
+    <thead><tr><th style="width:20%">买方说</th><th style="width:36%">背后的真实问题</th><th>正确回答</th></tr></thead>
+    <tbody>
+      <tr><td>“我们能自己写”</td><td>代码看起来不难；他不确定判据和证据值多少钱</td><td>“代码两周能写；49 格判据、拒收语义、4 次真实拒收的证据 corpus 不是两周。你可以先拿开源版试，30 分钟接上，再决定要不要自建。”</td></tr>
+      <tr><td>“这能作为合规证据吗？”</td><td>他要的是一个可以交给审计/监管的东西</td><td>“它是技术附件，不是合规结论。它能提供逐次记录、出处、链校验；是否满足某条款，要你的法律/合规团队判断。我们不做认证。”</td></tr>
+      <tr><td>“能挡提示注入吗？”</td><td>他把审计当成防线</td><td>“不能。审计层不是防线。你需要阻断，应该用网关/WAF/访问控制；内核负责事后能拿出发生过什么。”</td></tr>
+      <tr><td>“为什么不用 Langfuse？”</td><td>他在比价；Langfuse 免费/便宜</td><td>“Langfuse 记录发生了什么；内核判断这句话能不能收，并指名哪一格拦的。单位不同。你可以两个都用，用 trace ID 关联。”</td></tr>
+      <tr><td>“谁来支持？一个人靠谱吗？”</td><td>他在评估交付风险</td><td>“私有化部署 + 支持合同 + 源码可审计；单作者是风险，我们把它写进合同和路线图，不藏着。”</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    这五类反对意见里，前三类必须在第一次通话就回答，不能等到 POC。
+    因为前三类决定“预算对不对”，后两类决定“能不能成交”。
+    如果第一次通话不主动说“不是防线、不是合规认证、不是能力增强”，买方会在尽调时自己发现，然后把你归类为“过度宣称”。
+  </p>
+
+  <h2>5.3 购买旅程：每一步要什么证据</h2>
+
+  <table class="tbl">
+    <thead><tr><th style="width:14%">阶段</th><th style="width:22%">买方动作</th><th style="width:30%">内核要提供的证据</th><th>常见卡点</th></tr></thead>
+    <tbody>
+      <tr><td>触发</td><td>事故、审计、客户追责、外包交付</td><td>一页“收口件”说明 + 10 分钟演示</td><td>买方不知道有这个品类</td></tr>
+      <tr><td>评估</td><td>看文档、比价、问“能不能自建”</td><td>49 格表、拒收示例、与 Langfuse 的分工</td><td>被放进可观测性比价表</td></tr>
+      <tr><td>POC</td><td>接一个调用方，跑 1–3 发</td><td>30 分钟接入；1 次有名字的拒收；链自洽；无 <span class="mono">sk-</span>；调用方模型代码 0 改动</td><td>POC 没有“坏发”，看不出价值</td></tr>
+      <tr><td>安全审查</td><td>SBOM、数据流、网络、权限</td><td>纯 stdlib、无运行时外呼、无工具执行、账本字段与 PII 说明</td><td>“审计层能不能挡攻击”</td></tr>
+      <tr><td>采购</td><td>合同、DPA、发票、预算</td><td>报价单、许可范围、支持 SLA、责任边界</td><td>单价超过部门权限</td></tr>
+      <tr><td>部署</td><td>装二进制、配账本、接 MCP</td><td>1–3 人日部署手册；回滚方案</td><td>客户环境无 Go/无容器</td></tr>
+      <tr><td>续费</td><td>看使用量、证据包、支持响应</td><td>季度证据摘要、拒收趋势、版本更新</td><td>用了一次就闲置</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    POC 是整条旅程的生死点。买方在 POC 里最想看到的不是“系统跑起来了”，而是“它拦住了一个我故意做坏的调用，并告诉我哪一格错了”。
+    所以 POC 设计必须包含一个<b>坏发</b>：调用方故意把 relayed 标成 measured，或把 absent 写成 0，内核必须整发拒收并指名格位。
+    如果 POC 只跑好发，买方会认为它只是一个“更复杂的日志”。
+  </p>
+
+  <div class="callout">
+    <div class="t">POC 成功判据（与唯一验收一致）</div>
+    <p><b>1.</b> 账上“被拒的写入 ≥1”，且能指名哪一格、内核原话是什么；<br>
+    <b>2.</b> 全程链自洽、<span class="mono">sk-</span> 0 次、没有“没量到却写成 0”；<br>
+    <b>3.</b> 接入 ≤30 分钟，调用方模型代码零改动。</p>
+    <p class="small">注意：这条验收今天严格 FAIL（真人外部未跑、拒收归因 5/8、缺席表达 G1）。POC 之前必须先补这三项，否则会把买方变成测试员。</p>
+  </div>
+
+  <h2>5.4 非客户：五类不要追</h2>
+  <ul>
+    <li><b>个人开发者：</b>没有预算，也不需要审计；给他们开源版即可，不投入销售。</li>
+    <li><b>模型实验室：</b>自建能力强，且他们的“账”是训练数据/评测，不是调用记录。</li>
+    <li><b>纯单轮聊天产品：</b>没有多代理/工具调用，49 格的大部分格用不上。</li>
+    <li><b>把审计当防火墙的团队：</b>他们会用“能不能挡注入”验收，必然失望；不要试图教育，直接转介网关。</li>
+    <li><b>只想让模型更准的团队：</b>8/8 vs 6/8 是负证据；卖给他们等于自证无用。</li>
+  </ul>
+
+  <h2>5.5 零成本需求验证计划</h2>
+
+  <p>
+    在写任何销售材料之前，先做 10 次访谈。访谈对象来自已有网络：做多代理平台的工程负责人、受监管行业的 AI 交付负责人、
+    Agent 框架/MCP 网关的产品负责人。全部远程、零差旅、零礼品；不要求对方付费，也不要求对方部署。
+  </p>
+
+  <table class="tbl">
+    <thead><tr><th style="width:8%">#</th><th style="width:52%">问题</th><th>想验证什么</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>最近一次“上游数字没依据、下游当证据”的事故是什么？</td><td>痛点是否真实、是否高频</td></tr>
+      <tr><td>2</td><td>现在怎么证明一句话是谁算的？拿得出记录吗？</td><td>现有替代方案与缺口</td></tr>
+      <tr><td>3</td><td>如果审计/客户明天问起，你多长时间能拿出记录？</td><td>触发强度与紧迫性</td></tr>
+      <tr><td>4</td><td>你们为可观测性付多少钱？为合规付多少钱？谁批？</td><td>预算归属与决策人</td></tr>
+      <tr><td>5</td><td>如果有一个闸门 30 分钟能接上，你愿意让谁做 POC？</td><td>是否有真实 POC 意愿</td></tr>
+      <tr><td>6</td><td>什么情况下你会拒绝它？</td><td>反对意见与边界</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    访谈的成功判据不是“对方说好”，而是三件可观察的事：
+    <b>（1）</b>至少 3 个买方描述了最近 6 个月内的真实触发；
+    <b>（2）</b>至少 1 个买方愿意指定 POC 负责人；
+    <b>（3）</b>至少 1 个买方能说出预算科目和审批人。
+    三条都没有，说明市场对象或切口错了，应该先改定位，而不是改产品。
+  </p>
+
+  <h2>5.6 细分结论</h2>
+  <p>
+    先打“多代理平台团队 + 合规暴露”这个交集，而不是整个可观测性市场。
+    这个交集的人数不多，但正好是“有预算、有触发、能自己做 POC”的买方；
+    他们成功后，会成为受监管客户的参考案例；受监管客户成功后，会成为框架厂商 OEM 的背书。
+    顺序是：<b>开源入口 → 设计伙伴 → 付费试点 → OEM</b>，不能跳步。
+  </p>
+
+  <div class="endnote">
+    本章客户画像、单价与预算量级为作者假设（C），需用 10 次访谈证伪；外部采用数据为 D 级。不要在访谈中承诺合规认证或能力增益。
+  </div>
+</section>

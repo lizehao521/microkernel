@@ -1,0 +1,1 @@
+{"jsonrpc":"2.0","id":212,"method":"tools/call","params":{"name":"kernel.declare_reader","arguments":{"reader":"调用方甲(闭环队-1019)","key":"fixed_overhead","side":"input"}}}

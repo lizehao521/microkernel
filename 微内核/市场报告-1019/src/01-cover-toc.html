@@ -1,0 +1,200 @@
+<!-- ================= COVER ================= -->
+<section class="cover">
+  <div class="grid"></div>
+  <div class="glow"></div>
+  <div class="glow2"></div>
+  <div class="inner">
+    <div class="kicker">Market Entry Study · 2026-10-19</div>
+    <h1>可验证记账内核<br><span class="thin">怎样面对市场</span></h1>
+    <div class="sub">
+      研究出版、开源闸门、企业私有化——三条路的证据、成本与先后。<br>
+      不是问“Agent 能不能更可信”，而是问“谁愿意为一次可复核的交代付钱”。
+    </div>
+    <div class="object">
+      研究对象：agentkernel v1 · 48 键 / 49 格 · 判据表冻结 · 哈希链账本
+    </div>
+    <div class="verdict">
+      <div class="lab">建议的进入方式</div>
+      <div class="txt">
+        <b style="color:#fff">D + A 先行</b>（研究出版 + 开源证据闸门）；
+        <b style="color:#fff">B 条件触发</b>（企业私有化）；
+        <b style="color:#fff">C 不做</b>（托管按次）；<b style="color:#fff">E 可选</b>（竞赛/生态）。
+      </div>
+    </div>
+    <table class="stats">
+      <tr>
+        <td style="width:25%"><div class="v">49</div><div class="l">格契约 · 48 个唯一键<br>机械一致，判据表冻结</div></td>
+        <td style="width:25%"><div class="v">80</div><div class="l">根慢闸整轮<br>空针/坏针 0，对照会红</div></td>
+        <td style="width:25%"><div class="v">6</div><div class="l">发外部调用方实测<br>294 条，整本账 490 条</div></td>
+        <td style="width:25%"><div class="v">—</div><div class="l">未找到付款证据<br>不写“0 个买家”</div></td>
+      </tr>
+    </table>
+  </div>
+  <div class="foot">
+    内部研究 · 不是投资建议 · 不是法律或合规意见 · 不是销售材料<br>
+    外部资料访问日 2026-10-19；内部证据截至 2026-10-19 22:00（本机时间）。所有数字按 A/B/C/D/X 分级，X 不塌成 0。
+  </div>
+</section>
+
+<!-- ================= READING GUIDE ================= -->
+<section>
+  <div class="chap-kicker">Reading Guide</div>
+  <h1 style="border-bottom-color:var(--teal)">阅读指南与一句话结论</h1>
+
+  <div class="chap-q">
+    <b>问题：</b>agentkernel 应该以哪种方式面对市场——直接做 SaaS、卖企业私有化、开源、出版研究，还是去打比赛？
+  </div>
+
+  <p class="lede">
+    结论先说：<b>今天最该做的是“研究出版 + 开源闸门”，不是卖软件。</b>
+    这不是因为产品没有价值，而是因为它的价值主张是“可复核的收口件”，
+    而“可复核”这三个字必须由外部调用方来证明；目前这个证明还没有完成。
+    先用零成本方式换外部证据，再用外部证据换第一家付费设计伙伴；没有外部证据之前，不卖。
+  </p>
+
+  <table class="metrics">
+    <tr>
+      <td><div class="v">窄市场</div><div class="l">SAM 约 1.6–3.0 亿美元（规划口径），不是通用可观测平台</div></td>
+      <td><div class="v">高单价</div><div class="l">私有化年费 1.2–3 万美元；低于 1 万覆盖不了支持</div></td>
+      <td><div class="v">低销量</div><div class="l">3 年 SOM 0.8–600 万美元；60–400 个账户即可触顶</div></td>
+      <td><div class="v">先证据</div><div class="l">外部干净臂、2 家设计伙伴、3 家付费，四道闸</div></td>
+    </tr>
+  </table>
+
+  <h2>这份报告怎么读</h2>
+  <table class="tbl">
+    <thead><tr><th style="width:18%">读者</th><th style="width:30%">先读</th><th style="width:30%">再读</th><th>可以跳过</th></tr></thead>
+    <tbody>
+      <tr><td>作者 / 决策</td><td>摘要与建议、第 7 章、第 8 章</td><td>第 2 章规模、第 9 章定价、第 12 章情景</td><td>第 3–5 章的逐条背景</td></tr>
+      <tr><td>工程 / 买方技术</td><td>第 1 章产品定义、第 6 章证据现状</td><td>第 4 章竞争、第 8 章闸门、附录 A 方法</td><td>第 9–12 章的财务假设</td></tr>
+      <tr><td>外部读者 / 伙伴</td><td>阅读指南、第 1 章、第 13 章</td><td>第 7 章选项、附录 E 对外材料草稿</td><td>第 2 章的估算细节</td></tr>
+    </tbody>
+  </table>
+
+  <h2>证据分级：五种状态，不许塌成一种</h2>
+  <table class="tbl">
+    <thead><tr><th style="width:10%">等级</th><th style="width:34%">含义</th><th>本报告里的例子</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag tag-a">A</span></td><td>工具自印 + 独立复算或双源逐字对上</td><td>49 格机械一致；10-19 那一趟 80 根慢闸；外部 6 发的账本指纹</td></tr>
+      <tr><td><span class="tag tag-b">B</span></td><td>单一来源自印，未被本报告独立复算</td><td>6 次调用完成一次收口；单次现场拒收记录</td></tr>
+      <tr><td><span class="tag tag-c">C</span></td><td>作者复算 / 规划假设，没有原始件</td><td>SAM/SOM 的子层占比、定价与财务情景</td></tr>
+      <tr><td><span class="tag tag-d">D</span></td><td>外部公开资料，已注明访问日，不是内核读数</td><td>市场规模、法规、竞品定价、MCP 采用调查</td></tr>
+      <tr><td><span class="tag tag-x">X</span></td><td>不可核 / 未验证；不许写成 0</td><td>真人外部验收；每一次拒收的机核格位；打包凭据与二进制一致</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn">
+    <div class="t">三条不许越过的表述边界</div>
+    <p><b>1. 审计层不是防线。</b>它不挡提示注入、不做访问控制、不替代 WAF 或网关。它只记录“这句话是谁算的”。</p>
+    <p><b>2. 不是答题增益层。</b>8 题盲测里纯模型 8/8、带内核 6/8；它管报账的出身与自洽，不跑代码、不判语义。</p>
+    <p><b>3. 不是合规认证。</b>它可以为合规提供技术附件，但不能单独得出“符合 EU AI Act / GB/T 47746”的结论。</p>
+  </div>
+
+  <h2>本报告不提议</h2>
+  <ul class="tight">
+    <li>不提议充值、买流量、投广告、招销售、参加需要差旅的展会；所有动作默认零现金、零新增依赖。</li>
+    <li>不提议改判据表、加第 50 格、动 48 键；市场进入不需要改内核。</li>
+    <li>不提议把这份报告写进 8797 / 8799 两本真流量账；它是研究件，不是模型调用。</li>
+    <li>不提议把“找到买家”当成唯一目标；先证明外部调用方能过干净臂，再谈收入。</li>
+  </ul>
+
+  <div class="endnote">
+    口径说明：本报告里的“美元”均为美元现价，不做通胀调整；“2026”指 2026 日历年或最近十二个月，按来源口径标注。
+    外部市场数据只用于判断数量级，不用于承诺增长率。所有派生比例（如“证据/审计子层占比”）都是作者假设，标 C，不是厂商披露。
+  </div>
+</section>
+
+<!-- ================= TOC ================= -->
+<section class="toc-page">
+  <div class="chap-kicker">Contents</div>
+  <h1 class="toc-title">目录</h1>
+  <p class="small" style="margin-bottom:2mm">页码为正文实际页；由渲染脚本按章节标题回填。PDF 页脚同时给出“当前页 / 总页数”。</p>
+  <table class="toc">
+    <tr class="l1"><td><span class="tn">00</span>摘要与建议</td><td class="pg" data-key="exec"></td></tr>
+    <tr class="l1"><td><span class="tn">01</span>研究对象与问题</td><td class="pg" data-key="ch1"></td></tr>
+    <tr class="l2"><td>1.1 为什么是 agentkernel，不是 26 策略引擎</td><td class="pg" data-key="s1-1"></td></tr>
+    <tr class="l2"><td>1.2 产品是什么、不是什么</td><td class="pg" data-key="s1-2"></td></tr>
+    <tr class="l2"><td>1.3 两种失效：说法漂白与事后拿不出</td><td class="pg" data-key="s1-3"></td></tr>
+    <tr class="l1"><td><span class="tn">02</span>市场定义与规模</td><td class="pg" data-key="ch2"></td></tr>
+    <tr class="l2"><td>2.2 三路自上而下</td><td class="pg" data-key="s2-2"></td></tr>
+    <tr class="l2"><td>2.3 自下而上：账户数 × 付费意愿</td><td class="pg" data-key="s2-3"></td></tr>
+    <tr class="l2"><td>2.4 三角校验与 SOM</td><td class="pg" data-key="s2-4"></td></tr>
+    <tr class="l1"><td><span class="tn">03</span>需求驱动</td><td class="pg" data-key="ch3"></td></tr>
+    <tr class="l1"><td><span class="tn">04</span>竞争格局</td><td class="pg" data-key="ch4"></td></tr>
+    <tr class="l2"><td>4.1 五类玩家</td><td class="pg" data-key="s4-1"></td></tr>
+    <tr class="l2"><td>4.2 价格锚：为什么不能按 seat 卖</td><td class="pg" data-key="s4-2"></td></tr>
+    <tr class="l1"><td><span class="tn">05</span>客户细分与购买旅程</td><td class="pg" data-key="ch5"></td></tr>
+    <tr class="l1"><td><span class="tn">06</span>产品与证据现状</td><td class="pg" data-key="ch6"></td></tr>
+    <tr class="l2"><td>6.1 能说的：A / B 级证据</td><td class="pg" data-key="s6-1"></td></tr>
+    <tr class="l2"><td>6.2 不能说的：X 级缺口</td><td class="pg" data-key="s6-2"></td></tr>
+    <tr class="l1"><td><span class="tn">07</span>市场进入方式：五个选项</td><td class="pg" data-key="ch7"></td></tr>
+    <tr class="l2"><td>7.1 选项 A：开源 / 开放核心</td><td class="pg" data-key="s7-1"></td></tr>
+    <tr class="l2"><td>7.2 选项 B：企业私有化许可</td><td class="pg" data-key="s7-2"></td></tr>
+    <tr class="l2"><td>7.3 选项 C：托管按次证据服务</td><td class="pg" data-key="s7-3"></td></tr>
+    <tr class="l2"><td>7.4 选项 D：研究出版 / 标准</td><td class="pg" data-key="s7-4"></td></tr>
+    <tr class="l2"><td>7.5 选项 E：竞赛 / 生态</td><td class="pg" data-key="s7-5"></td></tr>
+    <tr class="l1"><td><span class="tn">08</span>推荐路线与四道闸</td><td class="pg" data-key="ch8"></td></tr>
+    <tr class="l2"><td>8.2 三个阶段与交付物</td><td class="pg" data-key="s8-2"></td></tr>
+    <tr class="l2"><td>8.3 四道闸：Go / No-Go</td><td class="pg" data-key="s8-3"></td></tr>
+    <tr class="l1"><td><span class="tn">09</span>定价与单位经济</td><td class="pg" data-key="ch9"></td></tr>
+    <tr class="l1"><td><span class="tn">10</span>风险登记与热图</td><td class="pg" data-key="ch10"></td></tr>
+    <tr class="l1"><td><span class="tn">11</span>实施路线图（26 周）</td><td class="pg" data-key="ch11"></td></tr>
+    <tr class="l1"><td><span class="tn">12</span>财务情景与继续 / 冻结判据</td><td class="pg" data-key="ch12"></td></tr>
+    <tr class="l1"><td><span class="tn">13</span>结论</td><td class="pg" data-key="ch13"></td></tr>
+    <tr class="l1"><td><span class="tn">A</span>附录 A · 方法与证据分级</td><td class="pg" data-key="appA"></td></tr>
+    <tr class="l1"><td><span class="tn">B</span>附录 B · 数据表</td><td class="pg" data-key="appB"></td></tr>
+    <tr class="l1"><td><span class="tn">C</span>附录 C · 参考文献</td><td class="pg" data-key="appC"></td></tr>
+    <tr class="l1"><td><span class="tn">D</span>附录 D · 术语表</td><td class="pg" data-key="appD"></td></tr>
+    <tr class="l1"><td><span class="tn">E</span>附录 E · 对外材料草稿</td><td class="pg" data-key="appE"></td></tr>
+  </table>
+</section>
+
+<!-- ================= FIGURE / TABLE INDEX ================= -->
+<section class="toc-page">
+  <div class="chap-kicker">Figures &amp; Tables</div>
+  <h1 class="toc-title">图表索引</h1>
+  <table class="grid2" style="margin-top:3mm">
+    <tr>
+      <td>
+        <table class="toc" style="font-size:8.8pt">
+          <tr class="l1"><td><span class="tn">图</span>图目录</td><td class="pg"></td></tr>
+          <tr class="l2"><td>图 1 · 市场层级</td><td class="pg" data-key="fig1"></td></tr>
+          <tr class="l2"><td>图 2 · 三路自上而下</td><td class="pg" data-key="fig2"></td></tr>
+          <tr class="l2"><td>图 3 · 账户数 × ARPU</td><td class="pg" data-key="fig3"></td></tr>
+          <tr class="l2"><td>图 4 · 竞争定位</td><td class="pg" data-key="fig4"></td></tr>
+          <tr class="l2"><td>图 5 · 五力</td><td class="pg" data-key="fig5"></td></tr>
+          <tr class="l2"><td>图 6 · 证据阶梯</td><td class="pg" data-key="fig6"></td></tr>
+          <tr class="l2"><td>图 7 · 进入方式矩阵</td><td class="pg" data-key="fig7"></td></tr>
+          <tr class="l2"><td>图 8 · 决策树</td><td class="pg" data-key="fig8"></td></tr>
+          <tr class="l2"><td>图 9 · 风险热图</td><td class="pg" data-key="fig9"></td></tr>
+          <tr class="l2"><td>图 10 · 26 周路线</td><td class="pg" data-key="fig10"></td></tr>
+          <tr class="l2"><td>图 11 · 三情景收入</td><td class="pg" data-key="fig11"></td></tr>
+        </table>
+      </td>
+      <td>
+        <table class="toc" style="font-size:8.8pt">
+          <tr class="l1"><td><span class="tn">表</span>表目录</td><td class="pg"></td></tr>
+          <tr class="l2"><td>表 1 · 研究对象对比</td><td class="pg" data-key="tab1"></td></tr>
+          <tr class="l2"><td>表 2 · 市场边界</td><td class="pg" data-key="tab2"></td></tr>
+          <tr class="l2"><td>表 3 · 三路自上而下</td><td class="pg" data-key="tab3"></td></tr>
+          <tr class="l2"><td>表 4 · 自下而上假设</td><td class="pg" data-key="tab4"></td></tr>
+          <tr class="l2"><td>表 5 · 合规映射</td><td class="pg" data-key="tab5"></td></tr>
+          <tr class="l2"><td>表 6 · 五类玩家</td><td class="pg" data-key="tab6"></td></tr>
+          <tr class="l2"><td>表 7 · 公开价格锚</td><td class="pg" data-key="tab7"></td></tr>
+          <tr class="l2"><td>表 8 · 客户细分</td><td class="pg" data-key="tab8"></td></tr>
+          <tr class="l2"><td>表 9 · 能说的</td><td class="pg" data-key="tab9"></td></tr>
+          <tr class="l2"><td>表 10 · 不能说的</td><td class="pg" data-key="tab10"></td></tr>
+          <tr class="l2"><td>表 11 · 进入方式对比</td><td class="pg" data-key="tab11"></td></tr>
+          <tr class="l2"><td>表 12 · 四道闸</td><td class="pg" data-key="tab12"></td></tr>
+          <tr class="l2"><td>表 13 · 单位经济</td><td class="pg" data-key="tab13"></td></tr>
+          <tr class="l2"><td>表 14 · 风险登记</td><td class="pg" data-key="tab14"></td></tr>
+          <tr class="l2"><td>表 15 · 财务情景</td><td class="pg" data-key="tab15"></td></tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+  <div class="callout neutral" style="margin-top:6mm">
+    <div class="t">图表读法</div>
+    <p>所有金额图都标“假设”或“区间”，不标单点预测。TAM/SAM/SOM 图不按面积等比：若按面积画，SOM 会小到看不见，反而误导。规模数字只用于判断“这是不是一个能养活窄产品的市场”，不用于融资叙事。</p>
+  </div>
+</section>

@@ -1,0 +1,1 @@
+selfcheck rc=0 arm rc=0

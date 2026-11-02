@@ -1,0 +1,21 @@
+test_empty_raises (__main__.TestMean.test_empty_raises) ... ERROR
+test_many (__main__.TestMean.test_many) ... ok
+test_single (__main__.TestMean.test_single) ... ok
+
+======================================================================
+ERROR: test_empty_raises (__main__.TestMean.test_empty_raises)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "test_calc.py", line 9, in test_empty_raises
+    mean([])
+    ~~~~^^^^
+  File "C:\Users\Admin\Desktop\微内核\交付对账-1026\示例-编程\工作区\calc.py", line 2, in mean
+    return sum(xs) / len(xs)
+           ~~~~~~~~^~~~~~~~~
+ZeroDivisionError: division by zero
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.002s
+
+FAILED (errors=1)
+exit_code=1

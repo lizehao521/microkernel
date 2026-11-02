@@ -1,0 +1,61 @@
+<!-- ================= 0. EXECUTIVE SUMMARY ================= -->
+<section class="chapter">
+  <div class="chap-kicker">Chapter 0 · Executive Summary</div>
+  <h1 id="ch0" data-key="exec"><span class="num">0</span>摘要：只记五句话</h1>
+
+  <div class="lede">
+    <p><span class="st st-ok" data-state="有据">有据</span><span class="chip chip-disk" data-chip="disk">盘上</span>
+    <strong>一、赢家是算出来的。</strong>四个候选垂直 × 五个计分维，权重与每格凭据写在 <code>数据/评分表.json</code>，
+    由 <code>工具/出表.py</code> 出分、<code>工具/文档核对.py</code> 用同一个实现重算并逐字比渲染；
+    脚本重算的赢家是 <strong>V1 甲方 AI 项目验收 / 终验收货裁决</strong>（五维全有依据，加权好度 0.740），
+    但<strong>原始分第一是 V4（0.756），它只有 3/5 维有依据，被胜出资格线（≥4/5）挡在门外</strong>——
+    名次照原样印在这一句里，不藏。<span data-scan="census">依据格数 17/20 是本件枚举自家评分表数出来的缺席，不是市场读数。</span></p>
+
+    <p data-scan="not_run"><span class="st st-bad" data-state="相背">相背</span><span class="chip chip-disk" data-chip="disk">盘上</span>
+    <strong>二、需求侧盘上是空的，所以这份报告的主件是缺口表，不是判断。</strong>
+    非作者试读 0/1、G0 有效访谈 0/10、已签客户 0、已签 LOI 0/2、付费 0、安全审查 0/1、DPA 0/1、
+    真实拒收案例 0——这些零<strong>绝大多数是「动作没发生」那一种没有</strong>（<code>not_run</code>），
+    既不能折成 0 写成负结果，也不能反过来推定需求存在（第 2 章逐格给分母与 <code>path:line</code>）。</p>
+
+    <p data-scan="not_run"><span class="st st-ok" data-state="有据">有据</span><span class="chip chip-disk" data-chip="disk">盘上</span>
+    <strong>三、本机底盘只证明了形状与分辨力，没有证明有人要。</strong>
+    它能把一句交付声明判成 MATCH / MISMATCH / ABSENT 三态、能把「量不到」如实写成「核不了」而不是 0、
+    能把一份谎报的交付判到退出码 2；<strong>这三件都有现跑读数可指</strong>（第 3 章只给指针，不重述计数）。
+    「交付方自己声明」的部分按规矩封顶在未核实档，这一条是产品边界，不是缺陷。</p>
+
+    <p><span class="st st-ok" data-state="有据">有据</span><span class="chip chip-public" data-chip="public">公开件</span>
+    <strong>四、2026 年「验收要证据、要签字、要能复算」这套话术已经在写，但本轮取到的几乎全是卖方在写。</strong>
+    五篇被当作「买方已经在要求」的材料逐条复取后，四篇是供给方或其渠道的营销件，
+    唯一一篇买方自写的是 2026-10-19 一份政采结果公告里的验收条款（<span data-scan="targeted">本轮检索面内 n=1</span>）。
+    所以第 8 章的命题改成「<strong>卖方开始用买方的口吻写</strong>」——这条对本产品更有利（说明话术已被市场接受），
+    但它<strong>不等于</strong>买方自己提出了这个要求。法律侧另有一发相反方向的证据：AI 幻觉案的判决把核验义务落在使用人身上，
+    「侵权责任会自动长成逐调用账本的采购需求」这条链条在法律侧是断的。</p>
+
+    <p data-scan="not_run"><span class="st st-no" data-state="取不到">取不到</span><span class="chip chip-未" data-chip="未">未量</span>
+    <strong>五、所有候选共用同一道前置闸：非作者接入门，实测 0/1。</strong>
+    「30 分钟接入」是本族自己写进拒收码 R6 的<strong>禁用对外宣称</strong>，因此它在这里是<strong>待量的门</strong>，不是产品属性；
+    在它被量之前，第 7 章的产品设计只能写成规格与证伪条件，不能写成上线计划。</p>
+  </div>
+
+  <h2>这五句话各自靠什么站住</h2>
+  <table class="tbl avoid">
+    <tr><th>句</th><th>承重读数</th><th data-scan="term">属于哪一种「没有」</th><th>读数指针</th></tr>
+    <tr><td>一</td><td>赢家与原始名次由脚本重算；渲染逐字比对</td><td><span class="nowrap">—（本件自数）</span></td>
+      <td><code>读数/出表.txt</code> · <code>读数/文档核对.txt</code></td></tr>
+    <tr><td>二</td><td>缺口表 N1–N12，每格一手件出处</td><td><code>not_run</code> 为主，N10 是 <code>census</code>，N12 是 <code>targeted</code></td>
+      <td><code>方法与分母-1026.md</code> §四</td></tr>
+    <tr><td>三</td><td>底盘三态、退出码、自报封顶</td><td><span data-scan="census">底盘读数件内可枚举</span></td>
+      <td><code>交付对账-1026/报告-验收.txt</code> · <code>读数/*</code></td></tr>
+    <tr><td>四</td><td>24 条外部件逐条复取定级：核 11 / 片 6 / 未 1 / 反 6</td><td><span data-scan="targeted">定向检索面五类，覆盖不许自扩</span></td>
+      <td><code>数据/引用登记-1026.json</code> · 附录 A</td></tr>
+    <tr class="warn-row"><td>五</td><td>接入门未量，且是禁用对外宣称</td><td><code>not_run</code></td>
+      <td><code>方法与分母-1026.md</code> §八 · 第 9 章</td></tr>
+  </table>
+
+  <div class="callout danger">
+    <div class="t">这份报告不能用来做什么</div>
+    <p data-scan="not_run">不能用来对外宣称市场规模、合规符合度、客户存在度或「已落地」；不能用来给 V1 立项排期——
+    第 7 章的每一个小节都以「什么读数会把它推翻」收尾，而那些读数<strong>这一发一个都没有</strong>。
+    它能用的地方只有一处：把「下一趟该跑哪一发」写清楚（第 9 章）。</p>
+  </div>
+</section>

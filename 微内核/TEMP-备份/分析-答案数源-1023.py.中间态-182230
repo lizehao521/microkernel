@@ -1,0 +1,306 @@
+"""只读分析：一发过账答案里的每个数字，能不能在它自己那发的来源里找到。
+
+判据只查"该出现的数出现了"，从不查"不该出现的数出没出现"。这里补那半边：
+把答案里的数字逐个分三档 ——
+  literal   题目 / 判据 expected / 该题 requires 点名的文件里逐字有；
+  arith     由那些文件里的数用加减（<=3 个）或乘除（2 个）组合得出，并点名用了哪几个；
+  orphan    两档都不认 ⇒ 只能人读，工具不下"编造"的结论。
+只有 gets 没有 reads 的题（B05）答案源是实时端点、盘上没有 ⇒ unscoreable，不塌成 orphan。
+答案在跑件里落的是 answer[:400]，可能截短 ⇒ 单独数 possibly_truncated。
+打印不写盘；所有打印走 ensure_ascii。
+"""
+import itertools
+import json
+import re
+import sys
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+TASKS = HERE / "业务任务-13.jsonl"
+FX = HERE / "业务现场"
+HEAD_CAP = 400
+
+NUM_RE = re.compile(r"\d+(?:[.,]\d+)*")
+TSEP_RE = re.compile(r"^\d{1,3}(?:,\d{3})+(?:\.\d+)?$")
+
+
+def norm(tok):
+    if TSEP_RE.match(tok):
+        return tok.replace(",", "")
+    return tok
+
+
+def nums(text):
+    out = []
+    for m in NUM_RE.finditer(text or ""):
+        raw = m.group(0)
+        if raw.endswith(".") or raw.endswith(","):
+            raw = raw[:-1]
+        if not raw or raw in (".", ","):
+            continue
+        try:
+            out.append((raw, float(norm(raw))))
+        except ValueError:
+            continue
+    return out
+
+
+def load_tasks():
+    return {t["id"]: t for t in (json.loads(x) for x in
+            TASKS.read_text(encoding="utf-8").splitlines() if x.strip())}
+
+
+def sanctioned(task):
+    """Return (literal_values, base_values, unscoreable, sources)."""
+    req = task.get("requires") or {}
+    literal, base, sources = set(), set(), []
+    unscoreable = bool(req.get("gets")) and not any(
+        req.get(k) for k in ("reads", "lists", "stats"))
+    for key in ("reads", "stats"):
+        for rel in req.get(key) or []:
+            p = FX / rel
+            if p.is_file():
+                vals = [v for _, v in nums(p.read_text(encoding="utf-8"))]
+                literal.update(vals)
+                base.update(vals)
+                sources.append(rel)
+            else:
+                sources.append("MISSING:" + rel)
+    for rel in req.get("lists") or []:
+        d = FX / rel
+        if d.is_dir():
+            for f in sorted(d.iterdir()):
+                vals = [v for _, v in nums(f.name)]
+                literal.update(vals)
+                base.update(vals)
+                sources.append(rel + "/" + f.name)
+        else:
+            sources.append("MISSING-DIR:" + rel)
+    for field in ("numbers", "must_text", "any_groups"):
+        blob = json.dumps(task.get(field), ensure_ascii=False)
+        literal.update(v for _, v in nums(blob))
+    literal.update(v for _, v in nums(task.get("question") or ""))
+    return literal, base, unscoreable, sources
+
+
+def arith_rule(v, base):
+    """Explain v from base numbers; return (rule, operands) or None."""
+    bs = sorted(set(base))
+    tol = 1e-6
+    for a, b in itertools.permutations(bs, 2):
+        if abs(a * b - v) <= tol:
+            return ("乘", [a, b])
+        if b and abs(a / b - v) <= 1e-4:
+            return ("除", [a, b])
+    for size in (1, 2, 3):
+        for combo in itertools.combinations(bs, size):
+            for signs in itertools.product((1, -1), repeat=size):
+                if size == 1 and signs[0] == -1:
+                    continue
+                acc = 0.0
+                for s, x in zip(signs, combo):
+                    acc += s * x
+                if abs(acc - v) <= 1e-4:
+                    return ("加减", [x if s > 0 else -x for s, x in zip(signs, combo)])
+    return None
+
+
+def classify(row, task):
+    head = row.get("answer_head") or ""
+    literal, base, unscoreable, sources = sanctioned(task)
+    hits = []
+    for raw, v in nums(head):
+        if v in literal:
+            hits.append({"raw": raw, "value": v, "tier": "literal"})
+            continue
+        rule = arith_rule(v, base)
+        if rule:
+            hits.append({"raw": raw, "value": v, "tier": "arith",
+                         "rule": rule[0], "operands": rule[1]})
+        else:
+            hits.append({"raw": raw, "value": v, "tier": "orphan"})
+    tiers = {}
+    for h in hits:
+        tiers[h["tier"]] = tiers.get(h["tier"], 0) + 1
+    return {
+        "id": row.get("id"), "pass": row.get("pass"),
+        "bucket": row.get("__bucket__"),
+        "unscoreable": unscoreable,
+        "head_chars": len(head),
+        "possibly_truncated": len(head) >= HEAD_CAP,
+        "numbers": len(hits),
+        "orphan_values": sorted({h["raw"] for h in hits if h["tier"] == "orphan"}),
+        "arith_operands": [h["operands"] for h in hits if h["tier"] == "arith"],
+        "tiers": tiers,
+        "sources": sources,
+    }
+
+
+def _load(tag, fname):
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(tag, HERE / fname)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+AGG = _load("agg_mod", "汇总-业务重复-1023.py")
+bucket = AGG.bucket
+
+
+def share(k, n):
+    return round(k / n, 4) if n else None
+
+
+def pool(docs):
+    rows = []
+    for d in docs:
+        for r in d["runs"]:
+            r = dict(r)
+            r["__bucket__"] = bucket(r)
+            rows.append(r)
+    return rows
+
+
+def analyze(rows, tasks):
+    scored = {"pass": [], "fake_close": [], "step_cap": [], "echo_close": []}
+    transport = unscoreable = 0
+    for r in rows:
+        b = r.get("__bucket__")
+        if b == "transport":
+            transport += 1
+            continue
+        t = tasks.get(r.get("id"))
+        if t is None:
+            continue
+        c = classify(r, t)
+        if c["unscoreable"]:
+            unscoreable += 1
+            continue
+        scored.setdefault(b, []).append(c)
+    out = {"transport_skipped": transport, "unscoreable_skipped": unscoreable,
+           "unscoreable_why": "该题答案源是实时端点(/api/health)，盘上没有 ⇒ 不判 orphan"}
+    for name, lst in scored.items():
+        n = len(lst)
+        orph = [c for c in lst if c["orphan_values"]]
+        distinct = {}
+        for c in orph:
+            for v in c["orphan_values"]:
+                distinct[v] = distinct.get(v, 0) + 1
+        out[name] = {
+            "rows": n,
+            "numbers_total": sum(c["numbers"] for c in lst),
+            "rows_with_orphan": len(orph),
+            "rows_with_orphan_rate": share(len(orph), n),
+            "orphan_number_hits": sum(len(c["orphan_values"]) for c in lst),
+            "distinct_orphan_values": dict(sorted(distinct.items(), key=lambda kv: (-kv[1], kv[0]))),
+            "rows_arith_supported": sum(1 for c in lst if any(h == "arith" for h in c["tiers"])),
+            "tiers_total": {k: sum(c["tiers"].get(k, 0) for c in lst) for k in ("literal", "arith", "orphan")},
+            "possibly_truncated": sum(1 for c in lst if c["possibly_truncated"]),
+            "by_task": {tid: {"rows": sum(1 for c in lst if c["id"] == tid),
+                              "orphan_rows": sum(1 for c in lst if c["id"] == tid and c["orphan_values"])}
+                         for tid in sorted({c["id"] for c in lst})},
+            "examples": [c for c in orph[:6]],
+        }
+    return out
+
+
+def load_one(name):
+    p = Path(name)
+    if not p.is_absolute() and not p.exists():
+        p = HERE / "读数" / name
+    return json.loads(p.read_text(encoding="utf-8"))
+
+
+def selftest():
+    red = []
+    t = json.loads(TASKS.read_text(encoding="utf-8").splitlines()[0])  # B01
+    lit, base, uns, src = sanctioned(t)
+    # arm1: fabricated number must land orphan
+    c = classify({"id": "B01", "pass": 1, "answer_head": "含税合计 1280 元，另有运费 9731 元。"}, t)
+    red.append(("arm1 编的数要孤立", c["orphan_values"] == ["9731"]))
+    # arm2: fully sanctioned answer must be clean
+    c = classify({"id": "B01", "pass": 1, "answer_head": "合计 1280 元（服务器 1200 + 域名 80）。"}, t)
+    red.append(("arm2 有源的不许响", c["orphan_values"] == []))
+    # arm3: thousand separators must not false-red
+    c = classify({"id": "B11", "pass": 1, "answer_head": "销售部 1,250,000 元，财务部 1,184,000 元。"},
+                 tasks_all()["B11"])
+    red.append(("arm3 千分位不误判", c["orphan_values"] == []))
+    # arm4: derived diff (B11 66000) supported via oracle or arith
+    c = classify({"id": "B11", "pass": 1, "answer_head": "差 66000 元。"}, tasks_all()["B11"])
+    red.append(("arm4 判据点名的派生数有源", c["orphan_values"] == []))
+    # arm5: derived sum NOT in oracle (51500) must be explained by 加减 and name operands
+    c = classify({"id": "B02", "pass": 1, "answer_head": "已发生合计 51500 元，超 1500 元。"}, tasks_all()["B02"])
+    got = [o for o in c["arith_operands"] if sum(o) == 51500]
+    red.append(("arm5 求和走 arith 且点名操作数", c["orphan_values"] == [] and len(got) == 1))
+    # arm6: gets-only task is unscoreable, not orphan
+    c = classify({"id": "B05", "pass": 1, "answer_head": "ok=true，注册了 12 个工具，另有 3721 个。"}, tasks_all()["B05"])
+    red.append(("arm6 端点题记 unscoreable", c["unscoreable"] is True))
+    # arm7: truncation flag honest
+    c = classify({"id": "B01", "pass": 1, "answer_head": "x" * HEAD_CAP}, t)
+    red.append(("arm7 满 400 字符要标可能截短", c["possibly_truncated"] is True))
+    c = classify({"id": "B01", "pass": 1, "answer_head": "合计 1280 元。"}, t)
+    red.append(("arm7b 短答案不许标截短", c["possibly_truncated"] is False))
+    # arm8: chained ops (可用率百分数) is beyond arith ⇒ orphan, tool admits it
+    c = classify({"id": "B07", "pass": 1, "answer_head": "可用率 99.8958%。"}, tasks_all()["B07"])
+    red.append(("arm8 两链运算落到 orphan（尺子严，不假装会算）", c["orphan_values"] == ["99.8958"]))
+    # arm9: version strings from must_text are supported
+    c = classify({"id": "B12", "pass": 1, "answer_head": "VERSION 2.4.1，变更日志最新 2.4.0，不一致。"}, tasks_all()["B12"])
+    red.append(("arm9 版本号不误判", c["orphan_values"] == []))
+    # arm10: missing fixture file is named, not silently empty
+    bad = dict(t)
+    bad["requires"] = {"reads": ["不存在/没有.txt"]}
+    lit2, base2, uns2, src2 = sanctioned(bad)
+    red.append(("arm10 现场缺文件要点名", any(s.startswith("MISSING") for s in src2) and base2 == set()))
+    # arm11: bucket reuse comes from the shared aggregator, not a local copy
+    red.append(("arm11 分桶复用主件", bucket({"ok": True, "err": "x"}) == "transport"))
+    red.append(("arm11b 过账桶名对", bucket({"ok": True}) == "pass"))
+    # arm12: numbers counted on head only ⇒ empty head gives 0 numbers, not a crash
+    c = classify({"id": "B01", "pass": 1, "answer_head": ""}, t)
+    red.append(("arm12 空答案数 0 个数字", c["numbers"] == 0 and c["orphan_values"] == []))
+    fails = [n for n, okv in red if not okv]
+    for n, okv in red:
+        print(json.dumps({"arm": n, "ok": bool(okv)}, ensure_ascii=True))
+    print(json.dumps({"arms": len(red), "selftest_fails": len(fails),
+                      "failed": fails}, ensure_ascii=True))
+    return 1 if fails else 0
+
+
+_CACHE = {}
+
+
+def tasks_all():
+    if not _CACHE:
+        _CACHE.update(load_tasks())
+    return _CACHE
+
+
+def main():
+    if "--selftest" in sys.argv:
+        sys.exit(selftest())
+    names = [a for a in sys.argv[1:] if not a.startswith("--")]
+    if not names:
+        names = ["业务任务-13x20-真端点.json",
+                 "业务任务-13x5-真端点-修判据v3.json",
+                 "业务任务-三题x20-真端点.json"]
+    tasks = tasks_all()
+    docs = [load_one(n) for n in names]
+    rows = pool(docs)
+    print(json.dumps({"sources": len(docs), "pooled_rows": len(rows),
+                      "exe": docs[0].get("exe"), "task_set_sha256": docs[0].get("task_set_sha256"),
+                      "fixture_files": sum(1 for p in FX.rglob("*") if p.is_file()),
+                      "head_cap": HEAD_CAP}, ensure_ascii=True))
+    res = analyze(rows, tasks)
+    tot = sum(res[k]["rows"] for k in ("pass", "fake_close", "step_cap", "echo_close"))
+    print(json.dumps({"scored_rows": tot, "buckets_rows_sum": tot,
+                      "note": "答案只扫前 400 字符；orphan 是候选，不下编造结论"}, ensure_ascii=True))
+    for k in ("pass", "fake_close", "step_cap", "echo_close"):
+        print(json.dumps({"bucket": k, **{kk: vv for kk, vv in res[k].items() if kk != "examples"}},
+                         ensure_ascii=True))
+    for k in ("pass", "fake_close"):
+        for ex in res[k]["examples"]:
+            print(json.dumps({"example": k, **ex}, ensure_ascii=True))
+
+
+if __name__ == "__main__":
+    main()

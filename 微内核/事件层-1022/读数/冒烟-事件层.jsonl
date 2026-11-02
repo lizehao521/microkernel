@@ -1,0 +1,9 @@
+{"step": "S0 跑的是哪一份 build", "ok": true, "exe": "agentd-e1.exe", "sha256_12": "5ac171a854af", "build_rc": 0}
+{"step": "S1 stdout 不受事件层影响", "ok": true, "rc_on": 0, "rc_off": 0, "stdout_equal": true, "on_bytes": 2440, "off_bytes": 2441, "events_in_stdout": false}
+{"step": "S2 append-only 跨进程", "ok": true, "first_run": 32, "after_second": 64, "seq_regressions": 0, "run_started": 2}
+{"step": "S3 撞车守卫保住账本", "ok": true, "journal_is_file": true, "journal_bytes": 148215, "rc": 0, "stderr_has_collision_note": true, "nested_events_written": false}
+{"step": "S4 横幅三态各说各的", "ok": true, "内存态": true, "没开态": true, "落盘态": true, "file_line": ["agentd: 事件层 32 条 → C:\\Users\\Admin\\AppData\\Local\\Temp\\E1-冒烟-25604\\s4.events.jsonl"]}
+{"step": "S5 六态退出码未改", "ok": true, "real": 2, "turns": 3, "capped": 5, "script": 0, "bad_resume": 2}
+{"step": "S6 收口事件形状", "ok": true, "state": "settled", "stop": "script", "stop_why": "跑完：端点剧本走到最后一发", "progress": {"done": 6, "total": 6, "limit": 20}, "evidence": "measured", "turn": 0, "step_field": "absent"}
+{"step": "S7 回执（口径=Go -check-log）", "ok": true, "Go判据ValidateAccepts": "GREEN", "Go为什么": "32 条", "rc_结构支": 0, "rc_预算支": 0, "Python独立计数": "OK", "对不对得上": "一致", "最大ack_ms": 18, "预算支100状态": "GREEN", "预算支100读数": "32 条", "预算支只当发现": true, "限度分离": "ack_limit_ms=60000|ack_limit_ms=100", "有回执的发": 6, "趟身份": 1}
+{"step": "S8 结算与相位（口径=Go -check-log）", "ok": true, "Go判据ValidateSettlement": "GREEN", "Go为什么": "32 条", "Python独立计数": "OK", "对不对得上": "一致", "限度分离": "ack_limit_ms=60000|ack_limit_ms=100", "结算的发": 6, "结算类别": ["completed"], "有未走到步骤的份数": 0, "run_stop": "script", "run_why": true}

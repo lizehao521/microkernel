@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>看得见的编程 Agent</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>看得见的编程 Agent <span class="tag">本机 · 只读不执行</span></h1>
+  <p id="band" class="band" role="status" aria-live="polite">还没发起一发 —— 结论带在跑完之后才会亮。</p>
+</header>
+
+<main>
+  <section class="pane editor" aria-labelledby="h-edit">
+    <h2 id="h-edit">代码编辑区</h2>
+    <p id="autorun" class="note" hidden></p>
+    <div class="row">
+      <label for="lang">语言</label>
+      <select id="lang">
+        <option value="auto">自动</option>
+        <option value="go">go（真解析）</option>
+        <option value="python">python（降档）</option>
+        <option value="javascript">javascript（降档）</option>
+      </select>
+      <button id="load" type="button" class="ghost">装样例（该红的考卷）</button>
+      <button id="loadstack" type="button" class="ghost">装配错的栈</button>
+    </div>
+    <div class="codebox">
+      <label for="code" class="sr-only">要分析的代码（本件只读字节与解析语法树，不会执行它）</label>
+      <div id="gutter" aria-hidden="true">1</div>
+      <textarea id="code" spellcheck="false" placeholder="贴代码进来……（本件只读字节 + 解析，不会执行它）"></textarea>
+    </div>
+    <p id="budget" class="note" role="status" aria-live="polite">额度：还没问到（发一发之前先告诉你贴太多会不会落不了账）</p>
+    <label for="stack">报错/栈（可留空）—— 贴进来就把每一帧指回上面的行号；这台机不执行代码，所以帧只用来定位，不用来下结论
+    </label>
+    <textarea id="stack" class="stackbox" spellcheck="false" placeholder="panic: ... / Traceback (most recent call last): ..."></textarea>
+    <label for="q" class="sr-only">问题</label>
+    <input id="q" type="text" placeholder="要它干什么？例：为什么偶尔返回空 / 这段能怎么优化" value="这段有什么问题">
+    <div class="row">
+      <button id="go" type="button">发起一发（Ctrl+Enter）</button>
+      <button id="stop" type="button" class="ghost" disabled>停下来（已跑的照交账）</button>
+      <span id="state" class="dim" role="status" aria-live="polite">待机</span>
+    </div>
+    <p class="note">只监听 127.0.0.1；<b>不执行用户代码</b>；内核那三步走同进程接缝，服务端把读回关掉（或整条接缝关掉）时它们如实记 <code>absent</code>，界面不许把它画成绿。</p>
+  </section>
+
+  <section class="pane history" aria-labelledby="h-hist">
+    <h2 id="h-hist">对话历史</h2>
+    <ol id="hist" tabindex="0" aria-labelledby="h-hist"></ol>
+    <p class="dim" id="hist-note">落盘在 <code>数据/会话-*.jsonl</code>，刷新后还能看见。</p>
+  </section>
+
+  <section class="pane result" aria-labelledby="h-res">
+    <h2 id="h-res">结构化结果</h2>
+    <h3>这一发的循环（九步）</h3>
+    <ol id="trace"></ol>
+    <h3>结论 <span id="mix" class="mix"></span></h3>
+    <p id="debug" class="dim"></p>
+    <p id="gwline" class="dim"></p>
+    <div id="findings"></div>
+    <h3>账本改写了哪几格 <span id="kpi-why" class="dim"></span></h3>
+    <ul id="decisions"></ul>
+    <h3>没量到的（不许折叠）</h3>
+    <ul id="unknowns"></ul>
+  </section>
+</main>
+
+<footer>
+  <p>出处五档：<span class="b m">measured 自己数的</span><span class="b e">estimated 文本级</span><span class="b s">model_says 模型自报</span><span class="b r">relayed 转述</span><span class="b a">absent 没量到+理由</span></p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

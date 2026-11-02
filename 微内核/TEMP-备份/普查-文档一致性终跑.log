@@ -1,0 +1,33 @@
+TREE 微内核=62 个 .go（54 个 basename） | agentd=27 个 .go（27 个 basename）
+SCAN md=12 树=2 引用总数=52（只扫 事件层-1022 与 微内核,agentd 这两处，别的树要传 argv 进来）
+同名 basename=2 个（这些名字的引用一律进 AMBIG，件不猜是哪一份）：main.go×8, main_test.go×2
+分档 OK=15 DRIFT=26 NOCUE=2 OOB=0 NOFILE=0 AMBIG=2 NOID=7
+判不了的档：NOID（那句是纯散文）与 AMBIG（被扫范围里同名 .go 不止一份，同树内撞名也算）—— 都不折算成好，也不折算成坏
+抽取失手的档：NOCUE —— 抽出的词在那个文件里根本没有，多半是散文词/中文文案被当成标识符；**这一档不许读成「那处引用坏了」**
+  坏 交接-agentd事件层-1022.md                           md行580  NOCUE events_settle_teeth_test.go:92 解析到 cmd/agentd/events_settle_teeth_test.go ｜ 抽出的词=agentd,run_started,run_settled（同文件里没有）|| 那行=}, "却没有结算"},
+  坏 收口表-M5.md                                      md行15   DRIFT events.go:194 解析到 cmd/agentd/events.go ｜ 现应 DoneBefore@102,220,221
+  坏 收口表-M5.md                                      md行15   DRIFT loop.go:187 解析到 cmd/agentd/loop.go ｜ 现应 resume@643,645 DoneBefore@280 resume@643,645
+  坏 收口表-M5.md                                      md行18   DRIFT checklog.go:25 解析到 cmd/agentd/checklog.go ｜ 现应 ValidateLog@29,33 absent@29
+  坏 收口表-M5.md                                      md行18   DRIFT events.go:540 解析到 cmd/agentd/events.go ｜ 现应 ValidateLog@463,574,576 absent@21,101,313
+  坏 收口表-M5.md                                      md行56   DRIFT events.go:746 解析到 cmd/agentd/events.go ｜ 现应 ValidatePhaseTables@842,862
+  坏 收口表-M5.md                                      md行69   DRIFT sse.go:61 解析到 cmd/agentd/sse.go ｜ 现应 serveEvents@198,200 resumable@99,132,135
+  坏 收口表-M5.md                                      md行70   DRIFT events.go:194 解析到 cmd/agentd/events.go ｜ 现应 session@47,347,348
+  坏 收口表-M5.md                                      md行70   DRIFT loop.go:187 解析到 cmd/agentd/loop.go ｜ 现应 resume@643,645 agentd@622,632 session@66,190,198
+  坏 收口表-M5.md                                      md行71   DRIFT loop.go:186 解析到 cmd/agentd/loop.go ｜ 现应 settle@860,861,862 accept@347 accept@347
+  坏 收口表-M5.md                                      md行72   DRIFT loop.go:768 解析到 cmd/agentd/loop.go ｜ 现应 run_settled@860 run_settled@860 settle@860,861,862
+  坏 收口表-M5.md                                      md行72   DRIFT events.go:149 解析到 cmd/agentd/events.go ｜ 现应 run_settled@155,161,169 run_settled@155,161,169 settle@61,860
+  坏 收口表-M5.md                                      md行72   DRIFT loop.go:756 解析到 cmd/agentd/loop.go ｜ 现应 run_settled@860 run_settled@860 settle@860,861,862
+  坏 收口表-M5.md                                      md行73   NOCUE checklog.go:25 解析到 cmd/agentd/checklog.go ｜ 抽出的词=Succes,evidence,guessed_by_me（同文件里没有）|| 那行=// 每一行都带上「用的是哪个上限」：只把口径印在末行的话，放宽过的 GREEN 与
+  坏 收口表-M5.md                                      md行73   DRIFT events.go:528 解析到 cmd/agentd/events.go ｜ 现应 Succes@297 evidence@55,806,808
+  坏 收口表-M5.md                                      md行73   DRIFT events.go:540 解析到 cmd/agentd/events.go ｜ 现应 Succes@297 evidence@55,806,808
+  坏 收口表-M5.md                                      md行73   DRIFT events.go:281 解析到 cmd/agentd/events.go ｜ 现应 Succes@297 evidence@55,806,808
+  坏 收口表-M5.md                                      md行74   DRIFT checklog.go:41 解析到 cmd/agentd/checklog.go ｜ 现应 ack_limit_ms@27 ack_limit_ms@27
+  坏 验收-E1-1022.md                                  md行64   DRIFT events.go:130 解析到 cmd/agentd/events.go ｜ 现应 written@330,336,417 validate@582,603,604
+  坏 验收-E1-1022.md                                  md行65   DRIFT loop.go:608 解析到 cmd/agentd/loop.go ｜ 现应 run_settled@860
+  ...（其余 10 条：这条命令重跑就全印，别抄进文档）
+ARM-好 探针=cells.go（解析到 cells.go，同名份数=1）:40 符号=relayedCell -> 分档={'OK': 1, 'DRIFT': 0, 'NOCUE': 0, 'OOB': 0, 'NOID': 0, 'AMBIG': 0} 判动=1  OK
+ARM-坏 探针=cells.go:10（那行不含 relayedCell）在范围内=True 那行=[// Cell 是「一个键名 + 一个值 + 这个值是谁算的 + 它来自哪个字段] -> 分档={'OK': 0, 'DRIFT': 1, 'NOCUE': 0, 'OOB': 0, 'NOID': 0, 'AMBIG': 0} 判动=1  抓到
+landing: C:\Users\Admin\Desktop\微内核\事件层-1022\读数\锚点普查-散文行号.txt 38 lines 6650 bytes
+landing check: OK (38/38 lines)
+rc 归因: 坏臂没响=False 好臂没响=False 一条都没判动=False 落盘不配平=False
+注意：破没破（DRIFT/OOB 的多少）是本件的发现，不是本件的红 —— 别拿 rc=0 读成「引用都对」；反过来 rc=3 也不等于「引用都坏了」，它只说这一次普查不可信。

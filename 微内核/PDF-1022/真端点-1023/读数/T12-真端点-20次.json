@@ -1,0 +1,1112 @@
+{
+ "surface": "agenthub",
+ "task": "T12",
+ "shape": "T02 x20 (same session)",
+ "endpoint": "http://121.36.29.96:8787/v1/chat/completions",
+ "model": "MiniMax-M2.5",
+ "key_masked": "sk-rel...IbWA",
+ "port": 62962,
+ "reps_declared": 20,
+ "started": "2026-10-23T12:46:09+08:00",
+ "health": {
+  "allow_exec": false,
+  "allow_write": false,
+  "memory": 0,
+  "model_endpoint": "http://121.36.29.96:8787/v1/chat/completions",
+  "next_turn": 1,
+  "ok": true,
+  "tools": 12
+ },
+ "exe": {
+  "sha256": "7f001318b7c4c73d8e1312edd208943dc708ee7a9bacc80cec4cacb7968b4754",
+  "bytes": 12066304
+ },
+ "reps": [
+  {
+   "rep": 1,
+   "ok": true,
+   "status": 200,
+   "turn": 1,
+   "stop": "跑完",
+   "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "text.stats"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "model_says_steps": 2,
+   "read_present": true,
+   "read_class": "ok",
+   "stats_present": true,
+   "stats_class": "ok",
+   "lines": 7,
+   "sane": true,
+   "sane_why": "整列 2 步 / 5 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 3,
+   "dropped_from_window": 0,
+   "context_chars_used": 323,
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）；text.stats：参数 text ｜ 字节 39 ｜ UTF-8 码元 39 ｜ 行 7（空行 0）｜ 最长一行 7 字节，在第 5 行 ｜ 试了 1 次 ｜ 0ms",
+   "ms": 7717.2,
+   "err": null,
+   "at": "2026-10-23T12:46:18+08:00"
+  },
+  {
+   "rep": 2,
+   "ok": false,
+   "status": 200,
+   "turn": 2,
+   "stop": "跑完",
+   "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "text.stats"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "model_says_steps": 2,
+   "read_present": true,
+   "read_class": "ok",
+   "stats_present": true,
+   "stats_class": "ok",
+   "lines": 8,
+   "sane": true,
+   "sane_why": "整列 2 步 / 5 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 7,
+   "dropped_from_window": 0,
+   "context_chars_used": 884,
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）；text.stats：参数 text ｜ 字节 40 ｜ UTF-8 码元 40 ｜ 行 8（空行 1）｜ 最长一行 7 字节，在第 5 行 ｜ 试了 1 次 ｜ 0ms",
+   "ms": 7526.7,
+   "err": null,
+   "at": "2026-10-23T12:46:26+08:00"
+  },
+  {
+   "rep": 3,
+   "ok": false,
+   "status": 200,
+   "turn": 3,
+   "stop": "步数上限",
+   "stop_why": "步数上限：跑到第 6 步还没收口 ⇒ 停了（剩下的目标：看着都做过了）",
+   "steps": 6,
+   "tools": [
+    "fs.read",
+    "text.stats",
+    "fs.read",
+    "fs.read",
+    "fs.read",
+    "fs.read"
+   ],
+   "classes": [
+    "ok",
+    "ok",
+    "ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured",
+    "measured",
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "model_says_steps": 6,
+   "read_present": true,
+   "read_class": "ok",
+   "stats_present": true,
+   "stats_class": "ok",
+   "lines": 7,
+   "sane": true,
+   "sane_why": "整列 6 步 / 9 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 15,
+   "dropped_from_window": 0,
+   "context_chars_used": 2166,
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）；text.stats：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜",
+   "ms": 21421.1,
+   "err": null,
+   "at": "2026-10-23T12:46:48+08:00"
+  },
+  {
+   "rep": 4,
+   "ok": false,
+   "status": 200,
+   "turn": 4,
+   "stop": "跑完",
+   "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "model_says_steps": 1,
+   "read_present": true,
+   "read_class": "ok",
+   "stats_present": false,
+   "stats_class": null,
+   "lines": null,
+   "sane": true,
+   "sane_why": "整列 1 步 / 4 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 18,
+   "dropped_from_window": 0,
+   "context_chars_used": 3182,
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）",
+   "ms": 5924.8,
+   "err": null,
+   "at": "2026-10-23T12:46:54+08:00"
+  },
+  {
+   "rep": 5,
+   "ok": true,
+   "status": 200,
+   "turn": 5,
+   "stop": "跑完",
+   "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "text.stats"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "model_says_steps": 2,
+   "read_present": true,
+   "read_class": "ok",
+   "stats_present": true,
+   "stats_class": "ok",
+   "lines": 7,
+   "sane": true,
+   "sane_why": "整列 2 步 / 5 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 22,
+   "dropped_from_window": 0,
+   "context_chars_used": 3726,
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）；text.stats：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜",
+   "ms": 10111.3,
+   "err": null,
+   "at": "2026-10-23T12:47:04+08:00"
+  },
+  {
+   "rep": 6,
+   "ok": true,
+   "status": 200,
+   "turn": 6,
+   "stop": "跑完",
+   "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+   "steps": 3,
+   "tools": [
+    "fs.read",
+    "text.stats",
+    "text.stats"
+   ],
+   "classes": [
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "model_says_steps": 3,
+   "read_present": true,
+   "read_class": "ok",
+   "stats_present": true,
+   "stats_class": "ok",
+   "lines": 7,
+   "sane": true,
+   "sane_why": "整列 3 步 / 6 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 27,
+   "dropped_from_window": 5,
+   "context_chars_used": 3921,
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）；text.stats：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜",
+   "ms": 11589.4,
+   "err": null,
+   "at": "2026-10-23T12:47:16+08:00"
+  },
+  {
+   "rep": 7,
+   "ok": false,
+   "status": 200,
+   "turn": 7,
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 0,
+   "tools": [],
+   "classes": [],
+   "provenances": [],
+   "evidences": [],
+   "model_says_steps": 0,
+   "read_present": false,
+   "read_class": null,
+   "stats_present": false,
+   "stats_class": null,
+   "lines": null,
+   "sane": true,
+   "sane_why": "整列 0 步 / 3 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 29,
+   "dropped_from_window": 8,
+   "context_chars_used": 3994,
+   "answer_head": "这一发没有任何成功读数",
+   "ms": 3018.8,
+   "err": null,
+   "at": "2026-10-23T12:47:19+08:00"
+  },
+  {
+   "rep": 8,
+   "ok": true,
+   "status": 200,
+   "turn": 8,
+   "stop": "跑完",
+   "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "text.stats"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "model_says_steps": 2,
+   "read_present": true,
+   "read_class": "ok",
+   "stats_present": true,
+   "stats_class": "ok",
+   "lines": 7,
+   "sane": true,
+   "sane_why": "整列 2 步 / 5 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 33,
+   "dropped_from_window": 12,
+   "context_chars_used": 3870,
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）；text.stats：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜",
+   "ms": 8285.9,
+   "err": null,
+   "at": "2026-10-23T12:47:28+08:00"
+  },
+  {
+   "rep": 9,
+   "ok": false,
+   "status": 200,
+   "turn": 9,
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 0,
+   "tools": [],
+   "classes": [],
+   "provenances": [],
+   "evidences": [],
+   "model_says_steps": 0,
+   "read_present": false,
+   "read_class": null,
+   "stats_present": false,
+   "stats_class": null,
+   "lines": null,
+   "sane": true,
+   "sane_why": "整列 0 步 / 3 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 35,
+   "dropped_from_window": 14,
+   "context_chars_used": 3937,
+   "answer_head": "这一发没有任何成功读数",
+   "ms": 2537.5,
+   "err": null,
+   "at": "2026-10-23T12:47:30+08:00"
+  },
+  {
+   "rep": 10,
+   "ok": false,
+   "status": 200,
+   "turn": 10,
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 0,
+   "tools": [],
+   "classes": [],
+   "provenances": [],
+   "evidences": [],
+   "model_says_steps": 0,
+   "read_present": false,
+   "read_class": null,
+   "stats_present": false,
+   "stats_class": null,
+   "lines": null,
+   "sane": true,
+   "sane_why": "整列 0 步 / 3 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 37,
+   "dropped_from_window": 15,
+   "context_chars_used": 3899,
+   "answer_head": "这一发没有任何成功读数",
+   "ms": 3838.5,
+   "err": null,
+   "at": "2026-10-23T12:47:34+08:00"
+  },
+  {
+   "rep": 11,
+   "ok": false,
+   "status": 200,
+   "turn": 11,
+   "stop": "跑完",
+   "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+   "steps": 5,
+   "tools": [
+    "tools.list",
+    "fs.read",
+    "fs.read",
+    "fs.read",
+    "fs.read"
+   ],
+   "classes": [
+    "ok",
+    "ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured",
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "model_says_steps": 5,
+   "read_present": true,
+   "read_class": "ok",
+   "stats_present": false,
+   "stats_class": null,
+   "lines": null,
+   "sane": true,
+   "sane_why": "整列 5 步 / 8 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 44,
+   "dropped_from_window": 23,
+   "context_chars_used": 3783,
+   "answer_head": "tools.list：认识的工具共 12 个；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\f",
+   "ms": 17339.5,
+   "err": null,
+   "at": "2026-10-23T12:47:52+08:00"
+  },
+  {
+   "rep": 12,
+   "ok": false,
+   "status": 200,
+   "turn": 12,
+   "stop": "步数上限",
+   "stop_why": "步数上限：跑到第 6 步还没收口 ⇒ 停了（剩下的目标：看着都做过了）",
+   "steps": 6,
+   "tools": [
+    "fs.read",
+    "fs.read",
+    "fs.read",
+    "fs.read",
+    "fs.read",
+    "text.stats"
+   ],
+   "classes": [
+    "ok",
+    "ok",
+    "ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured",
+    "measured",
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "model_says_steps": 6,
+   "read_present": true,
+   "read_class": "ok",
+   "stats_present": true,
+   "stats_class": "ok",
+   "lines": 7,
+   "sane": true,
+   "sane_why": "整列 6 步 / 9 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 52,
+   "dropped_from_window": 32,
+   "context_chars_used": 3964,
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜ 读到",
+   "ms": 14710.1,
+   "err": null,
+   "at": "2026-10-23T12:48:07+08:00"
+  },
+  {
+   "rep": 13,
+   "ok": true,
+   "status": 200,
+   "turn": 13,
+   "stop": "跑完",
+   "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "text.stats"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "model_says_steps": 2,
+   "read_present": true,
+   "read_class": "ok",
+   "stats_present": true,
+   "stats_class": "ok",
+   "lines": 7,
+   "sane": true,
+   "sane_why": "整列 2 步 / 5 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 56,
+   "dropped_from_window": 40,
+   "context_chars_used": 3363,
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）；text.stats：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜",
+   "ms": 6530.6,
+   "err": null,
+   "at": "2026-10-23T12:48:13+08:00"
+  },
+  {
+   "rep": 14,
+   "ok": false,
+   "status": 200,
+   "turn": 14,
+   "stop": "跑完",
+   "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "estimated"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "model_says_steps": 0,
+   "read_present": true,
+   "read_class": "ok",
+   "stats_present": false,
+   "stats_class": null,
+   "lines": null,
+   "sane": true,
+   "sane_why": "整列 1 步 / 4 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 59,
+   "dropped_from_window": 40,
+   "context_chars_used": 3919,
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）",
+   "ms": 5833.4,
+   "err": null,
+   "at": "2026-10-23T12:48:20+08:00"
+  },
+  {
+   "rep": 15,
+   "ok": false,
+   "status": 200,
+   "turn": 15,
+   "stop": "跑完",
+   "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "model_says_steps": 1,
+   "read_present": true,
+   "read_class": "ok",
+   "stats_present": false,
+   "stats_class": null,
+   "lines": null,
+   "sane": true,
+   "sane_why": "整列 1 步 / 4 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 62,
+   "dropped_from_window": 42,
+   "context_chars_used": 3994,
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）",
+   "ms": 6519.0,
+   "err": null,
+   "at": "2026-10-23T12:48:26+08:00"
+  },
+  {
+   "rep": 16,
+   "ok": true,
+   "status": 200,
+   "turn": 16,
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 3,
+   "tools": [
+    "fs.read",
+    "text.stats",
+    "text.stats"
+   ],
+   "classes": [
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured",
+    "measured"
+   ],
+   "model_says_steps": 3,
+   "read_present": true,
+   "read_class": "ok",
+   "stats_present": true,
+   "stats_class": "ok",
+   "lines": 7,
+   "sane": true,
+   "sane_why": "整列 3 步 / 6 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 67,
+   "dropped_from_window": 45,
+   "context_chars_used": 3847,
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）；text.stats：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜",
+   "ms": 11156.9,
+   "err": null,
+   "at": "2026-10-23T12:48:38+08:00"
+  },
+  {
+   "rep": 17,
+   "ok": false,
+   "status": 200,
+   "turn": 17,
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "model_says_steps": 1,
+   "read_present": true,
+   "read_class": "ok",
+   "stats_present": false,
+   "stats_class": null,
+   "lines": null,
+   "sane": true,
+   "sane_why": "整列 1 步 / 4 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 70,
+   "dropped_from_window": 49,
+   "context_chars_used": 3969,
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）",
+   "ms": 6151.7,
+   "err": null,
+   "at": "2026-10-23T12:48:44+08:00"
+  },
+  {
+   "rep": 18,
+   "ok": false,
+   "status": 200,
+   "turn": 18,
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 1,
+   "tools": [
+    "fs.read"
+   ],
+   "classes": [
+    "ok"
+   ],
+   "provenances": [
+    "model_says"
+   ],
+   "evidences": [
+    "measured"
+   ],
+   "model_says_steps": 1,
+   "read_present": true,
+   "read_class": "ok",
+   "stats_present": false,
+   "stats_class": null,
+   "lines": null,
+   "sane": true,
+   "sane_why": "整列 1 步 / 4 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 73,
+   "dropped_from_window": 52,
+   "context_chars_used": 3887,
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）",
+   "ms": 14136.5,
+   "err": null,
+   "at": "2026-10-23T12:48:58+08:00"
+  },
+  {
+   "rep": 19,
+   "ok": false,
+   "status": 200,
+   "turn": 19,
+   "stop": "跑完",
+   "stop_why": "端点说可以收口",
+   "steps": 0,
+   "tools": [],
+   "classes": [],
+   "provenances": [],
+   "evidences": [],
+   "model_says_steps": 0,
+   "read_present": false,
+   "read_class": null,
+   "stats_present": false,
+   "stats_class": null,
+   "lines": null,
+   "sane": true,
+   "sane_why": "整列 0 步 / 3 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 75,
+   "dropped_from_window": 53,
+   "context_chars_used": 3344,
+   "answer_head": "这一发没有任何成功读数",
+   "ms": 2518.0,
+   "err": null,
+   "at": "2026-10-23T12:49:01+08:00"
+  },
+  {
+   "rep": 20,
+   "ok": true,
+   "status": 200,
+   "turn": 20,
+   "stop": "跑完",
+   "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+   "steps": 2,
+   "tools": [
+    "fs.read",
+    "text.stats"
+   ],
+   "classes": [
+    "ok",
+    "ok"
+   ],
+   "provenances": [
+    "model_says",
+    "model_says"
+   ],
+   "evidences": [
+    "measured",
+    "measured"
+   ],
+   "model_says_steps": 2,
+   "read_present": true,
+   "read_class": "ok",
+   "stats_present": true,
+   "stats_class": "ok",
+   "lines": 7,
+   "sane": true,
+   "sane_why": "整列 2 步 / 5 条结论自洽（判据 13 条全过）",
+   "mix_ok": true,
+   "retries": 0,
+   "memory_msgs": 79,
+   "dropped_from_window": 53,
+   "context_chars_used": 3775,
+   "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）；text.stats：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜",
+   "ms": 9227.1,
+   "err": null,
+   "at": "2026-10-23T12:49:10+08:00"
+  }
+ ],
+ "summary": {
+  "reps_ran": 20,
+  "ok": 7,
+  "success_rate": 0.35,
+  "stops": {
+   "跑完": 18,
+   "步数上限": 2
+  },
+  "provenance_counts": {
+   "model_says": 39,
+   "estimated": 1
+  },
+  "reps_without_model_says": 5,
+  "ms_p50": 7717.2,
+  "ms_p95": 17339.5,
+  "ms_max": 21421.1,
+  "failures": [
+   {
+    "rep": 2,
+    "stop": "跑完",
+    "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+    "tools": [
+     "fs.read",
+     "text.stats"
+    ],
+    "classes": [
+     "ok",
+     "ok"
+    ],
+    "read_class": "ok",
+    "stats_class": "ok",
+    "lines": 8,
+    "sane_why": "整列 2 步 / 5 条结论自洽（判据 13 条全过）",
+    "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）；text.stats：参数 text ｜ 字节 40 ｜ UTF-8 码元 40 ｜ 行 8（空行 1）｜ 最长一行 7 字节，在第 5 行 ｜ 试了 1 次 ｜ 0ms",
+    "err": null
+   },
+   {
+    "rep": 3,
+    "stop": "步数上限",
+    "stop_why": "步数上限：跑到第 6 步还没收口 ⇒ 停了（剩下的目标：看着都做过了）",
+    "tools": [
+     "fs.read",
+     "text.stats",
+     "fs.read",
+     "fs.read",
+     "fs.read",
+     "fs.read"
+    ],
+    "classes": [
+     "ok",
+     "ok",
+     "ok",
+     "ok",
+     "ok",
+     "ok"
+    ],
+    "read_class": "ok",
+    "stats_class": "ok",
+    "lines": 7,
+    "sane_why": "整列 6 步 / 9 条结论自洽（判据 13 条全过）",
+    "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）；text.stats：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜",
+    "err": null
+   },
+   {
+    "rep": 4,
+    "stop": "跑完",
+    "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+    "tools": [
+     "fs.read"
+    ],
+    "classes": [
+     "ok"
+    ],
+    "read_class": "ok",
+    "stats_class": null,
+    "lines": null,
+    "sane_why": "整列 1 步 / 4 条结论自洽（判据 13 条全过）",
+    "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）",
+    "err": null
+   },
+   {
+    "rep": 7,
+    "stop": "跑完",
+    "stop_why": "端点说可以收口",
+    "tools": [],
+    "classes": [],
+    "read_class": null,
+    "stats_class": null,
+    "lines": null,
+    "sane_why": "整列 0 步 / 3 条结论自洽（判据 13 条全过）",
+    "answer_head": "这一发没有任何成功读数",
+    "err": null
+   },
+   {
+    "rep": 9,
+    "stop": "跑完",
+    "stop_why": "端点说可以收口",
+    "tools": [],
+    "classes": [],
+    "read_class": null,
+    "stats_class": null,
+    "lines": null,
+    "sane_why": "整列 0 步 / 3 条结论自洽（判据 13 条全过）",
+    "answer_head": "这一发没有任何成功读数",
+    "err": null
+   },
+   {
+    "rep": 10,
+    "stop": "跑完",
+    "stop_why": "端点说可以收口",
+    "tools": [],
+    "classes": [],
+    "read_class": null,
+    "stats_class": null,
+    "lines": null,
+    "sane_why": "整列 0 步 / 3 条结论自洽（判据 13 条全过）",
+    "answer_head": "这一发没有任何成功读数",
+    "err": null
+   },
+   {
+    "rep": 11,
+    "stop": "跑完",
+    "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+    "tools": [
+     "tools.list",
+     "fs.read",
+     "fs.read",
+     "fs.read",
+     "fs.read"
+    ],
+    "classes": [
+     "ok",
+     "ok",
+     "ok",
+     "ok",
+     "ok"
+    ],
+    "read_class": "ok",
+    "stats_class": null,
+    "lines": null,
+    "sane_why": "整列 5 步 / 8 条结论自洽（判据 13 条全过）",
+    "answer_head": "tools.list：认识的工具共 12 个；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\f",
+    "err": null
+   },
+   {
+    "rep": 12,
+    "stop": "步数上限",
+    "stop_why": "步数上限：跑到第 6 步还没收口 ⇒ 停了（剩下的目标：看着都做过了）",
+    "tools": [
+     "fs.read",
+     "fs.read",
+     "fs.read",
+     "fs.read",
+     "fs.read",
+     "text.stats"
+    ],
+    "classes": [
+     "ok",
+     "ok",
+     "ok",
+     "ok",
+     "ok",
+     "ok"
+    ],
+    "read_class": "ok",
+    "stats_class": "ok",
+    "lines": 7,
+    "sane_why": "整列 6 步 / 9 条结论自洽（判据 13 条全过）",
+    "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）；fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜ 读到",
+    "err": null
+   },
+   {
+    "rep": 14,
+    "stop": "跑完",
+    "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+    "tools": [
+     "fs.read"
+    ],
+    "classes": [
+     "ok"
+    ],
+    "read_class": "ok",
+    "stats_class": null,
+    "lines": null,
+    "sane_why": "整列 1 步 / 4 条结论自洽（判据 13 条全过）",
+    "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）",
+    "err": null
+   },
+   {
+    "rep": 15,
+    "stop": "跑完",
+    "stop_why": "端点用自然语言收口（不是 JSON 动作）",
+    "tools": [
+     "fs.read"
+    ],
+    "classes": [
+     "ok"
+    ],
+    "read_class": "ok",
+    "stats_class": null,
+    "lines": null,
+    "sane_why": "整列 1 步 / 4 条结论自洽（判据 13 条全过）",
+    "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）",
+    "err": null
+   },
+   {
+    "rep": 17,
+    "stop": "跑完",
+    "stop_why": "端点说可以收口",
+    "tools": [
+     "fs.read"
+    ],
+    "classes": [
+     "ok"
+    ],
+    "read_class": "ok",
+    "stats_class": null,
+    "lines": null,
+    "sane_why": "整列 1 步 / 4 条结论自洽（判据 13 条全过）",
+    "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）",
+    "err": null
+   },
+   {
+    "rep": 18,
+    "stop": "跑完",
+    "stop_why": "端点说可以收口",
+    "tools": [
+     "fs.read"
+    ],
+    "classes": [
+     "ok"
+    ],
+    "read_class": "ok",
+    "stats_class": null,
+    "lines": null,
+    "sane_why": "整列 1 步 / 4 条结论自洽（判据 13 条全过）",
+    "answer_head": "fs.read：C:\\Users\\Admin\\AppData\\Local\\Temp\\hubd-t12-real-fve1_j_b\\fixture\\numbers.txt ｜ 读到 45 字节（UTF-8 码元 45 个）",
+    "err": null
+   },
+   {
+    "rep": 19,
+    "stop": "跑完",
+    "stop_why": "端点说可以收口",
+    "tools": [],
+    "classes": [],
+    "read_class": null,
+    "stats_class": null,
+    "lines": null,
+    "sane_why": "整列 0 步 / 3 条结论自洽（判据 13 条全过）",
+    "answer_head": "这一发没有任何成功读数",
+    "err": null
+   }
+  ]
+ },
+ "landing_ok": {
+  "reading_exists": true,
+  "reading_bytes": 21547,
+  "log_bytes": 322,
+  "key_in_reading": false,
+  "key_in_log": false
+ },
+ "finished": "2026-10-23T12:49:11+08:00"
+}

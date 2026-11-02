@@ -1,0 +1,9 @@
+=== Info-ZIP 独立复核（agentkernel-2026-10-18-win-x64.zip，修打包器后这份）===
+    testing: agentkernel/evidence/source-fingerprint.sha256   OK
+No errors detected in compressed data of agentkernel-2026-10-18-win-x64.zip.
+--- 包里有没有混进 ~ / .log ---
+2
+--- 解出来核 bin 五件 + 跑闸门 ---
+5
+797fcda0f9737452
+✓ 全部通过（项数由上面自己数，不抄在这里）

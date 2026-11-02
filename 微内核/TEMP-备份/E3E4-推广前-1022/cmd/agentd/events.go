@@ -1,0 +1,640 @@
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"os"
+	"path/filepath"
+	"strconv"
+	"regexp"
+	"sync"
+	"time"
+)
+
+// 事件层是宿主侧的东西：内核 v1 已冻结（48 键 / 49 格），这里一格都不新增，
+// 只是把循环「已经落进账的那些事实」按发按序另写一份，给界面与断线续传当底。
+// 形状照 研究-协同工作-1022.md §5.1。
+
+// 五档出处的名字与内核那本账一致。写不进这五个就算不合格 ——
+// 宁可当场拒，也不要落一条「看起来像 measured」的假凭据。
+var evidenceTiers = map[string]bool{
+	"measured": true, "estimated": true, "model_says": true, "relayed": true, "absent": true,
+}
+
+// 状态是「这一条在讲什么阶段」，必须是个可分档的 token；
+// 结束原因的整句话走 Stop 字段，不许塞进 state（下游就没法按 state 归并了）。
+var eventStates = map[string]bool{
+	"running": true, "ok": true, "refused": true, "failed": true, "settled": true, "interrupted": true,
+}
+
+type EventStep struct {
+	No   *int   `json:"no,omitempty"`
+	Name string `json:"name,omitempty"`
+	Tool string `json:"tool,omitempty"`
+}
+
+// Progress 的 Total 用指针：算不出来就是「没这个数」，写 0 会被读成「总共 0 步」，
+// 那是这本账最恨的那一族。Limit 另放：额度是额度、工作量是工作量，
+// 混在一个字段里会把「跑完」印成「跑了一半」。
+type Progress struct {
+	Done  int  `json:"done"`
+	Total *int `json:"total,omitempty"`
+	Limit *int `json:"limit,omitempty"`
+}
+
+type Event struct {
+	V         int        `json:"v"`
+	Session   string     `json:"session"`
+	Run       string     `json:"run"` // 第几趟：号是**趟内**的轴，跨趟追加的日志要靠它分开
+	Turn      int        `json:"turn"`
+	Seq       int        `json:"seq"`
+	TS        string     `json:"ts"`
+	Kind      string     `json:"kind"`
+	Step      *EventStep `json:"step,omitempty"`
+	State     string     `json:"state"`
+	Evidence  string     `json:"evidence"`
+	Why       string     `json:"why,omitempty"`
+	Stop      string     `json:"stop,omitempty"`     // 六态的 **token**（script/turns/policy/driver/capped/abort）
+	StopWhy   string     `json:"stop_why,omitempty"` // 那一态的整句话 —— 别拿散文让下游做中文字符串匹配
+	Progress  *Progress  `json:"progress,omitempty"`
+	Accept    *Accept    `json:"accept,omitempty"` // 只有 turn_accepted 带
+	Settle    *Settle    `json:"settle,omitempty"` // 只有结算那一条带
+	ElapsedMS int64      `json:"elapsed_ms"`
+
+	// enteredAt 是「请求入口那一刻」，由造回执的那里定死。它非导出 ⇒ encoding/json 天然跳过，
+	// 不用加 tag（M2 路 B 的 P2-5：注释原来写着 json:"-"，行为对、说明错）。
+	// Emit 拿它算 ts 与 ack_ms —— 等 emit 时才现取，ack_ms 恒为 0，针1 就是装饰。
+	enteredAt time.Time
+}
+
+// Accept 是回执的载荷：收到的是哪一发、打算走几步、上限多少、从哪儿能把它停下、
+// 断了能不能续。少一样，界面就只能猜 —— 而「猜出来的可续」正是这份研究要治的那一族。
+type Accept struct {
+	// Planned 说实话是「还剩几发（含本发）」，不是「还剩几步」—— 契约 §5.2.1 那个「计划」字面
+	// 被 M2 路 A 点出名实不符（turn1..6 报 6..1，而每发实际 3–4 步）。字段名跟着事实改，
+	// 别的驱动不知道就 nil（绝不写 0）。
+	Planned *int `json:"planned_shots"`
+	Limit     *int   `json:"turn_limit"`
+	StopVia   string `json:"stop_via"`
+	Resumable *bool  `json:"resumable"` // 指针且不带 omitempty：旧记录读回 nil = 没量过，不许塌成 false
+	AckMS     *int64 `json:"ack_ms"`    // 距入口多久才回执 —— 针1 数的就是这个
+}
+
+// 针1 的口径：回执距请求入口超过这个数就红。
+const ackLimitMS = 100
+
+// Settle 是结算的载荷（契约 §5.2.4「停=结算」要的那三样）：
+// 停在哪一相、已经发生了什么、没发生什么。
+// 「没发生的」必须逐条点名并写明**根本没执行** —— 把没跑的步含糊说成「跑了没结果」，
+// 就是 pgagent 测试 11 抓的那一族假象。
+type Settle struct {
+	Phase      string         `json:"phase"`                    // 停下来时正在做哪一相
+	Reached    []string       `json:"reached"`                  // 这一发真走过的相
+	NotReached []string       `json:"not_reached"`              // 根本没执行的相
+	Counts     map[string]int `json:"counts"`                   // 本发各 state 各几条（成功/被拒/失败/没量到）
+	Kind       string         `json:"kind"`                     // 造成停的那一类（interrupted / settled）
+	Why        string         `json:"why"`                      // 结算自己的理由（absent 那一族的原因走各条事件的 why）
+	DoneBefore int            `json:"done_before_shots"`        // 打断前已经落账的发数 —— 计数要活过打断
+	KPI        int             `json:"ledger_driven_decisions"` // 账驱动的步数：打断路径上不许被清零
+}
+
+// 一发今天的相位表。**只列今天真有事件对的相**：
+// read_back / decide 还没有专属事件（属 u.hook-coverage），这里不假装能判它们走没走到 —— 
+// 相位表与事件种类必须同源，否则补步针数的是空气。
+var turnPhases = []string{"accept", "work", "check_call", "record_call"}
+var phaseKind = map[string]string{
+	"accept":      "turn_accepted",
+	"work":        "shot_started",
+	"check_call":  "precheck",
+	"record_call": "recorded",
+}
+
+// stopTokens 是六态的 token 词表（与 exitOf 一一对应，一格不新增）。
+var stopTokens = map[string]bool{
+	"script": true, "turns": true, "policy": true, "driver": true, "capped": true, "abort": true,
+}
+
+// ValidateSettlement 是针4（结算）+ 针5（补步）的可达形态，判读回来的整本日志：
+//   每一发要么有且只有一条结算，要么这条发没开始过（不能半结算）；
+//   reached 与 not_reached 不相交、并集正好是相位表（少一相就是漏判）；
+//   not_reached 里的相，它对应的事件 kind **一条都不许出现在这一发里**（补步针）；
+//   counts 的加总必须等于这一发除结算外的事件条数（自印与账对得上，三态不塌）；
+//   stop 必须是六 token 之一，整句话走 stop_why。
+func ValidateSettlement(evs []Event) error {
+	perTurn := map[string][]Event{}
+	var turns []string
+	for _, e := range evs {
+		if e.Turn == 0 {
+			continue
+		}
+		key := blockOf(e)
+		if _, has := perTurn[key]; !has {
+			turns = append(turns, key)
+		}
+		perTurn[key] = append(perTurn[key], e)
+	}
+	for _, e := range evs {
+		if e.Kind == "run_settled" {
+			if !stopTokens[e.Stop] || e.StopWhy == "" {
+				return fmt.Errorf("run 级结算的 stop=%q / stop_why=%q 不合格 —— token 与整句话分两格放", e.Stop, e.StopWhy)
+			}
+		}
+	}
+	for _, key := range turns {
+		group := perTurn[key]
+		t := group[0].Turn
+		var settles []Event
+		for _, e := range group {
+			if e.Kind == "turn_settled" || e.Kind == "turn_interrupted" {
+				settles = append(settles, e)
+			}
+		}
+		if len(settles) == 0 {
+			continue // 这一发还没收口：由 E3 之外的路径（回帧坏/读回失败）负责，缺口记在 u.hook-coverage
+		}
+		if len(settles) > 1 {
+			return fmt.Errorf("第 %d 发有 %d 条结算 —— 只能结一次，多条就是两套收口代码", t, len(settles))
+		}
+		s := settles[0]
+		if s.Settle == nil {
+			return fmt.Errorf("第 %d 发有结算却没带载荷 —— 三样一样都没交", t)
+		}
+		switch s.Settle.Kind {
+		case "completed", "refused", "failed", "interrupted":
+		default:
+			return fmt.Errorf("第 %d 发结算的 kind=%q 不在四类里 —— 结束类别不许散写（state 有白名单，这里同理）", t, s.Settle.Kind)
+		}
+		if (s.Kind == "turn_interrupted") != (s.Settle.Kind == "interrupted") {
+			return fmt.Errorf("第 %d 发 kind=%s 与事件名 %s 对不上 —— 打断与正常收口不许混着标", t, s.Settle.Kind, s.Kind)
+		}
+		if s.Settle.KPI < 0 {
+			return fmt.Errorf("第 %d 发结算的 KPI=%d 是负数", t, s.Settle.KPI)
+		}
+		seen := map[string]bool{}
+		for _, p := range s.Settle.Reached {
+			if seen[p] {
+				return fmt.Errorf("第 %d 发 reached 里 %q 重复", t, p)
+			}
+			seen[p] = true
+		}
+		sum := map[string]bool{}
+		for _, p := range append(append([]string{}, s.Settle.Reached...), s.Settle.NotReached...) {
+			if sum[p] {
+				return fmt.Errorf("第 %d 发 %q 既算走到又算没走到 —— 两格打架", t, p)
+			}
+			sum[p] = true
+		}
+		if len(s.Settle.Reached)+len(s.Settle.NotReached) != len(turnPhases) {
+			return fmt.Errorf("第 %d 发的相位条数 %d，与相位表 %d 不符（少一相就是漏一相的判据）",
+				t, len(s.Settle.Reached)+len(s.Settle.NotReached), len(turnPhases))
+		}
+		// 补步针：说「没走到」的相，它的事件一条都不许在这一发里出现
+		for _, p := range s.Settle.NotReached {
+			k, has := phaseKind[p]
+			if !has {
+				continue
+			}
+			for _, e := range group {
+				if e.Kind == k {
+					return fmt.Errorf("第 %d 发结算说 %q 没执行，流里却来了 %s —— 没执行的步被写成了走过的步", t, p, k)
+				}
+			}
+		}
+		// 反过来也要对：说「走到了」的相，事件必须真在（这是 C2 那族坏法的牙）
+		for _, p := range s.Settle.Reached {
+			k, has := phaseKind[p]
+			if !has {
+				continue
+			}
+			found := false
+			for _, e := range group {
+				if e.Kind == k {
+					found = true
+					break
+				}
+			}
+			if !found {
+				return fmt.Errorf("第 %d 发结算说走过 %q，可这一发没有一条 %s 事件 —— 补出来的步", t, p, k)
+			}
+		}
+		n := 0
+		for _, e := range group {
+			if e.Kind != "turn_settled" && e.Kind != "turn_interrupted" {
+				n++
+			}
+		}
+		total := 0
+		for _, v := range s.Settle.Counts {
+			total += v
+		}
+		if total != n {
+			return fmt.Errorf("第 %d 发结算自印 counts 加总 %d，本发实际 %d 条 —— 两个数不许并存", t, total, n)
+		}
+		for _, e := range group {
+			if e.Evidence == "absent" && e.Why == "" {
+				return fmt.Errorf("第 %d 发有 absent 事件没带 why：%+v", t, e)
+			}
+		}
+	}
+	return nil
+}
+
+// reCanResume 判「这句话在声称能续」。它必须放过否定式：
+// 「断开即取消，不可续」里含「可续」三字，按裸子串判就是把诚实的话当谎抓。
+var reCanResume = regexp.MustCompile(`(^|[^不])可续`)
+
+// settleKinds 是「终止类」事件：它们不进本发的 state 统计 ——
+// 否则结算那条把自己也算成「发生过的一步」，counts 就与账多出一格。
+var settleKinds = map[string]bool{"turn_settled": true, "turn_interrupted": true, "run_settled": true}
+
+type eventBus struct {
+	mu       sync.Mutex // seq 与 written 都是「数出来的」，第二个生产者一进来，没锁就是竞态
+	path     string
+	f        *os.File
+	seq      map[int]int
+	states   map[int]map[string]int // 每一发的 state 计数：结算的 counts 由这里现数，不靠人手打
+	t0       time.Time
+	written  int
+	closed   bool
+	run      string // 第几趟的号：pid + 起表时刻，够分开「同一对路径上的两趟」
+	degraded string // 为什么没落成文件；横幅要说，不许静默降级
+}
+
+// blockOf 是一条「发」在日志里的完整身份：session + run + turn。
+// 只用 session+turn 不够 —— 发号是趟内的轴，同一对路径连跑三趟就会撞成三条回执
+// （M2 路 B 的 P0-1，我自己复现过：三趟同 session，(session,turn) 上仍是 3 条）。
+func blockOf(e Event) string {
+	return e.Session + "" + e.Run + "" + strconv.Itoa(e.Turn)
+}
+
+// newEventBus：path 为空就不开文件，只在内存里数序（用于「关掉事件层」那一趟与单元测试）。
+func newEventBus(path string) *eventBus {
+	b := &eventBus{path: path, seq: map[int]int{}, states: map[int]map[string]int{}, t0: time.Now(),
+		run: fmt.Sprintf("r%d-%d", os.Getpid(), time.Now().UnixNano())}
+	if path == "" {
+		return b
+	}
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+		b.degraded = "建不了落点目录：" + err.Error()
+		b.path = ""
+		return b
+	}
+	// O_APPEND 而不是 O_TRUNC：这本日志是 E4「Last-Event-ID 重放」要读的底，
+	// 开文件就把上一趟抹了，等于把别人要续的那个游标源删掉。
+	f, err := os.OpenFile(path, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o644)
+	if err != nil {
+		b.degraded = "开不了日志文件：" + err.Error()
+		b.path = ""
+		return b
+	}
+	b.f = f
+	// 同一本日志可能留着上一趟：append-only 就不许让 seq 重新从 1 开始，
+	// 否则 (session,turn,seq) 这个三元组不再唯一，续传会指向两条。
+	prev, err := ReadEvents(path)
+	if err != nil {
+		b.degraded = "读不回既有事件日志，序号没法接续，这一趟不落盘：" + err.Error()
+		_ = b.f.Close()
+		b.f, b.path = nil, ""
+		return b
+	}
+	for _, e := range prev {
+		if e.Seq > b.seq[e.Turn] {
+			b.seq[e.Turn] = e.Seq
+		}
+		// state 统计也要按既有那本接着数 —— 结算的 counts 判的是「整本日志里这一发」，
+		// 从零起数就会少掉上一趟那几条，counts 与实际条数对不上。
+		if !settleKinds[e.Kind] {
+			if b.states[e.Turn] == nil {
+				b.states[e.Turn] = map[string]int{}
+			}
+			b.states[e.Turn][e.State]++
+		}
+	}
+	return b
+}
+
+func (b *eventBus) Close() {
+	if b == nil {
+		return
+	}
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	if b.f != nil {
+		_ = b.f.Close()
+		b.f = nil
+	}
+	b.closed = true
+}
+
+// stats 是给横幅用的那一读：落了哪、落了几条、为什么没落成。
+// 三个都要，少一个就把「量不到」写成「没有」。
+func (b *eventBus) stats() (path string, written int, degraded string) {
+	if b == nil {
+		return "", 0, "事件层没开（--events=false）"
+	}
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	return b.path, b.written, b.degraded
+}
+
+// seqCanFollow 是序号判据本体：同一发内必须严格 +1。
+// 它现在只被 ValidateLog（读回来的整本日志）与臂调用 —— 早先在 Emit 里也调一次，
+// 但那里的 next 恒等于 prev+1，是不可达的死牙，删了。
+func seqCanFollow(prev, next int) error {
+	switch {
+	case next == prev:
+		return fmt.Errorf("序号重复：%d 又来一次", next)
+	case next < prev:
+		return fmt.Errorf("序号回退：%d 之后来了 %d", prev, next)
+	}
+	return nil
+}
+
+// ValidateAccepts 用契约的 100ms 判（生产与闸口用这一条）。
+func ValidateAccepts(evs []Event) error { return ValidateAcceptsWithin(evs, ackLimitMS) }
+
+// ValidateAcceptsWithin 同一套判据，但把「回执延迟上限」交给调用方：
+// 满载 `-shuffle=on` 下实测出现过 483ms 的合法跑法（Sync 与调度被别的测试压着），
+// 绝对阈值这时候量的是机器不是口径。所以：顺序/载荷/续传三件事永远判，
+// 只有 ack 那一格按传入的限度判 —— 真要量 0.1s 就传契约值 100（`-check-log` 与延迟那两支都传 100）。
+//
+// 判读回来的这本日志：每一发的第一条必须是 turn_accepted；ack_ms 给得出来且不超传入的上限；
+// 停止入口说得出；resumable 不许缺（缺=没量过，另记一笔，不塌成 false）；写成 false 时要有为什么；
+// 且这一发的任何一条都不许出现「可续」这种没兑现的声称。
+func ValidateAcceptsWithin(evs []Event, limitMS int64) error {
+	order := map[string][]Event{}
+	var turns []string
+	for _, e := range evs {
+		if e.Turn == 0 {
+			continue // run 级事件不属于任何一发
+		}
+		key := blockOf(e)
+		if _, has := order[key]; !has {
+			turns = append(turns, key)
+		}
+		order[key] = append(order[key], e)
+	}
+	if len(turns) == 0 {
+		return fmt.Errorf("这本日志一条发级事件都没有 —— 回执针没东西可判")
+	}
+	for _, key := range turns {
+		group := order[key]
+		t := group[0].Turn
+		if first := group[0]; first.Kind != "turn_accepted" {
+			return fmt.Errorf("第 %d 发第一条是 %q，不是 turn_accepted —— 「先回执再干活」落点错了", t, first.Kind)
+		}
+		var acc *Accept
+		claims := []string{}
+		for _, e := range group {
+			if e.Accept != nil {
+				if acc != nil {
+					return fmt.Errorf("第 %d 发有两条回执 —— 受理只能有一次", t)
+				}
+				acc = e.Accept
+			}
+			for _, s := range []string{e.Why, e.Stop, nameOf(e)} {
+				if reCanResume.MatchString(s) {
+					claims = append(claims, s)
+				}
+			}
+		}
+		if acc == nil {
+			return fmt.Errorf("第 %d 发的 turn_accepted 没带载荷", t)
+		}
+		switch {
+		case acc.AckMS == nil:
+			return fmt.Errorf("第 %d 发的回执没有 ack_ms —— 针1 无从判断", t)
+		case *acc.AckMS > limitMS:
+			return fmt.Errorf("第 %d 发的回执距入口 %dms，超上限 %dms", t, *acc.AckMS, limitMS)
+		case acc.StopVia == "":
+			return fmt.Errorf("第 %d 发的回执没说停止入口在哪", t)
+		case acc.Resumable == nil:
+			return fmt.Errorf("第 %d 发的 resumable 是 nil —— 能不能续要当场给个话，不许留成没量过", t)
+		}
+		if acc.Resumable != nil && !*acc.Resumable {
+			if group[0].Why == "" {
+				return fmt.Errorf("第 %d 发写了不可续却没给为什么", t)
+			}
+			if len(claims) > 0 {
+				return fmt.Errorf("第 %d 发写着 resumable=false，流里却出现「可续」字样：%q —— 界面据此画可续就是谎", t, claims[0])
+			}
+		}
+	}
+	// 「发级不许挂 step、run 级不许挂发号」只判一处：ValidateTurnShape。
+	// 原来这里还有一份重复判据，而且一条测试没走过 —— 看着两道闸、实际一道（M2 路 B 的 P1-4）。
+	if err := ValidateTurnShape(evs); err != nil {
+		return err
+	}
+	return nil
+}
+
+func nameOf(e Event) string {
+	if e.Step == nil {
+		return ""
+	}
+	return e.Step.Name + " " + e.Step.Tool
+}
+
+// ValidateTurnShape 单独管「回执不许挂 step、run 级事件不许挂发号」这一族轴问题。
+// 为什么拆出来：混在序号判据里，红了不知道是哪条在响。
+func ValidateTurnShape(evs []Event) error {
+	for _, e := range evs {
+		switch {
+		case e.Turn == 0 && e.Step != nil:
+			return fmt.Errorf("run 级事件 %q 带了 step —— 两个轴混在一格", e.Kind)
+		case e.Kind == "turn_accepted" && e.Step != nil:
+			return fmt.Errorf("turn_accepted 带了 step —— 受理不是某一步")
+		}
+	}
+	return nil
+}
+
+// ValidateLog 是序号针的**可达**形态：判「读回来的这本日志同一发内严格递增」。
+// 判据只有从公开路径走得到，红才是真红。
+func ValidateLog(evs []Event) error {
+	last := map[int]int{}
+	for i, e := range evs {
+		if err := seqCanFollow(last[e.Turn], e.Seq); err != nil {
+			return fmt.Errorf("第 %d 条不合格：%v", i+1, err)
+		}
+		last[e.Turn] = e.Seq
+	}
+	return nil
+}
+
+// validate 不合格就返回错误且**不落盘**：absent 没理由、档名不认识、kind 或 state 乱写，都属这一族。
+func (e *Event) validate() error {
+	switch {
+	case e.Kind == "":
+		return fmt.Errorf("事件没有 kind")
+	case !evidenceTiers[e.Evidence]:
+		return fmt.Errorf("出处档 %q 不在五档里", e.Evidence)
+	case !eventStates[e.State]:
+		return fmt.Errorf("状态 %q 不在白名单里 —— 五档有门禁而状态没有，是不对称的", e.State)
+	case e.Evidence == "absent" && e.Why == "":
+		return fmt.Errorf("absent 事件没带 why —— 量不到要写为什么量不到，不许静默")
+	case e.Accept != nil && e.enteredAt.IsZero():
+		// 回执没带入口时刻就没法算 ack_ms；放过去等于让针1 恒过。
+		return fmt.Errorf("turn_accepted 没带请求入口时刻 —— ack_ms 会变成 0，那是自证不是度量")
+	}
+	return nil
+}
+
+// Emit 落一条事件。返回的 error 只可能来自这条事件自己不合格或写盘失败；
+// 调用方（宿主循环）拿到错误要喊出来，不许吞 —— 吞掉就是「事件层坏了但没人知道」。
+func (b *eventBus) Emit(e Event) error {
+	if b == nil {
+		return nil
+	}
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	if b.closed {
+		return fmt.Errorf("事件层已关闭，这条不落盘（kind=%s）", e.Kind)
+	}
+	e.V = 1
+	if e.Run == "" {
+		e.Run = b.run // 趟身份由总线盖，不靠调用方记得填
+	}
+	// 时刻优先用「请求入口那一刻」（回执的意义就是那一刻到的多早）；没有入口的其他事件用现在。
+	at := time.Now()
+	if !e.enteredAt.IsZero() {
+		at = e.enteredAt
+	}
+	e.TS = at.Format(time.RFC3339Nano)
+	e.ElapsedMS = time.Since(b.t0).Milliseconds()
+	e.Seq = b.seq[e.Turn] + 1
+	ne := e
+	if ne.Accept != nil {
+		// 深拷一份再填：`ne := e` 只拷了指针，直接写就等于往调用方那份 Accept 上写 ——
+		// 同一个对象复用两次，第二次的 ack_ms 会照抄第一次（M2 路 B 的 P1-1，已复现）。
+		// 而且**无条件覆盖**：调用方递进来的 ack_ms 一律不算数，否则写侧一行赋值就能抹平针1（P1-2）。
+		na := *ne.Accept
+		ne.Accept = &na
+		ms := time.Since(ne.enteredAt).Milliseconds()
+		ne.Accept.AckMS = &ms
+	}
+	if err := ne.validate(); err != nil {
+		return err
+	}
+	line, err := json.Marshal(ne)
+	if err != nil {
+		return err
+	}
+	if b.f != nil {
+		// 先落盘（含 Sync）再算落了：写失败或 sync 失败都不推进计数与序号，
+		// 否则会留下一本「自印条数比文件里多」的假账。
+		if _, err := b.f.Write(append(line, '\n')); err != nil {
+			return err
+		}
+		if err := b.f.Sync(); err != nil {
+			return err
+		}
+	}
+	b.seq[e.Turn] = e.Seq
+	b.written++
+	if !settleKinds[e.Kind] {
+		if b.states[e.Turn] == nil {
+			b.states[e.Turn] = map[string]int{}
+		}
+		b.states[e.Turn][e.State]++
+	}
+	return nil
+}
+
+// countsFor 把这一发已经落出去的 state 分布抄一份出来给结算用。
+// 关键在「抄」：counts 由这本账自己数出来，不是人手打的 —— 打的那份会与账不一致。
+func (b *eventBus) countsFor(turn int) map[string]int {
+	if b == nil {
+		return map[string]int{}
+	}
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	out := map[string]int{}
+	for k, v := range b.states[turn] {
+		out[k] = v
+	}
+	return out
+}
+
+// ReadEvents 把落出去的那份读回来逐条解析 —— 自证用：只数文件字节数不算数，
+// 读不回同样条数与同样顺序，就是写了一堆看不见的字。
+func ReadEvents(path string) ([]Event, error) {
+	b, err := os.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+	out := []Event{}
+	for _, ln := range splitLines(string(b)) {
+		var e Event
+		if err := json.Unmarshal([]byte(ln), &e); err != nil {
+			return out, fmt.Errorf("第 %d 行解析不了：%v", len(out)+1, err)
+		}
+		out = append(out, e)
+	}
+	return out, nil
+}
+
+func splitLines(s string) []string {
+	out := []string{}
+	start := 0
+	for i := 0; i < len(s); i++ {
+		if s[i] == '\n' {
+			if i > start {
+				out = append(out, s[start:i])
+			}
+			start = i + 1
+		}
+	}
+	if start < len(s) {
+		out = append(out, s[start:])
+	}
+	return out
+}
+
+// emit 是 run 上的薄壳：事件层关掉（bus 为 nil）时整条路径就是零成本。
+// 拒收要喊，但喊去 stderr —— stdout 那份正文是能被逐字比对的运行账，
+// 诊断写进去等于事件层一坏就把上一条针也一起弄红（分不清是谁在响）。
+func (r *run) emit(e Event) {
+	if r.events == nil {
+		return
+	}
+	e.Session = r.session
+	if err := r.events.Emit(e); err != nil {
+		r.errf("    事件层拒了（第 %d 发，kind=%s）：%v —— 这条没落盘", r.turns, e.Kind, err)
+	}
+}
+
+func intp(v int) *int { return &v }
+
+func (r *run) stepEv(kind, state, evidence, why, name string, no int) Event {
+	return Event{
+		Kind: kind, State: state, Evidence: evidence, Why: why, Turn: r.turns,
+		Step: &EventStep{No: intp(no), Name: name},
+	}
+}
+
+// acceptedEv 造这一发的回执。**入口时刻在这里就定死**，不等 emit 时现取 ——
+// 现取的话 ack_ms 恒为 0，针1 就成了挂在没人走的枝上的装饰。
+//
+// resumable 今天只能写 false：SSE 与 Last-Event-ID 还没落（E4）。
+// 诚实地说不可续，比假装能续更协同（研究件 §5.2.4 / 引用 P25-P26）。
+func (r *run) acceptedEv() Event {
+	resumable := false
+	return Event{
+		Kind: "turn_accepted", State: "running", Evidence: "measured", Turn: r.turns,
+		Why: "断开不能续：还没做 SSE 投送与 Last-Event-ID 重放（E4）",
+		// 上限只放一处（Accept.Limit）——同一件事在两格里各写一份，改一份就分叉。
+		// 上限与停止入口只放一处（Accept.Limit / Accept.StopVia）。
+		// E3 之后进程内也有停止入口（run.Stop），所以这里两条都列出来 —— 只写 signal 就是把能停的那一半藏了。
+		Accept:    &Accept{Planned: r.plannedLeft(), Limit: intp(r.maxTurns), StopVia: "signal:SIGINT|in-proc:run.Stop(why)", Resumable: &resumable},
+		enteredAt: r.ackAnchor(),
+	}
+}
+
+// plannedLeft：只有剧本驱动知道还剩几发；其他驱动给 nil —— 不知道就写 nil，绝不写 0。
+func (r *run) plannedLeft() *int {
+	if s, ok := r.drv.(*scripted); ok {
+		return intp(s.Left())
+	}
+	return nil
+}

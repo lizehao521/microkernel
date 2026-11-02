@@ -1,0 +1,29 @@
+kernel.impl | view=current | conf=high | refs=2 | kernel 实现（check_call/record_call/read_back/verify/tally/read
+kernel.journal | view=current | conf=high | refs=1 | encode_journal：只编 JSONL 字节交回调用方
+host.rpc | view=current | conf=high | refs=1 | kernelRPC
+host.loop | view=current | conf=high | refs=1 | run.loop()
+host.say | view=current | conf=high | refs=1 | r.say（stdout 正文，可逐字比对）
+host.checkcall | view=current | conf=high | refs=1 | 预检调用点 kernel.check_call
+host.recordcall | view=current | conf=high | refs=1 | 落账调用点 kernel.record_call
+host.readback | view=current | conf=high | refs=4 | 回边读回 kernel.read_back
+host.decide | view=current | conf=high | refs=1 | r.decide：账上 fail_kind → 下一步（唯一 KPI 来源）
+host.resume | view=current | conf=high | refs=1 | r.resume：读回续跑，先核链
+host.checkpoint | view=current | conf=high | refs=1 | r.checkpoint：编账交出去
+host.closeout | view=current | conf=high | refs=1 | r.closeOut：verify/tally/读者/收口
+host.trace | view=current | conf=high | refs=2 | writeTrace：49 格轨迹解剖页（跑完才写）
+host.exit | view=current | conf=high | refs=1 | 六态退出码 exitOf（0/2/3/4/5/6）
+host.abort | view=current | conf=high | refs=2 | abort 通道 + SIGINT
+host.fakesrv | view=current | conf=high | refs=1 | fakesrv：本机假端点（Hijacker/Flusher 形状）
+host.tests | view=current | conf=high | refs=2 | agentd 测试面（Test 函数现数由尺子印）
+ev.bus | view=current | conf=high | refs=3 | r.emit(event) 事件总线
+ev.log | view=current | conf=high | refs=3 | append-only 事件日志 (session,turn,seq)
+host.hooks | view=current | conf=high | refs=6 | 宿主挂点（7 处 emit）
+host.eventTests | view=current | conf=high | refs=2 | 事件层测试（6 支，含 2 支臂）
+host.eventFlags | view=current | conf=high | refs=2 | -events / -events-out 旗标
+ev.accept | view=target | conf=low | refs=1 | turn_accepted 受理事件
+ev.settle | view=target | conf=low | refs=2 | turn_interrupted → turn_settled 结算
+ev.sse | view=target | conf=low | refs=2 | SSE 投送 + id / Last-Event-ID 重放
+ev.watchdog | view=target | conf=low | refs=1 | 10s 兜底进度 progress_tick / why_late
+ev.lock | view=target | conf=low | refs=1 | 一发一锁（并发直拒，不排队不混列）
+ev.ui | view=target | conf=low | refs=2 | 三行界面 现在/已经/接下来
+ev.harness | view=target | conf=low | refs=1 | 工具/事件层验收.py（八条针一条命令）

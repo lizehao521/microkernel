@@ -1,0 +1,185 @@
+{
+  "$meta": {
+    "name": "微核台 v2",
+    "version": "0.3.0-prototype",
+    "date": "2026-10-26",
+    "source": [
+      "原型-源/base.css :root 与布局规则",
+      "原型-源/v2.css 双模式扩展与模型态"
+    ],
+    "build": {
+      "file": "微核台.html",
+      "bytes": 147904,
+      "lines": 3332,
+      "sha256": "4db8f042957580fd33af10ec5031610cf0b714fbe8d028467c73be0bddcdc5cb"
+    },
+    "note": "值逐字取自 CSS；表格列宽也按实际规则记录。改 token 必须重跑 工具-合并原型.py 与 工具-验收HTTP.py。"
+  },
+  "color": {
+    "paper": "#f3f2ed",
+    "surface": "#ffffff",
+    "surface2": "#faf9f5",
+    "surface3": "#eeede6",
+    "ink1": "#17191e",
+    "ink2": "#4b505b",
+    "ink3": "#646974",
+    "ink4": "#a3a7b0",
+    "line1": "#e4e2da",
+    "line2": "#d3d0c6",
+    "accent": "#1f49d6",
+    "accentWeak": "#e9eeff",
+    "accentInk": "#1637a8",
+    "ok": "#0e7a4d",
+    "okBg": "#e7f4ec",
+    "okLine": "#bfe3cd",
+    "bad": "#b42318",
+    "badBg": "#fdeceb",
+    "badLine": "#f5c6c2",
+    "warn": "#8a5a00",
+    "warnBg": "#fdf3dd",
+    "warnLine": "#ecd9a8",
+    "unknown": "#5c6270",
+    "unknownBg": "#eef0f4",
+    "unknownLine": "#d8dbe2",
+    "relay": "#6a5a9a",
+    "relayBg": "#f4f0fb",
+    "relayLine": "#ddd4ef",
+    "modelInk": "#5b3a9e",
+    "modelBg": "#f1ecfd",
+    "modelLine": "#d8ccf5",
+    "side": "#16181d",
+    "side2": "#1e2128",
+    "side3": "#2a2e37",
+    "sideText": "#a9aeb9",
+    "sideDim": "#868c98"
+  },
+  "basis": {
+    "disk": {
+      "label": "有依据",
+      "text": "#1f5fa8",
+      "line": "#c9dcf3",
+      "bg": "#eef5fd",
+      "series": "#6b9bd2"
+    },
+    "relayed": {
+      "label": "转述",
+      "text": "#6a5a9a",
+      "line": "#ddd4ef",
+      "bg": "#f4f0fb",
+      "series": "#9a8bc4"
+    },
+    "estimated": {
+      "label": "估算",
+      "text": "#8a5a00",
+      "line": "#ecd9a8",
+      "bg": "#fdf3dd",
+      "series": "#c9a45c",
+      "borderStyle": "dashed"
+    },
+    "model_says": {
+      "label": "模型自述",
+      "text": "#5c6270",
+      "line": "#d8dbe2",
+      "bg": "#eef0f4",
+      "series": "#c77b6b"
+    },
+    "absent": {
+      "label": "缺席",
+      "text": "#646974",
+      "line": "#d3d0c6",
+      "bg": "#eeede6",
+      "series": "#c9c6bb"
+    }
+  },
+  "radius": {
+    "chip": "3px",
+    "s": "4px",
+    "m": "8px",
+    "l": "12px",
+    "pill": "999px"
+  },
+  "shadow": {
+    "1": "0 1px 2px rgba(20, 22, 28, .05)",
+    "2": "0 12px 32px rgba(20, 22, 28, .14), 0 2px 8px rgba(20, 22, 28, .06)"
+  },
+  "typography": {
+    "sans": "\"Segoe UI\", \"Microsoft YaHei UI\", \"Microsoft YaHei\", system-ui, -apple-system, sans-serif",
+    "mono": "\"Cascadia Mono\", \"Cascadia Code\", Consolas, \"Courier New\", monospace",
+    "base": { "size": "13px", "lineHeight": 1.5 },
+    "scale": {
+      "monoMicro": "9px",
+      "tableMicro": "9.5px",
+      "table": "10px",
+      "meta": "10.5px",
+      "small": "11px",
+      "bodySmall": "11.5px",
+      "body": "12px",
+      "queueTitle": "12.8px",
+      "ui": "13px",
+      "drawerTitle": "16px",
+      "modalTitle": "17px",
+      "queueHead": "19px",
+      "detailTitle": "22px",
+      "viewTitle": "23px"
+    },
+    "weights": { "regular": 400, "medium": 500, "semibold": 600, "bold": 700 }
+  },
+  "layout": {
+    "titlebar": "44px",
+    "sidebar": "236px",
+    "queueColumn": "358px",
+    "drawer": "min(620px, 92vw)",
+    "drawerWide": "min(880px, 96vw)",
+    "modal": "min(500px, 94vw)",
+    "modalWide": "min(720px, 95vw)",
+    "chatRail": "318px",
+    "chatUserMax": "620px",
+    "drawerCellsColumns": ["34px", "188px", "64px", "148px", "auto", "92px"],
+    "drawerEventsColumns": ["88px", "150px", "74px", "96px", "70px", "auto"],
+    "focusRing": "2px solid #1f49d6; outline-offset: 2px"
+  },
+  "motion": {
+    "drawer": "transform .22s cubic-bezier(.22,.61,.36,1)",
+    "modal": "opacity .16s ease; transform .16s ease",
+    "overlay": "opacity .18s ease",
+    "kernelPulse": "pulse 1.1s ease infinite",
+    "reducedMotion": "未实现（NOT_RUN）"
+  },
+  "semantics": {
+    "claimVerdicts": {
+      "MATCH": { "label": "相符", "tone": "ok" },
+      "MISMATCH": { "label": "不符", "tone": "bad" },
+      "ABSENT": { "label": "核不了", "tone": "warn" }
+    },
+    "deliveryVerdicts": {
+      "ACCEPTED": { "label": "全部相符，可收", "tone": "ok" },
+      "NOT-ACCEPTED-MISMATCH": { "label": "不能收 · 有不符", "tone": "bad" },
+      "NOT-ACCEPTED-UNVERIFIED": { "label": "核不了 · 证据缺席", "tone": "warn" }
+    },
+    "answerTiers": {
+      "measured": { "label": "有依据", "tone": "accent" },
+      "absent": { "label": "核不了", "tone": "warn" },
+      "refused": { "label": "答不了", "tone": "neutral" },
+      "model_says": { "label": "模型转述", "tone": "model", "notEvidence": true }
+    },
+    "decisionActions": {
+      "accept": { "label": "收下", "writesReceipt": true },
+      "hold": { "label": "挂起", "writesReceipt": true },
+      "reject": { "label": "退回", "writesReceipt": true }
+    }
+  },
+  "accessibility": {
+    "contrast": { "normalText": 4.5, "largeText": 3.0, "largeTextRule": ">=24px, or >=18.66px at weight >=700" },
+    "focus": "只给键盘 :focus-visible 加 2px 强调色描边",
+    "motion": "动画只改变位移与透明度，不闪烁",
+    "measured": {
+      "gate": "工具-对比度CDP.js",
+      "build": "4db8f042",
+      "states": 13,
+      "checked": 2535,
+      "failures": 0,
+      "modelMode": { "states": 14, "checked": 2634, "failures": 0 },
+      "teeth": "注入 .q-title{color:#f2f2f2} 后 3 处 1.12 被抓（build 4db8f042，checked=167）"
+    }
+  }
+}

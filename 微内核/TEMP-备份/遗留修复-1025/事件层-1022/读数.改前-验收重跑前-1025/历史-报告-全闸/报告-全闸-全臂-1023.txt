@@ -1,0 +1,11 @@
+tree=C:/Users/Admin/Desktop/微内核/微内核/微内核
+go vet ./cmd/agentd    rc=0     1s | tail<-stdout | 
+go test -count=1       rc=0    21s | tail<-stdout | ok  	agentkernel/cmd/agentd	20.285s
+kcheck（内核快闸）           rc=0     1s | tail<-stdout |  / ✓ 全部通过（项数由上面自己数，不抄在这里）
+锚点核对（尺子一）              rc=0     0s | tail<-reading | 合计：命中 29 ｜ 未命中 0 ｜ 缺文件 0 ｜ 行越界 0 ｜ 共 29 行 / 结论：evidence.md 的 29 条锚点全部回盘命中，且臂能红。
+证据模型核对（尺子二）            rc=0     1s | tail<-reading |  / 结论：sourceRefs 123 条回盘（符号可核 53 条全指到行，仅存在性 70 条未验符号），端点闭合，状态口径合规，6 臂能红。
+尺子自证（旧病复现）             rc=0     2s | tail<-reading |  / 结论：0 条自证不过。两个旧病各有一条新臂钉住，注回去就红；基准全绿。
+验收-事件层（八条针）            rc=0    32s | tail<-reading | NOT_RUN 真人可读性 ｜ NOT_RUN：界面可读性没请真人读过。 / conclusion=ALL-PINS-GREEN-WITH-ARMS
+臂检-全部族（变异自证）           rc=0   389s | tail<-reading | | L | L6 | 后端交过的数被下一帧抹成没量过 | cmd/agentd/web.go | TestPageRendersWithStubDOM | 0 | 1 | BIT | / | L | L7 | 帧回来了但屏上还挂着「断了」（浏览器实测抓到过的假话） | cmd/agentd/web.go | TestPageRendersWithStubDOM | 0 | 1 | BIT |
+arm-reading FRESH | rows=82 verdicts={"BIT": 82}
+conclusion=ALL-GATES-GREEN

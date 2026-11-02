@@ -1,0 +1,1 @@
+{"jsonrpc":"2.0","id":324,"method":"tools/call","params":{"name":"kernel.declare_reader","arguments":{"reader":"cell-auditor-yi","key":"finish_said","side":"output"}}}

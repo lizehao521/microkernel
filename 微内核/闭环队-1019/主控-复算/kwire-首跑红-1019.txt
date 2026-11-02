@@ -1,0 +1,9 @@
+KWIRE paths=27 units=39 holes=11 trials=378 vacuous=143 tools_doc_missing=1
+DRIFT 6 NOT-VERIFIABLE 0
+  DRIFT params 表缺失：文档里没有 <!-- kwire:params -->（分母 27 条路径没有一处写了类型）
+  DRIFT units 表缺失：文档里没有 <!-- kwire:units -->（分母 39 个单位成员）
+  DRIFT holes 表缺失：文档里没有 <!-- kwire:holes -->（实删实跑出 11 个写点会静默落账）
+  DRIFT 工具没有一处文档：kernel.declare_reader（contract.md 与 README.md 里搜不到这个名字，调用方只能靠猜）
+  DRIFT 文档句子已过期：「交整数目前是静默丢字段」，而 mcpsrv/mcpsrv.go 里现在有 DisallowUnknownFields
+  DRIFT 文档句子已过期：「`cmd/mcpkernel` 的 `args[T]`」，而 mcpsrv/mcpsrv.go 里现在有 func decodeCallArgs
+exit status 1

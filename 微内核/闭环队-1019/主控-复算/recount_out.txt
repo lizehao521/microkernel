@@ -1,0 +1,65 @@
+=== 分母自印 ===
+files: {"L1018":{"lines":2942,"entries":2940,"headerSkipped":1},"L8799":{"lines":492,"entries":490,"headerSkipped":1}}
+nonblank lines: 3432  non-JSON skipped(header): 2  badJson: 0
+distinct kinds: 49
+total entries: 3430
+
+=== never-filled (nonAbsent === 0) ===
+count: 2
+model_output:fail_status | total 70 | absent 70 | bases {"5":70} | perFile {"L1018":60,"L8799":10}
+model_output:retry_after_ms | total 70 | absent 70 | bases {"5":70} | perFile {"L1018":60,"L8799":10}
+
+=== per-file never-filled (只看单本账时) ===
+L1018 never-filled count: 2 -> model_output:fail_status, model_output:retry_after_ms
+L8799 never-filled count: 11 -> model_input:fixed_overhead, model_input:tokens, model_output:chunks, model_output:fail_status, model_output:first_byte_ms, model_output:max_gap_ms, model_output:retry_after_ms, model_output:usage_in, model_output:usage_out, model_output:wire_bytes_in, model_output:wire_bytes_out
+
+=== all kinds with basis histogram (for audit) ===
+model_input:call | total 70 | nonAbsent 70 | bases {"1":70}
+model_input:call_bytes_ceiling | total 70 | nonAbsent 70 | bases {"1":70}
+model_input:clamp_rounds | total 70 | nonAbsent 70 | bases {"1":70}
+model_input:clipped | total 70 | nonAbsent 70 | bases {"1":70}
+model_input:content_bytes | total 70 | nonAbsent 70 | bases {"1":70}
+model_input:content_ceiling | total 70 | nonAbsent 70 | bases {"1":70}
+model_input:dropped | total 70 | nonAbsent 70 | bases {"1":70}
+model_input:effective_ceiling | total 70 | nonAbsent 70 | bases {"1":70}
+model_input:fixed_overhead | total 70 | nonAbsent 60 | bases {"3":60,"5":10}
+model_input:folded | total 70 | nonAbsent 70 | bases {"1":70}
+model_input:leftover_pct | total 70 | nonAbsent 70 | bases {"1":70}
+model_input:notice_sent | total 70 | nonAbsent 70 | bases {"1":70}
+model_input:notice_text | total 70 | nonAbsent 70 | bases {"1":70}
+model_input:notice_trimmed | total 70 | nonAbsent 70 | bases {"1":70}
+model_input:notice_why | total 70 | nonAbsent 70 | bases {"1":70}
+model_input:part_totals | total 70 | nonAbsent 70 | bases {"1":70}
+model_input:parts | total 70 | nonAbsent 70 | bases {"1":70}
+model_input:shares | total 70 | nonAbsent 70 | bases {"1":70}
+model_input:tokens | total 70 | nonAbsent 60 | bases {"3":60,"5":10}
+model_input:transport_slack_pct | total 70 | nonAbsent 70 | bases {"1":70}
+model_output:call | total 70 | nonAbsent 70 | bases {"1":70}
+model_output:chunks | total 70 | nonAbsent 15 | bases {"1":15,"5":55}
+model_output:cost_countable | total 70 | nonAbsent 70 | bases {"1":70}
+model_output:downgrade | total 70 | nonAbsent 70 | bases {"1":70}
+model_output:endpoint_model | total 70 | nonAbsent 70 | bases {"4":70}
+model_output:endpoint_model_said | total 70 | nonAbsent 70 | bases {"1":70}
+model_output:fail_detail | total 70 | nonAbsent 70 | bases {"1":70}
+model_output:fail_kind | total 70 | nonAbsent 70 | bases {"1":70}
+model_output:fail_status | total 70 | nonAbsent 0 | bases {"5":70}
+model_output:finish | total 70 | nonAbsent 70 | bases {"2":70}
+model_output:finish_said | total 70 | nonAbsent 70 | bases {"1":70}
+model_output:first_byte_ms | total 70 | nonAbsent 15 | bases {"1":15,"5":55}
+model_output:malformed_actions | total 70 | nonAbsent 70 | bases {"1":70}
+model_output:malformed_streak | total 70 | nonAbsent 70 | bases {"1":70}
+model_output:max_gap_ms | total 70 | nonAbsent 15 | bases {"1":15,"5":55}
+model_output:model_says_bytes | total 70 | nonAbsent 70 | bases {"1":70}
+model_output:model_says_clipped | total 70 | nonAbsent 70 | bases {"1":70}
+model_output:model_says_kept | total 70 | nonAbsent 70 | bases {"1":70}
+model_output:model_says_sha256 | total 70 | nonAbsent 70 | bases {"1":70}
+model_output:retry_after_ms | total 70 | nonAbsent 0 | bases {"5":70}
+model_output:sent | total 70 | nonAbsent 70 | bases {"1":70}
+model_output:streaming | total 70 | nonAbsent 70 | bases {"1":70}
+model_output:tool_calls | total 70 | nonAbsent 70 | bases {"1":70}
+model_output:usage_in | total 70 | nonAbsent 34 | bases {"2":34,"5":36}
+model_output:usage_out | total 70 | nonAbsent 34 | bases {"2":34,"5":36}
+model_output:wire_bytes_in | total 70 | nonAbsent 36 | bases {"1":34,"3":2,"5":34}
+model_output:wire_bytes_out | total 70 | nonAbsent 36 | bases {"1":34,"3":2,"5":34}
+model_output:wire_format | total 70 | nonAbsent 70 | bases {"2":70}
+model_output:wire_format_said | total 70 | nonAbsent 70 | bases {"1":70}

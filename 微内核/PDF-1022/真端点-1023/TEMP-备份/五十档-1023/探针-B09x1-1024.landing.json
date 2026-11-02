@@ -1,0 +1,10 @@
+{
+ "reading": "探针-B09x1-1024.json",
+ "checked_at": "2026-10-24T17:55:54+08:00",
+ "reading_exists": true,
+ "reading_bytes": 4748,
+ "reading_sha256": "e162e9e0070193d5d9c13f36763cbd745f912e900b151d01712c63d762e65564",
+ "log_bytes": 322,
+ "key_in_reading": false,
+ "key_in_log": false
+}

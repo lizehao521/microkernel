@@ -1,0 +1,38 @@
+锚点普查（散文里写死的 xxx.go:NNN）—— 只读、不是闸，rc 只回答这次普查可不可信
+TREE 微内核=62 个 .go（54 个 basename） | agentd=27 个 .go（27 个 basename）
+同名 basename=2 个：main.go×8, main_test.go×2 ｜ 这些名字的引用一律进 AMBIG（同树内撞名也算，件不猜哪一份）
+SCAN md=12 引用总数=52（范围=事件层-1022/*.md + 传入的树）
+分档 OK=15 DRIFT=26 NOCUE=2 OOB=0 NOFILE=0 AMBIG=2 NOID=7
+口径：DRIFT=符号在同文件别处找得到(真漂，给现应行号)；NOCUE=抽取失手(不算坏引用)；NOID/AMBIG=判不了(不折好也不折坏)；OOB=号越过被解析那一份的末尾（那一份是谁写在同一行里）
+坏	C:\Users\Admin\Desktop\微内核\事件层-1022\交接-agentd事件层-1022.md	md行578	NOCUE	events_settle_teeth_test.go:92	解析到 cmd/agentd/events_settle_teeth_test.go ｜ 抽出的词=agentd,run_started,run_settled（同文件里没有）|| 那行=}, "却没有结算"},
+坏	C:\Users\Admin\Desktop\微内核\事件层-1022\收口表-M5.md	md行15	DRIFT	events.go:194	解析到 cmd/agentd/events.go ｜ 现应 DoneBefore@102,220,221
+坏	C:\Users\Admin\Desktop\微内核\事件层-1022\收口表-M5.md	md行15	DRIFT	loop.go:187	解析到 cmd/agentd/loop.go ｜ 现应 resume@643,645 DoneBefore@280 resume@643,645
+坏	C:\Users\Admin\Desktop\微内核\事件层-1022\收口表-M5.md	md行18	DRIFT	checklog.go:25	解析到 cmd/agentd/checklog.go ｜ 现应 ValidateLog@29,33 absent@29
+坏	C:\Users\Admin\Desktop\微内核\事件层-1022\收口表-M5.md	md行18	DRIFT	events.go:540	解析到 cmd/agentd/events.go ｜ 现应 ValidateLog@463,574,576 absent@21,101,313
+坏	C:\Users\Admin\Desktop\微内核\事件层-1022\收口表-M5.md	md行56	DRIFT	events.go:746	解析到 cmd/agentd/events.go ｜ 现应 ValidatePhaseTables@842,862
+坏	C:\Users\Admin\Desktop\微内核\事件层-1022\收口表-M5.md	md行69	DRIFT	sse.go:61	解析到 cmd/agentd/sse.go ｜ 现应 serveEvents@198,200 resumable@99,132,135
+坏	C:\Users\Admin\Desktop\微内核\事件层-1022\收口表-M5.md	md行70	DRIFT	events.go:194	解析到 cmd/agentd/events.go ｜ 现应 session@47,347,348
+坏	C:\Users\Admin\Desktop\微内核\事件层-1022\收口表-M5.md	md行70	DRIFT	loop.go:187	解析到 cmd/agentd/loop.go ｜ 现应 resume@643,645 agentd@622,632 session@66,190,198
+坏	C:\Users\Admin\Desktop\微内核\事件层-1022\收口表-M5.md	md行71	DRIFT	loop.go:186	解析到 cmd/agentd/loop.go ｜ 现应 settle@860,861,862 accept@347 accept@347
+坏	C:\Users\Admin\Desktop\微内核\事件层-1022\收口表-M5.md	md行72	DRIFT	loop.go:768	解析到 cmd/agentd/loop.go ｜ 现应 run_settled@860 run_settled@860 settle@860,861,862
+坏	C:\Users\Admin\Desktop\微内核\事件层-1022\收口表-M5.md	md行72	DRIFT	events.go:149	解析到 cmd/agentd/events.go ｜ 现应 run_settled@155,161,169 run_settled@155,161,169 settle@61,860
+坏	C:\Users\Admin\Desktop\微内核\事件层-1022\收口表-M5.md	md行72	DRIFT	loop.go:756	解析到 cmd/agentd/loop.go ｜ 现应 run_settled@860 run_settled@860 settle@860,861,862
+坏	C:\Users\Admin\Desktop\微内核\事件层-1022\收口表-M5.md	md行73	NOCUE	checklog.go:25	解析到 cmd/agentd/checklog.go ｜ 抽出的词=Succes,evidence,guessed_by_me（同文件里没有）|| 那行=// 每一行都带上「用的是哪个上限」：只把口径印在末行的话，放宽过的 GREEN 与
+坏	C:\Users\Admin\Desktop\微内核\事件层-1022\收口表-M5.md	md行73	DRIFT	events.go:528	解析到 cmd/agentd/events.go ｜ 现应 Succes@297 evidence@55,806,808
+坏	C:\Users\Admin\Desktop\微内核\事件层-1022\收口表-M5.md	md行73	DRIFT	events.go:540	解析到 cmd/agentd/events.go ｜ 现应 Succes@297 evidence@55,806,808
+坏	C:\Users\Admin\Desktop\微内核\事件层-1022\收口表-M5.md	md行73	DRIFT	events.go:281	解析到 cmd/agentd/events.go ｜ 现应 Succes@297 evidence@55,806,808
+坏	C:\Users\Admin\Desktop\微内核\事件层-1022\收口表-M5.md	md行74	DRIFT	checklog.go:41	解析到 cmd/agentd/checklog.go ｜ 现应 ack_limit_ms@27 ack_limit_ms@27
+坏	C:\Users\Admin\Desktop\微内核\事件层-1022\验收-E1-1022.md	md行64	DRIFT	events.go:130	解析到 cmd/agentd/events.go ｜ 现应 written@330,336,417 validate@582,603,604
+坏	C:\Users\Admin\Desktop\微内核\事件层-1022\验收-E1-1022.md	md行65	DRIFT	loop.go:608	解析到 cmd/agentd/loop.go ｜ 现应 run_settled@860
+坏	C:\Users\Admin\Desktop\微内核\事件层-1022\验收-E1-1022.md	md行67	DRIFT	events.go:59	解析到 cmd/agentd/events.go ｜ 现应 stderr@792
+坏	C:\Users\Admin\Desktop\微内核\事件层-1022\验收-E1-1022.md	md行81	DRIFT	events.go:68	解析到 cmd/agentd/events.go ｜ 现应 O_TRUNC@367 append@150,152,188
+坏	C:\Users\Admin\Desktop\微内核\事件层-1022\验收-E1-1022.md	md行82	DRIFT	events.go:130	解析到 cmd/agentd/events.go ｜ 现应 written@330,336,417 ReadEvents@378,756,758
+坏	C:\Users\Admin\Desktop\微内核\事件层-1022\验收-E1-1022.md	md行86	DRIFT	events.go:183	解析到 cmd/agentd/events.go ｜ 现应 stdout@792 stdout@792
+坏	C:\Users\Admin\Desktop\微内核\事件层-1022\验收-E1-1022.md	md行98	DRIFT	loop.go:187	解析到 cmd/agentd/loop.go ｜ 现应 precheck@413,422 continue@200,420,464 refused@413,419,442
+坏	C:\Users\Admin\Desktop\微内核\事件层-1022\验收-E1-1022.md	md行152	AMBIG	main.go:83	同名共 8 份：cmd/agentd/main.go,cmd/kaudit/main.go,cmd/kcheck/main.go,cmd/kresearch/main.go,cmd/kwire/main.go,cmd/mcphttp/main.go,cmd/mcpkernel/main.go,tasks/probe/omitjournal/main.go
+坏	C:\Users\Admin\Desktop\微内核\事件层-1022\验收-E2-合并-1022.md	md行9	AMBIG	main.go:103	同名共 8 份：cmd/agentd/main.go,cmd/kaudit/main.go,cmd/kcheck/main.go,cmd/kresearch/main.go,cmd/kwire/main.go,cmd/mcphttp/main.go,cmd/mcpkernel/main.go,tasks/probe/omitjournal/main.go
+坏	C:\Users\Admin\Desktop\微内核\事件层-1022\验收-E2-合并-1022.md	md行9	DRIFT	loop.go:146	解析到 cmd/agentd/loop.go ｜ 现应 ack_ms@154,155,156 ack_ms@154,155,156
+坏	C:\Users\Admin\Desktop\微内核\事件层-1022\验收-E2-合并-1022.md	md行10	DRIFT	events.go:273	解析到 cmd/agentd/events.go ｜ 现应 ValidateLog@463,574,576 session@47,347,348 session@47,347,348
+坏	C:\Users\Admin\Desktop\微内核\事件层-1022\验收-E2-合并-1022.md	md行10	DRIFT	events.go:266	解析到 cmd/agentd/events.go ｜ 现应 ValidateLog@463,574,576 session@47,347,348 session@47,347,348
+ARM-好 OK cells.go:40 解析到=cells.go 同名份数=1 符号=relayedCell 判动=1
+ARM-坏 抓到 cells.go:10 在范围内=True 判动=1

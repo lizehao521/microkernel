@@ -1,0 +1,919 @@
+{
+  "model": "agentd 事件层 · 证据模型（与两张 DOT 同源，节点/边 ID 稳定，可 diff、可回盘核对）",
+  "viewStates": {
+    "current": "今天盘上就有",
+    "target": "计划新建（E1-E9），无代码证据，靠计划与需求号支撑"
+  },
+  "producedBy": {
+    "scenario": [
+      "system-modeler（当前态）",
+      "evolution-planner（目标态）"
+    ],
+    "foundation": [
+      "graphviz DOT"
+    ],
+    "plugin": "architecture-visualization@qoder-marketplace"
+  },
+  "root": "C:/Users/Admin/Desktop/微内核",
+  "generated": "2026-10-22T17:35:00+08:00",
+  "metadata": {
+    "sourceRefPolicy": "resolvable",
+    "note": "所有 sourceRefs 写成 root 相对路径，由 事件层-1022/锚点核对.py 逐条回盘验；验不过就退出码 3。target 节点允许没有代码证据，但必须标 state=target 且 confidence 不高于 low。",
+    "lastValidated": "2026-10-22（E1 落地后：臂检 10 根 + 冒烟 7 步 + 锚点 20/20）"
+  },
+  "nodes": [
+    {
+      "id": "kernel.impl",
+      "label": "kernel 实现（check_call/record_call/read_back/verify/tally/readers_report）",
+      "type": "module",
+      "state": "current",
+      "owner": "内核 v1（冻结）",
+      "confidence": "high",
+      "diagram": "event-layer-target.dot:mcpsrv",
+      "description": "被动记账件：不调度、不联网、不执行工具、不写盘",
+      "sourceRefs": [
+        "微内核/微内核/README.md:631",
+        "微内核/微内核/contract.md"
+      ]
+    },
+    {
+      "id": "kernel.journal",
+      "label": "encode_journal：只编 JSONL 字节交回调用方",
+      "type": "capability",
+      "state": "current",
+      "owner": "内核 v1（冻结）",
+      "confidence": "high",
+      "diagram": "event-layer-target.dot:journal",
+      "description": "落盘天生在宿主侧，这是边界不是缺陷",
+      "sourceRefs": [
+        "微内核/微内核/README.md"
+      ]
+    },
+    {
+      "id": "host.rpc",
+      "label": "kernelRPC",
+      "type": "module",
+      "state": "current",
+      "confidence": "high",
+      "diagram": "event-layer-target.dot:rpc",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/rpc.go:105"
+      ]
+    },
+    {
+      "id": "host.loop",
+      "label": "run.loop()",
+      "type": "module",
+      "state": "current",
+      "confidence": "high",
+      "diagram": "event-layer-target.dot:loop",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/loop.go:117"
+      ]
+    },
+    {
+      "id": "host.say",
+      "label": "r.say（stdout 正文，可逐字比对）",
+      "type": "module",
+      "state": "current",
+      "confidence": "high",
+      "diagram": "event-layer-target.dot:say",
+      "description": "事件层必须与它并存而不改写它",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/loop.go:85"
+      ]
+    },
+    {
+      "id": "host.checkcall",
+      "label": "预检调用点 kernel.check_call",
+      "type": "decision",
+      "state": "current",
+      "confidence": "high",
+      "diagram": "event-layer-target.dot:calls",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/loop.go:173"
+      ]
+    },
+    {
+      "id": "host.recordcall",
+      "label": "落账调用点 kernel.record_call",
+      "type": "decision",
+      "state": "current",
+      "confidence": "high",
+      "diagram": "event-layer-target.dot:calls",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/loop.go:189"
+      ]
+    },
+    {
+      "id": "host.readback",
+      "label": "回边读回 kernel.read_back",
+      "type": "decision",
+      "state": "current",
+      "confidence": "high",
+      "diagram": "event-layer-target.dot:calls",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/loop.go:293",
+        "微内核/微内核/cmd/agentd/loop.go:335",
+        "微内核/微内核/cmd/agentd/loop.go:484",
+        "微内核/微内核/cmd/agentd/rpc.go:105"
+      ]
+    },
+    {
+      "id": "host.decide",
+      "label": "r.decide：账上 fail_kind → 下一步（唯一 KPI 来源）",
+      "type": "decision",
+      "state": "current",
+      "confidence": "high",
+      "diagram": "event-layer-target.dot:policy",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/loop.go:316"
+      ]
+    },
+    {
+      "id": "host.resume",
+      "label": "r.resume：读回续跑，先核链",
+      "type": "module",
+      "state": "current",
+      "confidence": "high",
+      "diagram": "event-layer-target.dot:resume",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/loop.go:391"
+      ]
+    },
+    {
+      "id": "host.checkpoint",
+      "label": "r.checkpoint：编账交出去",
+      "type": "module",
+      "state": "current",
+      "confidence": "high",
+      "diagram": "event-layer-target.dot:ckpt",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/loop.go:533"
+      ]
+    },
+    {
+      "id": "host.closeout",
+      "label": "r.closeOut：verify/tally/读者/收口",
+      "type": "module",
+      "state": "current",
+      "confidence": "high",
+      "diagram": "event-layer-target.dot:closeout",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/loop.go:591"
+      ]
+    },
+    {
+      "id": "host.trace",
+      "label": "writeTrace：49 格轨迹解剖页（跑完才写）",
+      "type": "module",
+      "state": "current",
+      "confidence": "high",
+      "diagram": "event-layer-target.dot:trace",
+      "description": "事后审计件（closeOut 才写）。E8 起：页上的发数与逐发条数只从那一本事件日志读（traceLedger + runID 隔趟，上一趟不许混进这一页的「共几发」），数不到就在页上写「没量过」，不退回内存里的 r.shot —— 后者数的是落账的 shot，被拒/装不出的发不算，两个数本来就分得开。「每发 49 格 × 几发」也从这里读。",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/trace.go:93",
+        "微内核/微内核/cmd/agentd/trace.go:122",
+        "微内核/微内核/cmd/agentd/events.go:428"
+      ]
+    },
+    {
+      "id": "host.exit",
+      "label": "六态退出码 exitOf（0/2/3/4/5/6）",
+      "type": "decision",
+      "state": "current",
+      "confidence": "high",
+      "diagram": "event-layer-target.dot:exitcode",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/main.go:109"
+      ]
+    },
+    {
+      "id": "host.abort",
+      "label": "abort 通道 + SIGINT",
+      "type": "module",
+      "state": "current",
+      "confidence": "high",
+      "diagram": "event-layer-target.dot:abort",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/loop.go:124",
+        "微内核/微内核/cmd/agentd/loop.go:130"
+      ]
+    },
+    {
+      "id": "host.fakesrv",
+      "label": "fakesrv：本机假端点（Hijacker/Flusher 形状）",
+      "type": "module",
+      "state": "current",
+      "confidence": "high",
+      "diagram": "event-layer-target.dot:（未画，作 E4 的先例引用）",
+      "description": "E4 的 SSE 写法先例，不是交付面",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/fakesrv.go:107-135"
+      ]
+    },
+    {
+      "id": "host.tests",
+      "label": "agentd 测试面（Test 函数现数由尺子印）",
+      "type": "risk",
+      "state": "current",
+      "confidence": "high",
+      "diagram": "（不在图上，作 E1 的回归护栏）",
+      "description": "事件层不得改写 stdout 正文，否则这 34 根针的逐字比对会漂",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/agentd_test.go",
+        "微内核/微内核/cmd/agentd/same_ruler_test.go"
+      ]
+    },
+    {
+      "id": "ev.bus",
+      "label": "r.emit(event) 事件总线",
+      "type": "module",
+      "state": "current",
+      "confidence": "high",
+      "diagram": "event-layer-target.dot:bus",
+      "description": "E1 已落地并过 M2 双路互审：在现有 say 的位置并挂，stdout 正文一律不改写；拒收与降级一律喊在 stderr（r.errf），Close 之后再 Emit 直接拒",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/events.go:794",
+        "微内核/微内核/cmd/agentd/events.go:623",
+        "微内核/微内核/cmd/agentd/loop.go:338"
+      ]
+    },
+    {
+      "id": "ev.log",
+      "label": "append-only 事件日志 (session,turn,seq)",
+      "type": "database",
+      "state": "current",
+      "confidence": "high",
+      "diagram": "event-layer-target.dot:elog",
+      "description": "append-only 是真的：O_APPEND 开 + 从既有日志 seed 每发的 seq，第二趟接在第一趟后面；先落盘（含 Sync）成功才推进计数与序号；序号判据从不可达的 Emit 内联搬到可达的 ValidateLog",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/events.go:355",
+        "微内核/微内核/cmd/agentd/events.go:576",
+        "微内核/微内核/cmd/agentd/events.go:623"
+      ]
+    },
+    {
+      "id": "host.hooks",
+      "label": "宿主挂点（emit 点位由尺子现数，别抄这里的数）",
+      "type": "module",
+      "state": "current",
+      "confidence": "high",
+      "diagram": "event-layer-target.dot:（挂点在 loop 内，图上以 t-loop-bus 一条边代表）",
+      "description": "run_started / shot_started / precheck×2 / recorded×2 / run_settled；两条 refused 现在带内核原话那一行作 why，账满那一形与继续那一形在流里可分；回帧坏、读回失败、打断这些路径仍没有专属事件 —— 缺口记在 u.hook-coverage（E3）",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/loop.go:338",
+        "微内核/微内核/cmd/agentd/loop.go:409",
+        "微内核/微内核/cmd/agentd/loop.go:428",
+        "微内核/微内核/cmd/agentd/loop.go:437",
+        "微内核/微内核/cmd/agentd/loop.go:457",
+        "微内核/微内核/cmd/agentd/loop.go:482",
+        "微内核/微内核/cmd/agentd/loop.go:894"
+      ]
+    },
+    {
+      "id": "host.eventTests",
+      "label": "事件层测试（支数与臂数由尺子现数）",
+      "type": "risk",
+      "state": "current",
+      "confidence": "high",
+      "diagram": "（不在图上）",
+      "description": "递增 / 拒收三族 / 序号臂接重复与回退 / 跨趟 append 接续 / 撕裂日志降级 / 关闭后拒落 / stdout 逐字不变（含掩码牙与盲区）/ 拒收喊在 stderr / 收口形状（done=total、limit 另格、无 step）/ 落点推导与撞车 / 事件不带原话正文",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/events_test.go:22",
+        "微内核/微内核/cmd/agentd/events_test.go:145",
+        "微内核/微内核/cmd/agentd/events_test.go:185",
+        "微内核/微内核/cmd/agentd/events_test.go:329",
+        "微内核/微内核/cmd/agentd/events_test.go:350",
+        "微内核/微内核/cmd/agentd/events_test.go:391"
+      ]
+    },
+    {
+      "id": "host.eventFlags",
+      "label": "-events / -events-out 旗标",
+      "type": "decision",
+      "state": "current",
+      "confidence": "high",
+      "diagram": "（不在图上）",
+      "description": "落点默认由 --journal-out 推导；两处都空 → 只在内存数序并 stderr 明说；落点压在账本路径上 → 当场不落事件，也绝不让 MkdirAll 把 j.jsonl 变成目录（P0 守卫）；三态由 printEventBanner 各说各的（落了 / 没落点 / 坏了）",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/main.go:44",
+        "微内核/微内核/cmd/agentd/main.go:45",
+        "微内核/微内核/cmd/agentd/main.go:191",
+        "微内核/微内核/cmd/agentd/main.go:210"
+      ]
+    },
+    {
+      "id": "ev.accept",
+      "label": "turn_accepted 受理事件",
+      "type": "decision",
+      "state": "current",
+      "confidence": "high",
+      "diagram": "event-layer-target.dot:accept",
+      "description": "E2 已落地：turn_accepted 恒为本发第一条（挂点在装配、驱动与第一次 kernel.check_call 之前），载荷给全 planned_steps/turn_limit/stop_via/resumable/ack_ms；resumable 今天如实写 false 并带为什么。**本件主张，非行业标准**：MCP/A2A/LSP 均无受理回执语义（见研究件引用区 P20-P23）",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/events.go:819",
+        "微内核/微内核/cmd/agentd/events.go:486",
+        "微内核/微内核/cmd/agentd/loop.go:367"
+      ],
+      "planRef": "事件层-1022/计划-agentd事件层.json:E2"
+    },
+    {
+      "id": "ev.settle",
+      "label": "turn_interrupted → turn_settled 结算",
+      "type": "decision",
+      "state": "current",
+      "confidence": "high",
+      "diagram": "event-layer-target.dot:settle",
+      "description": "E3 已落地：settleTurn 一发只结一次，载荷交三样（停在哪个相 / reached / not_reached）+ counts 由总线现数；run 级 run_settled 带 stop(token) + stop_why(整句)。**本件主张**：MCP 取消是 best-effort、无回执无结算",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/loop.go:258",
+        "微内核/微内核/cmd/agentd/events.go:140",
+        "微内核/微内核/cmd/agentd/events.go:129"
+      ],
+      "planRef": "事件层-1022/计划-agentd事件层.json:E3"
+    },
+    {
+      "id": "ev.sse",
+      "label": "SSE 投送 + id / Last-Event-ID 重放",
+      "type": "service",
+      "state": "current",
+      "confidence": "high",
+      "diagram": "event-layer-target.dot:sse",
+      "description": "投送层只读那本 append-only 日志，不自带第二本账。游标是身份四元组 <session>:<run>:<turn>:<seq> —— 比研究件 §5.2.6 写的三元组多一段 run：日志跨趟接续后同一 session 会有两条 turn=1，而 seq 是发内序号（按 turn 分开数），全局不唯一；能定「哪儿之后」的全序只有日志行序。坏游标 409（不当首连重播整本）、日志读不动 503、只认 /events 这一条路。",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/sse.go:36",
+        "微内核/微内核/cmd/agentd/sse.go:41",
+        "微内核/微内核/cmd/agentd/sse.go:105",
+        "微内核/微内核/cmd/agentd/sse.go:146",
+        "微内核/微内核/cmd/agentd/sse.go:200",
+        "微内核/微内核/cmd/agentd/main.go:47"
+      ],
+      "planRef": "事件层-1022/计划-agentd事件层.json:E4"
+    },
+    {
+      "id": "ev.watchdog",
+      "label": "10s 兜底进度 progress_tick / why_late",
+      "type": "module",
+      "state": "current",
+      "confidence": "high",
+      "diagram": "event-layer-target.dot:watchdog",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/loop.go:179",
+        "微内核/微内核/cmd/agentd/events.go:716",
+        "微内核/微内核/cmd/agentd/main.go:32"
+      ],
+      "planRef": "事件层-1022/计划-agentd事件层.json:E5",
+      "owner": "宿主循环 + 事件总线",
+      "description": "回执之后、收口之前那段静默不再没人说话：到点补一条 progress_tick（measured，done/total/limit 同一根轴、total 不越过 limit），算不出还剩几步就补 why_late（absent 且必带为什么，total 留 nil 不编 0）。旗标 -progress-tick 默认 10s，填 0 = 关，关与开都上屏。补位只在这一发结算之前有效：countsFor 抄数那同一把锁里把这一发标成别再补（quiet），Emit 见 idleOnly && quiet 就安静跳过 —— 结算之后挤进一条会让自印 counts 与账差一条。超时不改退出码，也不补步骤。"
+    },
+    {
+      "id": "ev.lock",
+      "label": "一发一锁（并发直拒，不排队不混列）",
+      "type": "decision",
+      "state": "target",
+      "confidence": "low",
+      "diagram": "event-layer-target.dot:lock",
+      "sourceRefs": [
+        "研究-协同工作-1022.md",
+        "事件层-1022/交接-agentd事件层-1022.md",
+        "微内核/微内核/cmd/agentd/sse.go"
+      ],
+      "planRef": "事件层-1022/计划-agentd事件层.json:E6",
+      "description": "**没有产品落点，不是没做**：cmd/agentd 唯一的 HTTP 面是只读 /events（sseHandler/serveEvents/eventsMux），一发由 main.go 一次性起 r.loop() —— 不存在「第二发从外面进来」的那道门，所以入口级锁无从加。混列的另一半已成立：身份四元组 (session,run,turn,seq) + blockOf 把两趟隔开（臂 E1/E 族、K3）。等作者拍：加起发入口（新攻击面）或把这条改判成「身份轴已覆盖，入口级锁不适用」。「不适用」不等于「挡住了」。"
+    },
+    {
+      "id": "ev.ui",
+      "label": "三行界面 现在/已经/接下来（只投影）",
+      "type": "capability",
+      "state": "current",
+      "confidence": "high",
+      "diagram": "event-layer-target.dot:ui",
+      "description": "零构建单页挂在 /events 同一个 server 的 / 上，值一律取自事件帧：前端出现 reduce(/Math./parseInt(/+= 即红（TestPageDoesNotComputeAnything）。后端没交的那格在屏上写「没量过」，不写 0 不写空；交过的数不因下一帧没带而被抹掉。列表有界（32 条只留 12 行）。浏览器实测抓到并改掉两句假话：帧在进却标「断了」、交过的数被抹成没量过（臂 L6/L7）。真人可读性仍 NOT_RUN —— 看得见、没脏字不等于好读。",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/web.go:16",
+        "微内核/微内核/cmd/agentd/web.go:105",
+        "微内核/微内核/cmd/agentd/sse.go:215"
+      ],
+      "planRef": "事件层-1022/计划-agentd事件层.json:E7",
+      "owner": "宿主投送层（只读那一本日志）"
+    },
+    {
+      "id": "ev.harness",
+      "label": "八条针一条命令 + 全套闸一条命令",
+      "type": "module",
+      "state": "current",
+      "confidence": "high",
+      "diagram": "event-layer-target.dot:harness",
+      "description": "验收-事件层-1022.py：道数与针名从研究件 §8.2 现读，每条针报 tests/rc/arms_BIT，臂数从 读数/臂检-全部族.jsonl 现数并认 BIT(进程崩症状可见) 那一档；先数清单再按清单跑；§8.2 之外的事件层 Test 单列 PIN-EXTRA，本面之外只报数不判。体检-全闸-1023.py：按顺序叫起 vet/go test/kcheck/两把尺子/八条针/臂检，自己不判任何事，另核「臂读数比树新不新」——过期就把「全咬」从刚跑过降级成参考。存在的理由很具体：有人只跑两道就报全绿。",
+      "sourceRefs": [
+        "事件层-1022/验收-事件层-1022.py",
+        "事件层-1022/体检-全闸-1023.py",
+        "事件层-1022/报告-验收.txt",
+        "事件层-1022/报告-全闸.txt"
+      ],
+      "planRef": "事件层-1022/计划-agentd事件层.json:E9",
+      "owner": "事件层这面的收口件"
+    },
+    {
+      "id": "ev.identity",
+      "label": "事件身份四元组 (session,run,turn,seq)",
+      "type": "module",
+      "state": "current",
+      "confidence": "high",
+      "diagram": "（不在图上；改的是 ev.log 的身份轴）",
+      "description": "M2 两路各自撞到「跨趟追加的日志里同一 turn 会有多条回执/结算」；路 B 的最小修法（按 (session,turn) 分组）复算不成立 —— 三趟同 session 仍是 3 条。缺的是趟轴。",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/events.go:350",
+        "微内核/微内核/cmd/agentd/events.go:358"
+      ]
+    },
+    {
+      "id": "host.stopentry",
+      "label": "停止入口 run.Stop（进程内与 SIGINT 同一条）",
+      "type": "module",
+      "state": "current",
+      "confidence": "high",
+      "diagram": "（不在图上）",
+      "description": "E3：只有一条停止路径；重复叫停不炸、首发原因不被覆盖；stop_via 在回执里如实列出两个入口",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/loop.go:138"
+      ]
+    },
+    {
+      "id": "ev.checklog",
+      "label": "-check-log 判据模式（一条命令的落点）",
+      "type": "service",
+      "state": "current",
+      "confidence": "high",
+      "diagram": "事件层目标图上（E9 头一块）",
+      "description": "只读一本日志，把四支判据（ValidateLog / ValidateAccepts / ValidateSettlement / ValidateReplay 尾游标）的读数一行一个交出去；用的哪个 ack 上限也印在行里。为什么做进二进制：判据口径只能有一份，尺子在 Python 里再数一遍就会出现「Go 红、Python 绿」两头不认账。",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/checklog.go:18",
+        "微内核/微内核/cmd/agentd/main.go:48"
+      ],
+      "planRef": "事件层-1022/计划-agentd事件层.json:E9"
+    },
+    {
+      "id": "ev.resumeAxis",
+      "label": "续跑的发号轴接续（turnFloor）",
+      "type": "decision",
+      "state": "current",
+      "confidence": "high",
+      "diagram": "事件层目标图上",
+      "description": "r.turns 只数本进程跑了几发（额度、停止判断看它）；落进事件流的发号是 turnNo()=turnFloor+turns。M5 扫端抓到：续跑那趟 stderr 印「发号从第 7 发接着走」、结算 done_before 也从 7 起，事件 turn 却从 1 重新开始 —— 两轴打架，且 91 支 Test 无一覆盖「resume × 事件日志 × 结算」。进度格的 limit 一并折到同一根轴（基线+本进程额度），不再出现 done=9 / limit=3 这种分子分母不同源的并排数。",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/loop.go:988",
+        "微内核/微内核/cmd/agentd/loop.go:686"
+      ],
+      "planRef": "事件层-1022/计划-agentd事件层.json:E3"
+    },
+    {
+      "id": "ev.phaseTables",
+      "label": "相位与停止词表的同源判据",
+      "type": "decision",
+      "state": "current",
+      "confidence": "high",
+      "diagram": "事件层目标图上",
+      "description": "turnPhases / phaseKind / settleKinds / stopTokens 四张表今天互不连线；改名或加相会静默漂（实测：改一相名 Go 全绿、只有 Python 冒烟崩在 rc=1，而 rc=1 不在六态契约里）。ValidatePhaseTables() 把键集合、kind 归属、停止词表与 Token() 产出双向对齐；「站点枚举那一半」在 Go 里判不了，记 NOT_MEASURABLE。",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/events.go:862",
+        "微内核/微内核/cmd/agentd/events.go:108"
+      ],
+      "planRef": "事件层-1022/计划-agentd事件层.json:E9"
+    }
+  ],
+  "edges": [
+    {
+      "id": "e.rpc-kernel",
+      "from": "host.rpc",
+      "to": "kernel.impl",
+      "type": "calls",
+      "sync": "sync",
+      "protocol": "in-process",
+      "confidence": "high",
+      "description": "只消费格子，不新增格子",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/rpc.go:105",
+        "微内核/微内核/README.md:631"
+      ]
+    },
+    {
+      "id": "e.loop-check",
+      "from": "host.loop",
+      "to": "host.checkcall",
+      "type": "calls",
+      "sync": "sync",
+      "protocol": "in-process",
+      "confidence": "high",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/loop.go:173"
+      ]
+    },
+    {
+      "id": "e.loop-record",
+      "from": "host.loop",
+      "to": "host.recordcall",
+      "type": "writes",
+      "sync": "sync",
+      "protocol": "in-process",
+      "confidence": "high",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/loop.go:189"
+      ]
+    },
+    {
+      "id": "e.loop-readback",
+      "from": "host.loop",
+      "to": "host.readback",
+      "type": "reads",
+      "sync": "sync",
+      "protocol": "in-process",
+      "confidence": "high",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/loop.go:293"
+      ]
+    },
+    {
+      "id": "e.readback-decide",
+      "from": "host.readback",
+      "to": "host.decide",
+      "type": "depends-on",
+      "sync": "sync",
+      "protocol": "in-process",
+      "confidence": "high",
+      "description": "那条回边：读回来的 fail_kind 决定下一步，KPI 在这里 +1",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/loop.go:316"
+      ]
+    },
+    {
+      "id": "e.loop-say",
+      "from": "host.loop",
+      "to": "host.say",
+      "type": "publishes",
+      "sync": "sync",
+      "protocol": "file",
+      "confidence": "high",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/loop.go:85"
+      ]
+    },
+    {
+      "id": "e.closeout-ckpt",
+      "from": "host.closeout",
+      "to": "host.checkpoint",
+      "type": "calls",
+      "sync": "sync",
+      "protocol": "file",
+      "confidence": "high",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/loop.go:591",
+        "微内核/微内核/cmd/agentd/loop.go:533"
+      ]
+    },
+    {
+      "id": "e.resume-ckpt",
+      "from": "host.resume",
+      "to": "host.checkpoint",
+      "type": "reads",
+      "sync": "sync",
+      "protocol": "file",
+      "confidence": "high",
+      "description": "读回上一次编出的账；链不符就不往下写",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/loop.go:391"
+      ]
+    },
+    {
+      "id": "e.closeout-trace",
+      "from": "host.closeout",
+      "to": "host.trace",
+      "type": "calls",
+      "sync": "sync",
+      "protocol": "file",
+      "confidence": "high",
+      "description": "今天唯一的过程可见性来源，且是事后的",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/trace.go:89",
+        "微内核/微内核/cmd/agentd/loop.go:591"
+      ]
+    },
+    {
+      "id": "e.abort-closeout",
+      "from": "host.abort",
+      "to": "host.closeout",
+      "type": "depends-on",
+      "sync": "sync",
+      "protocol": "in-process",
+      "confidence": "high",
+      "description": "SIGINT 先交账再走",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/loop.go:124",
+        "微内核/微内核/cmd/agentd/loop.go:591"
+      ]
+    },
+    {
+      "id": "e.closeout-exit",
+      "from": "host.closeout",
+      "to": "host.exit",
+      "type": "validates",
+      "sync": "sync",
+      "protocol": "in-process",
+      "confidence": "high",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/main.go:109"
+      ]
+    },
+    {
+      "id": "e.t-loop-bus",
+      "from": "host.loop",
+      "to": "ev.bus",
+      "type": "publishes",
+      "sync": "async",
+      "protocol": "in-process",
+      "confidence": "low",
+      "state": "target",
+      "description": "E1：在现有 say 位置并挂，stdout 不改写",
+      "sourceRefs": [
+        "事件层-1022/计划-agentd事件层.json"
+      ]
+    },
+    {
+      "id": "e.t-bus-log",
+      "from": "ev.bus",
+      "to": "ev.log",
+      "type": "writes",
+      "sync": "sync",
+      "protocol": "file",
+      "confidence": "low",
+      "state": "target",
+      "sourceRefs": [
+        "事件层-1022/计划-agentd事件层.json"
+      ]
+    },
+    {
+      "id": "e.t-accept-check",
+      "from": "ev.accept",
+      "to": "host.checkcall",
+      "type": "depends-on",
+      "sync": "sync",
+      "protocol": "unknown",
+      "confidence": "low",
+      "state": "target",
+      "description": "针1：受理必须先于第一次内核调用；顺序未实测",
+      "sourceRefs": [
+        "事件层-1022/计划-agentd事件层.json"
+      ]
+    },
+    {
+      "id": "e.t-log-sse",
+      "from": "ev.log",
+      "to": "ev.sse",
+      "type": "reads",
+      "sync": "async",
+      "protocol": "HTTP",
+      "confidence": "high",
+      "state": "target",
+      "sourceRefs": [
+        "事件层-1022/计划-agentd事件层.json",
+        "微内核/微内核/cmd/agentd/sse.go",
+        "微内核/微内核/cmd/agentd/events.go"
+      ]
+    },
+    {
+      "id": "e.t-abort-settle",
+      "from": "host.abort",
+      "to": "ev.settle",
+      "type": "publishes",
+      "sync": "sync",
+      "protocol": "in-process",
+      "confidence": "low",
+      "state": "target",
+      "sourceRefs": [
+        "事件层-1022/计划-agentd事件层.json"
+      ]
+    },
+    {
+      "id": "e.t-settle-trace",
+      "from": "ev.log",
+      "to": "host.trace",
+      "type": "reads",
+      "sync": "batch",
+      "protocol": "file",
+      "confidence": "high",
+      "state": "target",
+      "description": "E8：一份账两个投影，不许两处各算",
+      "sourceRefs": [
+        "事件层-1022/计划-agentd事件层.json",
+        "微内核/微内核/cmd/agentd/trace.go",
+        "微内核/微内核/cmd/agentd/events.go"
+      ]
+    },
+    {
+      "id": "e.t-sse-ui",
+      "from": "ev.sse",
+      "to": "ev.ui",
+      "type": "publishes",
+      "sync": "async",
+      "protocol": "HTTP",
+      "confidence": "high",
+      "state": "target",
+      "description": "界面只投影后端交出的字段；脏字栏判据未写",
+      "sourceRefs": [
+        "事件层-1022/计划-agentd事件层.json",
+        "微内核/微内核/cmd/agentd/sse.go",
+        "微内核/微内核/cmd/agentd/web.go"
+      ]
+    },
+    {
+      "id": "e.t-harness-ui",
+      "from": "ev.harness",
+      "to": "ev.ui",
+      "type": "validates",
+      "sync": "unknown",
+      "protocol": "unknown",
+      "confidence": "high",
+      "state": "target",
+      "description": "针7/针8 需要真起服务与页面；本机尚未跑过",
+      "sourceRefs": [
+        "事件层-1022/计划-agentd事件层.json",
+        "事件层-1022/验收-事件层-1022.py",
+        "微内核/微内核/cmd/agentd/web.go"
+      ]
+    },
+    {
+      "id": "e-settle-bus",
+      "from": "ev.settle",
+      "to": "ev.bus",
+      "type": "calls",
+      "state": "current",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/loop.go:159"
+      ]
+    },
+    {
+      "id": "e-accept-settle",
+      "from": "ev.accept",
+      "to": "ev.settle",
+      "type": "follows",
+      "state": "current",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/loop.go:258"
+      ]
+    },
+    {
+      "id": "e.checklog.log",
+      "from": "ev.checklog",
+      "to": "ev.log",
+      "type": "reads",
+      "state": "current",
+      "description": "判据模式吃的就是总线落盘的那本日志（同一份底，不是另起的账）",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/checklog.go:29",
+        "微内核/微内核/cmd/agentd/main.go:47"
+      ]
+    },
+    {
+      "id": "e.resumeAxis.bus",
+      "from": "ev.resumeAxis",
+      "to": "ev.bus",
+      "type": "reads",
+      "state": "current",
+      "description": "发号轴落进总线盖的每条事件（Emit 前定好），counts 的键也用它",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/loop.go:866",
+        "微内核/微内核/cmd/agentd/loop.go:191"
+      ]
+    },
+    {
+      "id": "e.loop-watchdog",
+      "from": "host.loop",
+      "to": "ev.watchdog",
+      "type": "calls",
+      "sync": "async",
+      "confidence": "high",
+      "description": "回执之后 startTick、结算与收口先 stopTick —— 看门狗不许往已结账的那一发里挤条目",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/loop.go"
+      ]
+    },
+    {
+      "id": "e.watchdog-log",
+      "from": "ev.watchdog",
+      "to": "ev.log",
+      "type": "writes",
+      "sync": "async",
+      "confidence": "high",
+      "description": "补位走同一把锁的 Emit（idleOnly 那条守卫在这里生效）",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/events.go"
+      ]
+    },
+    {
+      "id": "e.ui-sse-read",
+      "from": "ev.ui",
+      "to": "ev.sse",
+      "type": "reads",
+      "sync": "async",
+      "confidence": "high",
+      "description": "页面只订阅 /events，不读第二本账：所以「页面活」与「账本对」是两个判据，各自有针",
+      "sourceRefs": [
+        "微内核/微内核/cmd/agentd/web.go",
+        "微内核/微内核/cmd/agentd/sse.go"
+      ]
+    }
+  ],
+  "unknowns": [
+    {
+      "id": "u.hook-coverage",
+      "what": "分支挂点仍不全：回帧坏那一族现在会结算，但 read_back/decide 两相仍无专属事件",
+      "why": "E1 只挂了 7 个点；装配失败、驱动 NOT_RUN、预检/落账回帧坏、容量到顶（stopCapped）、resume 早退（main.go 在 loop 前就 return）都还没有对应事件",
+      "nextValidate": "E5/E8：把那条回边与决定的因果投进事件流；相位表加了相就要同步进 turnPhases，否则补步针数的是空气"
+    },
+    {
+      "id": "u.truncate-vs-append",
+      "what": "newEventBus 用 O_TRUNC 打开，跨趟会覆盖上一趟",
+      "why": "「append-only」在这里只对**同一趟内**成立；说成账本纪律是过头的（events.go:68）",
+      "nextValidate": "要么改成 O_APPEND + 每趟独立文件名，要么把措辞降级为「趟内递增日志」——M2 路 A 也在查这条",
+      "resolved": "2026-10-22 E1 + M2 双路互审",
+      "resolvedBy": "E1 改成 O_APPEND，并从既有日志 seed 每发 seq；臂 TestEventLogAppendsAcrossRuns（变异 A1：改回 O_TRUNC 即红）+ 冒烟 S2（两趟 20→40 条，序号回退 0 处）"
+    },
+    {
+      "id": "u.settle-axis",
+      "what": "run_settled 把发号写进了 step.no（turn=0 与 no=6 混轴）",
+      "why": "loop.go:608 传的是 r.shot；收口不是某一发的步骤号",
+      "nextValidate": "M2 回来后单点修，改完补一支断言：run 级事件的 step 要么不带 no 要么带的是发号字段名",
+      "resolved": "2026-10-22 E1 + M2 双路互审",
+      "resolvedBy": "收口那条改成 run 级：turn=0 且不带 step，发号只进 progress.done；total 在「跑完」那一种停取 done（额度另放 limit），臂 A8/A10"
+    },
+    {
+      "id": "u.path-preemption",
+      "what": "--events-out 指到账本路径里面时，MkdirAll 把 j.jsonl 建成目录，账本写盘随即失败而 RC 仍为 0",
+      "why": "真 exe 实测（preempt 那一趟）：stdout 有「is a directory」，退出码 0；且 --events=false 下把 journal 指向目录同样 RC=0 ⇒ 「写盘失败不进退出码」是既有洞，事件层只是新触发口",
+      "nextValidate": "修路径互斥校验；退出码是否要变属六态契约变更，等作者定",
+      "resolved": "2026-10-22 E1 + M2 双路互审",
+      "resolvedBy": "eventLogPath 先把「落点压在 --journal-out 上」这一族挡掉：宁可这一趟不落事件，也不让 MkdirAll 把账本文件变成目录（臂 TestEventLogPathDerivationAndCollision，变异 A7；冒烟 S3 账本仍是文件、148232 字节）"
+    },
+    {
+      "id": "u.dead-seq-tooth",
+      "what": "Emit 内那句 seqCanFollow 不可达（next 恒为 prev+1）",
+      "why": "events.go:118-119；序号臂只直接调函数，不经 Emit ⇒ 「序号针会红」这句话目前只到函数级",
+      "nextValidate": "要么删掉，要么让臂从 Emit 走（注入坏 bus.seq 状态）",
+      "resolved": "2026-10-22 E1 + M2 双路互审",
+      "resolvedBy": "Emit 里那条不可达调用删了，判据搬到 ValidateLog（读回整本日志才能走得到）；臂用 crafted 坏日志喂重复与回退（TestValidateLogArmRejectsDuplicateAndRegress，变异 A2）"
+    },
+    {
+      "id": "u.banner-unwired",
+      "what": "eventsPath / eventsWritten 算了没有任何消费者",
+      "why": "main.go 全程不打印；loop.go 注释却写「留给横幅用」⇒ 未接线的内部承诺",
+      "nextValidate": "收口处按 stderr 印一行，或删掉该说法",
+      "resolved": "2026-10-22 E1 + M2 双路互审",
+      "resolvedBy": "eventsPath/eventsWritten 两个只写不读的字段删了，横幅现读 eventBus.stats()；三态各自印（TestUnreadableExistingLogDegradesLoudly + 冒烟 S4）"
+    },
+    {
+      "id": "u.cursor-states",
+      "what": "断线续传的游标四态（有效/404/410 过期/409 超前）该怎么在本件落",
+      "why": "来源 P25/P26 本轮只到搜索快照级，未读原文",
+      "nextValidate": "波2 抽查回来后改写 E4 任务"
+    },
+    {
+      "id": "u.accept-receipt",
+      "what": "「受理回执」是否真能压到 100ms 内（针1 的阈值口径）",
+      "why": "-shot-delay 与真端点下的时序实测不存在；真端点 NOT_RUN",
+      "nextValidate": "E2 实施时先跑 scripted，再记 NOT_RUN",
+      "resolved": "2026-10-22 E2",
+      "resolvedBy": "loop.go 的 emit(r.acceptedEv()) 在 check_call 之前；判据 ValidateAccepts 走读回路径；臂 TestLateReceiptGoesRed（把入口时刻拨慢 250ms 必须红）+ 变异 B1/B2/B3/B7"
+    },
+    {
+      "id": "u.human-readable",
+      "what": "三行界面人类读不读得懂、打断时机来不来得及",
+      "why": "真人 0/1；AI 模拟读者不算真人",
+      "nextValidate": "需要真人臂，未排期"
+    },
+    {
+      "id": "u.dot-render",
+      "what": "两张 DOT 的布局与出图是否可看",
+      "why": "本机无 graphviz（which dot 空），从未渲染过 SVG",
+      "nextValidate": "有渲染工具再核；目前只保证图源可维护"
+    },
+    {
+      "id": "u.tier-usage",
+      "what": "真实流五档只用一档：measured 20/20，estimated/model_says/relayed/absent 各 0（M2 路 A 补：回执的 planned/limit/stop_via 四种出处今天塌成一档 measured）",
+      "why": "挂点都在「已经落进账」的那一侧；absent 要由读回失败/未走到的步骤那两类事件承载（E2/E3）。冒烟把分布现印出来（读数 INFO 行），不藏",
+      "nextValidate": "E2/E3 落 decision/absent 事件后，同一支冒烟应数出 ≥2 档；数不出就点名"
+    },
+    {
+      "id": "u.journal-write-exit-code",
+      "what": "账本写失败（checkpoint 那一步 os.WriteFile 报错）仍然 rc=0",
+      "why": "E1 之前就这样（--events=false 也复现），不是事件层带进来的；改不改退出码属六态契约，要作者拍，不自作主张",
+      "nextValidate": "作者表态后再动；动之前不许写成「已修」"
+    },
+    {
+      "id": "u.mask-blindspot",
+      "what": "stdout 那根针把「N 字节」掩掉，只改数字宽度的污染它看不见",
+      "why": "encode_journal 内嵌时间戳，账本字节数本身就是抖动源（实测三跑 148232/148232/147938），不掩就是随机红；盲区由 TestMaskArms 写死（整行新增抓得到，量级变化抓不到）",
+      "nextValidate": "账本体积那一类要另配针（按格数或按内容字段比），别指望这根"
+    }
+  ]
+}

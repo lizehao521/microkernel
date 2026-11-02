@@ -1,0 +1,1 @@
+{"id":43,"jsonrpc":"2.0","result":{"content":[{"text":"整发拒收（拒收累计 2 次）：kernel: 输入侧账不自洽，第 5 发整发拒收（输出侧也不写）：kernel: token 那一格的出处是 measured —— 我们数不出对端的分词，只有估算或转述两种可能","type":"text"}],"isError":true}}

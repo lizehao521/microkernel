@@ -1,0 +1,74 @@
+digraph agentd_event_layer_target {
+  rankdir=TB;
+  fontname="Segoe UI";
+  labelloc=t;
+  label="agentd 事件层 · 目标态\n实线黑=今天已在盘上 ｜ 蓝虚线=计划新建(E1-E9) ｜ 红点线=冻结边界，不许动\n证据逐条见 evidence.md（2026-10-22 静态核对，SVG 未渲染：本机无 graphviz）";
+
+  node [shape=box, style="rounded,filled", fontname="Segoe UI", fontsize=11, fillcolor="#eef3f8"];
+  edge [fontname="Segoe UI", fontsize=10];
+
+  subgraph cluster_kernel {
+    label="内核 v1（已冻结：48 键 / 49 格，README.md:631 §8 停止新增）";
+    style="dotted"; color="#a3151e"; fontcolor="#a3151e";
+    mcpsrv   [label="kernel 实现\ncheck_call / record_call / read_back\nverify / tally / readers_report", color="#a3151e", style="rounded,filled,dotted"];
+    journal  [label="encode_journal\n只编字节交回调用方，不写盘", color="#a3151e", style="rounded,filled,dotted"];
+  }
+
+  subgraph cluster_host {
+    label="宿主 cmd/agentd（循环住在这里 —— 3364 行 / 10 文件 / 34 个 Test 函数）";
+    style="solid"; color="#5a5a5a";
+    rpc      [label="kernelRPC\nrpc.go:105 read_back", fillcolor="#dff0e2"];
+    loop     [label="run.loop()\nloop.go:117", fillcolor="#dff0e2"];
+    say      [label="r.say —— stdout 正文\nloop.go:85（保留，逐字可比对）", fillcolor="#dff0e2"];
+    calls    [label="内核调用点\ncheck_call loop.go:173\nrecord_call loop.go:189\nread_back loop.go:293/335/484", fillcolor="#dff0e2"];
+    policy   [label="r.decide —— 账上 fail_kind → 下一步\nloop.go:316（唯一 KPI 的来源）", fillcolor="#dff0e2"];
+    ckpt     [label="r.checkpoint 落盘\nloop.go:533", fillcolor="#dff0e2"];
+    resume   [label="r.resume —— 先核链，不符拒写(rc=2)\nloop.go:391", fillcolor="#dff0e2"];
+    closeout [label="r.closeOut —— verify/tally/读者/收口\nloop.go:591", fillcolor="#dff0e2"];
+    trace    [label="writeTrace 轨迹解剖页\ntrace.go:89（今天=跑完才写）", fillcolor="#dff0e2"];
+    exitcode [label="六态退出码 exitOf\nmain.go:109｜0/2/3/4/5/6", fillcolor="#dff0e2"];
+    abort    [label="abort 通道 + SIGINT\nloop.go:124/130", fillcolor="#dff0e2"];
+  }
+
+  subgraph cluster_events {
+    label="计划新建：事件层（宿主侧，不碰内核）";
+    style="dashed"; color="#134d7a"; fontcolor="#134d7a";
+    bus      [label="E1  r.emit(event)\n形状照研究件 §5.1", style="rounded,filled,dashed", color="#134d7a", fillcolor="#e3ecf7"];
+    elog     [label="E1  append-only 事件日志 (session,turn,seq)\n先落盘再上屏；absent 必带 why", style="rounded,filled,dashed", color="#134d7a", fillcolor="#e3ecf7"];
+    accept   [label="E2  turn_accepted\n先于第一次 check_call（针1 回执≤100ms）", style="rounded,filled,dashed", color="#134d7a", fillcolor="#e3ecf7"];
+    settle   [label="E3  turn_interrupted → turn_settled\n停在哪 / 已发生 / 没发生（针4 结算、针5 不补步）", style="rounded,filled,dashed", color="#134d7a", fillcolor="#e3ecf7"];
+    sse      [label="E4  127.0.0.1 随机端口 SSE\nid: session:turn:seq ＋ Last-Event-ID 重放\n无日志 ⇒ 明写 resumable:false（针6）", style="rounded,filled,dashed", color="#134d7a", fillcolor="#e3ecf7"];
+    watchdog [label="E5 ✓ 10s 兜底 progress_tick / why_late\nstartTick/idleView/quiet；-progress-tick 默认 10s", style="rounded,filled", color="#0b6b34", fillcolor="#dff0e2"];
+    lock     [label="E6 ？一发一锁：这棵树没有起发的入口\n只读 /events ⇒ 入口级锁无落点，等作者拍（≠挡住了）", style="rounded,filled,dashed", color="#134d7a", fillcolor="#e3ecf7"];
+    ui       [label="E7 ✓ 三行页 现在/已经/接下来\nweb.go 零构建，只投影；前端算口径即红", style="rounded,filled", color="#0b6b34", fillcolor="#dff0e2"];
+    harness  [label="E9 ✓ 验收-事件层-1022.py + 体检-全闸-1023.py\n八条针一条命令；道数现读、臂数现数", style="rounded,filled", color="#0b6b34", fillcolor="#dff0e2"];
+  }
+
+  rpc -> mcpsrv [label="只消费格子，不新增格子"];
+  loop -> calls;
+  loop -> policy;
+  policy -> calls [label="回边：读回来的格决定下一步", color="#0b6b34"];
+  loop -> say;
+  closeout -> ckpt;
+  resume -> ckpt [label="读回上一次编出的账"];
+  closeout -> trace [label="今天唯一的过程可见性来源（事后）", color="#8a6d1f"];
+  abort -> closeout [label="SIGINT 先交账再走"];
+  closeout -> exitcode;
+
+  loop -> bus [label="E1 在现有 say 位置并挂", style="dashed", color="#134d7a"];
+  bus -> elog [label="先落盘", style="dashed", color="#134d7a"];
+  bus -> accept [label="E2 首发", style="dashed", color="#134d7a"];
+  accept -> calls [label="顺序针钉住：受理在 check_call 之前", style="dashed", color="#134d7a"];
+  abort -> settle [style="dashed", color="#134d7a"];
+  settle -> closeout [label="同一套收口，不分叉", style="dashed", color="#134d7a"];
+  settle -> exitcode [label="被打断=6", style="dashed", color="#134d7a"];
+  elog -> sse [label="投送已落盘的那条，id 不另算", style="dashed", color="#134d7a"];
+  elog -> watchdog [label="idleView 一把锁内取静默/最后一条/已落几条", color="#0b6b34"];
+  loop -> watchdog [label="回执后 startTick；结算与收口先 stopTick", color="#0b6b34"];
+  watchdog -> elog [label="补位走同一把锁的 Emit（idleOnly && quiet 才落）", color="#0b6b34"];
+  sse -> lock [style="dashed", color="#134d7a"];
+  sse -> ui [label="界面只拿后端交出去的字段；没交的写「没量过」", color="#0b6b34"];
+  ui -> sse [label="只订阅 /events，不读第二本账", color="#0b6b34"];
+  elog -> trace [label="E8 ✓ 页上发数与逐发条数从这本账读（traceLedger+runID）", color="#0b6b34"];
+  harness -> ui [label="针8 真起服务与页面（node --check + 桩 DOM + 浏览器实测）", color="#0b6b34"];
+}

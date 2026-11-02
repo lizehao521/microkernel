@@ -1,0 +1,15 @@
+build rc=0 exe=C:\Users\Admin\AppData\Local\Temp\E1-冒烟-3792\agentd-e1.exe sha256=c148cba5df3d
+PASS S0 跑的是哪一份 build | exe=agentd-e1.exe sha256_12=c148cba5df3d build_rc=0
+PASS S1 stdout 不受事件层影响 | rc_on=0 rc_off=0 stdout_equal=True on_bytes=2439 off_bytes=2440 events_in_stdout=False
+PASS S2 append-only 跨进程 | first_run=32 after_second=64 seq_regressions=0 run_started=2
+PASS S3 撞车守卫保住账本 | journal_is_file=True journal_bytes=148085 rc=0 stderr_has_collision_note=True nested_events_written=False
+PASS S4 横幅三态各说各的 | 内存态=True 没开态=True 落盘态=True file_line=['agentd: 事件层 32 条 → C:\\Users\\Admin\\AppData\\Local\\Temp\\E1-冒烟-3792\\s4.events.jsonl']
+PASS S5 六态退出码未改 | real=2 turns=3 capped=5 script=0 bad_resume=2
+PASS S6 收口事件形状 | state=settled stop=script stop_why=跑完：端点剧本走到最后一发 progress={'done': 6, 'total': 6, 'limit': 20} evidence=measured turn=0 step_field=absent
+PASS S7 回执（口径=Go -check-log） | Go判据ValidateAccepts=GREEN Go为什么=32 条 rc_结构支=0 rc_预算支=0 Python独立计数=OK 对不对得上=一致 最大ack_ms=22 预算支100状态=GREEN 预算支100读数=32 条 预算支只当发现=True 限度分离=ack_limit_ms=60000|ack_limit_ms=100 有回执的发=6 趟身份=1
+PASS S8 结算与相位（口径=Go -check-log） | Go判据ValidateSettlement=GREEN Go为什么=32 条 Python独立计数=OK 对不对得上=一致 限度分离=ack_limit_ms=60000|ack_limit_ms=100 结算的发=6 结算类别=['completed'] 有未走到步骤的份数=0 run_stop=script run_why=True
+INFO check-log 结构支 rc=0 四支读数：{'ValidateLog': 'GREEN', 'ValidateAccepts': 'GREEN', 'ValidateSettlement': 'GREEN', 'ValidateReplay': 'GREEN'}
+INFO 真实流出处档分布 {'measured': 32}；带 why 的 12/32
+
+steps 9, passed 9
+readings: C:\Users\Admin\Desktop\微内核\事件层-1022\读数\冒烟-事件层.jsonl

@@ -1,0 +1,29 @@
+文档核对 · 垂类选择与产品化 v1 ｜ 只读，不改任何东西
+输入：评分表 schema=dtz-score/1 ｜ 关闭方向 9 条 ｜ 引用登记 24 条
+正文：8 份 HTML 段（src/）
+
+K1  权重合计=1                             PASS ｜ sum=1.00
+K2  结构齐（4×5）                           PASS ｜ 4 垂类 × 5 维
+K3  格子值合法                              PASS ｜ 格子值全为整数或字符串 unknown
+K4  unknown 带理由且不挂凭据                   PASS ｜ 未判定格 3 个，全部带理由
+K5  数字格有凭据与 rationale                  PASS ｜ 数字格均有凭据
+K6  凭据可核（盘上行号/核级/证伪阈值）                 PASS ｜ 凭据 32 条（disk=23 estimate=1 public=8）
+K7  无全 unknown 带权重维                    PASS ｜ 无「全 unknown 带权重」维
+K8  撞车核对可证伪                            PASS ｜ 登记 9 条 / 被点名 4 条 ｜ V1→C9 V2→C6 V3→C3 V4→C1
+K9  赢家由重算得出                            PASS ｜ 重算赢家 V1，名次 V4→V1→V3→V2
+K10 生成块无渲染漂移                           PASS ｜ 比对 SCORE、REFS
+K11 第7章章名=赢家                           PASS ｜ 章名：7 甲方 AI 项目验收：把「做成」拆回能回盘核的格子 ｜ 赢家：V1
+K12 页脚日期=decided_at                    PASS ｜ 页脚日期 1 处，均为 2026-10-26
+D1  引用双向无孤儿 + 指针解析                     PASS ｜ data-cite 24 ｜ data-src 58 ｜ 口径件指针 16
+D3  普查标记（哪一种 0）                        PASS ｜ 缺席陈述 105 句，已标 105 句（census 16 / targeted 8 / not_run 46 / term 35）
+
+chip 词表（disk/public/estimate/relayed/未）：52 处，越表 0 处
+三态（有据/相背/取不到）：51 处，越档 0 处
+
+checks_run=14/14 ｜ checks_red=0 ｜ own_error=0
+score_cells_filled=17/20 ｜ score_verticals=4 ｜ score_winner=V1 ｜ score_flips=0
+refs_rows=24 ｜ refs_status=核11|片6|未1|反6
+tier-labelled assertions = 52/52
+pointers_resolved: data-src=58 data-cite=24 口径件=16
+
+结论：全过（rc=0）。注意：这只说十四道都红不起来，不说结论对——臂有没有牙看 工具/臂检-文档.py。

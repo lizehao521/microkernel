@@ -1,0 +1,48 @@
+{"at": "2026-10-26T05:31:51+08:00", "event": "start", "version": "0.1.0", "port": 63045, "state": "unconfigured", "model": "", "base_host": ""}
+{"at": "2026-10-26T05:31:51+08:00", "event": "start", "version": "0.1.0", "port": 63048, "state": "ready", "model": "fake-model-1", "base_host": "http://127.0.0.1:63044"}
+{"at": "2026-10-26T05:31:51+08:00", "event": "explain", "version": "0.1.0", "ok": true, "status": 200, "ms": 35, "question_chars": 6, "digest_chars": 393, "upstream_bytes": 243}
+{"at": "2026-10-26T05:31:51+08:00", "event": "rejected", "version": "0.1.0", "error": "BAD_DIGEST", "why": "摘要含未允许的顶层字段：memory", "question_chars": 6}
+{"at": "2026-10-26T05:31:51+08:00", "event": "rejected", "version": "0.1.0", "error": "BAD_DIGEST", "why": "摘要含疑似本机路径 / 哈希 / 口令字样：C:\\", "question_chars": 6}
+{"at": "2026-10-26T05:31:51+08:00", "event": "rejected", "version": "0.1.0", "error": "BAD_DIGEST", "why": "声明含未允许字段：sha256", "question_chars": 6}
+{"at": "2026-10-26T05:31:51+08:00", "event": "explain", "version": "0.1.0", "ok": false, "error": "UPSTREAM_500", "status": 500, "ms": 15, "question_chars": 6, "digest_chars": 393}
+{"at": "2026-10-26T05:31:51+08:00", "event": "explain", "version": "0.1.0", "ok": false, "error": "BAD_RESPONSE", "status": 200, "ms": 15, "upstream_bytes": 15}
+{"at": "2026-10-26T05:31:51+08:00", "event": "explain", "version": "0.1.0", "ok": true, "status": 200, "ms": 12, "question_chars": 6, "digest_chars": 393, "upstream_bytes": 116}
+{"at": "2026-10-26T05:31:51+08:00", "event": "start", "version": "0.1.0", "port": 63065, "state": "ready", "model": "fake-model-1", "base_host": "http://127.0.0.1:63044"}
+{"at": "2026-10-26T05:31:52+08:00", "event": "explain", "version": "0.1.0", "ok": false, "error": "TIMEOUT", "ms": 1032, "question_chars": 6, "digest_chars": 393}
+{"at": "2026-10-26T05:52:47+08:00", "event": "start", "version": "0.1.0", "port": 55547, "state": "ready", "model": "stub-model-1", "base_host": "http://127.0.0.1:55546"}
+{"at": "2026-10-26T05:52:48+08:00", "event": "rejected", "version": "0.1.0", "error": "BAD_DIGEST", "why": "摘要含疑似本机路径 / 哈希 / 口令字样：sha256", "question_chars": 26}
+{"at": "2026-10-26T05:58:32+08:00", "event": "start", "version": "0.1.0", "port": 50956, "state": "unconfigured", "model": "", "base_host": ""}
+{"at": "2026-10-26T05:58:32+08:00", "event": "start", "version": "0.1.0", "port": 50959, "state": "ready", "model": "fake-model-1", "base_host": "http://127.0.0.1:50955"}
+{"at": "2026-10-26T05:58:32+08:00", "event": "explain", "version": "0.1.0", "ok": true, "status": 200, "ms": 28, "question_chars": 6, "digest_chars": 393, "upstream_bytes": 243}
+{"at": "2026-10-26T05:58:32+08:00", "event": "rejected", "version": "0.1.0", "error": "BAD_DIGEST", "why": "摘要含未允许的顶层字段：memory", "question_chars": 6}
+{"at": "2026-10-26T05:58:32+08:00", "event": "rejected", "version": "0.1.0", "error": "BAD_DIGEST", "why": "摘要含疑似本机路径 / 口令字样：C:\\", "question_chars": 6}
+{"at": "2026-10-26T05:58:32+08:00", "event": "rejected", "version": "0.1.0", "error": "BAD_DIGEST", "why": "声明含未允许字段：sha256", "question_chars": 6}
+{"at": "2026-10-26T05:58:32+08:00", "event": "rejected", "version": "0.1.0", "error": "BAD_DIGEST", "why": "摘要含疑似哈希值（40-64 位十六进制）", "question_chars": 6}
+{"at": "2026-10-26T05:58:32+08:00", "event": "explain", "version": "0.1.0", "ok": true, "status": 200, "ms": 2, "question_chars": 6, "digest_chars": 412, "upstream_bytes": 243}
+{"at": "2026-10-26T05:58:32+08:00", "event": "explain", "version": "0.1.0", "ok": false, "error": "UPSTREAM_500", "status": 500, "ms": 16, "question_chars": 6, "digest_chars": 393}
+{"at": "2026-10-26T05:58:32+08:00", "event": "explain", "version": "0.1.0", "ok": false, "error": "BAD_RESPONSE", "status": 200, "ms": 2, "upstream_bytes": 15}
+{"at": "2026-10-26T05:58:32+08:00", "event": "explain", "version": "0.1.0", "ok": true, "status": 200, "ms": 18, "question_chars": 6, "digest_chars": 393, "upstream_bytes": 116}
+{"at": "2026-10-26T05:58:33+08:00", "event": "start", "version": "0.1.0", "port": 50979, "state": "ready", "model": "fake-model-1", "base_host": "http://127.0.0.1:50955"}
+{"at": "2026-10-26T05:58:34+08:00", "event": "explain", "version": "0.1.0", "ok": false, "error": "TIMEOUT", "ms": 1029, "question_chars": 6, "digest_chars": 393}
+{"at": "2026-10-26T05:59:40+08:00", "event": "start", "version": "0.1.0", "port": 51006, "state": "ready", "model": "stub-model-1", "base_host": "http://127.0.0.1:51005"}
+{"at": "2026-10-26T05:59:41+08:00", "event": "explain", "version": "0.1.0", "ok": true, "status": 200, "ms": 44, "question_chars": 26, "digest_chars": 3032, "upstream_bytes": 355}
+{"at": "2026-10-26T05:59:41+08:00", "event": "explain", "version": "0.1.0", "ok": false, "error": "UPSTREAM_500", "status": 500, "ms": 3, "question_chars": 26, "digest_chars": 3032}
+{"at": "2026-10-26T05:59:41+08:00", "event": "explain", "version": "0.1.0", "ok": false, "error": "BAD_RESPONSE", "status": 200, "ms": 2, "upstream_bytes": 15}
+{"at": "2026-10-26T05:59:42+08:00", "event": "start", "version": "0.1.0", "port": 51031, "state": "unconfigured", "model": "", "base_host": ""}
+{"at": "2026-10-26T06:02:10+08:00", "event": "start", "version": "0.1.0", "port": 51091, "state": "ready", "model": "stub-model-1", "base_host": "http://127.0.0.1:51090"}
+{"at": "2026-10-26T06:02:11+08:00", "event": "explain", "version": "0.1.0", "ok": true, "status": 200, "ms": 43, "question_chars": 26, "digest_chars": 3032, "upstream_bytes": 355}
+{"at": "2026-10-26T06:02:11+08:00", "event": "explain", "version": "0.1.0", "ok": false, "error": "UPSTREAM_500", "status": 500, "ms": 4, "question_chars": 26, "digest_chars": 3032}
+{"at": "2026-10-26T06:02:11+08:00", "event": "explain", "version": "0.1.0", "ok": false, "error": "BAD_RESPONSE", "status": 200, "ms": 1, "upstream_bytes": 15}
+{"at": "2026-10-26T06:02:12+08:00", "event": "start", "version": "0.1.0", "port": 51116, "state": "unconfigured", "model": "", "base_host": ""}
+{"at": "2026-10-26T06:10:28+08:00", "event": "start", "version": "0.1.0", "port": 63264, "state": "ready", "model": "stub-model-1", "base_host": "http://127.0.0.1:63263"}
+{"at": "2026-10-26T06:11:45+08:00", "event": "explain", "version": "0.1.0", "ok": true, "status": 200, "ms": 50, "question_chars": 16, "digest_chars": 3032, "upstream_bytes": 424}
+{"at": "2026-10-26T06:12:36+08:00", "event": "explain", "version": "0.1.0", "ok": true, "status": 200, "ms": 18, "question_chars": 16, "digest_chars": 3032, "upstream_bytes": 424}
+{"at": "2026-10-26T06:15:16+08:00", "event": "explain", "version": "0.1.0", "ok": true, "status": 200, "ms": 22, "question_chars": 16, "digest_chars": 3032, "upstream_bytes": 424}
+{"at": "2026-10-26T06:16:36+08:00", "event": "explain", "version": "0.1.0", "ok": true, "status": 200, "ms": 20, "question_chars": 16, "digest_chars": 3032, "upstream_bytes": 424}
+{"at": "2026-10-26T06:18:07+08:00", "event": "explain", "version": "0.1.0", "ok": true, "status": 200, "ms": 2, "question_chars": 16, "digest_chars": 3032, "upstream_bytes": 424}
+{"at": "2026-10-26T06:19:01+08:00", "event": "explain", "version": "0.1.0", "ok": true, "status": 200, "ms": 2, "question_chars": 16, "digest_chars": 3032, "upstream_bytes": 424}
+{"at": "2026-10-26T06:41:37+08:00", "event": "start", "version": "0.1.0", "port": 64322, "state": "ready", "model": "stub-model-1", "base_host": "http://127.0.0.1:64321"}
+{"at": "2026-10-26T06:41:37+08:00", "event": "explain", "version": "0.1.0", "ok": true, "status": 200, "ms": 27, "question_chars": 26, "digest_chars": 3032, "upstream_bytes": 355}
+{"at": "2026-10-26T06:41:38+08:00", "event": "explain", "version": "0.1.0", "ok": false, "error": "UPSTREAM_500", "status": 500, "ms": 15, "question_chars": 26, "digest_chars": 3032}
+{"at": "2026-10-26T06:41:38+08:00", "event": "explain", "version": "0.1.0", "ok": false, "error": "BAD_RESPONSE", "status": 200, "ms": 8, "upstream_bytes": 15}
+{"at": "2026-10-26T06:41:38+08:00", "event": "start", "version": "0.1.0", "port": 64347, "state": "unconfigured", "model": "", "base_host": ""}

@@ -1,0 +1,35 @@
+"""Debug the two new metrics_claims arms (56b / 56c) -- prints what the ruler actually returned."""
+import importlib.util
+import json
+from pathlib import Path
+
+HERE = Path(r"C:\Users\Admin\Desktop\微内核\PDF-1022\真端点-1023")
+spec = importlib.util.spec_from_file_location("ruler", HERE / "分析-答案数源-1023.py")
+R = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(R)
+
+m = R.file_metrics("客户/投诉.csv")
+fm56 = R.file_metrics("客户/客户名单.csv")
+print(json.dumps({"m": [m["bytes"], m["codepoints"]], "fm56": [fm56["bytes"], fm56["codepoints"]]}))
+
+two_ok = {"id": "B11", "pass": 1, "__bucket__": "pass",
+          "answer_head": "fs.read：C:\\x\\fixture\\客户\\客户名单.csv ｜ 读到 %d 字节；"
+                         "fs.read：C:\\x\\fixture\\客户\\投诉.csv ｜ 读到 %d 字节"
+                         % (fm56["bytes"], m["bytes"]),
+          "trail": [{"tool": "fs.read", "path": "C:\\x\\fixture\\客户\\客户名单.csv"},
+                    {"tool": "fs.read", "path": "C:\\x\\fixture\\客户\\投诉.csv"}]}
+print("HEAD", json.dumps(two_ok["answer_head"], ensure_ascii=False))
+print("SEGS", json.dumps([(k, t, rel) for k, t, s, rel in R.receipt_segments(two_ok["answer_head"])],
+                         ensure_ascii=False))
+two_bad = dict(two_ok)
+tgt = "客户名单.csv ｜ 读到 %d" % fm56["bytes"]
+print("REPLACE_HIT", tgt in two_ok["answer_head"])
+two_bad["answer_head"] = two_ok["answer_head"].replace(tgt, "客户名单.csv ｜ 读到 %d" % m["bytes"])
+print("BAD", json.dumps(R.metrics_claims([two_bad], R.TASKS_ALL), ensure_ascii=False))
+
+ghost = {"id": "B11", "pass": 2, "__bucket__": "pass",
+         "answer_head": "fs.read：C:\\x\\fixture\\客户\\不存在的.csv ｜ 读到 %d 字节" % m["bytes"],
+         "trail": [{"tool": "fs.read", "path": "C:\\x\\fixture\\客户\\投诉.csv"}]}
+print("GHOST_SEGS", json.dumps([(k, t, rel) for k, t, s, rel in R.receipt_segments(ghost["answer_head"])],
+                               ensure_ascii=False))
+print("GHOST", json.dumps(R.metrics_claims([ghost], R.TASKS_ALL), ensure_ascii=False))

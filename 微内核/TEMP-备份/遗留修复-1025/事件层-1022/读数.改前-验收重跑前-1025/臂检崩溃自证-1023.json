@@ -1,0 +1,98 @@
+{
+ "cases": [
+  {
+   "tag": "new-atexit",
+   "rc": 1,
+   "sec": 3,
+   "left": [],
+   "fired": true,
+   "tree_same": true,
+   "prev_md5_same": true,
+   "prev_bytes": 105,
+   "part_left": false,
+   "tail": [
+    "  File \"C:\\Users\\Admin\\AppData\\Local\\Temp\\arm-crash-selfcheck-1023\\new-atexit\\arm-tool-under-test.py\", line 480, in <module>",
+    "    raise RuntimeError(\"crash switch fired after writing mutant (ARMCHECK_CRASH_AFTER_MUTATE=1)\")",
+    "RuntimeError: crash switch fired after writing mutant (ARMCHECK_CRASH_AFTER_MUTATE=1)"
+   ]
+  },
+  {
+   "tag": "old-noexith",
+   "rc": 1,
+   "sec": 4,
+   "left": [
+    "allfam-10780"
+   ],
+   "fired": true,
+   "tree_same": true,
+   "prev_md5_same": false,
+   "prev_bytes": 0,
+   "part_left": false,
+   "tail": [
+    "  File \"C:\\Users\\Admin\\AppData\\Local\\Temp\\arm-crash-selfcheck-1023\\old-noexith\\arm-tool-under-test.py\", line 433, in <module>",
+    "    raise RuntimeError(\"crash switch fired after writing mutant (ARMCHECK_CRASH_AFTER_MUTATE=1)\")",
+    "RuntimeError: crash switch fired after writing mutant (ARMCHECK_CRASH_AFTER_MUTATE=1)"
+   ]
+  },
+  {
+   "tag": "prev-noatomic",
+   "rc": 1,
+   "sec": 3,
+   "left": [],
+   "fired": true,
+   "tree_same": true,
+   "prev_md5_same": false,
+   "prev_bytes": 0,
+   "part_left": false,
+   "tail": [
+    "  File \"C:\\Users\\Admin\\AppData\\Local\\Temp\\arm-crash-selfcheck-1023\\prev-noatomic\\arm-tool-under-test.py\", line 452, in <module>",
+    "    raise RuntimeError(\"crash switch fired after writing mutant (ARMCHECK_CRASH_AFTER_MUTATE=1)\")",
+    "RuntimeError: crash switch fired after writing mutant (ARMCHECK_CRASH_AFTER_MUTATE=1)"
+   ]
+  }
+ ],
+ "checks": [
+  [
+   "新件：崩溃开关真接上线（不是恒不执行）",
+   true
+  ],
+  [
+   "新件：崩在变异窗口里，工作副本仍被 atexit 带走",
+   true
+  ],
+  [
+   "新件：真树 mtime+size 逐文件不变（臂只动 TEMP 副本）",
+   true
+  ],
+  [
+   "新件：崩掉后上一份读数一字未动（正式名只由 .part 替换）",
+   true
+  ],
+  [
+   "新件：崩掉后 读数/ 里没有 .part 半截件",
+   true
+  ],
+  [
+   "负对照：旧件同样的崩法必须留下副本（否则这条自证是空的）",
+   true
+  ],
+  [
+   "负对照：旧件也没写真树（破坏面本来就只在 TEMP）",
+   true
+  ],
+  [
+   "负对照：旧件把上一份读数截成 0 字节（这条牙确实是新长的）",
+   true
+  ],
+  [
+   "中间件（只有 atexit）：副本照样带走 ⇒ 清理与原子发布是两件事",
+   true
+  ],
+  [
+   "中间件（只有 atexit）：上一份读数仍被截成 0 字节 ⇒ 原子发布才是这一条的修法",
+   true
+  ]
+ ],
+ "tree": "C:/Users/Admin/Desktop/微内核/微内核/微内核",
+ "bad": 0
+}

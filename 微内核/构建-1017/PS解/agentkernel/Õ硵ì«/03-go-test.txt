@@ -1,0 +1,10 @@
+=== go test -p 1 -count=1 ./... ===
+ok  	agentkernel	0.920s
+ok  	agentkernel/cmd/kaudit	0.084s
+?   	agentkernel/cmd/kcheck	[no test files]
+?   	agentkernel/cmd/kresearch	[no test files]
+ok  	agentkernel/cmd/mcphttp	1.559s
+?   	agentkernel/cmd/mcpkernel	[no test files]
+ok  	agentkernel/mcpsrv	0.098s
+?   	agentkernel/tasks/probe/omitjournal	[no test files]
+退出码 0

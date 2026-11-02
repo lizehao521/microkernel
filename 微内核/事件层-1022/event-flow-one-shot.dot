@@ -1,0 +1,32 @@
+digraph agentd_event_flow_one_shot {
+  rankdir=TB;
+  fontname="Segoe UI";
+  labelloc=t;
+  label="一发之内的事件序（目标态）\n左边=今天代码里的真实调用点，右边=该发的事件；seq 单调，absent 必带 why\n出处见 evidence.md；本图描述计划态，不是现状";
+
+  node [shape=box, style="rounded,filled", fontsize=11, fontname="Segoe UI", fillcolor="#eef3f8"];
+  edge [fontsize=10, fontname="Segoe UI"];
+
+  req   [label="请求入口\nmain.go 旗标 → run{}", fillcolor="#dff0e2"];
+  a     [label="① seq=1 turn_accepted\nsession/turn/计划/上限/停止入口/resumable", style="rounded,filled,dashed", color="#134d7a", fillcolor="#e3ecf7"];
+  b     [label="② kernel.check_call\nloop.go:173（预检，不调就不落）", fillcolor="#dff0e2"];
+  c     [label="③ step_started / precheck\nevidence=measured", style="rounded,filled,dashed", color="#134d7a", fillcolor="#e3ecf7"];
+  d     [label="④ kernel.record_call\nloop.go:189（整发落账）", fillcolor="#dff0e2"];
+  e     [label="⑤ kernel.read_back\nloop.go:293/335/484（那条回边）", fillcolor="#dff0e2"];
+  f     [label="⑥ r.decide → 账上 fail_kind 指向的动作\nloop.go:316｜KPI 在这一格才 +1", fillcolor="#dff0e2"];
+  g     [label="⑦ step_finished\nstate=ok/failed/refused/absent + why + elapsed_ms", style="rounded,filled,dashed", color="#134d7a", fillcolor="#e3ecf7"];
+  h     [label=">10s 无新事件 → progress_tick(done/total) 或 why_late", style="rounded,filled,dashed", color="#134d7a", fillcolor="#e3ecf7"];
+  i     [label="abort / stop → turn_interrupted\nloop.go:124/130", style="rounded,filled,dashed", color="#134d7a", fillcolor="#e3ecf7"];
+  j     [label="closeOut（loop.go:591）→ turn_settled\n停在哪 / 已发生(各档计数+理由) / 没发生(未走到的步)", style="rounded,filled,dashed", color="#134d7a", fillcolor="#e3ecf7"];
+  k     [label="checkpoint 落盘 loop.go:533\n→ exitOf 六态 main.go:109", fillcolor="#dff0e2"];
+
+  req -> a -> b -> c -> d -> e -> f -> g -> k;
+  g -> h [label="慢的那一发", style="dashed", color="#134d7a"];
+  h -> i [style="dashed", color="#134d7a"];
+  i -> j [style="dashed", color="#134d7a"];
+  j -> k;
+  b -> i [label="预检拒也算一步，不许静默", style="dashed", color="#8a6d1f"];
+
+  note [label="三条反臂（臂必须是叶子）\n· 把 ① 挪到 ② 之后 ⇒ 顺序针红\n· 关掉 -read-back ⇒ KPI 必须掉回 0\n· 结算里补一条没走的步 ⇒ 补步针红", shape=note, fillcolor="#fdf6e3", fontsize=10];
+  j -> note [style=invis];
+}

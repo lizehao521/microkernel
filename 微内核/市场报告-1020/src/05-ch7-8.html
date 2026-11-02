@@ -1,0 +1,193 @@
+<!-- ================= CH 7 ================= -->
+<section class="chapter" id="ch7">
+  <div class="chap-kicker">Chapter 07</div>
+  <h1><span class="num">07</span>推荐路线与五道闸</h1>
+
+  <div class="chap-q">
+    <b>问题：</b>D + A 先行走多远？什么读数出现时必须停？B 到底要等到哪一步？
+  </div>
+
+  <h2>7.1 四条原则</h2>
+  <ol>
+    <li><b>先证据，后收入。</b>没有外部复核的证据包，不进入销售。</li>
+    <li><b>先附着，后替代。</b>接入现有 trace / eval，不做另一个平台。</li>
+    <li><b>先私有，后托管。</b>当前只做本地 / VPC 证据包；托管按次不做。</li>
+    <li><b>先证伪，后承诺。</b>每个阶段都写“什么读数出现就停”，不写“预计会成功”。</li>
+  </ol>
+
+  <h2>7.2 三个阶段与交付物</h2>
+  <p>
+    <b>阶段 D（第 1–6 周）：研究出版。</b>发布《Agent 执行 → 项目记录 → 二次修改》报告、R/N 协议、负结果与证据包规范草案。
+    目标不是流量，是 3 个外部评审意见、1 个愿意做 POC 的团队、1 个真实触发（事故复盘 / 审计 / 行为变更）。
+  </p>
+  <p>
+    <b>阶段 A（第 7–14 周）：开源证据适配层。</b>发布 OTel / LangSmith / Langfuse 适配器、证据包模板、10 例失败样本。
+    目标是 3 个非作者团队各自产出 1 个证据包，并完成 1 次可复核修改；不是 star 数，也不是下载量。
+  </p>
+  <p>
+    <b>阶段 B（第 19–26 周）：企业私有化。</b>只在 Gate 1.5 与 Gate 2 都通过后启动。交付 VPC / 本地部署、SBOM、DPA、责任边界与安全审查材料；
+    目标是 2 封 LOI + 1 次安全审查 + 1 个付费试点。阶段 B 不追求“多客户”，追求“第一个能续费的客户”。
+  </p>
+
+  <h2 id="s7-2">7.3 五道闸：Go / No-Go</h2>
+  <table class="tbl">
+    <caption><b>表 8</b> 五道闸：通过条件、失败动作与读数来源</caption>
+    <thead><tr><th style="width:12%">闸</th><th style="width:10%">时间</th><th style="width:40%">通过条件</th><th>失败动作</th></tr></thead>
+    <tbody>
+      <tr><td><b>G0</b> 需求</td><td>第 30 天</td><td>10 次访谈；≥3 个真实触发；≥1 个 POC 志愿者；≥1 个预算科目</td><td>补访谈；不写销售材料</td></tr>
+      <tr><td><b>G1</b> 交付</td><td>第 60 天</td><td>非作者真人 ≤60 分钟产出 1 个证据包并完成 1 次修改；拒收被计数；链自洽；`sk-` 0 次；调用方模型代码 0 改动</td><td>修适配层；不开放下载</td></tr>
+      <tr class="em-row"><td><b>G1.5</b> 增量</td><td>第 90 天</td><td>10 例 R/N 双臂：R 臂留出集通过率 ≥ N 臂 + 20 个百分点；假修复率不高于 N 臂；反臂 A/B 按预期失败或拒绝</td><td><b>冻结为研究资产</b>，不进入 B</td></tr>
+      <tr><td><b>G2</b> 采购</td><td>第 120 天</td><td>2 封 LOI；1 次安全审查通过；SBOM / DPA / 责任边界齐备</td><td>降级为咨询 / 研究合作</td></tr>
+      <tr><td><b>G3</b> 续费</td><td>第 180 天</td><td>≥3 家付费 ≥1 万美元，或 ≥5 家付费试点；至少 1 家续费 / 转正</td><td>停止扩张；保留 1–2 个深度客户</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn">
+    <div class="t">G1.5 是本报告最硬的一条</div>
+    <p>
+      它不测“客户喜不喜欢”，只测“看记录再改”是否比“不看记录直接改”更好。如果 R 臂没有增量，说明价值来自外部验证器，不是记录；
+      此时应把产品收窄为“验证器 + 轻量记录”，而不是继续卖“记录驱动改进”。G1.5 失败一次可以修协议再跑一次；连续两次失败就冻结。
+    </p>
+  </div>
+
+  <figure>
+    <div class="pad">
+      <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="进入决策树">
+        <rect x="0" y="0" width="760" height="400" fill="#ffffff"/>
+        <defs><marker id="a2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#64748b"/></marker></defs>
+        <g font-size="11" text-anchor="middle">
+          <rect x="40" y="45" width="120" height="52" rx="8" fill="#ccfbf1" stroke="#0f766e" stroke-width="2"/>
+          <text x="100" y="68" fill="#0f766e" font-weight="700">D 研究出版</text>
+          <text x="100" y="86" fill="#0f766e">3 评审 / 1 POC</text>
+          <rect x="200" y="45" width="120" height="52" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+          <text x="260" y="68" fill="#1e40af" font-weight="700">A 开源适配层</text>
+          <text x="260" y="86" fill="#1e40af">3 团队证据包</text>
+          <rect x="360" y="45" width="120" height="52" rx="8" fill="#f8fafc" stroke="#64748b"/>
+          <text x="420" y="68" fill="#334155" font-weight="700">G1 交付</text>
+          <text x="420" y="86" fill="#334155">60 分钟 / 1 修改</text>
+          <rect x="520" y="45" width="120" height="52" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+          <text x="580" y="68" fill="#92400e" font-weight="700">G1.5 增量</text>
+          <text x="580" y="86" fill="#92400e">10 例 R/N</text>
+          <rect x="520" y="170" width="120" height="52" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+          <text x="580" y="193" fill="#166534" font-weight="700">B 私有化</text>
+          <text x="580" y="211" fill="#166534">G2 LOI + 安全</text>
+          <rect x="520" y="295" width="120" height="52" rx="8" fill="#dcfce7" stroke="#16a34a"/>
+          <text x="580" y="318" fill="#166534" font-weight="700">G3 续费</text>
+          <text x="580" y="336" fill="#166534">≥1 家续费</text>
+          <rect x="300" y="295" width="140" height="52" rx="8" fill="#fee2e2" stroke="#dc2626"/>
+          <text x="370" y="318" fill="#991b1b" font-weight="700">冻结 / 收窄</text>
+          <text x="370" y="336" fill="#991b1b">研究资产 C</text>
+        </g>
+        <g stroke="#64748b" stroke-width="1.6" fill="none" marker-end="url(#a2)">
+          <line x1="160" y1="71" x2="195" y2="71"/>
+          <line x1="320" y1="71" x2="355" y2="71"/>
+          <line x1="480" y1="71" x2="515" y2="71"/>
+          <line x1="580" y1="97" x2="580" y2="165"/>
+          <line x1="580" y1="222" x2="580" y2="290"/>
+          <line x1="520" y1="196" x2="445" y2="310"/>
+        </g>
+        <text x="480" y="150" font-size="10" fill="#64748b">G1.5 过</text>
+        <text x="455" y="255" font-size="10" fill="#64748b">G1.5 不过</text>
+        <text x="580" y="268" font-size="10" fill="#64748b">G2 过</text>
+      </svg>
+    </div>
+    <figcaption><b>图 6</b> 决策树：D → A → G1 → G1.5 → B → G2 → G3。G1.5 不过，直接冻结或收窄，不进入私有化。</figcaption>
+  </figure>
+
+  <h2>7.4 停止条件与退出</h2>
+  <ul>
+    <li><b>G1 连续两次不过：</b>停止开源推广，回到适配层与样本质量；不做销售。</li>
+    <li><b>G1.5 连续两次不过：</b>冻结为研究资产 C；保留报告与规范，不保留商业承诺。</li>
+    <li><b>G2 没有 LOI：</b>降级为咨询 / 研究合作；不做私有化产线。</li>
+    <li><b>G3 没有续费：</b>停止扩张；保留 1–2 个深度客户，转做定制证据包。</li>
+  </ul>
+
+  <h2>7.5 未来 7 天做什么</h2>
+  <ul class="checklist">
+    <li>发布研究报告与 R/N 协议草案；邀请 3 个外部评审，不买流量。</li>
+    <li>建 `evidence/` 模板：账本、原像、版本、拒收日志、外部验证结果。</li>
+    <li>从现有报告挑 10 个失败样本 + 10 个留出样本，冻结清单。</li>
+    <li>写 G1.5 的预注册判据：主指标、假修复率、盲评方式、反臂 A/B。</li>
+    <li>做一次内部 dry run：非作者同事 60 分钟产出证据包；记录卡点。</li>
+    <li>准备 3 个复盘工作坊问题，不做产品演示。</li>
+    <li>把“闭环 / 30 分钟 / 防线 / 合规认证”四个词从对外材料里删掉。</li>
+  </ul>
+
+  <h2>7.6 前六个月不要做</h2>
+  <table class="tbl">
+    <thead><tr><th style="width:34%">不要做</th><th>原因</th></tr></thead>
+    <tbody>
+      <tr><td>托管按次服务</td><td>隐私、留存、运维成本高；与定位冲突</td></tr>
+      <tr><td>合规认证声明</td><td>第 12 条是记录义务，不是认证；说错会失去信任</td></tr>
+      <tr><td>“闭环已通”叙事</td><td>R/N 未跑；严格双臂 FAIL</td></tr>
+      <tr><td>“30 分钟接入”承诺</td><td>非作者真人未验证；改为 60 分钟证据包目标</td></tr>
+      <tr><td>给 v1 加字段</td><td>v1 冻结；版本/拒收放链外，避免破坏判据表</td></tr>
+      <tr><td>投放 / 买流量</td><td>类别未验证；先换外部复核与真实使用</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ================= CH 8 ================= -->
+<section class="chapter" id="ch8">
+  <div class="chap-kicker">Chapter 08</div>
+  <h1><span class="num">08</span>定价与单位经济</h1>
+
+  <div class="chap-q">
+    <b>问题：</b>证据包按什么计价？为什么不能按 seat / span / token？单位经济在什么条件下成立？
+  </div>
+
+  <h2>8.1 计价单位：证据包，不是调用量</h2>
+  <p>
+    可观测性平台按 seat、span 或数据量计价 [16][17][19][20]；评测平台按 experiment / 样本量计价 [18]。
+    证据包的价值不在“记录了多少”，而在“能不能支撑一次修改、能不能回滚、能不能对外披露”。因此计价单位应是
+    <b>“每年证据包订阅”</b>或<b>“每次可复核修改”</b>，而不是 seat / span / token。按调用量卖，会把证据层拉进可观测性的价格战；
+    按人头卖，会把价值锚在“人头”而不是“风险”。
+  </p>
+
+  <h2>8.2 价格梯子</h2>
+  <table class="tbl">
+    <caption><b>表 9</b> 价格梯子（C 级规划值，不是报价单）</caption>
+    <thead><tr><th style="width:18%">层级</th><th style="width:22%">价格</th><th style="width:30%">包含</th><th>适用</th></tr></thead>
+    <tbody>
+      <tr><td><b>社区版</b></td><td>免费</td><td>适配器 + 证据包模板 + 单机账本</td><td>个人 / 开源项目 / 评估</td></tr>
+      <tr><td><b>团队版</b></td><td>1.5–3.0 万美元 / 年</td><td>3–5 个证据包 / 月；邮件支持；升级</td><td>已有 trace 的 AI 平台团队</td></tr>
+      <tr><td><b>证据包版</b></td><td>4–8 万美元 / 年</td><td>私有化部署；SBOM / DPA；安全审查；季度复盘</td><td>受监管 / 高事故成本</td></tr>
+      <tr><td><b>试点</b></td><td>3–5 千美元 / 6 周</td><td>1 个场景；1 个证据包；1 次修改复盘</td><td>G2 前的付费验证</td></tr>
+      <tr><td><b>支持加购</b></td><td>1–2 万美元 / 年</td><td>专属支持；审计陪同；每季演练</td><td>证据包版客户</td></tr>
+    </tbody>
+  </table>
+
+  <h2>8.3 单位经济：支持天数是生死线</h2>
+  <p>
+    证据包不是纯软件：私有化部署、安全审查、审计陪同都要人力。按团队版 ARPU 1.8 万美元、年支持 3 天、每天成本 800 美元估算，
+    COGS 约 2,400 美元，毛利率约 87%；证据包版 ARPU 6 万美元、年支持 10 天、每天 800 美元，COGS 约 8,000 美元，毛利率约 87%。
+    如果支持天数翻倍，毛利率会掉到 75% 以下；如果客户要求 7×24 响应，单位经济不成立。
+  </p>
+  <table class="tbl">
+    <thead><tr><th>指标</th><th class="num">团队版</th><th class="num">证据包版</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>ARPU / 年</td><td class="num">18,000</td><td class="num">60,000</td><td>C 级假设</td></tr>
+      <tr><td>支持天数 / 年</td><td class="num">3</td><td class="num">10</td><td>部署 + 审计陪同</td></tr>
+      <tr><td>COGS / 年</td><td class="num">2,400</td><td class="num">8,000</td><td>800 / 天</td></tr>
+      <tr><td>毛利率</td><td class="num">87%</td><td class="num">87%</td><td>不含 CAC</td></tr>
+      <tr><td>CAC</td><td class="num">9,000</td><td class="num">20,000</td><td>内容 + 工作坊 + 试点</td></tr>
+      <tr><td>回本周期</td><td class="num">≈7 个月</td><td class="num">≈5 个月</td><td>按毛利计</td></tr>
+      <tr><td>年流失</td><td class="num">15%</td><td class="num">10%</td><td>私有化粘性更高</td></tr>
+      <tr><td>LTV（毛利 / 流失）</td><td class="num">≈104,000</td><td class="num">≈522,000</td><td>不含支持扩容</td></tr>
+    </tbody>
+  </table>
+
+  <h2>8.4 定价风险与规则</h2>
+  <ul>
+    <li><b>平台捆绑：</b>可观测性平台把证据功能打包，价格被压到“功能价”；对策是卖“跨平台 + 可披露 + 可回滚”，不卖单点功能。</li>
+    <li><b>买家拿日志存储比价：</b>证据包不是存储；报价时把“一次事故复盘的成本”作为锚，不用 GB 单价。</li>
+    <li><b>采购上限：</b>团队版落在 2 万美元以内，绕过部分审批；证据包版走安全预算。</li>
+    <li><b>折扣纪律：</b>试点可以打折，年度不送私有化；不做终身买断。</li>
+  </ul>
+
+  <h2>8.5 定价结论</h2>
+  <p>
+    价格锚在“证据”，不在“量”。团队版 1.5–3.0 万美元 / 年负责获客；证据包版 4–8 万美元 / 年负责收入；试点 3–5 千美元 / 6 周负责验证。
+    如果客户只愿意按 span 付费，说明他买的是可观测性，不是证据包；这类客户应转给平台，不进入销售漏斗。
+  </p>
+</section>

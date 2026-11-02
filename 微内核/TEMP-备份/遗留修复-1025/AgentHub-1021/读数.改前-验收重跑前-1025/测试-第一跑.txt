@@ -1,0 +1,62 @@
+=== RUN   TestRegistryRejectsDuplicateAndBadSpec
+--- PASS: TestRegistryRejectsDuplicateAndBadSpec (0.00s)
+=== RUN   TestParamValidationUnknownKeyAndType
+--- PASS: TestParamValidationUnknownKeyAndType (0.00s)
+=== RUN   TestGatesRefuseBeforeCalling
+--- PASS: TestGatesRefuseBeforeCalling (0.02s)
+=== RUN   TestNetPrecheckCountsZeroAttempts
+--- PASS: TestNetPrecheckCountsZeroAttempts (0.01s)
+=== RUN   TestRetryBackoffAndNoRetryClasses
+--- PASS: TestRetryBackoffAndNoRetryClasses (0.09s)
+=== RUN   TestDegradeMarksItsSource
+--- PASS: TestDegradeMarksItsSource (0.09s)
+=== RUN   TestMemoryAcrossProcessAndReference
+--- PASS: TestMemoryAcrossProcessAndReference (0.01s)
+=== RUN   TestAskInsteadOfInventingArgs
+--- PASS: TestAskInsteadOfInventingArgs (0.00s)
+=== RUN   TestWindowDropIsVisible
+--- PASS: TestWindowDropIsVisible (0.01s)
+=== RUN   TestSaneJudgeBitesEachLie
+=== RUN   TestSaneJudgeBitesEachLie/成功却一次也没试
+=== RUN   TestSaneJudgeBitesEachLie/absent没理由
+=== RUN   TestSaneJudgeBitesEachLie/没成却署了measured
+=== RUN   TestSaneJudgeBitesEachLie/成了却没读数
+=== RUN   TestSaneJudgeBitesEachLie/端点没配却说模型说的
+=== RUN   TestSaneJudgeBitesEachLie/署名不认识
+=== RUN   TestSaneJudgeBitesEachLie/五档加总不等
+=== RUN   TestSaneJudgeBitesEachLie/空收口
+=== RUN   TestSaneJudgeBitesEachLie/降级没写来处
+--- PASS: TestSaneJudgeBitesEachLie (0.04s)
+    --- PASS: TestSaneJudgeBitesEachLie/成功却一次也没试 (0.00s)
+    --- PASS: TestSaneJudgeBitesEachLie/absent没理由 (0.00s)
+    --- PASS: TestSaneJudgeBitesEachLie/没成却署了measured (0.00s)
+    --- PASS: TestSaneJudgeBitesEachLie/成了却没读数 (0.00s)
+    --- PASS: TestSaneJudgeBitesEachLie/端点没配却说模型说的 (0.00s)
+    --- PASS: TestSaneJudgeBitesEachLie/署名不认识 (0.01s)
+    --- PASS: TestSaneJudgeBitesEachLie/五档加总不等 (0.00s)
+    --- PASS: TestSaneJudgeBitesEachLie/空收口 (0.00s)
+    --- PASS: TestSaneJudgeBitesEachLie/降级没写来处 (0.00s)
+=== RUN   TestJudgeNameMustBeInRoster
+--- PASS: TestJudgeNameMustBeInRoster (0.24s)
+=== RUN   TestRealTurnsStaySelfConsistent
+--- PASS: TestRealTurnsStaySelfConsistent (1.47s)
+=== RUN   TestCrossTurnJudgeCatchesBrokenChain
+--- PASS: TestCrossTurnJudgeCatchesBrokenChain (0.01s)
+=== RUN   TestManifestToolRunsForReal
+--- PASS: TestManifestToolRunsForReal (0.07s)
+=== RUN   TestBadManifestIsRejectedNotSilent
+--- PASS: TestBadManifestIsRejectedNotSilent (0.00s)
+=== RUN   TestSSEEndToEndEventsAndToolVisualization
+--- PASS: TestSSEEndToEndEventsAndToolVisualization (0.01s)
+=== RUN   TestExecRunAcceptsBothSlicesAndRefusesEmpty
+--- PASS: TestExecRunAcceptsBothSlicesAndRefusesEmpty (0.01s)
+=== RUN   TestConcurrentTurnIsRefusedNotInterleaved
+--- PASS: TestConcurrentTurnIsRefusedNotInterleaved (0.72s)
+=== RUN   TestEvalExprShapes
+--- PASS: TestEvalExprShapes (0.00s)
+=== RUN   TestFsGuardBlocksEscape
+--- PASS: TestFsGuardBlocksEscape (0.00s)
+=== RUN   TestManifestWithTriggersIsPickedByLocalPlanner
+--- PASS: TestManifestWithTriggersIsPickedByLocalPlanner (0.07s)
+PASS
+ok  	hubd	2.893s

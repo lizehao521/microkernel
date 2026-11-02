@@ -1,0 +1,9 @@
+证据模型核对 · event-layer.evidence.json（回盘可解析）
+节点 29 ｜ 边 19 ｜ sourceRefs 80 ｜ 解析失败 0 ｜ 悬空边 0 ｜ id 重复 0
+状态分布：current 22 ｜ target 7（target 允许无代码证据，但必须标 target 且 confidence ≤ low）
+
+臂：A1 塞一条不存在的 sourceRef → 有效（抓到了）
+臂：A2 塞一条端点悬空的边 → 有效（抓到了）
+臂：A3 把一个 target 节点改标成 current → 有效（抓到了）
+
+结论：80 条 sourceRefs 全部回盘可解析，端点闭合，状态口径合规，且三条臂都能红。

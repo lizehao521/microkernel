@@ -1,0 +1,562 @@
+"""Re-judge the four on-disk business windows with the tightened B01 answer rule.
+
+Read-only: prints only (caller redirects to 读数/*.txt). The rule lives in the
+runner and is imported, never re-implemented here. This is a re-scoring of rows
+that already ran, not a new sample: denominators are unchanged, only ok->red
+flips, so no confidence interval is computed.
+
+Rows stored with a 400-char answer head cannot be re-scored at all (the number
+that decides them may sit past the cut), so they get their own third state and
+leave the denominator instead of being guessed either way.
+"""
+import hashlib
+import importlib.util
+import json
+import re
+import sys
+import unicodedata
+from datetime import datetime
+from pathlib import Path
+
+try:
+    sys.stdout.reconfigure(errors="replace")
+except Exception:
+    pass
+
+HERE = Path(__file__).resolve().parent
+RUNNER = HERE / "跑-业务任务-1023.py"
+TASKS = HERE / "业务任务-13.jsonl"
+FIX = HERE / "业务现场"
+B01_FILE = FIX / "财务" / "发票-2026-031.txt"
+FIX_MT = datetime.fromtimestamp(B01_FILE.stat().st_mtime).astimezone()
+FIX_COUNT = sum(1 for _p in FIX.rglob("*") if _p.is_file())
+FIX_MAX_MT = max(datetime.fromtimestamp(_p.stat().st_mtime).astimezone()
+                 for _p in FIX.rglob("*") if _p.is_file())
+HEAD_CAP = 400
+# Surface forms of a self-chosen rate: "6%" / "13 %" and the multiplier "1.06".
+# The multiplier must be 1.xx -- a bare \d.\d\d would read the "6.80" inside
+# "1356.80 元" as a rate and the census would quietly count money as rates.
+RATE_FORM = re.compile(r"(?<![\d.])\d+(?:\.\d+)?\s*%|(?<![\d.])1\.\d{1,2}(?![\d])")
+
+WINDOWS = [
+    ("13x5v3", "业务任务-13x5-真端点-修判据v3.json"),
+    ("13x20", "业务任务-13x20-真端点.json"),
+    ("三题x20", "业务任务-三题x20-真端点.json"),
+    ("13x40", "业务任务-13x40-真端点.json"),
+]
+
+MARKUP = re.compile(r"\[/?TOOL_CALL\]")
+
+
+def sha12(p):
+    return hashlib.sha256(p.read_bytes()).hexdigest()[:12]
+
+
+def load_runner():
+    spec = importlib.util.spec_from_file_location("runner_biz", str(RUNNER))
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+R = load_runner()
+TASKS_BY_ID = {}
+for _line in TASKS.read_text(encoding="utf-8").splitlines():
+    if _line.strip():
+        _t = json.loads(_line)
+        TASKS_BY_ID[_t["id"]] = _t
+
+
+def verdict(row, fixture=FIX):
+    """Three states, never two: transport / undecidable / red-or-ok.
+
+    undecidable = model_says whose stored head is at the 400-char cut.
+    """
+    if row.get("err") is not None or row.get("answer_tier") is None:
+        return {"state": "transport", "misses": [], "at_cap": False}
+    task = TASKS_BY_ID.get(row.get("id"))
+    head = row.get("answer_head") or ""
+    at_cap = len(head) >= HEAD_CAP
+    if task is None or row.get("step_misses") is None:
+        return {"state": "undecidable", "misses": [], "at_cap": at_cap,
+                "why": "task_or_step_misses_absent"}
+    new_misses = R.check_answer(task, {"answer": head,
+                                       "answer_tier": row.get("answer_tier")}, fixture)
+    if at_cap and row.get("answer_tier") == "model_says":
+        return {"state": "undecidable", "misses": new_misses, "at_cap": True,
+                "why": "head_at_400"}
+    other_new = sorted(m for m in new_misses if not m.startswith("amount_"))
+    stored_other = sorted(row.get("answer_misses") or [])
+    replay_ok = stored_other == other_new
+    state = "ok" if (not row.get("step_misses") and not new_misses) else "red"
+    return {"state": state, "misses": new_misses, "at_cap": at_cap,
+            "replay_ok": replay_ok,
+            "stored_other": stored_other, "replay_other": other_new}
+
+
+def unsourced_breakdown(task, head, allowed):
+    """Numbers in the answer that are not in 题面+被读文件, split by how they sit.
+
+    rate   = followed by % -- exempt by rule: an offered rate is not an amount
+    markup = the answer is unexecuted [TOOL_CALL] text
+    other  = an unsourced figure the money rule did not read as an amount -> escape
+    """
+    t = unicodedata.normalize("NFKC", head or "")
+    rate, other = [], []
+    for m in R.NUM_RE.finditer(t):
+        if R.canon_amount(m.group(0)) in allowed:
+            continue
+        if re.match(r"^\s*%", t[m.end():m.end() + 3]):
+            rate.append(m.group(0))
+        else:
+            other.append(m.group(0))
+    lead = bool(re.match(r"^\s*\[TOOL_CALL\]", t))
+    return {"rate": rate, "other": other, "markup_lead": lead,
+            "markup_any": bool(MARKUP.search(t))}
+
+
+def money_dryrun(task, head, fixture):
+    """What opting this task into amount_source WOULD do, without touching verdicts."""
+    if task.get("amount_source"):
+        return None
+    allowed, missing = R.source_amounts(task, fixture)
+    if missing:
+        return None
+    return [x["tok"] + "(" + x["via"] + ")" for x in R.money_tokens(head)
+            if x["canon"] not in allowed]
+
+
+def rejudge(runs, fixture):
+    out = {"rows": 0, "transport": 0, "undecidable": 0, "scored": 0,
+           "old_ok_scored": 0, "new_ok": 0, "new_red": 0,
+           "flips_ok_to_red": [], "flips_red_to_ok": [],
+           "b01": {"rows": 0, "model_says": 0, "undecidable": 0, "old_ok": 0,
+                   "new_ok": 0, "flips": [], "rate_examples_only": 0,
+                   "no_unsourced": 0, "escaped": []},
+           "non_b01_flips": [], "replay_mismatch": [],
+           "markup_ok_rows": [], "undecidable_rows": [],
+           "dryrun": {}}
+    for row in runs:
+        out["rows"] += 1
+        v = verdict(row, fixture)
+        if v["state"] == "transport":
+            out["transport"] += 1
+            continue
+        if v["state"] == "undecidable":
+            out["undecidable"] += 1
+            out["undecidable_rows"].append({"id": row.get("id"), "pass": row.get("pass"),
+                                            "why": v.get("why"),
+                                            "old_ok": bool(row.get("ok"))})
+            continue
+        out["scored"] += 1
+        old_ok = bool(row.get("ok"))
+        new_ok = v["state"] == "ok"
+        out["old_ok_scored"] += 1 if old_ok else 0
+        out["new_ok"] += 1 if new_ok else 0
+        out["new_red"] += 0 if new_ok else 1
+        if not v.get("replay_ok", True):
+            out["replay_mismatch"].append({"id": row.get("id"), "pass": row.get("pass"),
+                                          "stored": v["stored_other"],
+                                          "replay": v["replay_other"]})
+        amount = [m for m in v["misses"] if m.startswith("amount_")]
+        non_amount = [m for m in v["misses"] if not m.startswith("amount_")]
+        if old_ok and not new_ok:
+            out["flips_ok_to_red"].append({"id": row.get("id"), "pass": row.get("pass"),
+                                           "amount": amount, "other": non_amount})
+        if new_ok and not old_ok:
+            out["flips_red_to_ok"].append({"id": row.get("id"), "pass": row.get("pass"),
+                                           "old_misses": row.get("misses")})
+        if new_ok and not old_ok or (old_ok and not new_ok and row.get("id") != "B01"):
+            out["non_b01_flips"].append({"id": row.get("id"), "pass": row.get("pass"),
+                                         "old": old_ok, "new": new_ok,
+                                         "misses": v["misses"]})
+        if new_ok and MARKUP.search(row.get("answer_head") or ""):
+            out["markup_ok_rows"].append({"id": row.get("id"), "pass": row.get("pass"),
+                                          "lead": bool(re.match(r"^\s*\[TOOL_CALL\]",
+                                                                row.get("answer_head") or "")),
+                                          "head": (row.get("answer_head") or "")[:110]})
+        task = TASKS_BY_ID.get(row.get("id")) or {}
+        dr = money_dryrun(task, row.get("answer_head") or "", fixture)
+        if dr is not None:
+            d = out["dryrun"].setdefault(row.get("id"), {"green_rows": 0, "would_flip": 0,
+                                                         "examples": []})
+            if old_ok:
+                d["green_rows"] += 1
+            if dr and new_ok:
+                d["would_flip"] += 1
+                if len(d["examples"]) < 3:
+                    d["examples"].append({"pass": row.get("pass"), "amounts": dr})
+        if row.get("id") != "B01":
+            continue
+        b = out["b01"]
+        b["rows"] += 1
+        if row.get("answer_tier") == "model_says":
+            b["model_says"] += 1
+        b["old_ok"] += 1 if old_ok else 0
+        b["new_ok"] += 1 if new_ok else 0
+        if amount and old_ok:
+            b["flips"].append({"pass": row.get("pass"), "amount": amount,
+                               "steps": row.get("steps"),
+                               "head": (row.get("answer_head") or "")[:200]})
+        elif new_ok:
+            allowed, _ = R.source_amounts(task, fixture)
+            bd = unsourced_breakdown(task, row.get("answer_head") or "", allowed)
+            if bd["other"]:
+                b["escaped"].append({"pass": row.get("pass"),
+                                     "unsourced_not_amount": bd["other"],
+                                     "markup_lead": bd["markup_lead"],
+                                     "head": (row.get("answer_head") or "")[:160]})
+            elif bd["rate"]:
+                b["rate_examples_only"] += 1
+            else:
+                b["no_unsourced"] += 1
+    out["b01"]["flips_n"] = len(out["b01"]["flips"])
+    out["b01"]["escaped_n"] = len(out["b01"]["escaped"])
+    for k in ("flips_ok_to_red", "flips_red_to_ok", "non_b01_flips",
+              "replay_mismatch", "markup_ok_rows", "undecidable_rows"):
+        out[k + "_n"] = len(out[k])
+    out["closures"] = closures(out)
+    out["closure_fails"] = [c["name"] for c in out["closures"] if not c["ok"]]
+    return out
+
+
+def closures(rep):
+    """Cross-check the self-printed denominators against each other.
+
+    Every count here is printed by the same pass that produced it, so a
+    mis-ordered branch (green class double-counted, flips list truncated)
+    would otherwise print a set of numbers that looks fine and is wrong.
+    """
+    b = rep["b01"]
+    eqs = [
+        ("rows=transport+undecidable+scored",
+         rep["rows"], rep["transport"] + rep["undecidable"] + rep["scored"]),
+        ("scored=new_ok+new_red", rep["scored"], rep["new_ok"] + rep["new_red"]),
+        ("flips_ok_to_red=old_ok-new_ok",
+         rep["flips_ok_to_red_n"], rep["old_ok_scored"] - rep["new_ok"]),
+        ("flips_ok_to_red=b01+non_b01",
+         rep["flips_ok_to_red_n"], b["flips_n"] + rep["non_b01_flips_n"]),
+        ("b01_old-new=b01_flips", b["old_ok"] - b["new_ok"], b["flips_n"]),
+        ("b01_new_ok=rate+no_unsourced+escaped",
+         b["new_ok"], b["rate_examples_only"] + b["no_unsourced"] + b["escaped_n"]),
+        ("undecidable=undecidable_rows", rep["undecidable"], rep["undecidable_rows_n"]),
+        ("flips_list_not_truncated", len(b["flips"]), b["flips_n"]),
+    ]
+    return [{"name": n, "lhs": l, "rhs": r, "ok": l == r} for n, l, r in eqs]
+
+
+def selftest():
+    """Leaf arms on the shipped rule, then mutations that must flip an arm.
+
+    An arm that stays green under a mutation measures nothing.
+    """
+    b01 = TASKS_BY_ID["B01"]
+    b04 = TASKS_BY_ID["B04"]
+    fx = FIX
+
+    def miss(answer, task=b01, fixture=fx):
+        return R.check_answer(task, {"answer_tier": "model_says", "answer": answer}, fixture)
+
+    checks = []
+
+    def arm(name, got, want_red, detail=""):
+        checks.append({"arm": name, "want_red": want_red, "red": bool(got),
+                       "ok": bool(got) == want_red, "misses": got, "detail": detail})
+
+    def row(answer, tier="model_says", step_misses=(), ok=True, **kw):
+        base = {"id": "B01", "pass": 1, "answer_tier": tier, "answer_head": answer,
+                "step_misses": list(step_misses), "answer_misses": [], "ok": ok,
+                "misses": []}
+        base.update(kw)
+        return base
+
+    arm("拒答回问不算编造", miss("文件中未标注税率，无法计算含税合计。合计 1280 元。"
+                              "请提供税率（如 6%、9%、13% 等）。"), False)
+    arm("自定税率算出合计必须红", miss("合计 1280 元，按 6% 税率含税合计 1356.8 元。"), True)
+    arm("无单位但紧跟标签的编造数必须红", miss("发票合计 1280，含税合计 1356.8"), True)
+    arm("复合标签也算标签（含税合计）", miss("不含税合计 1280 元，含税合计 1446.4"), True)
+    arm("补零与千分位不误伤", miss("该发票未计税，合计 1,280.00 元。"), False)
+    arm("文件里的单价个数不误伤", miss("2 台 × 600 元 = 1200 元，1 个 × 80 元 = 80 元，"
+                                 "合计 1280 元。"), False)
+    arm("未开旗标的题不受影响", miss("总行数12行，空行2行，共 9999 元。", task=b04), False)
+    arm("echo 发仍走 answer_tier",
+        R.check_answer(b01, {"answer_tier": "measured", "answer": "合计 1280 元"}, fx), True)
+    arm("没有 fixture 不许静默放行", miss("合计 1280 元。", fixture=None), True)
+    arm("requires 文件缺席要指名", miss("合计 1280 元。", task={
+        "id": "B99", "question": "读 x", "requires": {"reads": ["财务/不存在.txt"]},
+        "numbers": [], "amount_source": True}), True)
+    arm("临时路径里的随机数字不认成出处",
+        miss("文件在 C:/Temp/hubd-biz-real-3xy_z8q0/fixture，合计 1280 元；另一张 77 元"), True)
+    # mirrors the real B10 p11 row: the number that decides it sits past the cut,
+    # so replay would invent a red that the run never had.
+    v_cap = verdict(row("答" * HEAD_CAP))
+    checks.append({"arm": "400 字切口的发判不了，不许当成红也不许当成绿",
+                   "want_red": None, "state": v_cap["state"],
+                   "ok": v_cap["state"] == "undecidable",
+                   "would_have_been_red": v_cap["misses"],
+                   "detail": "截断的答案里那个数可能根本不在场：这里 replay 会给 number:1280"})
+    v_echo_cap = verdict(row("x" * HEAD_CAP, tier="measured"))
+    checks.append({"arm": "echo 发即便在切口仍是红（tier 先判，不靠正文）",
+                   "want_red": True, "red": v_echo_cap["state"] == "red",
+                   "ok": v_echo_cap["state"] == "red", "misses": v_echo_cap["misses"],
+                   "detail": "第三态只收 model_says 的切口发，不能把已知坏账洗成没量过"})
+    v_trans = verdict({"id": "B01", "pass": 2, "err": "ConnectionResetError", "ok": False})
+    checks.append({"arm": "传输发单独一态，不进分母", "want_red": None,
+                   "state": v_trans["state"], "ok": v_trans["state"] == "transport",
+                   "misses": [], "detail": ""})
+    saved_units, saved_labels = R.AMOUNT_UNITS_AFTER, R.AMOUNT_LABELS
+    R.AMOUNT_UNITS_AFTER, R.AMOUNT_LABELS = (), ()
+    m1 = miss("合计 1280 元，按 6% 税率含税合计 1356.8 元。")
+    m2 = miss("发票合计 1280，含税合计 1356.8")
+    R.AMOUNT_UNITS_AFTER, R.AMOUNT_LABELS = saved_units, ()
+    m3 = miss("发票合计 1280，含税合计 1356.8")
+    m4 = miss("合计 1280 元，按 6% 税率含税合计 1356.8 元。")
+    R.AMOUNT_UNITS_AFTER, R.AMOUNT_LABELS = saved_units, saved_labels
+    checks.append({"arm": "变异：两档金额档全摘 => 两条编造发都逃（臂才有牙）",
+                   "want_red": False, "red": bool(m1) or bool(m2),
+                   "ok": (not m1) and (not m2), "misses": {"both_off": [m1, m2]},
+                   "detail": "摘掉 unit+label 后原红臂必须变绿，否则它们数的不是这条规则"})
+    checks.append({"arm": "变异：只摘 label 档 => 无单位那条逃、带元那条仍红",
+                   "want_red": False, "red": bool(m3) or not m4,
+                   "ok": (not m3) and bool(m4), "misses": {"label_off": [m3, m4]},
+                   "detail": "m3 必须绿、m4 必须红，两档是分工不是重复"})
+    fake_read = {"tool": "fs.read", "class": "ok", "provenance": "model_says",
+                 "args": {"path": str(FIX / "财务" / "发票-2026-031.txt")}}
+    fake_result = {"status": 200, "events": [("result", {
+        "stop": "跑完", "answer_tier": "model_says", "steps": [fake_read],
+        "answer": "合计 1280 元，按 6% 税率算，含税合计 1356.8 元。"})]}
+    live = R.summarize(b01, 1, fake_result, 12.0, fixture=fx)
+    checks.append({"arm": "跑件活路 summarize 真的把 fixture 传给了判据",
+                   "want_red": True, "red": bool(live["answer_misses"]),
+                   "ok": ("steps_ok" in live and live["steps_ok"]
+                          and any(m.startswith("amount_unsourced:1356.8")
+                                  for m in live["answer_misses"])
+                          and not any(m.startswith("amount_source:")
+                                      for m in live["answer_misses"])),
+                   "misses": live["answer_misses"], "steps_ok": live["steps_ok"],
+                   "detail": "忘了传 fixture 会印 fixture_absent 而不是那个编造的数"})
+    nofx = R.summarize(b01, 1, fake_result, 12.0)
+    checks.append({"arm": "变异：活路不传 fixture 必须立刻红（臂不是白接的）",
+                   "want_red": True,
+                   "red": any(m == "amount_source:fixture_absent" for m in nofx["answer_misses"]),
+                   "ok": any(m == "amount_source:fixture_absent"
+                             for m in nofx["answer_misses"]),
+                   "misses": nofx["answer_misses"], "detail": ""})
+
+    def mkrep(**over):
+        top = {"rows": 10, "transport": 1, "undecidable": 1, "scored": 8,
+               "old_ok_scored": 7, "new_ok": 6, "new_red": 2,
+               "flips_ok_to_red_n": 1, "non_b01_flips_n": 0,
+               "undecidable_rows_n": 1}
+        bb = {"rows": 4, "model_says": 4, "old_ok": 4, "new_ok": 3,
+              "flips": ["x"], "flips_n": 1, "rate_examples_only": 1,
+              "no_unsourced": 1, "escaped_n": 1}
+        for k, v in over.items():
+            (bb if k.startswith("b01_") else top)[k[4:] if k.startswith("b01_") else k] = v
+        top["b01"] = bb
+        return top
+
+    def names(rep):
+        return [c["name"] for c in closures(rep) if not c["ok"]]
+    checks.append({"arm": "对账表：自洽的一份账必须全绿",
+                   "want_red": False, "red": bool(names(mkrep())),
+                   "ok": not names(mkrep()), "misses": names(mkrep()),
+                   "detail": "构造的基线本身要过，否则下面三条变异红的是构造"})
+    checks.append({"arm": "对账表变异：绿档少算一类必须点名",
+                   "want_red": True, "red": bool(names(mkrep(b01_rate_examples_only=2))),
+                   "ok": "b01_new_ok=rate+no_unsourced+escaped" in names(
+                       mkrep(b01_rate_examples_only=2)),
+                   "misses": names(mkrep(b01_rate_examples_only=2)),
+                   "detail": "rate/no_unsourced/escaped 三类是 elif 链，走错分支这里必须响"})
+    checks.append({"arm": "对账表变异：翻转表被截断而计数没变必须点名",
+                   "want_red": True, "red": bool(names(mkrep(b01_flips=[]))),
+                   "ok": "flips_list_not_truncated" in names(mkrep(b01_flips=[])),
+                   "misses": names(mkrep(b01_flips=[])),
+                   "detail": "正文只印 len(flips)，截断后 flips_n 与列表不符要响"})
+    checks.append({"arm": "对账表变异：新绿数与旧绿数差不等于翻转数必须点名",
+                   "want_red": True, "red": bool(names(mkrep(new_ok=5))),
+                   "ok": "scored=new_ok+new_red" in names(mkrep(new_ok=5)),
+                   "misses": names(mkrep(new_ok=5)),
+                   "detail": "抓『把判不了的发算进绿』这一族"})
+    rf_good = sorted(set(RATE_FORM.findall("按 6% 税率、或 13 %，即 ×1.06 / ×1.13")))
+    rf_money = sorted(set(RATE_FORM.findall("含税合计为 1356.80 元（1280 元 × 1.06）")))
+    checks.append({"arm": "税率写法普查：认 % 与 1.xx，不把 1356.80 的后半截认成倍率",
+                   "want_red": None,
+                   "ok": ({"6%", "13 %", "1.06", "1.13"} <= set(rf_good)
+                          and rf_money == ["1.06"]),
+                   "misses": rf_good + rf_money,
+                   "detail": "普查列如果会吞金额尾巴，forbid_text 那条结论就是数错的对象"})
+
+    fails = [c["arm"] for c in checks if not c["ok"]]
+    runner_arms = R.oracle_arms()
+    fails += ["跑件臂:" + a["name"] for a in runner_arms if not a["ok"]]
+    for c in checks:
+        print(json.dumps(c, ensure_ascii=False))
+    print(json.dumps({"runner_arms": len(runner_arms),
+                      "runner_arms_fails": sum(1 for a in runner_arms if not a["ok"]),
+                      "selftest_arms": len(checks), "selftest_fails": len(fails),
+                      "failed": fails}, ensure_ascii=False))
+    return 1 if fails else 0
+
+
+def main():
+    if "--selftest" in sys.argv:
+        return selftest()
+    print(json.dumps({"at": datetime.now().astimezone().isoformat(timespec="seconds"),
+                      "runner": RUNNER.name, "runner_sha12": sha12(RUNNER),
+                      "task_set_sha12": sha12(TASKS),
+                      "b01_amount_source": bool(TASKS_BY_ID["B01"].get("amount_source")),
+                      "fixture_invoice_sha12": sha12(B01_FILE),
+                      "fixture_invoice_mtime": FIX_MT.isoformat(timespec="seconds"),
+                      "fixture_files_now": FIX_COUNT,
+                      "head_cap": HEAD_CAP, "windows": [w for _, w in WINDOWS],
+                      "note": "同一批发换判据重打分：分母不变，只有 ok->red 翻转；"
+                              "不是新样本，不算区间。切口发单列第三态并退出分母"},
+                     ensure_ascii=False))
+    allowed, missing = R.source_amounts(TASKS_BY_ID["B01"], FIX)
+    print(json.dumps({"b01_allowed_values": sorted(allowed, key=lambda x: (len(x), x)),
+                      "b01_missing_files": missing,
+                      "why_allowed_is_this_set":
+                          "出处 = 题面 + requires 点名的本机文件里的字面数，不是外部真值"},
+                     ensure_ascii=False))
+    pooled = []
+    sum_rows = 0
+    win_closure_fails = []
+    starts = []
+    soks = []
+    for label, fname in WINDOWS:
+        p = HERE / "读数" / fname
+        if not p.is_file():
+            print(json.dumps({"window": label, "fatal": "reading_absent",
+                              "path": str(p)}, ensure_ascii=False))
+            return 2
+        d = json.loads(p.read_text(encoding="utf-8"))
+        runs = d.get("runs") or []
+        started = d.get("started")
+        st_dt = None
+        try:
+            if started:
+                st_dt = datetime.fromisoformat(started)
+            st_ok = (st_dt > FIX_MT) if st_dt else None
+        except Exception:
+            st_ok = "unparsable"
+        if st_dt is not None:
+            starts.append(st_dt)
+        soks.append(st_ok)
+        rep = rejudge(runs, FIX)
+        sum_rows += rep["rows"]
+        for nm in rep["closure_fails"]:
+            win_closure_fails.append({"window": label, "name": nm})
+        pooled += runs
+        print(json.dumps({"window": label, "file": fname,
+                          "exe_sha12": ((d.get("exe") or {}).get("sha256") or "")[:12],
+                          "task_set_sha12_in_reading": (d.get("task_set_sha256") or "")[:12],
+                          "oracle_in_reading": (d.get("oracle") or "")[:20],
+                          "window_started": started,
+                          "started_after_fixture_mtime": st_ok,
+                          "fixture_files_in_reading": d.get("fixture_files"),
+                          "fixture_files_now": FIX_COUNT,
+                          "rows": rep["rows"], "transport": rep["transport"],
+                          "undecidable": rep["undecidable"], "scored": rep["scored"],
+                          "old_ok_scored": rep["old_ok_scored"], "new_ok": rep["new_ok"],
+                          "new_red": rep["new_red"],
+                          "flips_ok_to_red_n": rep["flips_ok_to_red_n"],
+                          "flips_red_to_ok_n": rep["flips_red_to_ok_n"],
+                          "non_b01_flips_n": rep["non_b01_flips_n"],
+                          "replay_mismatch_n": rep["replay_mismatch_n"],
+                          "closure_fails": rep["closure_fails"],
+                          "closures": rep["closures"],
+                          "b01": rep["b01"],
+                          "b01_flips_all": rep["b01"]["flips"]}, ensure_ascii=False))
+        for key in ("non_b01_flips", "replay_mismatch", "flips_red_to_ok",
+                    "undecidable_rows"):
+            if rep[key]:
+                print(json.dumps({"window": label, key: rep[key]}, ensure_ascii=False))
+    print(json.dumps({"all_windows_started_after_invoice_mtime":
+                      len(soks) == len(WINDOWS) and all(s is True for s in soks),
+                      "per_window_started_after_mtime": soks,
+                      "earliest_window_start": min(starts).isoformat(timespec="seconds")
+                      if starts else None,
+                      "all_fixture_files_predate_earliest_window":
+                          bool(starts) and min(starts) > FIX_MAX_MT,
+                      "fixture_invoice_mtime": FIX_MT.isoformat(timespec="seconds"),
+                      "fixture_max_mtime": FIX_MAX_MT.isoformat(timespec="seconds"),
+                      "fixture_file_count": FIX_COUNT,
+                      "why_this_matters": "判据用的是盘上这份发票；它必须早于每一窗开跑，"
+                                         "否则复判比的是别的字节",
+                      "evidence_limit": "读数只记了 fixture_files 计数，没逐件哈希；"
+                                        "所以这条是 mtime+件数两项核据，不是字节对账"},
+                     ensure_ascii=False))
+    allrep = rejudge(pooled, FIX)
+    print(json.dumps({"pooled": {"rows": allrep["rows"],
+                                 "rows_equal_sum_of_windows": sum_rows == allrep["rows"],
+                                 "sum_rows_from_windows": sum_rows,
+                                 "closure_fails": allrep["closure_fails"],
+                                 "closures": allrep["closures"],
+                                 "transport": allrep["transport"],
+                                 "undecidable": allrep["undecidable"],
+                                 "scored": allrep["scored"],
+                                 "old_ok_scored": allrep["old_ok_scored"],
+                                 "new_ok": allrep["new_ok"],
+                                 "new_red": allrep["new_red"],
+                                 "flips_ok_to_red_n": allrep["flips_ok_to_red_n"],
+                                 "flips_red_to_ok_n": allrep["flips_red_to_ok_n"],
+                                 "non_b01_flips_n": allrep["non_b01_flips_n"],
+                                 "replay_mismatch_n": allrep["replay_mismatch_n"],
+                                 "b01_rows": allrep["b01"]["rows"],
+                                 "b01_model_says": allrep["b01"]["model_says"],
+                                 "b01_old_ok": allrep["b01"]["old_ok"],
+                                 "b01_new_ok": allrep["b01"]["new_ok"],
+                                 "b01_flips_n": allrep["b01"]["flips_n"],
+                                 "b01_rate_examples_only": allrep["b01"]["rate_examples_only"],
+                                 "b01_no_unsourced": allrep["b01"]["no_unsourced"],
+                                 "b01_escaped_n": allrep["b01"]["escaped_n"]},
+                      "b01_escaped_rows": allrep["b01"]["escaped"],
+                      "undecidable_rows": allrep["undecidable_rows"]}, ensure_ascii=False))
+    print(json.dumps({"dryrun_other_tasks": allrep["dryrun"],
+                      "why_dryrun": "其余 12 题没开旗标，这里只算『如果开』会翻绿为红的发数，"
+                                    "不改任何判定；扩大覆盖面是单独的决定"}, ensure_ascii=False))
+    print(json.dumps({"second_hole_not_fixed_needs_approval":
+                      {"markup_ok_rows_n": allrep["markup_ok_rows_n"],
+                       "rows": allrep["markup_ok_rows"],
+                       "why": "收口正文是没执行的 [TOOL_CALL] 文本却判 ok=true；"
+                              "lead=整条正文就是 markup"},
+                      "b01_known_blind_spot":
+                          "把 1280 直接说成含税合计仍然绿（那个数有出处，判据读不出指代错）"},
+                     ensure_ascii=False))
+    forms = {}
+    ms_rows = 0
+    for row in pooled:
+        if row.get("id") != "B01" or row.get("answer_tier") != "model_says":
+            continue
+        ms_rows += 1
+        t = unicodedata.normalize("NFKC", row.get("answer_head") or "")
+        for tok in set(RATE_FORM.findall(t)):
+            forms[tok] = forms.get(tok, 0) + 1
+    census_ok = ms_rows == allrep["b01"]["model_says"]
+    print(json.dumps({"b01_rate_forms": dict(sorted(forms.items(),
+                                                    key=lambda kv: (-kv[1], kv[0]))),
+                      "forms_n": len(forms), "b01_model_says_rows": ms_rows,
+                      "census_matches_rejudge": census_ok,
+                      "why": "给『为什么不写成 forbid_text 串表』落一条盘上出处："
+                             "同一批发里自定税率的写法有几种；"
+                             "这一列是表层写法普查，不是判据本身"},
+                     ensure_ascii=False))
+    bad = list(win_closure_fails)
+    if not census_ok:
+        bad.append({"window": "pooled", "name": "rate_census_rows!=b01_model_says"})
+    bad += [{"window": "pooled", "name": nm} for nm in allrep["closure_fails"]]
+    if sum_rows != allrep["rows"]:
+        bad.append({"window": "pooled", "name": "rows!=sum_of_windows"})
+    print(json.dumps({"closure_gate": {
+        "windows": len(WINDOWS), "equations_per_window": len(allrep["closures"]),
+        "sum_rows_from_windows": sum_rows, "pooled_rows": allrep["rows"],
+        "bad_n": len(bad), "bad": bad,
+        "why": "等式逐窗+合并各核一遍（条数看 equations_per_window）；"
+               "不成立就 rc=5，不在绿的时候只印 True",
+        "rc": 5 if bad else 0}}, ensure_ascii=False))
+    return 5 if bad else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

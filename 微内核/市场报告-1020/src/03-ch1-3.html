@@ -1,0 +1,235 @@
+<!-- ================= CH 1 ================= -->
+<section class="chapter" id="ch1">
+  <div class="chap-kicker">Chapter 01</div>
+  <h1><span class="num">01</span>为什么要重评</h1>
+
+  <div class="chap-q">
+    <b>问题：</b>v1 已经给出“D + A 先行、B 条件触发、C 不做、E 可选”。上一轮研究又证明“账本本身不构成闭环”。这两件事放在一起，原来的进入方式还成立吗？
+  </div>
+
+  <h2 id="s1-1">1.1 v1 的结论与它的前提</h2>
+  <p>
+    v1 的排序建立在三个前提上：第一，市场存在一个“可验证记账”的空位；第二，账本能把“谁做了什么”记清；第三，记录足以支撑一次二次修改。
+    前两个前提有本地读数支撑：账本 2,940 条、链 2,940/2,940 重算通过、49 格形状稳定 [27][30]。第三个前提在 v1 里是<strong>假设</strong>，不是实测。
+  </p>
+  <p>
+    v1 的严格双臂验收已经 FAIL：`declare_reader` 拒收六桶全 0，真人干净臂 NOT_RUN [27]。当时这被解释为“验收工具还没准备好”；现在看，问题更深一层：
+    即使验收工具准备好，账本也缺少产物原像、行为/判据版本与拒收计数，二次修改无法归因。v1 把“记录完整”当成了“记录足以支持修改”，这是 v2 要修正的核心。
+  </p>
+
+  <h2 id="s1-2">1.2 变了什么：从账本到证据包</h2>
+  <p>
+    上一轮研究（《Agent 执行 → 项目记录 → 二次修改》）给出的结论是：没有外部反馈时，LLM 的内在自省在推理任务上可能使表现下降 [34]；
+    可靠的自我纠正几乎都依赖测试、工具或人类反馈 [35]。从轨迹学习也一样：Agent Lightning 需要奖励或可验证结果 [38]，
+    ExpeL 依赖任务成败标签 [39]，AWM 的在线模式只从评估器判为正确的轨迹归纳 [41]，Voyager 只把环境验证过的技能入库 [42]。
+    共同点是：<strong>先有外部结果信号，再谈从记录学习</strong>。
+  </p>
+  <p>
+    本地记录面又恰好缺三样：产物原像、版本三元组、拒收计数。账本里没有产物内容，只有 60/60 个 `model_says_sha256` [30]；
+    没有行为/配置版本、判据版本、审阅者字段；`declare_reader` 只在内存里生效，声明被拒不会进账 [26]。
+    `read_back` 的描述承诺返回指纹，实现没有打印 [26]。`load_journal` 可以整本替换账本，`APPEND_ONLY` 默认关闭 [26]。
+    这意味着：账本可以证明“记录未被改”，但不能单独证明“这次修改有依据”。
+  </p>
+  <div class="callout">
+    <div class="t">因此，产品叙事必须换</div>
+    <p>
+      从“可验证记账内核”换成“<strong>可复核的二次修改证据</strong>”：账本只是证据包的一件，另外三件是产物原像、版本清单、外部验证器。
+      这不是加功能，而是加交付物；内核仍然不调度、不联网、不执行工具。
+    </p>
+  </div>
+
+  <h2 id="s1-3">1.3 重评问题与判据</h2>
+  <p>
+    重评问题不变：<b>以哪种方式面对市场</b>。但判据从“哪条路收入大”改成四条更硬的：
+  </p>
+  <ol>
+    <li><b>证据判据：</b>这条路能不能产出外部可复核的证据，而不只是内部读数？</li>
+    <li><b>预算判据：</b>买方有没有现成预算科目，还是要新开一个“AI 审计”科目？</li>
+    <li><b>交付判据：</b>能不能在不做托管、不接客户 prompt / 工具输出的前提下交付？</li>
+    <li><b>防守判据：</b>被平台复制时，还剩下什么是难复制的？</li>
+  </ol>
+  <p>
+    这四条判据会把五条路重新排一次。排序结果与 v1 相同，但理由和门槛不同：D 第一，是因为它先解决“证据判据”；A 第二，是因为它解决“交付判据”；
+    B 必须等“预算判据”和“证据判据”都过；C 违反“交付判据”；E 只解决传播，不解决前三条。
+  </p>
+</section>
+
+<!-- ================= CH 2 ================= -->
+<section class="chapter" id="ch2">
+  <div class="chap-kicker">Chapter 02</div>
+  <h1><span class="num">02</span>市场与定位</h1>
+
+  <div class="chap-q">
+    <b>问题：</b>“可验证记账”到底是独立市场，还是可观测性 / 评测 / 治理三个市场之间的一个功能？
+  </div>
+
+  <h2 id="s2-1">2.1 市场边界：记账层不是可观测性</h2>
+  <p>
+    可观测性回答“发生了什么”，评测回答“好不好”，治理回答“合不合规”。记账层回答的是另一个问题：
+    <b>这次修改凭什么发生、改的是哪一版、能不能回滚、能不能对外披露</b>。它需要可观测性的 trace 作为输入，但不是 trace 的替代品；
+    它需要评测的结果作为外部信号，但不是评测平台本身。
+  </p>
+  <table class="tbl">
+    <caption><b>表 2</b> 市场边界：计入什么、排除什么</caption>
+    <thead><tr><th style="width:22%">层级</th><th style="width:40%">计入本报告</th><th>排除</th></tr></thead>
+    <tbody>
+      <tr><td><b>Agent 执行记录</b></td><td>调用、工具、结果、缺席、依据、链完整性</td><td>模型内部推理、隐藏思维链</td></tr>
+      <tr><td><b>证据包</b></td><td>产物原像、行为/判据版本、拒收计数、外部验证结果</td><td>通用日志平台、SIEM 全量替代</td></tr>
+      <tr><td><b>审计/复核</b></td><td>二次修改的归因、回滚、对外披露</td><td>合规认证、法律意见、渗透测试</td></tr>
+      <tr><td><b>防线</b></td><td>不纳入</td><td>提示注入拦截、工具权限、运行时防护</td></tr>
+    </tbody>
+  </table>
+  <p>
+    这张边界表决定了一个关键判断：<b>agentkernel 不卖“安全”，卖“可复核”</b>。安全预算归 CISO，可复核预算归 AI 平台 / 安全工程 / 合规；
+    后者的金额更小，但采购链条更短，试用门槛更低。v1 把“审计层不是防线”写在边界里，v2 把它变成市场定位：不去抢防线预算，去抢证据预算。
+  </p>
+
+  <h2 id="s2-2">2.2 规模重算：为什么下调 SAM</h2>
+  <p>
+    TAM 仍按相邻口径估算：LLM 可观测性约 26.9 亿美元、AI TRiSM 约 30.9 亿美元，两者相邻但不相加，形成 27–31 亿美元的区间 [8][9]。
+    v1 假设 SAM 占 LLM 可观测性 8–12%、AI TRiSM 5–8%，得到 1.6–3.0 亿美元。v2 把占比下调到 3–6%，理由是：
+    记账/证据不是可观测性的主预算，而是主预算里的一个附加项；买方不会为“证据包”单独开一个和可观测性同量级的科目。
+  </p>
+  <p>
+    这样 SAM 约为 1.0–2.0 亿美元：LLM 可观测性 26.9 亿 × 3–6% = 0.8–1.6 亿；AI TRiSM 30.9 亿 × 3–6% = 0.9–1.9 亿；
+    取相邻区间 1.0–2.0 亿。SOM 按 SAM 的 0.5–2% 估算，三年为 0.5–4.0 百万美元；按 1.5–3.0 万美元 ARPU，对应约 17–267 个账户。
+    这些占比是 <span class="tag tag-c">C</span> 级规划假设，不是市场调查结论；v1 的 8–12% / 5–8% 同样是 C 级，v2 只是把假设调得更保守。
+  </p>
+
+  <figure>
+    <div class="pad">
+      <svg viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="修订后的市场层级">
+        <rect x="0" y="0" width="760" height="360" fill="#ffffff"/>
+        <text x="24" y="30" font-size="16" font-weight="700" fill="#0b1f33">修订后的市场层级（非等比示意）</text>
+        <rect x="24" y="52" width="712" height="270" rx="14" fill="#eef4f8" stroke="#b9c9d8"/>
+        <text x="44" y="80" font-size="13" font-weight="700" fill="#12314f">TAM 27–31 亿美元</text>
+        <text x="44" y="100" font-size="11" fill="#5b6b7f">LLM 可观测性 26.9 + AI TRiSM 30.9（相邻口径，非相加）</text>
+        <rect x="130" y="120" width="500" height="170" rx="12" fill="#dff3ef" stroke="#14b8a6"/>
+        <text x="150" y="148" font-size="13" font-weight="700" fill="#0f766e">SAM 1.0–2.0 亿美元</text>
+        <text x="150" y="168" font-size="11" fill="#3f5b6b">相邻市场 × 3–6%（v1 为 8–12% / 5–8%）</text>
+        <rect x="250" y="190" width="260" height="70" rx="10" fill="#fef3c7" stroke="#d97706"/>
+        <text x="270" y="218" font-size="13" font-weight="700" fill="#92400e">SOM 0.5–4.0 百万美元</text>
+        <text x="270" y="238" font-size="11" fill="#7c5a2a">三年，SAM × 0.5–2%</text>
+        <text x="736" y="330" font-size="10" fill="#7c8b9d" text-anchor="end">占比为 C 级规划假设；图形非等比，仅表达层级关系。</text>
+      </svg>
+    </div>
+    <figcaption><b>图 1</b> 修订后的市场层级。TAM 沿用 v1 的相邻口径；SAM 与 SOM 因“功能而非平台”的判断下调。<span class="figsrc">来源：v1 市场数据 [8][9]；v2 占比为 C 级假设。</span></figcaption>
+  </figure>
+
+  <table class="tbl">
+    <caption><b>表 3</b> 规模三路交叉（v2 口径）</caption>
+    <thead><tr><th>路径</th><th class="num">基数</th><th class="num">占比</th><th class="num">结果</th><th>用途</th></tr></thead>
+    <tbody>
+      <tr><td>LLM 可观测性</td><td class="num">26.9 亿美元</td><td class="num">3–6%</td><td class="num">0.8–1.6 亿美元</td><td>SAM 上界来源之一 [8]</td></tr>
+      <tr><td>AI TRiSM</td><td class="num">30.9 亿美元</td><td class="num">3–6%</td><td class="num">0.9–1.9 亿美元</td><td>SAM 下界来源之一 [9]</td></tr>
+      <tr><td>AI 治理</td><td class="num">—</td><td class="num">25–35%</td><td class="num">下界校验</td><td>防止 SAM 估高 [10]</td></tr>
+      <tr class="em-row"><td><b>SAM 取相邻区间</b></td><td class="num">—</td><td class="num">—</td><td class="num"><b>1.0–2.0 亿美元</b></td><td>本报告使用</td></tr>
+      <tr><td>SOM（三年）</td><td class="num">SAM</td><td class="num">0.5–2%</td><td class="num">0.5–4.0 百万美元</td><td>按 1.5–3 万美元 ARPU</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="s2-3">2.3 买家与预算科目</h2>
+  <p>
+    买家不是“AI 伦理委员会”，也不是“要买防线的 CISO”。最可能的买家是三类：
+    <b>AI 平台负责人</b>（要回答“这次行为变更为什么发生”）、<b>安全工程负责人</b>（要做事后取证与复盘）、<b>合规/风险负责人</b>（要留可审计的证据，但不负责认证）。
+    三者的共同点是：已经有 trace / eval 工具，缺的是“修改证据”，不是“再多一条日志”。
+  </p>
+  <table class="tbl">
+    <caption><b>表 4</b> 买家、触发与预算科目</caption>
+    <thead><tr><th style="width:18%">买家</th><th style="width:28%">触发</th><th style="width:24%">预算科目</th><th>不买的理由</th></tr></thead>
+    <tbody>
+      <tr><td><b>AI 平台负责人</b></td><td>Agent 行为变更后回归、无法归因</td><td>可观测性 / 评测</td><td>现有 trace 已够用；不想再加一个供应商</td></tr>
+      <tr><td><b>安全工程</b></td><td>事故复盘、内部审计、对外说明</td><td>安全工具 / 事件响应</td><td>认为“审计层不是防线”，不愿单独付费</td></tr>
+      <tr><td><b>合规 / 风险</b></td><td>EU AI Act 第 12 条、客户尽调、内部留痕</td><td>AI 治理 / 合规</td><td>要认证，不要工具；或已买治理平台</td></tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <div class="pad">
+      <svg viewBox="0 0 760 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="证据层在价值链中的位置">
+        <rect x="0" y="0" width="760" height="260" fill="#ffffff"/>
+        <g font-size="12" font-weight="700" text-anchor="middle">
+          <rect x="18" y="70" width="120" height="70" rx="8" fill="#e2e8f0" stroke="#94a3b8"/>
+          <text x="78" y="100" fill="#334155">Agent 运行时</text>
+          <text x="78" y="120" font-size="10" font-weight="400" fill="#64748b">调用 / 工具 / 产物</text>
+          <rect x="168" y="70" width="120" height="70" rx="8" fill="#dbeafe" stroke="#60a5fa"/>
+          <text x="228" y="100" fill="#1e40af">Trace / 可观测</text>
+          <text x="228" y="120" font-size="10" font-weight="400" fill="#3b5b8a">span / 日志 / 回放</text>
+          <rect x="318" y="70" width="120" height="70" rx="8" fill="#ede9fe" stroke="#a78bfa"/>
+          <text x="378" y="100" fill="#5b21b6">Eval / 实验</text>
+          <text x="378" y="120" font-size="10" font-weight="400" fill="#6d5a9c">数据集 / 基线</text>
+          <rect x="468" y="60" width="130" height="90" rx="8" fill="#f0fdfa" stroke="#0f766e" stroke-width="2.5"/>
+          <text x="533" y="92" fill="#0f766e">证据包</text>
+          <text x="533" y="112" font-size="10" font-weight="400" fill="#3f6b66">账本 + 原像</text>
+          <text x="533" y="128" font-size="10" font-weight="400" fill="#3f6b66">+ 版本 + 验证器</text>
+          <rect x="628" y="70" width="114" height="70" rx="8" fill="#fef3c7" stroke="#d97706"/>
+          <text x="685" y="100" fill="#92400e">审计 / 披露</text>
+          <text x="685" y="120" font-size="10" font-weight="400" fill="#8a6420">复盘 / 对外说明</text>
+        </g>
+        <g stroke="#0f766e" stroke-width="2" fill="none" marker-end="url(#ar)">
+          <line x1="138" y1="105" x2="162" y2="105"/>
+          <line x1="288" y1="105" x2="312" y2="105"/>
+          <line x1="438" y1="105" x2="462" y2="105"/>
+          <line x1="598" y1="105" x2="622" y2="105"/>
+        </g>
+        <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#0f766e"/></marker></defs>
+        <text x="533" y="178" font-size="10" text-anchor="middle" fill="#0f766e" font-weight="700">agentkernel 的位置：证据层，不是运行时，也不是防线</text>
+        <text x="380" y="225" font-size="10" text-anchor="middle" fill="#7c8b9d">输入来自 trace 与 eval；输出给审计、客户尽调与内部复盘。</text>
+      </svg>
+    </div>
+    <figcaption><b>图 2</b> 证据层在价值链中的位置。它消费 trace 与 eval 的输出，不替代两者；也不进入运行时拦截路径。</figcaption>
+  </figure>
+</section>
+
+<!-- ================= CH 3 ================= -->
+<section class="chapter" id="ch3">
+  <div class="chap-kicker">Chapter 03</div>
+  <h1><span class="num">03</span>需求与反需求</h1>
+
+  <div class="chap-q">
+    <b>问题：</b>什么事件会让买家真正需要“可复核的修改证据”？什么条件下需求会消失？
+  </div>
+
+  <h2>3.1 三个真实触发</h2>
+  <p>
+    <b>触发一：事故复盘。</b>Agent 执行了一次错误操作，团队要回答“它当时看到了什么、用了哪一版策略、谁批准了修改”。现有 trace 能回答“看到了什么”，不一定能回答“哪一版、谁批准、改了什么”。
+    A1 注入测试已经证明：链通过、内容仍可以是不可信的 [30]；复盘需要的不是更多 span，而是可追溯的修改证据。
+  </p>
+  <p>
+    <b>触发二：受监管审计。</b>EU AI Act 第 12 条要求高风险系统在全生命周期内技术上支持自动记录事件；第 26(6) 条要求部署方在其控制范围内保存日志，保存期与预期用途相称，至少六个月 [2][48]。
+    这类需求真实存在，但买家要的是“能交差的记录”，不是“又一个日志平台”；合规预算通常已经有主，证据层只能做附加项。
+  </p>
+  <p>
+    <b>触发三：行为变更与回归。</b>团队改了 prompt、路由或阈值，想知道“新版是不是真的更好”。这需要旧版与新版在同一留出集上的对比，以及“为什么改”的证据。
+    如果没有记录，第二次修改只能靠感觉；有了记录但没有外部验证器，第二次修改会退化成“照着记录再写一遍” [34][35]。
+  </p>
+
+  <h2>3.2 技术驱动：MCP 采用了，遥测没跟上</h2>
+  <p>
+    MCP 已成为 Agent 工具接入的常见协议 [14]；但遥测侧仍在演化：OpenTelemetry 的 GenAI 语义约定截至 2026-08 的公开资料仍标为 Development，
+    `gen_ai.system` 已在 semconv v1.37.0 起标记弃用、由 `gen_ai.provider.name` 取代 [15][50]。Microsoft Agent Framework 的敏感数据采集默认关闭，
+    prompt、响应、工具入参出参都要显式开启 [45]。这意味着：默认 trace 只是骨架，证据层必须自己补内容、补版本、补拒收。
+  </p>
+  <p>
+    这既是机会也是成本。机会是：平台还没把“证据包”做成标准；成本是：字段还在变，适配层要固定 semconv 版本并加映射。
+    v2 因此把 A 的交付物定为“适配层 + 证据包规范”，而不是“又一个 trace 后端”。
+  </p>
+
+  <h2>3.3 反需求：五件会让需求消失的事</h2>
+  <table class="tbl">
+    <thead><tr><th style="width:28%">反需求</th><th>为什么会让需求消失</th><th style="width:28%">应对</th></tr></thead>
+    <tbody>
+      <tr><td><b>失败率很低</b></td><td>没有二次修改，就没有证据需求</td><td>只盯高变更、高监管、高事故成本场景</td></tr>
+      <tr><td><b>现有日志“够用”</b></td><td>买家分不清 trace 与证据包，认为再加一层是浪费</td><td>用一次真实复盘演示“缺哪三样”</td></tr>
+      <tr><td><b>隐私与留存顾虑</b></td><td>不愿把 prompt / 工具输出交给第三方</td><td>只做私有化 / 本地证据包，不做托管</td></tr>
+      <tr><td><b>不想再加供应商</b></td><td>采购流程长，平台已绑定</td><td>做平台插件 / 适配层，不做替代</td></tr>
+      <tr><td><b>平台捆绑</b></td><td>LangSmith / Langfuse / Datadog 把证据功能打包进主产品</td><td>守住“可验证 + 可回滚 + 可披露”的深水区</td></tr>
+    </tbody>
+  </table>
+
+  <h2>3.4 需求结论</h2>
+  <p>
+    需求是真的，但窄：它依附于“事故复盘 / 受监管审计 / 行为变更”三个触发，不是一个独立的大科目。正确的进入方式不是教育市场“你需要一个记账内核”，
+    而是等买家已经在做复盘或审计时，告诉他“你缺的是这三样证据”。这也决定了销售动作：先做复盘工作坊，再卖证据包；先接入现有 trace，再谈替换。
+  </p>
+</section>

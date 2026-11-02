@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "C:\Users\Admin\Desktop\微内核\构建-1017\客服靶场\跑客服.py", line 31, in <module>
+    HOST, PORT, RPATH = _U.group(1), int(_U.group(2) or (443 if LLM_URL.startswith("https") else 80)), _U.group(3)
+                        ^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'group'

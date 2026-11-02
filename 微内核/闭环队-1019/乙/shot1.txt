@@ -1,0 +1,98 @@
+model_input:call	basis=1	payload=1
+model_input:parts	basis=1	payload=["system","skill","memory","history","toolspec","user"]
+model_input:part_totals	basis=1	payload=[{"Kind":"system","Parts":1,"Bytes":0},{"Kind":"skill","Parts":1,"Bytes":0},{"Kind":"memory","Parts":1,"Bytes":0},{"Kind":"history","Parts":1,"Bytes":0},{"Kind":"toolspec","Parts":1,"Bytes":0},{"Kind":"user","Parts":1,"Bytes":0}]
+model_input:content_bytes	basis=1	payload=0
+model_input:tokens	basis=5	payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"分词器在对端；且这一侧连 content_bytes 都没量到，估一个数没有依据"}
+model_input:call_bytes_ceiling	basis=1	payload=200000
+model_input:transport_slack_pct	basis=1	payload=15
+model_input:content_ceiling	basis=1	payload=170000
+model_input:effective_ceiling	basis=1	payload=170000
+model_input:clamp_rounds	basis=1	payload=0
+model_input:leftover_pct	basis=1	payload=0
+model_input:fixed_overhead	basis=5	payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"骨架字节要装配器数，模型这一侧数不到"}
+model_input:shares	basis=1	payload=["history=30","memory=10","skill=10","system=20","toolspec=10","user=20"]
+model_input:notice_sent	basis=1	payload=false
+model_input:notice_trimmed	basis=1	payload=false
+model_input:notice_why	basis=1	payload="这一发没有裁剪记录，也就没有要发的知情通知"
+model_input:notice_text	basis=1	payload=""
+model_input:folded	basis=1	payload=[]
+model_input:clipped	basis=1	payload=[]
+model_input:dropped	basis=1	payload=[]
+model_output:call	basis=1	payload=1
+model_output:streaming	basis=1	payload=false
+model_output:finish	basis=2	payload=""
+model_output:finish_said	basis=1	payload=false
+model_output:endpoint_model	basis=4	payload=""
+model_output:endpoint_model_said	basis=1	payload=false
+model_output:wire_format	basis=2	payload=""
+model_output:wire_format_said	basis=1	payload=false
+model_output:model_says_bytes	basis=1	payload=16622
+model_output:model_says_kept	basis=1	payload=16622
+model_output:model_says_clipped	basis=1	payload=false
+model_output:model_says_sha256	basis=1	payload="9deda46e1c36f47da8de9bae75c3b441a587c05b3f77d07ebdb7975a8c9ee1b7"
+model_output:usage_in	basis=5	payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"分词器在对端，这一趟外壳没把 usage 递到我这一侧"}
+model_output:usage_out	basis=5	payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"分词器在对端，这一趟外壳没把 usage 递到我这一侧"}
+model_output:wire_bytes_out	basis=5	payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"请求体字节是编码后数的，不在这次调用的可见面上"}
+model_output:wire_bytes_in	basis=5	payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"通道字节是传输层数的，不在这次调用的可见面上"}
+model_output:chunks	basis=5	payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"按非流式记，结构上没有分帧数"}
+model_output:first_byte_ms	basis=5	payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"按非流式记，结构上没有首帧等待"}
+model_output:max_gap_ms	basis=5	payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"按非流式记，结构上没有帧间静默"}
+model_output:tool_calls	basis=1	payload=28
+model_output:malformed_actions	basis=1	payload=1
+model_output:malformed_streak	basis=1	payload=1
+model_output:fail_kind	basis=1	payload=""
+model_output:fail_detail	basis=1	payload=""
+model_output:fail_status	basis=5	payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"没故障，也没有对端响应可抄状态码"}
+model_output:retry_after_ms	basis=5	payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"没故障，对端也没说要等多久"}
+model_output:downgrade	basis=1	payload=false
+model_output:sent	basis=1	payload="不知道发没发出去（没数到，不是 0）"
+model_output:cost_countable	basis=1	payload=false
+model_input:call	basis=1	payload=1
+model_input:parts	basis=1	payload=["system","skill","memory","history","toolspec","user"]
+model_input:part_totals	basis=1	payload=[{"Kind":"history","Parts":1,"Bytes":0},{"Kind":"memory","Parts":1,"Bytes":0},{"Kind":"skill","Parts":1,"Bytes":0},{"Kind":"system","Parts":1,"Bytes":0},{"Kind":"toolspec","Parts":1,"Bytes":0},{"Kind":"user","Parts":1,"Bytes":0}]
+model_input:content_bytes	basis=1	payload=0
+model_input:tokens	basis=5	payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"分词器在对端，这一侧连 content_bytes 都没量到，估一个数没有依据"}
+model_input:call_bytes_ceiling	basis=1	payload=200000
+model_input:transport_slack_pct	basis=1	payload=15
+model_input:content_ceiling	basis=1	payload=170000
+model_input:effective_ceiling	basis=1	payload=170000
+model_input:clamp_rounds	basis=1	payload=0
+model_input:leftover_pct	basis=1	payload=0
+model_input:fixed_overhead	basis=5	payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"骨架字节由外壳装配，模型这一侧数不到；没量到不是 0"}
+model_input:shares	basis=1	payload=["history=45","memory=5","skill=10","system=10","toolspec=15","user=15"]
+model_input:notice_sent	basis=1	payload=false
+model_input:notice_trimmed	basis=1	payload=false
+model_input:notice_why	basis=1	payload="未折叠未裁尾：整块原像直送，没有裁剪动作要知情"
+model_input:notice_text	basis=1	payload="整圈合并发：本发把主页生产+渲染验收+内核探型合为一条，未按轮拆分。输入侧 content_bytes / part_totals / budget 六格是裸整数，结构上不能表达缺席，账上的 0 是「没量到」不是「量到 0」；shares 与两级额度是策略数（我定的额度，不是端点给的）。"
+model_input:folded	basis=1	payload=[]
+model_input:clipped	basis=1	payload=[]
+model_input:dropped	basis=1	payload=[]
+model_output:call	basis=1	payload=1
+model_output:streaming	basis=1	payload=false
+model_output:finish	basis=2	payload=""
+model_output:finish_said	basis=1	payload=false
+model_output:endpoint_model	basis=4	payload=""
+model_output:endpoint_model_said	basis=1	payload=false
+model_output:wire_format	basis=2	payload=""
+model_output:wire_format_said	basis=1	payload=false
+model_output:model_says_bytes	basis=1	payload=18398
+model_output:model_says_kept	basis=1	payload=18398
+model_output:model_says_clipped	basis=1	payload=false
+model_output:model_says_sha256	basis=1	payload="4d8a22e6936db8dd58e3323b5ae36d91d0a07f9b2b863bc15f4146a2398a8c1d"
+model_output:usage_in	basis=5	payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"外壳没把 usage 递到我这一侧；没量到不是 0"}
+model_output:usage_out	basis=5	payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"外壳没把 usage 递到我这一侧；没量到不是 0"}
+model_output:wire_bytes_out	basis=5	payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"请求体字节是编码后数的，不在这次调用的可见面上"}
+model_output:wire_bytes_in	basis=5	payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"通道字节是传输层数的，不在这次调用的可见面上"}
+model_output:chunks	basis=5	payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"按非流式记：这一发结构上没有分帧数，写数就拒"}
+model_output:first_byte_ms	basis=5	payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"按非流式记：结构上没有首帧等待"}
+model_output:max_gap_ms	basis=5	payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"按非流式记：结构上没有帧间静默"}
+model_output:tool_calls	basis=1	payload=77
+model_output:malformed_actions	basis=1	payload=0
+model_output:malformed_streak	basis=1	payload=0
+model_output:fail_kind	basis=1	payload="transport"
+model_output:fail_detail	basis=1	payload="browser-use take_screenshot 返回 NATIVE_BROWSER_VIEWPORT_UNAVAILABLE：应用内浏览器 surface 隐藏（visibilityState=hidden，1000ms 内无正 viewport），像素层没取到图；结构验收改用 a11y snapshot + evaluate_script 代偿。另：一次 click 因弹层盖住目标被拒（页面状态，不是参数形状）"
+model_output:fail_status	basis=5	payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"本地工具面，没有对端响应码可拄"}
+model_output:retry_after_ms	basis=5	payload={"N":0,"Basis":0,"Source":"","Absent":true,"Refused":false,"Why":"不是限流类故障，对端没说要等多久"}
+model_output:downgrade	basis=1	payload=false
+model_output:sent	basis=1	payload="不知道发没发出去（没数到，不是 0）"
+model_output:cost_countable	basis=1	payload=false

@@ -1,0 +1,9 @@
+{"arm": "C1 not_reached 恒空（没走到的步骤不交）", "file": "cmd/agentd/loop.go", "test": "^TestInterruptDoesNotFabricateSteps$", "control_rc": 0, "mutant_rc": 1, "mutant_build_broken": false, "verdict": "BIT", "note": ""}
+{"arm": "C2 补步：所有相都算走过", "file": "cmd/agentd/loop.go", "test": "^TestInterruptSettlesWithinSecond$", "control_rc": 0, "mutant_rc": 1, "mutant_build_broken": false, "verdict": "BIT", "note": ""}
+{"arm": "C3 counts 不现数（人手打空表）", "file": "cmd/agentd/loop.go", "test": "^TestEveryTurnSettlesExactlyOnce$", "control_rc": 0, "mutant_rc": 1, "mutant_build_broken": false, "verdict": "BIT", "note": ""}
+{"arm": "C4 幂等守卫拆掉（一发可结多次）", "file": "cmd/agentd/loop.go", "test": "^TestSettleTurnIsIdempotent$", "control_rc": 0, "mutant_rc": 1, "mutant_build_broken": false, "verdict": "BIT", "note": ""}
+{"arm": "C5 打断不结算", "file": "cmd/agentd/loop.go", "test": "^TestInterruptSettlesWithinSecond$", "control_rc": 0, "mutant_rc": 1, "mutant_build_broken": false, "verdict": "BIT", "note": ""}
+{"arm": "C6 叫停原因被后发的覆盖", "file": "cmd/agentd/loop.go", "test": "^TestStopEntryIsSingleAndIdempotent$", "control_rc": 0, "mutant_rc": 1, "mutant_build_broken": false, "verdict": "BIT", "note": ""}
+{"arm": "C7 run 级 stop 写回散文", "file": "cmd/agentd/loop.go", "test": "^TestEventSeqMonotonicWithinEachTurn$", "control_rc": 0, "mutant_rc": 1, "mutant_build_broken": false, "verdict": "BIT", "note": ""}
+{"arm": "C8 结算类别散写没门禁", "file": "cmd/agentd/events.go", "test": "^TestSettlementArmsCatchEachBadShape$", "control_rc": 0, "mutant_rc": 1, "mutant_build_broken": false, "verdict": "BIT", "note": ""}
+{"arm": "C9 被打断也标成 completed", "file": "cmd/agentd/loop.go", "test": "^TestInterruptDoesNotFabricateSteps$", "control_rc": 0, "mutant_rc": 1, "mutant_build_broken": false, "verdict": "BIT", "note": ""}

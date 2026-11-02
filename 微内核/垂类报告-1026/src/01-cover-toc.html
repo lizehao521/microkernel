@@ -1,0 +1,107 @@
+<!-- ================= COVER + TOC ================= -->
+<section class="cover">
+  <div class="grid"></div>
+  <div class="glow"></div>
+  <div class="glow2"></div>
+  <div class="inner">
+    <div class="kicker">Delivery Reconciliation · Vertical Selection &amp; Product Design · V1</div>
+    <h1>把「做成了」<br><span class="thin">三个字拆成能回盘核的格子</span></h1>
+    <div class="sub">
+      底盘已经能逐条核对交付声明与盘上证据（三态 + 回执 + 退出码）。<br>
+      这一份报告不造工具，只回答两个问题：<strong>该把它推给哪一类买家</strong>，以及<strong>那一类的产品该长什么样</strong>。
+    </div>
+    <div class="object" data-date="2026-10-26">
+      研究对象：交付对账 1026（CLI + 桌面端 v2）· 判定日 2026-10-26 · 件种：文档件（本轮不改任何代码）
+    </div>
+    <div class="verdict">
+      <div class="lab">脚本重算的判定</div>
+      <div class="txt" data-scan="not_run">四个候选里，<strong>V1 甲方 AI 项目验收 / 终验收货裁决</strong>被冠「胜出」——它是唯一五维全有依据的一行。
+      <strong>原始分第一是 V4，但它只有 3/5 维有依据，被胜出资格线挡在门外</strong>；名次照原样印，不藏。
+      这不是一次市场发现：需求侧<strong>盘上是空的</strong>（访谈 0/10、试读 0/1、客户 0），
+      所以第 7 章给的是<strong>带条件的产品设计</strong>，不是可执行的销售计划。</div>
+    </div>
+    <table class="stats">
+      <tr>
+        <td><div class="v">V1</div><div class="l">脚本重算赢家<br>5/5 维有依据（名次 V4→V1→V3→V2）</div></td>
+        <td><div class="v">17/20</div><div class="l">评分格有依据<br>其余 3 格是「未判定」，不当 0</div></td>
+        <td data-scan="not_run"><div class="v">0/10</div><div class="l">G0 有效访谈<br>NOT_RUN，不是「市场没需求」</div></td>
+        <td data-scan="not_run"><div class="v">0/1</div><div class="l">非作者接入门实测<br>四个候选共同的前置闸</div></td>
+      </tr>
+    </table>
+  </div>
+  <div class="foot">
+    本报告不是合规意见、不是报价单、不是「符合某法规」的声明；<strong>三种规模数一律不产</strong>（理由与替身装置见第 1 章与附录 D）。
+    「30 分钟接入」是本族自己写进拒收码的禁用对外宣称，全文只作为<strong>待量的门</strong>出现。<br>
+    封面四个数都由脚本现数：前两格见 <code>读数/出表.txt</code> 与 <code>读数/文档核对.txt</code>，后两格见 <code>方法与分母-1026.md</code> §四 的缺口表。
+  </div>
+</section>
+
+<section class="toc-page">
+  <h1 class="toc-title">这份 v1 怎么读</h1>
+
+  <div class="callout warn">
+    <div class="t">先说三件会让读者不舒服的事，说完再讲别的</div>
+    <p data-scan="term"><strong>一、这份报告不给你规模数。</strong>它给的是「需求证据缺口表」——每一格是谁数的、属于哪一种「没有」、
+    能说什么不能说什么。上一族（1022）正因为把快照级规模数排版进了正文，一个判 UNSUPPORTED、一个一手根本取不到。</p>
+    <p><strong>二、胜出者是算出来的，不是挑出来的。</strong>四个候选、五计分维、权重与每格凭据全在
+    <code>数据/评分表.json</code>；<code>工具/出表.py</code> 出分，<code>工具/文档核对.py</code> 用同一件重算并逐字比渲染。
+    第 7 章的章名由脚本核对，等于赢家；赢家变了，那一章必须重写。</p>
+    <p data-scan="term"><strong>三、本报告的公开件里有六条是它自己推翻的。</strong>写作前那份提纲有四个说法是错的（误归因、错日期、
+    把机构间倡议读成创业公司、把不存在的话当成自述），逐条登记在 <code>数据/引用登记-1026.json</code> 的「反」档，附录 D 原样列出。
+    一份报告若没有「我错在哪」这一节，它的「有据」就不值这么多。</p>
+  </div>
+
+  <table class="toc">
+    <tr class="l1"><td><span class="tn">0</span>摘要：只记五句话</td><td class="pg" data-key="exec"></td></tr>
+    <tr class="l1"><td data-scan="term"><span class="tn">1</span>方法与分母：谁数的、哪一种「没有」</td><td class="pg" data-key="ch1"></td></tr>
+    <tr class="l2"><td>1.1 波次账：哪一波真跑了</td><td class="pg" data-key="s1-1"></td></tr>
+    <tr class="l2"><td data-scan="term">1.3 三种「没有」：普查 / 定向 / 未做</td><td class="pg" data-key="s1-3"></td></tr>
+    <tr class="l1"><td><span class="tn">2</span>需求证据缺口表</td><td class="pg" data-key="ch2"></td></tr>
+    <tr class="l2"><td>2.1 逐格读数与盘上出处</td><td class="pg" data-key="s2-1"></td></tr>
+    <tr class="l2"><td>2.2 N11 与 N12 的分工：本报告的承重墙</td><td class="pg" data-key="s2-2"></td></tr>
+    <tr class="l1"><td><span class="tn">3</span>本机底盘能证什么、不能证什么</td><td class="pg" data-key="ch3"></td></tr>
+    <tr class="l2"><td>3.1 只指路：读数件清单</td><td class="pg" data-key="s3-1"></td></tr>
+    <tr class="l2"><td>3.2 分辨力与它的边界</td><td class="pg" data-key="s3-2"></td></tr>
+    <tr class="l1"><td><span class="tn">4</span>评分尺：为什么是这五维</td><td class="pg" data-key="ch4"></td></tr>
+    <tr class="l1"><td><span class="tn">5</span>评分结果（本块由脚本生成）</td><td class="pg" data-key="ch5"></td></tr>
+    <tr class="l1"><td><span class="tn">6</span>撞车核对：逐条对照已关闭方向</td><td class="pg" data-key="ch6"></td></tr>
+    <tr class="l1"><td><span class="tn">7</span>胜出垂类的产品设计</td><td class="pg" data-key="ch7"></td></tr>
+    <tr class="l2"><td>7.1 交付对象：不是包，是一张挂尾款的裁决</td><td class="pg" data-key="s7-1"></td></tr>
+    <tr class="l2"><td>7.2 声明词表：13 种现有类型覆盖什么</td><td class="pg" data-key="s7-2"></td></tr>
+    <tr class="l2"><td>7.3 证据源：三源加第四源的规格</td><td class="pg" data-key="s7-3"></td></tr>
+    <tr class="l2"><td>7.4 语义真值由谁供</td><td class="pg" data-key="s7-4"></td></tr>
+    <tr class="l2"><td>7.5 回执件的合同与法务用法</td><td class="pg" data-key="s7-5"></td></tr>
+    <tr class="l2"><td>7.6 三条定价假设，各带证伪阈值</td><td class="pg" data-key="s7-6"></td></tr>
+    <tr class="l2"><td>7.7 闸门时序：哪一格红，整门就停</td><td class="pg" data-key="s7-7"></td></tr>
+    <tr class="l2"><td>7.8 本章仍是 NOT_RUN 的清单</td><td class="pg" data-key="s7-8"></td></tr>
+    <tr class="l1"><td><span class="tn">8</span>2026 年的付费语境与同车道</td><td class="pg" data-key="ch8"></td></tr>
+    <tr class="l2"><td>8.1 一句被反复重写的前提：卖方开始用买方的口吻写</td><td class="pg" data-key="s8-1"></td></tr>
+    <tr class="l2"><td>8.2 语境件清单：谁能上屏、谁只给方向</td><td class="pg" data-key="s8-2"></td></tr>
+    <tr class="l2"><td>8.3 一条相背证据：法律不要求账本</td><td class="pg" data-key="s8-3"></td></tr>
+    <tr class="l1"><td><span class="tn">9</span>试点周期、门与定价假设怎么量</td><td class="pg" data-key="ch9"></td></tr>
+    <tr class="l2"><td>9.1 每一道门要产出缺口表里的哪一格</td><td class="pg" data-key="s9-1"></td></tr>
+    <tr class="l2"><td>9.2 三条假设的观测口径与「量不到怎么办」</td><td class="pg" data-key="s9-2"></td></tr>
+    <tr class="l2"><td>9.3 价盘形状对照：审计日志被放在最高档</td><td class="pg" data-key="s9-3"></td></tr>
+    <tr class="l1"><td><span class="tn">10</span>风险登记与红队</td><td class="pg" data-key="ch10"></td></tr>
+    <tr class="l1"><td><span class="tn">11</span>结论（三态 + 条号）</td><td class="pg" data-key="ch11"></td></tr>
+    <tr class="l1"><td><span class="tn">A</span>引用分级登记（本块由脚本生成）</td><td class="pg" data-key="appA"></td></tr>
+    <tr class="l1"><td><span class="tn">B</span>NOT_RUN 与缺口全表</td><td class="pg" data-key="appB"></td></tr>
+    <tr class="l1"><td><span class="tn">C</span>复跑命令</td><td class="pg" data-key="appC"></td></tr>
+    <tr class="l1"><td><span class="tn">D</span>措辞红线与被推翻的说法</td><td class="pg" data-key="appD"></td></tr>
+  </table>
+</section>
+
+<section class="toc-page">
+  <h2 id="fig-index">图表索引</h2>
+  <table class="toc">
+    <tr class="l2"><td>图 1 一句声明怎么走完（第 1 章）</td><td class="pg" data-key="fig1"></td></tr>
+    <tr class="l2"><td>图 2 需求证据缺口表（第 2 章）</td><td class="pg" data-key="fig2"></td></tr>
+    <tr class="l2"><td>图 3 4×5 评分热矩阵，脚本生成（第 5 章）</td><td class="pg" data-key="fig3"></td></tr>
+    <tr class="l2"><td>图 4 已关闭方向地图（第 6 章）</td><td class="pg" data-key="fig4"></td></tr>
+    <tr class="l2"><td>图 5 语义真值来源链（7.4）</td><td class="pg" data-key="fig5"></td></tr>
+    <tr class="l2"><td>图 6 闸门时序与当前读数（7.7）</td><td class="pg" data-key="fig6"></td></tr>
+    <tr class="l2"><td>图 7 2026 同车道时间线（8.2）</td><td class="pg" data-key="fig7"></td></tr>
+  </table>
+  <p class="small">本页只列图，不列结论；每张图的数据层是同页或次页的表格，图上每个数都能在那张表里指认。</p>
+  <p class="small">全部计数以 <code>MANIFEST.txt</code> 与 <code>读数/*</code> 为准；本页与封面出现的每个数都指得上其中一发。</p>
+</section>

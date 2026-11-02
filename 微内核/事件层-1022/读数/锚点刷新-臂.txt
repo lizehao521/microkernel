@@ -1,0 +1,9 @@
+MISSING（盘上找不到，宁可红不留旧行号，也不写盘）：
+  ev.log: func ValidateLog\(
+  host.eventTests: func TestValidateLogArmRejectsDuplicateAndRegress\(
+  host.eventTests: func TestEventLogAppendsAcrossRuns\(
+  host.eventTests: func TestEmitFailureIsLoudOnStderr\(
+  host.eventTests: func TestRefusedEventsCarryTheirWhy\(
+  host.eventTests: func TestEventLogPathDerivationAndCollision\(
+  host.eventFlags: func eventLogPath\(
+  host.eventFlags: func printEventBanner\(

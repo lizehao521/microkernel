@@ -1,0 +1,22 @@
+{
+ "id": "E2",
+ "title": "受理事件 turn_accepted 先于第一次内核调用",
+ "covers": [
+  3,
+  9
+ ],
+ "tasks": [
+  "在 loop() 里第一次 r.rpc.call(\"kernel.check_call\")（loop.go:173）之前 emit turn_accepted，载荷带 session/turn/计划步数/上限(-max-turns)/停止入口地址或信号/resumable",
+  "回执时间取自请求入口那一个时刻，不要在 emit 时才现取（否则针1 恒过）",
+  "测试：turn_accepted 必须是这一发事件流的第一条；把 resumption 能力如实写成 false 时，页面/流上不许出现「可续」字样",
+  "反臂：把 emit 挪到 check_call 之后 ⇒ 顺序针必须红；把回执延迟到 >100ms ⇒ 针1 必须红"
+ ],
+ "executionFit": "fits-one-run",
+ "demoBoundary": "一发事件流第一条恒为 turn_accepted，且带可寻址的停止入口；针1 读数现印",
+ "scopeNotes": "单点改动，边界清楚：只管「受理」这一件事。",
+ "blockedBy": [
+  "E1"
+ ],
+ "techGuidance": null,
+ "status": "Planned"
+}

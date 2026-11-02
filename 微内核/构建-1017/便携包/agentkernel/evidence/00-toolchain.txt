@@ -1,0 +1,4 @@
+=== 工具链自印 ===
+go version go1.27.2 windows/amd64
+GO=  /c/Users/Admin/sdk/go/bin/go
+GOPROXY=off GOTOOLCHAIN=local

@@ -1,0 +1,282 @@
+{
+  "result": "PASS",
+  "checks": 53,
+  "total": 53,
+  "build": {
+    "file": "微核台.html",
+    "bytes": 147904,
+    "sha256": "4db8f042957580fd33af10ec5031610cf0b714fbe8d028467c73be0bddcdc5cb"
+  },
+  "model": {
+    "base_host": "http://127.0.0.1:64321",
+    "model": "stub-model-1"
+  },
+  "upstream_requests": 3,
+  "checks_detail": [
+    {
+      "name": "bridge ready",
+      "ok": true,
+      "detail": "ready"
+    },
+    {
+      "name": "bridge key is flag only",
+      "ok": true,
+      "detail": "True"
+    },
+    {
+      "name": "state 200 with model",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "name": "state model ready",
+      "ok": true,
+      "detail": "ready"
+    },
+    {
+      "name": "state model boundary present",
+      "ok": true,
+      "detail": "只发问题 + 去标识证据摘要；不发记忆、操作者、文件路径、sha256、回执、口令"
+    },
+    {
+      "name": "state has no key",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "api model ready",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "name": "served bytes match build",
+      "ok": true,
+      "detail": "got=147904 file=147904"
+    },
+    {
+      "name": "served sha match build",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "local answer measured",
+      "ok": true,
+      "detail": "measured"
+    },
+    {
+      "name": "local answer source local_rules",
+      "ok": true,
+      "detail": "local_rules"
+    },
+    {
+      "name": "local answer made no upstream call",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "name": "string use_model stays local",
+      "ok": true,
+      "detail": "local_rules"
+    },
+    {
+      "name": "model answer 200",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "name": "model answer tier model_says",
+      "ok": true,
+      "detail": "model_says"
+    },
+    {
+      "name": "model answer source model",
+      "ok": true,
+      "detail": "model"
+    },
+    {
+      "name": "model answer title from upstream",
+      "ok": true,
+      "detail": "摘要复核"
+    },
+    {
+      "name": "model answer text from upstream",
+      "ok": true,
+      "detail": "D1-C4 不符；D9-C9 不在摘要里，核不了。"
+    },
+    {
+      "name": "model refs only valid ids",
+      "ok": true,
+      "detail": "['D1-C4']"
+    },
+    {
+      "name": "model answer no key",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "one upstream call",
+      "ok": true,
+      "detail": "1"
+    },
+    {
+      "name": "upstream path v1/chat/completions",
+      "ok": true,
+      "detail": "/v1/chat/completions"
+    },
+    {
+      "name": "upstream bearer key",
+      "ok": true,
+      "detail": "Bearer TEST-KEY-MODEL-IN"
+    },
+    {
+      "name": "upstream body has no key",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "upstream model name",
+      "ok": true,
+      "detail": "stub-model-1"
+    },
+    {
+      "name": "upstream temperature 0",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "name": "digest top keys whitelist",
+      "ok": true,
+      "detail": "['deliveries', 'not_same_run']"
+    },
+    {
+      "name": "digest 3 deliveries / 16 claims",
+      "ok": true,
+      "detail": "3"
+    },
+    {
+      "name": "digest claim keys whitelist",
+      "ok": true,
+      "detail": "['basis', 'id', 'text', 'verdict', 'why']"
+    },
+    {
+      "name": "digest has no memory/operator/path",
+      "ok": true,
+      "detail": "{'leaky': [], 'hash': False, 'drive': False}"
+    },
+    {
+      "name": "question sent with digest",
+      "ok": true,
+      "detail": "接入验收：D-1026-01 哪几条声明与盘上不符？"
+    },
+    {
+      "name": "upstream 500 maps absent",
+      "ok": true,
+      "detail": "absent"
+    },
+    {
+      "name": "upstream 500 title",
+      "ok": true,
+      "detail": "模型没有答上来"
+    },
+    {
+      "name": "upstream 500 call counted",
+      "ok": true,
+      "detail": "1"
+    },
+    {
+      "name": "upstream 500 says call happened",
+      "ok": true,
+      "detail": "端点返回 HTTP 500：{\"error\": \"stub upstream rejected key ***\"}。这次模型调用发生了；这不是证据结论。"
+    },
+    {
+      "name": "upstream 500 no key in answer",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "bad response maps absent",
+      "ok": true,
+      "detail": "BAD_RESPONSE"
+    },
+    {
+      "name": "bad response call counted",
+      "ok": true,
+      "detail": "1"
+    },
+    {
+      "name": "memory has model rows",
+      "ok": true,
+      "detail": "5"
+    },
+    {
+      "name": "memory model row has calls/model",
+      "ok": true,
+      "detail": "stub-model-1"
+    },
+    {
+      "name": "memory file no key",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "bridge log no key",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "bridge log no question",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "bridge log has explain events",
+      "ok": true,
+      "detail": "698"
+    },
+    {
+      "name": "no bridge state off",
+      "ok": true,
+      "detail": "off"
+    },
+    {
+      "name": "no bridge answer absent",
+      "ok": true,
+      "detail": "模型未接入"
+    },
+    {
+      "name": "no bridge 0 calls",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "name": "no bridge local still works",
+      "ok": true,
+      "detail": "measured"
+    },
+    {
+      "name": "unconfigured bridge state",
+      "ok": true,
+      "detail": "unconfigured"
+    },
+    {
+      "name": "core sees unconfigured",
+      "ok": true,
+      "detail": "unconfigured"
+    },
+    {
+      "name": "unconfigured answer absent",
+      "ok": true,
+      "detail": "模型桥不可用"
+    },
+    {
+      "name": "unconfigured 0 calls",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "name": "test dialogue cleared",
+      "ok": true,
+      "detail": "0"
+    }
+  ]
+}

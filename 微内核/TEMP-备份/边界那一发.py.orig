@@ -1,0 +1,333 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""边界那一发：把目标里"交互流畅 + 五档不许塌 + absent 必带理由"这两句，拿十种边界输入去量。
+
+    python 工具/边界那一发.py [go.exe 路径]
+
+为什么要有它：验收跑到 W13 为止，端到端那一发用的都是**形状正常**的输入（一段脏 Go、一句问题）。
+可"贴进来的东西"不是只有这一形：空的、只有空白的、200KB 的、非法 UTF-8 的、语言填 ruby 的、
+一行五万字的。这些形状下服务要么给结论、要么**明说给不了** —— 中间那种"默默少一半还署 measured"
+才是目标禁的事。这条脚本只读地打这些发，把每种形状的读数写进 `读数/W14-边界那一发.json`。
+
+它起在 127.0.0.1 的随机空闲端口，**绝不碰 8797/8799**；数据目录在 TEMP，跑完删。
+"""
+import json
+import os
+import shutil
+import socket
+import subprocess
+import sys
+import time
+import urllib.error
+import urllib.parse
+import urllib.request
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(HERE)
+SRC = os.path.join(ROOT, "src", "pgagent")
+GO = sys.argv[1] if len(sys.argv) > 1 else "go"
+WORK = os.path.join(ROOT, "TEMP-边界")
+OUT = os.path.join(ROOT, "读数", "W14-边界那一发.json")
+
+DIRTY = ("package main\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\nfunc load(p string) string {\n"
+         "\tdata, _ := os.ReadFile(p)\n\tseed := len(data)\n\tseed := seed + 1\n"
+         "\tif seed > 0 {\n\t\tfmt.Print(seed)\n\t}\n\treturn string(data)\n}\n")
+
+
+def free_port():
+    s = socket.socket()
+    s.bind(("127.0.0.1", 0))
+    p = s.getsockname()[1]
+    s.close()
+    return p
+
+
+def sse_turn(base, body, timeout=60):
+    """POST /api/turn 收 SSE；返回 (状态码, 步名, 结果对象或 None, 帧数, 毫秒, 错误文本)。"""
+    req = urllib.request.Request(base + "/api/turn",
+                                 data=json.dumps(body).encode("utf-8"),
+                                 headers={"Content-Type": "application/json"})
+    steps, result, frames = [], None, 0
+    t0 = time.time()
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            buf = b""
+            while True:
+                chunk = r.read1(4096) if hasattr(r, "read1") else r.read(4096)
+                if not chunk:
+                    break
+                buf += chunk
+                while b"\n\n" in buf:
+                    raw, buf = buf.split(b"\n\n", 1)
+                    frames += 1
+                    ev, data = "message", ""
+                    for ln in raw.decode("utf-8", "replace").splitlines():
+                        if ln.startswith("event: "):
+                            ev = ln[7:].strip()
+                        elif ln.startswith("data: "):
+                            data += ln[6:]
+                    if not data:
+                        continue
+                    obj = json.loads(data)
+                    if ev == "step":
+                        steps.append({"name": obj.get("name"), "ran": obj.get("ran")})
+                    elif ev == "result":
+                        result = obj
+    except urllib.error.HTTPError as e:
+        txt = e.read().decode("utf-8", "replace").strip()
+        return e.code, steps, result, frames, int((time.time() - t0) * 1000), txt
+    except Exception as e:
+        return -1, steps, result, frames, int((time.time() - t0) * 1000), repr(e)
+    return 200, steps, result, frames, int((time.time() - t0) * 1000), ""
+
+
+def brief(status, steps, result, frames, ms, err):
+    mix = (result or {}).get("provenance_mix") or {}
+    # 名字也要落件：第一版只落了"步=10"这种计数，结果"少了哪三步"这一问要重跑一遍才知道
+    # —— 计数不带对象，等于把发现留在内存里（读数要能自证）。
+    return {"步名": ["%s%s" % (("" if x["ran"] else "×"), x["name"]) for x in steps],
+            "未决原话": [(u.get("what") if isinstance(u, dict) else str(u))
+                       for u in ((result or {}).get("unknowns") or [])][:4],
+        "http": status,
+        "帧数": frames,
+        "毫秒": ms,
+        "亮出的步": len(steps),
+        "五档恒等": (result or {}).get("mix_identity_ok"),
+        "五档": {k: mix.get(k) for k in ("measured", "estimated", "model_says", "relayed", "absent", "total")},
+        "KPI": (result or {}).get("kpi_ledger_decided"),
+        # 检索键以打印件为准：Result 的 JSON 名是 stop_reason（我第一版写 end_reason ⇒ 这一栏一路是 None，
+        # 判据没用它所以没造成假绿，但"读数里那一栏是空的"这件事本身就该修）。
+        "结束": (result or {}).get("stop_reason"),
+        "未决条数": len((result or {}).get("unknowns") or []),
+        "findings条数": len((result or {}).get("findings") or []),
+        "错误文本": err[:220],
+    }
+
+
+def main():
+    os.makedirs(WORK, exist_ok=True)
+    rc = subprocess.run([GO, "build", "-o", os.path.join(WORK, "pgagent-边界.exe"), "."],
+                        cwd=SRC, capture_output=True, text=True,
+                        encoding="utf-8", errors="replace").returncode
+    if rc != 0:
+        print("编不出来 ⇒ 这一轮没跑")
+        return 1
+    exe = os.path.join(WORK, "pgagent-边界.exe")
+    port = free_port()
+    assert port not in (8797, 8799)
+    env = dict(os.environ, PYTHONIOENCODING="utf-8")
+    srv = subprocess.Popen([exe, "-port", str(port), "-data", os.path.join(WORK, "数据"), "-fake-endpoint"],
+                           cwd=SRC, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    base = "http://127.0.0.1:%d" % port
+    cases, problems = [], []
+    假期望被判红 = False   # 先初始化：中途抛异常时下面那句"判据有牙"不能读到半个值就当验过
+    try:
+        for _ in range(60):
+            try:
+                urllib.request.urlopen(base + "/api/health", timeout=1).read()
+                break
+            except Exception:
+                time.sleep(0.2)
+
+        # 打断类的用例必须有一台"慢得下来"的服务：一圈只跑几十毫秒，点停永远赶不上。
+        # 第一版就栽在这里 —— 并发那一发时好时坏（A 常常已经跑完），那不是产品的错，是我把竞态写进了考卷。
+        # `-step-delay` 是应用自己提供的旋钮（main.go 里那句注释：0 = 中断只能靠程序自己造）。
+        port2 = free_port()
+        assert port2 not in (8797, 8799)
+        srv2 = subprocess.Popen([exe, "-port", str(port2), "-data", os.path.join(WORK, "数据慢"),
+                                 "-fake-endpoint", "-step-delay", "150ms"],
+                                cwd=SRC, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        base_slow = "http://127.0.0.1:%d" % port2
+        for _ in range(60):
+            try:
+                urllib.request.urlopen(base_slow + "/api/health", timeout=1).read()
+                break
+            except Exception:
+                time.sleep(0.2)
+
+        def add(名, 期望, body):
+            # 期望 = (一句人话, 判据函数)。判据函数不进读数件 —— 第一发就栽在这里：
+            # 把 lambda 塞进 dict 再 json.dump，直接在写件那一步崩掉，十个用例的读数全丢。
+            文字, 判 = 期望
+            st, steps, res, fr, ms, err = sse_turn(base, body)
+            d = {"用例": 名, "期望": 文字}
+            d.update(brief(st, steps, res, fr, ms, err))
+            d["实际是否合期望"] = bool(判(d))
+            if not d["实际是否合期望"]:
+                problems.append(名)
+            cases.append(d)
+            print("%-26s http=%s 帧=%s 步=%s 恒等=%s KPI=%s 未决=%s err=%s" % (
+                名, d["http"], fr, d["亮出的步"], d["五档恒等"], d["KPI"], d["未决条数"], d["错误文本"][:40]))
+
+        OK200 = ("200 且五档恒等", lambda d: d["http"] == 200 and d["五档恒等"] is True)
+        BAD400 = ("400 且带一句为什么", lambda d: d["http"] == 400 and d["错误文本"] != "")
+
+        add("空代码", BAD400, {"session": "b1", "lang": "go", "code": "", "question": "这段有什么问题"})
+        add("只有空白与换行", BAD400, {"session": "b2", "lang": "go", "code": "   \n\t\n  ", "question": "看看"})
+        add("200KB 大粘贴", OK200, {"session": "b3", "lang": "go", "code": DIRTY + "// 填充\n" * 9000,
+                                  "question": "这段有什么问题"})
+        add("一行五万字无换行", OK200, {"session": "b4", "lang": "go", "code": "package main; var x = " + "1" * 50000,
+                                       "question": "这段有什么问题"})
+        add("非法 UTF-8 字节", OK200, json.loads('{"session":"b5","lang":"go","question":"这段有什么问题",'
+                                                 '"code":"package main\\n// \\ud800 坏代理对\\nvar x = 1\\n"}'))
+        add("语言填 ruby（没实现）", OK200, {"session": "b6", "lang": "ruby", "code": "def a\n  puts 1\nend\n",
+                                           "question": "这段有什么问题"})
+        add("lang 为空串", OK200, {"session": "b7", "lang": "", "code": DIRTY, "question": "这段有什么问题"})
+        add("问题为空（只贴代码）", OK200, {"session": "b8", "lang": "go", "code": DIRTY, "question": ""})
+        add("栈里没有行号", OK200, {"session": "b9", "lang": "go", "code": DIRTY, "stack": "panic: boom\n",
+                                   "question": "为什么 panic"})
+
+        # 并发两发 + 只停其中一发：停 A 不能把 B 一起带走（每发的中止是按 session+turn 点名的）。
+        # 停的号写死 1：数据目录每次新建，两个 session 各自的第一发就是 turn=1（不是猜，是这件脚本自己的前提）。
+        import threading
+        box = {}
+
+        def 跑(k, sess):
+            st, steps, res, fr, ms, err = sse_turn(base_slow, {"session": sess, "lang": "go",
+                                                          "code": DIRTY, "question": "这段有什么问题"})
+            box[k] = {"http": st, "步": len(steps), "KPI": (res or {}).get("kpi_ledger_decided"),
+                      "结束": (res or {}).get("stop_reason"), "帧": fr}
+
+        th = [threading.Thread(target=跑, args=("A", "并发-A")), threading.Thread(target=跑, args=("B", "并发-B"))]
+        for t in th:
+            t.start()
+        time.sleep(0.5)   # 慢服务每步 150ms ⇒ 这一发还在跑，停得下来
+        try:
+            with urllib.request.urlopen(base_slow + "/api/stop",
+                                        data=json.dumps({"session": "并发-A", "turn": box.get("A", {}).get("turn", 1)}).encode(),
+                                        timeout=10) as r:
+                stopA = json.loads(r.read().decode())
+        except Exception as e:
+            stopA = {"异常": repr(e)}
+        for t in th:
+            t.join(timeout=60)
+        a, b = box.get("A", {}), box.get("B", {})
+        d = {"用例": "并发两发、只停 A", "期望": "A 被打断、B 跑完且 KPI>0", "A": a, "B": b, "停A的回话": stopA}
+        d["实际是否合期望"] = bool(stopA.get("stopped") is True and a.get("结束") == "被打断"
+                            and b.get("结束") == "跑完" and (b.get("KPI") or 0) >= 1
+                            and a.get("步", 99) < 13)
+        if not d["实际是否合期望"]:
+            problems.append("并发两发、只停 A")
+        cases.append(d)
+
+        # 掐断连接（读两帧就把连接掐了）：服务端要**照样收口、照样落盘**，用 /api/history 复查
+        req = urllib.request.Request(base_slow + "/api/turn",
+                                     data=json.dumps({"session": "掐断", "lang": "go", "code": DIRTY,
+                                                      "question": "这段有什么问题"}).encode("utf-8"),
+                                     headers={"Content-Type": "application/json"})
+        掐 = {"用例": "读两帧就掐断连接", "期望": "history 里这一发有收口（stop_reason 非空、五档恒等在）"}
+        try:
+            with urllib.request.urlopen(req, timeout=20) as r:
+                got = 0
+                while got < 2:
+                    if r.readline():
+                        got += 1
+                    else:
+                        break
+            # with 退出即掐断
+        except Exception as e:
+            掐["异常"] = repr(e)
+        time.sleep(0.4)
+        try:
+            with urllib.request.urlopen(base_slow + "/api/history?session=" + urllib.parse.quote("掐断"), timeout=10) as r:
+                h = json.loads(r.read().decode())
+        except Exception as e:
+            h = {"异常": repr(e)}
+        掐["history 回话"] = {"count": h.get("count"), "键": sorted(h.keys()),
+                          "异常": h.get("异常", "")}   # 失败时读数要能自证为什么，别只留三个 null
+        rec = (h.get("turns") or [{}])[-1] if h.get("turns") else {}
+        # history 里的记录是**平铺**的（没有 result 这层），键名与 SSE 那份 Result 一致
+        res = rec
+        掐["history条数"] = h.get("count")
+        掐["那一发的结束"] = res.get("stop_reason")
+        掐["那一发的五档恒等"] = res.get("mix_identity_ok")
+        掐["实际是否合期望"] = bool(掐.get("那一发的结束") and 掐.get("那一发的五档恒等") is True)
+        if not 掐["实际是否合期望"]:
+            problems.append("读两帧就掐断连接")
+        cases.append(掐)
+
+        add("超长问题（50KB）", OK200, {"session": "b11", "lang": "go", "code": DIRTY,
+                                       "question": "这段有什么问题？" * 5000})
+        add("只有栈没代码", BAD400, {"session": "b12", "lang": "go", "code": "   ", "question": "为什么 panic",
+                                     "stack": "panic: boom\n\ngoroutine 1 [running]:\nmain.load(0x0)\n\t/x.go:6 +0x20\n"})
+        add("二进制样子的字节", OK200, {"session": "b13", "lang": "go",
+                                       "code": "package main\nvar b = []byte{0x00, 0xff, 0xfe}\n// \x01\x02\n",
+                                       "question": "这段有什么问题"})
+
+        s1, _, r1, _, _, _ = sse_turn(base, {"session": "b10", "lang": "go", "code": DIRTY, "question": "这段有什么问题"})
+        s2, _, r2, _, _, _ = sse_turn(base, {"session": "b10", "lang": "go", "code": DIRTY, "question": "这段有什么问题"})
+        d = {"用例": "同 session 连发两发", "期望": "两发都 200 且 turn 号不同", "一发": s1, "二发": s2,
+             "一发turn": r1 and r1.get("turn"), "二发turn": r2 and r2.get("turn")}
+        d["实际是否合期望"] = bool(s1 == 200 and s2 == 200 and d["一发turn"] != d["二发turn"])
+        if not d["实际是否合期望"]:
+            problems.append("同 session 连发两发")
+        cases.append(d)
+
+        # 停一发不存在的：不能谎报"停了"
+        try:
+            body = json.dumps({"session": "没有这个会话", "turn": 99}).encode()
+            with urllib.request.urlopen(base + "/api/stop", data=body, timeout=10) as r:
+                js = json.loads(r.read().decode())
+        except Exception as e:
+            js = {"异常": repr(e)}
+        d = {"用例": "停一发不存在的", "期望": "stopped=false 且带那句解释", "读数": js,
+             "实际是否合期望": js.get("stopped") is False and "note" in js}
+        if not d["实际是否合期望"]:
+            problems.append("停一发不存在的")
+        cases.append(d)
+
+        # GET /api/turn：不能当一发跑了
+        try:
+            with urllib.request.urlopen(base + "/api/turn", timeout=10) as r:
+                code = r.getcode()
+        except urllib.error.HTTPError as e:
+            code = e.code
+        d = {"用例": "GET /api/turn", "期望": "405（不许当一发跑）", "http": code,
+             "实际是否合期望": code == 405}
+        if not d["实际是否合期望"]:
+            problems.append("GET /api/turn")
+        cases.append(d)
+
+        # 自我拆穿那一发：给一个**明知是假**的期望（空代码硬说期望 200），看这份读数的"合期望"这格
+        # 会不会替它开绿灯。它要是"合期望"，说明这栏是装饰，上面九条的"合期望"三个字就不能信。
+        st, steps, res, fr, ms, err = sse_turn(base, {"session": "z0", "lang": "go", "code": "",
+                                                      "question": "这段有什么问题"})
+        d = {"用例": "自我拆穿（假期望，必须被判不达标）", "期望": "200（这是假的）", "http": st}
+        d["实际是否合期望"] = bool(st == 200)
+        假期望被判红 = (d["实际是否合期望"] is False)
+        cases.append(d)
+        print("自我拆穿那发：http=%s ⇒ 判不达标=%s（这条若判成达标，上面所有「合期望」三个字都不可信）" % (
+            st, 假期望被判红))
+    finally:
+        srv2.terminate()
+        srv2.wait(timeout=10)
+        srv.terminate()
+        srv.wait(timeout=10)
+        shutil.rmtree(WORK, ignore_errors=True)
+
+    if not 假期望被判红:
+        problems.append("自我拆穿那发没被判红 ⇒ 这栏「合期望」是装饰")
+    out = {"生成时刻（本机钟）": time.strftime("%Y-%m-%d %H:%M:%S"),
+           "分母": "自印 %d 个用例（脚本现跑现数，不是照着期望写的）" % len(cases),
+           "端口": "127.0.0.1:%d（随机空闲；8797/8799 没碰）" % port,
+           "TEMP 残留": os.path.isdir(WORK),
+           "不达标用例": problems,
+           "用例": cases}
+    os.makedirs(os.path.dirname(OUT), exist_ok=True)
+    with open(OUT, "w", encoding="utf-8", newline="\n") as f:
+        # default=repr 是兜底不是遮羞布：上面那条评论说的崩法，兜底会让它变成"件里多一行怪字符串"，
+        # 而不是把已经跑完的十个用例一起丢掉。
+        json.dump(out, f, ensure_ascii=False, indent=1, default=repr)
+    print("\n分母=%d 个用例 ｜ 不达标=%d：%s" % (len(cases), len(problems), problems or "无"))
+    print("写了 " + OUT + "（TEMP-边界 残留：%s）" % out["TEMP 残留"])
+    # 跨件传数走结构化行（同一族规矩：父件去 grep 散文，文案一改计数就归零）。
+    print("SUMMARY cases=%d bad=%d temp_left=%d" % (
+        len(cases), len(problems), 1 if out["TEMP 残留"] else 0))
+    return 1 if problems else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

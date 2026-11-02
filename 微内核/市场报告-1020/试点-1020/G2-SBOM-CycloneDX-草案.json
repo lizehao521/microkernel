@@ -1,0 +1,788 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "serialNumber": "urn:uuid:3a07276d-6015-5d38-a617-919f3230c59b",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-20T00:00:00Z",
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "name": "agentkernel-sbom-handbuilt",
+          "version": "0.1.0"
+        }
+      ]
+    },
+    "component": {
+      "type": "application",
+      "bom-ref": "ak-pilot-service",
+      "name": "agentkernel evidence package pilot",
+      "version": "2026-10-20-draft",
+      "description": "Author-side draft export of two domain SBOM drafts; not a complete product SBOM."
+    },
+    "properties": [
+      {
+        "name": "ak:sbom:status",
+        "value": "draft"
+      },
+      {
+        "name": "ak:sbom:completeness",
+        "value": "not-complete"
+      },
+      {
+        "name": "ak:sbom:schema-validation",
+        "value": "NOT_RUN"
+      },
+      {
+        "name": "ak:sbom:scope",
+        "value": "pilot tools + kernel source/binaries"
+      },
+      {
+        "name": "ak:sbom:source-documents",
+        "value": "G2-SBOM-试点工具.md; G2-SBOM-内核模块.md"
+      },
+      {
+        "name": "ak:sbom:dependency-semantics",
+        "value": "runtime edges only; build relations are recorded in ak:build-* properties"
+      },
+      {
+        "name": "ak:sbom:nonclaim",
+        "value": "not complete; not a security review; vulnerability scan NOT_RUN; no schema validation"
+      },
+      {
+        "name": "ak:sbom:generated-by",
+        "value": "author-side manual export; no network"
+      }
+    ]
+  },
+  "components": [
+    {
+      "type": "file",
+      "bom-ref": "ak-tool-slice-verify",
+      "name": "工具/切片与校验.js",
+      "version": "v2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "25b83f70a4e3fc47f1d5d4ba8e23e381eb1484566c03ccfdb81420a212f2be27"
+        }
+      ],
+      "properties": [
+        {
+          "name": "ak:domain",
+          "value": "tools"
+        },
+        {
+          "name": "ak:distribution",
+          "value": "trial-pack"
+        },
+        {
+          "name": "ak:bytes",
+          "value": "7281"
+        },
+        {
+          "name": "ak:path",
+          "value": "市场报告-1020/试点-1020/工具/切片与校验.js"
+        },
+        {
+          "name": "ak:runtime",
+          "value": "ak-node-runtime"
+        },
+        {
+          "name": "ak:evidence",
+          "value": "measured"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "bom-ref": "ak-tool-trial-zip",
+      "name": "工具/打非作者试读包.py",
+      "version": "v1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "42461bc775040c9a9b85dd31f5cea6b79f9ff0a18e4dd2ad3054136b7611684d"
+        }
+      ],
+      "properties": [
+        {
+          "name": "ak:domain",
+          "value": "tools"
+        },
+        {
+          "name": "ak:distribution",
+          "value": "build-only"
+        },
+        {
+          "name": "ak:bytes",
+          "value": "3353"
+        },
+        {
+          "name": "ak:path",
+          "value": "市场报告-1020/试点-1020/工具/打非作者试读包.py"
+        },
+        {
+          "name": "ak:build-runtime",
+          "value": "ak-python-runtime"
+        },
+        {
+          "name": "ak:evidence",
+          "value": "measured"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "ak-kernel-src",
+      "name": "agentkernel",
+      "version": "(devel)",
+      "properties": [
+        {
+          "name": "ak:domain",
+          "value": "kernel"
+        },
+        {
+          "name": "ak:source-manifest-sha256",
+          "value": "049af7f6ac0395e77e1d7d34fd9486ecf59ec66f576383531b623877a729c856"
+        },
+        {
+          "name": "ak:source-files",
+          "value": "35 .go + go.mod (release fingerprint 35/35)"
+        },
+        {
+          "name": "ak:source-tree",
+          "value": "35 .go + go.mod; tasks/probe/omitjournal/main.go excluded from release fingerprint"
+        },
+        {
+          "name": "ak:go-mod-sha256",
+          "value": "aee4a04c2108218c26f18c4f86e61f761791c2d74bdb96c60814dd3b5d173407"
+        },
+        {
+          "name": "ak:external-modules",
+          "value": "0"
+        },
+        {
+          "name": "ak:vcs",
+          "value": "absent"
+        },
+        {
+          "name": "ak:build-tool",
+          "value": "ak-go-stdlib"
+        },
+        {
+          "name": "ak:build-outputs",
+          "value": "ak-bin-kaudit, ak-bin-kcheck, ak-bin-kresearch, ak-bin-mcphttp, ak-bin-mcpkernel"
+        },
+        {
+          "name": "ak:evidence",
+          "value": "measured"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "bom-ref": "ak-bin-kaudit",
+      "name": "kaudit.exe",
+      "version": "(devel)",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "3a9c863dfdc58c365cb2f850085a460d5c71c60060dfd5748f5f06c287c8ebf6"
+        }
+      ],
+      "properties": [
+        {
+          "name": "ak:domain",
+          "value": "kernel"
+        },
+        {
+          "name": "ak:bytes",
+          "value": "10092032"
+        },
+        {
+          "name": "ak:path",
+          "value": "构建-1017/agentkernel/bin/kaudit.exe"
+        },
+        {
+          "name": "ak:goos",
+          "value": "windows"
+        },
+        {
+          "name": "ak:goarch",
+          "value": "amd64"
+        },
+        {
+          "name": "ak:cgo",
+          "value": "0"
+        },
+        {
+          "name": "ak:module",
+          "value": "agentkernel"
+        },
+        {
+          "name": "ak:go-buildinfo",
+          "value": "go1.27.2; path=agentkernel/cmd/kaudit; CGO_ENABLED=0; GOOS=windows; GOARCH=amd64; GOAMD64=v1; module-deps=0; trimpath=absent; vcs=absent"
+        },
+        {
+          "name": "ak:reproducibility",
+          "value": "5/5 same-host byte-identical"
+        },
+        {
+          "name": "ak:evidence",
+          "value": "measured"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "bom-ref": "ak-bin-kcheck",
+      "name": "kcheck.exe",
+      "version": "(devel)",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1858e0892d2462b0bf5c32d169d1d4154fee1a831fb078c391d760a941c9c67c"
+        }
+      ],
+      "properties": [
+        {
+          "name": "ak:domain",
+          "value": "kernel"
+        },
+        {
+          "name": "ak:bytes",
+          "value": "6529024"
+        },
+        {
+          "name": "ak:path",
+          "value": "构建-1017/agentkernel/bin/kcheck.exe"
+        },
+        {
+          "name": "ak:goos",
+          "value": "windows"
+        },
+        {
+          "name": "ak:goarch",
+          "value": "amd64"
+        },
+        {
+          "name": "ak:cgo",
+          "value": "0"
+        },
+        {
+          "name": "ak:module",
+          "value": "agentkernel"
+        },
+        {
+          "name": "ak:go-buildinfo",
+          "value": "go1.27.2; path=agentkernel/cmd/kcheck; CGO_ENABLED=0; GOOS=windows; GOARCH=amd64; GOAMD64=v1; module-deps=0; trimpath=absent; vcs=absent"
+        },
+        {
+          "name": "ak:reproducibility",
+          "value": "5/5 same-host byte-identical"
+        },
+        {
+          "name": "ak:evidence",
+          "value": "measured"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "bom-ref": "ak-bin-kresearch",
+      "name": "kresearch.exe",
+      "version": "(devel)",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "9dca0d37f39ee6761edd77ba729ab5fa9b8a6a9f5ea448c17107d1603260bb44"
+        }
+      ],
+      "properties": [
+        {
+          "name": "ak:domain",
+          "value": "kernel"
+        },
+        {
+          "name": "ak:bytes",
+          "value": "11999744"
+        },
+        {
+          "name": "ak:path",
+          "value": "构建-1017/agentkernel/bin/kresearch.exe"
+        },
+        {
+          "name": "ak:goos",
+          "value": "windows"
+        },
+        {
+          "name": "ak:goarch",
+          "value": "amd64"
+        },
+        {
+          "name": "ak:cgo",
+          "value": "0"
+        },
+        {
+          "name": "ak:module",
+          "value": "agentkernel"
+        },
+        {
+          "name": "ak:go-buildinfo",
+          "value": "go1.27.2; path=agentkernel/cmd/kresearch; CGO_ENABLED=0; GOOS=windows; GOARCH=amd64; GOAMD64=v1; module-deps=0; trimpath=absent; vcs=absent"
+        },
+        {
+          "name": "ak:reproducibility",
+          "value": "5/5 same-host byte-identical"
+        },
+        {
+          "name": "ak:evidence",
+          "value": "measured"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "bom-ref": "ak-bin-mcphttp",
+      "name": "mcphttp.exe",
+      "version": "(devel)",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "f60617409932b57ce164007a1f56742ee2a731abf18451513b40b728524cd0a7"
+        }
+      ],
+      "properties": [
+        {
+          "name": "ak:domain",
+          "value": "kernel"
+        },
+        {
+          "name": "ak:bytes",
+          "value": "13125632"
+        },
+        {
+          "name": "ak:path",
+          "value": "构建-1017/agentkernel/bin/mcphttp.exe"
+        },
+        {
+          "name": "ak:goos",
+          "value": "windows"
+        },
+        {
+          "name": "ak:goarch",
+          "value": "amd64"
+        },
+        {
+          "name": "ak:cgo",
+          "value": "0"
+        },
+        {
+          "name": "ak:module",
+          "value": "agentkernel"
+        },
+        {
+          "name": "ak:go-buildinfo",
+          "value": "go1.27.2; path=agentkernel/cmd/mcphttp; CGO_ENABLED=0; GOOS=windows; GOARCH=amd64; GOAMD64=v1; module-deps=0; trimpath=absent; vcs=absent"
+        },
+        {
+          "name": "ak:reproducibility",
+          "value": "5/5 same-host byte-identical"
+        },
+        {
+          "name": "ak:evidence",
+          "value": "measured"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "bom-ref": "ak-bin-mcpkernel",
+      "name": "mcpkernel.exe",
+      "version": "(devel)",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "468c6e322e59c899606dd45f2904b22cd5291e4ef9aa175c1c1b07bc5a0a7519"
+        }
+      ],
+      "properties": [
+        {
+          "name": "ak:domain",
+          "value": "kernel"
+        },
+        {
+          "name": "ak:bytes",
+          "value": "6090240"
+        },
+        {
+          "name": "ak:path",
+          "value": "构建-1017/agentkernel/bin/mcpkernel.exe"
+        },
+        {
+          "name": "ak:goos",
+          "value": "windows"
+        },
+        {
+          "name": "ak:goarch",
+          "value": "amd64"
+        },
+        {
+          "name": "ak:cgo",
+          "value": "0"
+        },
+        {
+          "name": "ak:module",
+          "value": "agentkernel"
+        },
+        {
+          "name": "ak:go-buildinfo",
+          "value": "go1.27.2; path=agentkernel/cmd/mcpkernel; CGO_ENABLED=0; GOOS=windows; GOARCH=amd64; GOAMD64=v1; module-deps=0; trimpath=absent; vcs=absent"
+        },
+        {
+          "name": "ak:reproducibility",
+          "value": "5/5 same-host byte-identical"
+        },
+        {
+          "name": "ak:evidence",
+          "value": "measured"
+        }
+      ]
+    },
+    {
+      "type": "framework",
+      "bom-ref": "ak-go-stdlib",
+      "name": "Go standard library",
+      "version": "1.27.2",
+      "properties": [
+        {
+          "name": "ak:domain",
+          "value": "toolchain"
+        },
+        {
+          "name": "ak:license-sha256",
+          "value": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad"
+        },
+        {
+          "name": "ak:cgo",
+          "value": "0"
+        },
+        {
+          "name": "ak:toolchain",
+          "value": "go1.27.2 windows/amd64"
+        },
+        {
+          "name": "ak:evidence",
+          "value": "measured"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "ak-go-x-crypto",
+      "name": "crypto",
+      "version": "v0.52.1-0.20260526024921-9beb694f9766",
+      "group": "golang.org/x",
+      "properties": [
+        {
+          "name": "ak:domain",
+          "value": "toolchain"
+        },
+        {
+          "name": "ak:embedded-in",
+          "value": "GOROOT/src/vendor"
+        },
+        {
+          "name": "ak:license-sha256",
+          "value": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad"
+        },
+        {
+          "name": "ak:patents-sha256",
+          "value": "96f408bfae65bf137fc2525d3ecb030271c50c1e90799f87abf8846d8dd505cc"
+        },
+        {
+          "name": "ak:evidence",
+          "value": "measured"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "ak-go-x-net",
+      "name": "net",
+      "version": "v0.55.1-0.20260731170536-c1d18010be90",
+      "group": "golang.org/x",
+      "properties": [
+        {
+          "name": "ak:domain",
+          "value": "toolchain"
+        },
+        {
+          "name": "ak:embedded-in",
+          "value": "GOROOT/src/vendor"
+        },
+        {
+          "name": "ak:license-sha256",
+          "value": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad"
+        },
+        {
+          "name": "ak:patents-sha256",
+          "value": "96f408bfae65bf137fc2525d3ecb030271c50c1e90799f87abf8846d8dd505cc"
+        },
+        {
+          "name": "ak:evidence",
+          "value": "measured"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "ak-go-x-sys",
+      "name": "sys",
+      "version": "v0.45.0",
+      "group": "golang.org/x",
+      "properties": [
+        {
+          "name": "ak:domain",
+          "value": "toolchain"
+        },
+        {
+          "name": "ak:embedded-in",
+          "value": "GOROOT/src/vendor"
+        },
+        {
+          "name": "ak:license-sha256",
+          "value": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad"
+        },
+        {
+          "name": "ak:patents-sha256",
+          "value": "96f408bfae65bf137fc2525d3ecb030271c50c1e90799f87abf8846d8dd505cc"
+        },
+        {
+          "name": "ak:evidence",
+          "value": "measured"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "ak-go-x-text",
+      "name": "text",
+      "version": "v0.37.0",
+      "group": "golang.org/x",
+      "properties": [
+        {
+          "name": "ak:domain",
+          "value": "toolchain"
+        },
+        {
+          "name": "ak:embedded-in",
+          "value": "GOROOT/src/vendor"
+        },
+        {
+          "name": "ak:license-sha256",
+          "value": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad"
+        },
+        {
+          "name": "ak:patents-sha256",
+          "value": "96f408bfae65bf137fc2525d3ecb030271c50c1e90799f87abf8846d8dd505cc"
+        },
+        {
+          "name": "ak:evidence",
+          "value": "measured"
+        }
+      ]
+    },
+    {
+      "type": "platform",
+      "bom-ref": "ak-node-runtime",
+      "name": "Node.js",
+      "version": "22.23.2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "0d0f5e39f9f3d9587bc19f73eab3c2c9c4903fd02d6dbf9c853dd81b3d95fad4"
+        }
+      ],
+      "properties": [
+        {
+          "name": "ak:domain",
+          "value": "runtime"
+        },
+        {
+          "name": "ak:distribution",
+          "value": "not-distributed"
+        },
+        {
+          "name": "ak:scope",
+          "value": "runtime"
+        },
+        {
+          "name": "ak:bytes",
+          "value": "86997320"
+        },
+        {
+          "name": "ak:host-path",
+          "value": "C:/Users/Admin/.codearts/runtimes/node/node.exe"
+        },
+        {
+          "name": "ak:version-output",
+          "value": "v22.23.2"
+        },
+        {
+          "name": "ak:evidence",
+          "value": "measured"
+        }
+      ]
+    },
+    {
+      "type": "platform",
+      "bom-ref": "ak-python-runtime",
+      "name": "Python",
+      "version": "3.14.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "3179d8b7d28ccc7547e59c3080bf2f715442b692c33798e928fd311f2c97f57b"
+        }
+      ],
+      "properties": [
+        {
+          "name": "ak:domain",
+          "value": "runtime"
+        },
+        {
+          "name": "ak:distribution",
+          "value": "not-distributed"
+        },
+        {
+          "name": "ak:scope",
+          "value": "build"
+        },
+        {
+          "name": "ak:bytes",
+          "value": "106328"
+        },
+        {
+          "name": "ak:host-path",
+          "value": "C:/Users/Admin/sdk/py314/python.exe"
+        },
+        {
+          "name": "ak:core-dll",
+          "value": "python314.dll; 6757720 B; SHA-256 ac1223782497ad05c80d34c2216818eb16a25d7687bf1f2596b0b2eb25ca7b5d"
+        },
+        {
+          "name": "ak:abi-dll",
+          "value": "python3.dll; 74072 B; SHA-256 1fe883c6123a0485af1789c1fc56d7e7bb27eb465f65b154d48d1181c8ca5465"
+        },
+        {
+          "name": "ak:version-output",
+          "value": "Python 3.14.1"
+        },
+        {
+          "name": "ak:evidence",
+          "value": "measured"
+        }
+      ]
+    },
+    {
+      "type": "operating-system",
+      "bom-ref": "ak-os-windows",
+      "name": "Windows",
+      "properties": [
+        {
+          "name": "ak:domain",
+          "value": "os"
+        },
+        {
+          "name": "ak:version-inventory",
+          "value": "deployment absent; build-host 10.0.22631.6936"
+        },
+        {
+          "name": "ak:build-host-os",
+          "value": "10.0.22631.6936; DisplayVersion=23H2; registry ProductName=Windows 10 Enterprise"
+        },
+        {
+          "name": "ak:build-host-kernel32",
+          "value": "10.0.22621.6931 (WinBuild.160101.0800); 815584 B; SHA-256 C8088D514F1A6F7421CF00534CF9EC7AF6F1E9D1AF186417F2B23934606C5AD7"
+        },
+        {
+          "name": "ak:imports",
+          "value": "kernel32.dll (5/5 binaries)"
+        },
+        {
+          "name": "ak:forwarders",
+          "value": "absent"
+        },
+        {
+          "name": "ak:evidence",
+          "value": "absent"
+        },
+        {
+          "name": "ak:reason",
+          "value": "deployment OS/DLL versions not inventoried; build-host readings recorded; target machine decides"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "ak-tool-slice-verify",
+      "dependsOn": [
+        "ak-node-runtime"
+      ]
+    },
+    {
+      "ref": "ak-tool-trial-zip",
+      "dependsOn": [
+        "ak-python-runtime"
+      ]
+    },
+    {
+      "ref": "ak-go-stdlib",
+      "dependsOn": [
+        "ak-go-x-crypto",
+        "ak-go-x-net",
+        "ak-go-x-sys",
+        "ak-go-x-text"
+      ]
+    },
+    {
+      "ref": "ak-bin-kaudit",
+      "dependsOn": [
+        "ak-go-stdlib",
+        "ak-os-windows"
+      ]
+    },
+    {
+      "ref": "ak-bin-kcheck",
+      "dependsOn": [
+        "ak-go-stdlib",
+        "ak-os-windows"
+      ]
+    },
+    {
+      "ref": "ak-bin-kresearch",
+      "dependsOn": [
+        "ak-go-stdlib",
+        "ak-os-windows"
+      ]
+    },
+    {
+      "ref": "ak-bin-mcphttp",
+      "dependsOn": [
+        "ak-go-stdlib",
+        "ak-os-windows"
+      ]
+    },
+    {
+      "ref": "ak-bin-mcpkernel",
+      "dependsOn": [
+        "ak-go-stdlib",
+        "ak-os-windows"
+      ]
+    }
+  ]
+}

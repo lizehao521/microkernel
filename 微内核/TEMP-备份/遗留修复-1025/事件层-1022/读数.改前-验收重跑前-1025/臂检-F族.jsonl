@@ -1,0 +1,7 @@
+{"arm": "F1 半结算不判（回到 continue）", "file": "cmd/agentd/events.go", "test": "^TestSettlementJudgeCatchesEachBadShape$", "control_rc": 0, "mutant_rc": 1, "mutant_build_broken": false, "verdict": "BIT", "note": ""}
+{"arm": "F2 相位名散写不判", "file": "cmd/agentd/events.go", "test": "^TestSettlementJudgeCatchesEachBadShape$", "control_rc": 0, "mutant_rc": 1, "mutant_build_broken": false, "verdict": "BIT", "note": ""}
+{"arm": "F3 结算不带 why 不判", "file": "cmd/agentd/events.go", "test": "^TestSettlementJudgeCatchesEachBadShape$", "control_rc": 0, "mutant_rc": 1, "mutant_build_broken": false, "verdict": "BIT", "note": ""}
+{"arm": "F4 done_before 大于发号不判", "file": "cmd/agentd/events.go", "test": "^TestSettlementJudgeCatchesEachBadShape$", "control_rc": 0, "mutant_rc": 1, "mutant_build_broken": false, "verdict": "BIT", "note": ""}
+{"arm": "F5 同趟计数倒退不判", "file": "cmd/agentd/events.go", "test": "^TestSettlementJudgeCatchesEachBadShape$", "control_rc": 0, "mutant_rc": 1, "mutant_build_broken": false, "verdict": "BIT", "note": ""}
+{"arm": "F6 counts 逐名比整条摘掉（只剩加总）", "file": "cmd/agentd/events.go", "test": "^TestSettlementJudgeCatchesEachBadShape$", "control_rc": 0, "mutant_rc": 1, "mutant_build_broken": false, "verdict": "BIT", "note": ""}
+{"arm": "F7 reached 里表外相名不判（回到 continue）", "file": "cmd/agentd/events.go", "test": "^TestSettlementJudgeCatchesEachBadShape$", "control_rc": 0, "mutant_rc": 1, "mutant_build_broken": false, "verdict": "BIT", "note": ""}

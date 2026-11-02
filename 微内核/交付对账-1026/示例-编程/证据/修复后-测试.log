@@ -1,0 +1,9 @@
+test_empty_raises (__main__.TestMean.test_empty_raises) ... ok
+test_many (__main__.TestMean.test_many) ... ok
+test_single (__main__.TestMean.test_single) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.001s
+
+OK
+exit_code=0

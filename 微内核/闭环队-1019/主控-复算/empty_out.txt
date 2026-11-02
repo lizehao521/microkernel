@@ -1,0 +1,7 @@
+kinds: 49
+--- STRICT never-filled (no entry with basis!=5 AND non-empty claim) ---
+count: 2
+model_output:fail_status | total 70 | absent 70 | measuredEmpty 0 | measuredNonEmpty 0 | {"L1018":{"empty":0,"nonEmpty":0,"absent":60},"L8799":{"empty":0,"nonEmpty":0,"absent":10}}
+model_output:retry_after_ms | total 70 | absent 70 | measuredEmpty 0 | measuredNonEmpty 0 | {"L1018":{"empty":0,"nonEmpty":0,"absent":60},"L8799":{"empty":0,"nonEmpty":0,"absent":10}}
+--- measured-but-empty totals across all kinds ---
+entries with basis!=5 and empty claim: 0

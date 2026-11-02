@@ -1,0 +1,3 @@
+agentd：驱动=real（自主=true）；session=agentd-27276；读回=true；声明读者=true
+agentd: 10s 兜底进度开：静默过 10s 补 progress_tick，total 算不出补 why_late
+agentd: 事件层 7 条 → C:\Users\Admin\Desktop\微内核\PDF-1022\真端点-1023\读数\agentd-真端点.events.jsonl

@@ -1,0 +1,10 @@
+{
+ "reading": "T12-真端点-20次.json",
+ "checked_at": "2026-10-23T12:49:42+08:00",
+ "reading_bytes": 29181,
+ "reading_sha256": "0ac74f3df9116b6896f24bca71e5b870226310e72b36001a4622726bc09e92c7",
+ "log_bytes": 322,
+ "key_in_reading": false,
+ "key_in_log": false,
+ "note": "主读数里的 landing_ok.reading_bytes=21547 是写入 summary 之前的瞬时值（旧脚本时机错）；本 sidecar 是终态自证。"
+}

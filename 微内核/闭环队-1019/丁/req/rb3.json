@@ -1,0 +1,1 @@
+{"jsonrpc":"2.0","id":51,"method":"tools/call","params":{"name":"kernel.read_back","arguments":{"session":"calib-sess","call":3,"side":"input"}}}

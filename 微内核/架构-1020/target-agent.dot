@@ -1,0 +1,54 @@
+digraph agentkernel_target {
+  rankdir=TB;
+  graph [fontname="Segoe UI", labelloc=t, fontsize=15,
+         label="目标态 · 把记账件装进一个能跑的智能体（L2 容器）\n实线=今天已有 · 蓝虚线=要新建 · 红点线=口径未定"];
+  node [fontname="Segoe UI", fontsize=10];
+  edge [fontname="Segoe UI", fontsize=9];
+
+  subgraph cluster_kernel {
+    label="不动的那一半：内核（被动库 · v1 冻结 48 键/49 格）"; color=gray55; style=bold;
+    kpkg [shape=component, label="agentkernel 包 + mcpsrv.go\n判据表 / Entry / Append / CheckChain"];
+    mcp [shape=box, label="mcpkernel.exe stdio｜mcphttp.exe :8797\n写面：kernel.record_call · 读面：read_back / verify / tally"];
+    kau [shape=box, label="kaudit.exe :8788 只读\n6 条端点 · 篡改即拒载入"];
+    kche [shape=box, label="kcheck.exe 快闸（自带判据）"];
+  }
+
+  subgraph cluster_agent {
+    label="要新建的那一半：Agent 运行时（新容器，绝不长进内核里）"; color=dodgerblue4; style=dashed;
+    loop [shape=box, style=rounded, color=dodgerblue4,
+          label="agentd —— 循环宿主（进程）\nthink → 预检 → 落账 → 读回 → 由账决定下一步 → 收口\n每步都往内核要一次读数，不自记小账"];
+    policy [shape=box, style=rounded, color=dodgerblue4,
+            label="决策回边（已有实物：tasks/mcp/agent.py:53-60 POLICY）\nfail_kind → 动作，每条注明「依据账上哪个键名」"];
+    ctr [shape=note, style=rounded, color=dodgerblue4,
+         label="唯一 KPI：账本触发过几次决定\n0 ⇒ 这条边是虚接，循环不算跑通"];
+    seam [shape=box, style=rounded, color=dodgerblue4,
+          label="模型驱动缝（三选一，循环体不许知道自己接的是哪家）\n① scripted：假端点按剧本回（agent.py MAX_TOKENS 旋钮）\n② real：外部模型（要 AGNES_BASE/MODEL/KEY）\n③ session：Qoder 自己当模型，走已连的 MCP"];
+    bridge [shape=box, style=rounded, color=dodgerblue4,
+            label="持久化桥：按 checkpoint 落盘\nencode_journal 取字节 → 调用方写文件 → kaudit -journal\n（内核不写盘，这一格本来就是调用方的活）"];
+  }
+
+  panel [shape=box, style=rounded, color=dodgerblue4,
+         label="本地面板（复用 2026-10-15 已批口径的草稿，未开工）\n四块：链三态条 / 出身分布 / 一发解剖 / 对质台\n只连 kaudit，物理上连不到写面"];
+
+  jl [shape=cylinder, label="账本 JSONL + 轨迹文件\n（每轮一个可回放的 session）"];
+  model [shape=ellipse, style=dashed, color=gray40, label="模型 / 会话\n（外部，凭证只走环境变量）"];
+
+  seam -> loop [label="想（think）"];
+  model -> seam [style=dashed];
+  loop -> mcp [label="① check_call 预检（当前账副本，不写回）\n② record_call 落账（两侧一起）", style=bold];
+  loop -> policy [label="上一发失败/挤兑时", style=bold];
+  mcp -> loop [label="read_back / tally 把格子交回来", style=bold];
+  policy -> ctr [label="每次由账发起的决定都记一笔"];
+  loop -> bridge [label="收口 / 每 N 发"];
+  bridge -> jl [label="写盘"];
+  kau -> jl [label="-journal 载入"];
+  panel -> kau [label="只读 XHR · 127.0.0.1"];
+  kche -> kpkg [label="闸"];
+
+  risk1 [shape=note, style=dotted, color=red, fontsize=9,
+         label="未定口径 ①：驱动走 ②/③ 才算真模型，走 ① 只能证明循环机械正确 ——\n两条都要留，但对外话术不同，不许把 ① 说成 ②"];
+  risk2 [shape=note, style=dotted, color=red, fontsize=9,
+         label="未定口径 ②：agentd 是新容器 ⇒ 它自己要不要判据表？\n若新增格子就撞 v1 冻结（改判据表要三件配齐）；默认答：不新增，只消费"];
+  loop -> risk1 [style=dotted];
+  policy -> risk2 [style=dotted];
+}

@@ -1,0 +1,25 @@
+# 原样中文名 -> 便携包内 ASCII 条目名 ｜ 映射表 ｜ 未列出的名字两边一致
+docs/产品定位.md -> docs/product-positioning.md
+交付说明.md -> PACKAGE-README.md
+凭据/00-工具链.txt -> evidence/00-toolchain.txt
+凭据/01-go-build.txt -> evidence/01-go-build.txt
+凭据/02-逐件构建.txt -> evidence/02-build-each.txt
+凭据/03-go-test.txt -> evidence/03-go-test.txt
+凭据/04-kcheck-exe.txt -> evidence/04-kcheck-exe.txt
+凭据/05-分母.txt -> evidence/05-denominators.txt
+凭据/07-sha256sum独立复核.txt -> evidence/07-sha256sum-independent.txt
+凭据/08-手机侧.txt -> evidence/08-mobile-use.txt
+凭据/09-BH-bundle.json -> evidence/09-BH-bundle.json
+凭据/10-BH-analyze.json -> evidence/10-BH-analyze.json
+凭据/11-BH-checkup.json -> evidence/11-BH-checkup.json
+凭据/12-BH-git根因.txt -> evidence/12-BH-git-cause.txt
+凭据/13-BH-canvas初始化.json -> evidence/13-BH-canvas-init.json
+凭据/14-BH-台账.txt -> evidence/14-BH-ledger.txt
+凭据/15-解包后独立核.txt -> evidence/15-extracted-independent-check.txt
+凭据/16-解包件跑闸.txt -> evidence/16-extracted-gate.txt
+凭据/18-逐件smoke.txt -> evidence/18-binary-smoke.txt
+凭据/19-两面-tools清单.txt -> evidence/19-tools-list-both-faces.txt
+凭据/20-BH-checkup-plan.md -> evidence/20-BH-checkup-plan.md
+凭据/21-BH-plan确定性.txt -> evidence/21-BH-plan-determinism.txt
+凭据/打包读数.txt -> evidence/pack-readings.txt
+凭据/源码指纹.sha256 -> evidence/source-fingerprint.sha256
